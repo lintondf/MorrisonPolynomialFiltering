@@ -40,9 +40,31 @@ class FilterBase :
         self.t0 = None
         self.t = None
         self.Z = None
+        self.n = None
+        self.E = None
+        self.edit = editorDefault
 
+    def initialize(self, t0, Z0, editingWindow=25):
+        self.t0 = t0
+        self.t = t0
+        self.Z = Z0 # normalize initial state vector
+        self.E = zeros([editingWindow])
+        self.n = 0
+        
+    def setEditor(self, editor):
+        self.edit = editor
+        
+    def updateGOF(self, e):
+        self.E[self.n % len(self.E)] = e
+        self.n += 1
+        
+    def getGOF(self):
+        m = min(len(self.E), self.n)
+        return var(self.E[0:m])
+    
 class ReynekeMorrisonFilterBase(FilterBase) :
     def __init__(self, order) :
+        FilterBase.__init__(self)
         if (order < 0 or order > 5) :
             raise ValueError("Polynomial orders < 0 or > 5 are not supported; order %d" % order)
         self.order = order
@@ -50,20 +72,13 @@ class ReynekeMorrisonFilterBase(FilterBase) :
         self.dtau = None
         # diagonal matrix D implemented as vector using element-wise operations
         self.D = None   # state denormalization vector D(tau) = [tau^-0, tau^-1,...tau^-order]
-        self.n = None
-        self.E = None
-        self.edit = editorDefault
         
-    def initialize(self, t0, Z0, tau, window=25):
-        if (len(Z0) != self.order+1) :
-            raise ValueError("Z0 must be a vector of %d elements" % (self.order+1))
+    def initialize(self, t0, Z0, tau, editingWindow=25):
+        if (len(Z0) < self.order+1) :
+            raise ValueError("Z0 must be a vector of at least %d elements" % (self.order+1))
         self.tau = tau
         self.D = array((self.tau*ones([self.order+1]))**(range(0,self.order+1)))
-        self.t0 = t0
-        self.t = t0
-        self.Z = self.D * Z0[0:self.order+1] # normalize initial state vector
-        self.n = 0
-        self.E = zeros([window])
+        FilterBase.initialize(self, t0, self.D * Z0[0:self.order+1], editingWindow)
     
     def predict(self, dtau):
         P = stateTransitionMatrix(self.order+1, dtau)
@@ -84,19 +99,11 @@ class ReynekeMorrisonFilterBase(FilterBase) :
     def denormalizeState(self, Z):
         return Z / self.D
     
-    def updateGOF(self, e):
-        self.E[self.n % len(self.E)] = e
-        self.n += 1
-        
     def getGOF(self):
         if (self.n <= self.order+1) :
             return sys.float_info.max  # with too few samples prefer lower order
-        m = min(len(self.E), self.n)
-        return var(self.E[0:m])
+        return FilterBase.getGOF(self)
     
-    def setEditor(self, editor):
-        self.edit = editor
-        
     def getState(self, t):
         if (t == self.t) :
             return self.denormalizeState(self.Z)
@@ -106,18 +113,7 @@ class ReynekeMorrisonFilterBase(FilterBase) :
 
     def getTime(self):
         return self.t
-            
-    # virtual methods    
-    def add(self, t, y):
-        raise NotImplementedError()
     
-    def gamma(self, x):
-        raise NotImplementedError()
-    
-class EMPBase(ReynekeMorrisonFilterBase):    
-    def __init__(self, order) :
-        ReynekeMorrisonFilterBase.__init__(self, order)
-        
     def add(self, t, y):
         dt = t - self.t
         dtau = self.normalizeDeltaTime(dt)
@@ -125,11 +121,56 @@ class EMPBase(ReynekeMorrisonFilterBase):
         e = y - Zstar[0]
         self.updateGOF(e)
         if(not self.edit(self, t, y, e)) :
-            n = self.normalizeTime(t)
-            gamma = self.gamma(n)
+            gamma = self.gamma(self.gammaParameter(t, dtau))
             self.Z = Zstar + gamma * e
             self.t = t
+            
+    # virtual methods    
+    def gammaParameter(self, t, dtau):
+        raise NotImplementedError()
+            
+    def gamma(self, x):
+        raise NotImplementedError()
+    
+class EMPBase(ReynekeMorrisonFilterBase):    
+    def __init__(self, order) :
+        ReynekeMorrisonFilterBase.__init__(self, order)
         
+    def gammaParameter(self, t, dtau):
+        return self.normalizeTime(t)
+        
+#     def add(self, t, y):
+#         dt = t - self.t
+#         dtau = self.normalizeDeltaTime(dt)
+#         Zstar = stateTransitionMatrix(self.order+1, dtau) @ self.Z
+#         e = y - Zstar[0]
+#         self.updateGOF(e)
+#         n = self.normalizeTime(t)
+#         if(not self.edit(self, t, y, e)) :
+#             gamma = self.gamma(n)
+#             self.Z = Zstar + gamma * e
+#             self.t = t
+        
+class FMPBase(ReynekeMorrisonFilterBase) :
+    def __init__(self, order=1, theta=0.90) :
+        ReynekeMorrisonFilterBase.__init__(self, order)
+        self.theta = theta
+    
+    def gammaParameter(self, t, dtau):
+        return self.theta ** abs(dtau)
+        
+#     def add(self, t, y):
+#         return ReynekeMorrisonFilterBase.add(self, t, y, )
+#         dt = t - self.t
+#         dtau = self.normalizeDeltaTime(dt)
+#         Zstar = stateTransitionMatrix(self.order+1, dtau) @ self.Z
+#         e = y - Zstar[0]
+#         n = self.theta ** abs(dtau)
+#         if(not self.edit(self, t, y, e)) :
+#             gamma = self.gamma(n)
+#             self.Z = Zstar + gamma * e
+#             self.t = t
+    
 class EMP0(EMPBase) :
     def __init__(self) :
         EMPBase.__init__(self, 0)
@@ -274,22 +315,6 @@ class EMPSet():
         return self.emps[self.current].getState(t)
 
         
-class FMPBase(ReynekeMorrisonFilterBase) :
-    def __init__(self, order=1, theta=0.90) :
-        ReynekeMorrisonFilterBase.__init__(self, order)
-        self.theta = theta
-    
-    def add(self, t, y):
-        dt = t - self.t
-        dtau = self.normalizeDeltaTime(dt)
-        Zstar = stateTransitionMatrix(self.order+1, dtau) @ self.Z
-        e = y - Zstar[0]
-        thetaEff = self.theta ** abs(dtau)
-        gamma = self.gamma(thetaEff)
-        self.Z = Zstar + gamma * e
-        self.t = t
-        return self.denormalizeState(self.Z)
-    
 class FMP0(FMPBase):    
     def __init__(self, theta=0.9) :
         FMPBase.__init__(self, 0, theta)
@@ -346,6 +371,11 @@ class FMP5(FMPBase):
                       (3*2*1)*1.0/24.0*(1-t)**4*(17+26*t+17*t**2),
                       (4*3*2*1)*1.0/8.0*(1-t)**5*(1+t),
                       (5*4*3*2*1)*1.0/120.0*(1-t)**6 ])
+        
+class FixedMemoryFilter(FilterBase) :
+    def __init__(self, length=51) :
+        FilterBase.__init__(self)
+        
 
 def generateTestData(order, N, t0, Y0, dt, bias=0.0, sigma=1.0):
     truth = zeros([N,order+1])
@@ -422,7 +452,7 @@ def testFMP():
 if __name__ == '__main__':
     pass
     testFMP()
-#     testFixedMemoryFilter()
+    testFixedMemoryFilter()
 #     A = array([[0,1,0],[0,0,1], [0,0,0]])
 #     print(expm(0.1*A))
 #     B = (diag(ones([3-1]),k=1))

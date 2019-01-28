@@ -41,7 +41,6 @@ class Test(unittest.TestCase):
         for order in range(0,6) :
             base = ReynekeMorrisonFilterBase(order)
             self.assertEqual(base.order, order, "order %d incorrect" % order)
-            self.assertEqual(len(base.Z), order+1, "state length incorrect; was %d expected %d" % (len(base.Z), order+1))
         try :
             base = ReynekeMorrisonFilterBase(-1)
             self.assertTrue(False, "order -1 not detected")
@@ -52,6 +51,7 @@ class Test(unittest.TestCase):
         base = ReynekeMorrisonFilterBase(order)
         Y0 = array([100.0, 10.0, 1.0]);
         base.initialize(0.0, Y0, 0.1)
+        self.assertEqual(len(base.Z), order+1, "state length incorrect; was %d expected %d" % (len(base.Z), order+1))
         self.assertEqual(len(base.D), order+1, "Denormalization vector length incorrect")
         dtau = base.normalizeDeltaTime(0.1)
         Z = base.predict(dtau)
