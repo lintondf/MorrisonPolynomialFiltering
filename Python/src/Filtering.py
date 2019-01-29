@@ -28,7 +28,6 @@ from numpy_ringbuffer import RingBuffer
 '''
 '''
 def stateTransitionMatrix(N, dt):
-    
     '''
     Return a Pade' expanded state transition matrix of order m [RMKdR(7)]
         P(d)_i,j = (d^(j-i))/(j-i)! where 0 <= i <= j <= m elsewhere zero
@@ -39,7 +38,7 @@ def stateTransitionMatrix(N, dt):
     B = (diag(ones([N-1]),k=1))
     return expm(dt*B)
 
-class EditorNone : 
+class EditorDefault : 
     def __init__(self, filterBase): 
         self.filter = filterBase
     
@@ -53,7 +52,7 @@ class FilterBase :
         self.Z = None
         self.n = 0
         self.E = zeros([editingWindow])
-        self.editor = EditorNone(self)
+        self.editor = EditorDefault(self)
 
     def restart(self, t0, Z0):
         self.t0 = t0
