@@ -70,11 +70,18 @@ class FilterBase :
             self.E = []
         
     def updateGoodnessOfFit(self, e):
+        '''
+        Add residual (observation - prediction) to history
+        :param e: observation - prediction
+        '''
         if (len(self.E) > 0) :
             self.E[self.n % len(self.E)] = e
         self.n += 1
         
     def getGoodnessOfFit(self):
+        '''
+        Return variance of last (editingWindow) residuals
+        '''
         if (len(self.E) > 0) :
             m = min(len(self.E), self.n)
             return var(self.E[0:m])
@@ -82,6 +89,9 @@ class FilterBase :
             return sys.float_info.max
 
     def getBiasOfFit(self):
+        '''
+        Return mean of last (editingWindow) residuals
+        '''
         if (len(self.E) > 0) :
             m = min(len(self.E), self.n)
             return average(self.E[0:m])
@@ -316,8 +326,18 @@ class EMP() :
 
         
 class EMPSet():        
+    '''
+    An EMPSet object encapsulates a set of ExpandingMemoryPolynomial filters
+    up to the specified order.  All of these filters run in parallel.  The
+    filter with the lowest GoodnessOfFit variance is selected to report time,
+    state, and fit statistics
+    '''
     
     def __init__(self, order):
+        '''
+        Initialize this EMPSet object
+        :param order: highest order of EMP filter to include
+        '''
         self.order = order
         self.emps = []
         self.current = None
