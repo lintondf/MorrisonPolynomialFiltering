@@ -5,10 +5,12 @@ Created on Jan 24, 2019
 '''
 import unittest
 
-from numpy import array, transpose, zeros, argmin, array2string
+from numpy import array, transpose, zeros, argmin, array2string, var, average
 from numpy.linalg import norm
 from numpy.random import randn
-from Filtering import ReynekeMorrisonFilterBase, stateTransitionMatrix, EMP0, EMP1, EMP2, EMP3, EMP4, EMP5, EMP, EMPSet,FMP0, FMP1, FMP2, FMP3, FMP4, FMP5 #, FMP, FMPSet
+from Filtering import RecursiveFilterBase, stateTransitionMatrix,\
+                      EMP0, EMP1, EMP2, EMP3, EMP4, EMP5, EMP, EMPSet,\
+                      FMP0, FMP1, FMP2, FMP3, FMP4, FMP5 #, FMP, FMPSet
 from runstats import Statistics
 from math import sin
 
@@ -16,6 +18,7 @@ def generateTestData(order, N, t0, Y0, dt, bias=0.0, sigma=1.0):
     if (order >= 0) :
         truth = zeros([N,order+1])
         observations = bias + sigma*randn(N,1)
+        noise = (average(observations), var(observations))
         times = zeros([N,1])
         S = stateTransitionMatrix(order+1, dt)
         t = t0 + dt
@@ -30,6 +33,7 @@ def generateTestData(order, N, t0, Y0, dt, bias=0.0, sigma=1.0):
         order = -order
         truth = zeros([N,order+1])
         observations = bias + sigma*randn(N,1)
+        noise = (average(observations), var(observations))
         times = zeros([N,1])
         t = t0 + dt
         Y = Y0
@@ -39,7 +43,7 @@ def generateTestData(order, N, t0, Y0, dt, bias=0.0, sigma=1.0):
             times[i] = t
             truth[i,:] = Y[:]
             t = t+dt
-    return (times, truth, observations)
+    return (times, truth, observations, noise)
 
 class Test(unittest.TestCase):
     
@@ -52,28 +56,28 @@ class Test(unittest.TestCase):
         pass
 
 
-    def testReynekeMorrisonFilterBase(self):
-        for order in range(0,6) :
-            base = ReynekeMorrisonFilterBase(order)
-            self.assertEqual(base.order, order, "order %d incorrect" % order)
-        try :
-            base = ReynekeMorrisonFilterBase(-1)
-            self.assertTrue(False, "order -1 not detected")
-        except ValueError as err :
-            pass
-        
-        order = 2
-        base = ReynekeMorrisonFilterBase(order)
-        Y0 = array([100.0, 10.0, 1.0]);
-        base.initialize(0.0, Y0, 0.1)
-        self.assertEqual(len(base.Z), order+1, "state length incorrect; was %d expected %d" % (len(base.Z), order+1))
-        self.assertEqual(len(base.D), order+1, "Denormalization vector length incorrect")
-        dtau = base._normalizeDeltaTime(0.1)
-        Z = base._predict(dtau)
-        Y = base._denormalizeState(Z)
-        self.assertEqual( Y[0], 100.0+0.1*10.0+0.5*0.1**2*1.0, "Bad prediction element 0")
-        self.assertEqual( Y[1], 10.0+0.1*1.0, "Bad prediction element 1")
-        self.assertEqual( Y[2], 1.0, "Bad prediction element 2")                  
+#     def testRecursiveFilterBase(self):
+#         for order in range(0,6) :
+#             base = RecursiveFilterBase(order)
+#             self.assertEqual(base.order, order, "order %d incorrect" % order)
+#         try :
+#             base = RecursiveFilterBase(-1)
+#             self.assertTrue(False, "order -1 not detected")
+#         except ValueError as err :
+#             pass
+#         
+#         order = 2
+#         base = RecursiveFilterBase(order)
+#         Y0 = array([100.0, 10.0, 1.0]);
+#         base.initialize(0.0, Y0, 0.1)
+#         self.assertEqual(len(base.Z), order+1, "state length incorrect; was %d expected %d" % (len(base.Z), order+1))
+#         self.assertEqual(len(base.D), order+1, "Denormalization vector length incorrect")
+#         dtau = base._normalizeDeltaTime(0.1)
+#         Z = base._predict(dtau)
+#         Y = base._denormalizeState(Z)
+#         self.assertEqual( Y[0], 100.0+0.1*10.0+0.5*0.1**2*1.0, "Bad prediction element 0")
+#         self.assertEqual( Y[1], 10.0+0.1*1.0, "Bad prediction element 1")
+#         self.assertEqual( Y[2], 1.0, "Bad prediction element 2")                  
 
     def testStateTransitionMatrix(self):
         y0 = 100.0
@@ -96,7 +100,7 @@ class Test(unittest.TestCase):
         y1 = 10.0
         y2 = 1.0
         Y0 = array([y0]);
-        (times, truth, observations) = generateTestData(0, N, 0.0, Y0, 0.1)
+        (times, truth, observations, __) = generateTestData(0, N, 0.0, Y0, 0.1)
 
         emp = EMP0()
         emp.initialize(0.0, Y0, 0.1)
@@ -112,7 +116,7 @@ class Test(unittest.TestCase):
         y1 = 10.0
         y2 = 1.0
         Y0 = array([y0, y1]);
-        (times, truth, observations) = generateTestData(1, N, 0.0, Y0, 0.1)
+        (times, truth, observations, __) = generateTestData(1, N, 0.0, Y0, 0.1)
 
         emp = EMP1()
         emp.initialize(0.0, Y0, 0.1)
@@ -129,7 +133,7 @@ class Test(unittest.TestCase):
         y1 = 10.0
         y2 = 1.0
         Y0 = array([y0, y1, y2]);
-        (times, truth, observations) = generateTestData(2, N, 0.0, Y0, 0.1)
+        (times, truth, observations, __) = generateTestData(2, N, 0.0, Y0, 0.1)
 
         emp = EMP2()
         emp.initialize(0.0, Y0, 0.1)
@@ -150,7 +154,7 @@ class Test(unittest.TestCase):
         y1 = 10.0
         y2 = 1.0
         Y0 = array([1e4, 1e3, 1e2, 1e1]);
-        (times, truth, observations) = generateTestData(3, N, 0.0, Y0, 0.1)
+        (times, truth, observations, __) = generateTestData(3, N, 0.0, Y0, 0.1)
 
         emp = EMP3()
         emp.initialize(0.0, Y0, 0.1)
@@ -170,7 +174,7 @@ class Test(unittest.TestCase):
         y1 = 10.0
         y2 = 1.0
         Y0 = array([1e4, 1e3, 1e2, 1e1, 1e0]);
-        (times, truth, observations) = generateTestData(4, N, 0.0, Y0, 0.1)
+        (times, truth, observations, __) = generateTestData(4, N, 0.0, Y0, 0.1)
 
         emp = EMP4()
         emp.initialize(0.0, Y0, 0.1)
@@ -190,25 +194,29 @@ class Test(unittest.TestCase):
         y1 = 10.0
         y2 = 1.0
         Y0 = array([1e4, 1e3, 1e2, 1e1, 1e0, 1e-1]);
-        (times, truth, observations) = generateTestData(5, N, 0.0, Y0, 0.1)
+        Y0 = array([8, -1, -2*2, -0.02, 0.004, 1e-12])
+        (times, truth, observations, noise) = generateTestData(5, N, 0.0, Y0, 0.1, 0, 10)
 
         emp = EMP5()
         emp.initialize(0.0, Y0, 0.1)
         for i in range(0,N) :
             emp.add(times[i][0], truth[i,0])
             Yf = emp.getState(times[i][0])
-            self.assertLess(norm((Yf-truth[i,:])/Yf), 1e-6, 'Noiseless state error')
-#         emp.initialize(0.0, Y0, 0.1)
-#         stats = Statistics()
-#         for i in range(0,N) :
-#             emp.add(times[i][0], observations[i])
-#             Yf = emp.getState()
-# #             print(i,Yf,norm((Yf-truth[i,:])/Yf))
-#             if (i > N-30) :
-#                 stats.push( Yf[0] - truth[i,0] )
-# #             print(i,Yf[0],Yf[0]-truth[i,0])
-# #             self.assertLess(norm((Yf-truth[i,:])/Yf), 2.5, 'Excess noise state error')
-#         print(stats.mean(), stats.variance(), emp.VRF(N-15) )
+            r = array2string(Yf, formatter={'float_kind':lambda y: "%10.4g" % y})
+            s = array2string((Yf[0:4]-truth[i,0:4])/truth[i,0:4], formatter={'float_kind':lambda y: "%10.4g" % y})
+            print("%5d %10.4g %s %s %10.4g" % (i, times[i][0], r, s, norm((Yf[0:4]-truth[i,0:4]))))
+
+            self.assertLess(norm((Yf[0:4]-truth[i,0:4])), 1e-6, 'Noiseless state error')
+        emp.initialize(0.0, Y0, 0.1)
+        stats = Statistics()
+        for i in range(0,N) :
+            emp.add(times[i][0], observations[i])
+            Yf = emp.getState(times[i][0])
+            if (i > N-30) :
+                stats.push( Yf[0] - truth[i,0] )
+            print(i,Yf,Yf[0]-truth[i,0])
+        print('EMP5', stats.mean(), stats.variance(), emp.VRF(N-15), noise )
+        self.assertLess( stats.variance(), emp.VRF(N-15)*noise[1], 'Excess noise in state vectors')
 
 
     def testEMP(self):
@@ -220,7 +228,7 @@ class Test(unittest.TestCase):
         
         for order in range(0, 5+1) :
             print(order, Y0[0:order+1])
-            (times, truth, observations) = generateTestData(order, N, 0.0, Y0[0:order+1], 0.1)
+            (times, truth, observations, __) = generateTestData(order, N, 0.0, Y0[0:order+1], 0.1)
             emp = EMPSet(5)
             emp.initialize(0.0, Y0, 0.1)
             for i in range(0,N) :
@@ -232,7 +240,7 @@ class Test(unittest.TestCase):
                                 'Noiseless state error (%d, %d)' % (order, i))
         order = 5
         
-        (times, truth, observations) = generateTestData(-5, N, 0.0, Y0, 0.1)
+        (times, truth, observations, __) = generateTestData(-5, N, 0.0, Y0, 0.1)
         emp = EMPSet(5)
         emp.initialize(0.0, Y0, 0.1)
         for i in range(0,N) :
@@ -250,7 +258,7 @@ class Test(unittest.TestCase):
 #         y2 = 1.0
 #         Y0 = array([y0, y1, y2, 0.5, 0.25, -0.125]);
 #         tau = 0.1
-#         (times, truth, observations) = generateTestData(5, N, 0.0, Y0, tau)
+#         (times, truth, observations, __) = generateTestData(5, N, 0.0, Y0, tau)
 #         print(times[0], truth[0,:] )
 #         print(times[-1], truth[-1,:] )
 #          
@@ -284,7 +292,7 @@ class Test(unittest.TestCase):
         y2 = 5.0
         Y0 = array([y0, y1, y2, 2.5, 1, 0.5])
         tau = 0.1
-        (times, truth, observations) = generateTestData(5, N, 0.0, Y0, tau, 0.0, 1.0)
+        (times, truth, observations, __) = generateTestData(5, N, 0.0, Y0, tau, 0.0, 1.0)
         fmp = FMP5(0.9)
         print("FMP Ns %10.1f" % fmp.nSwitch())
 #         fmp.initialize(0.0, Y0, tau)
