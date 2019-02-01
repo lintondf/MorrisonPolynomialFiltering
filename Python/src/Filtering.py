@@ -53,65 +53,37 @@ def stateTransitionMatrix(N, dt):
 #     return B
 
 class EditorDefault : 
-    def __init__(self, filterBase, editingWindow=25): 
+    def __init__(self, filterBase, editingWindow=15): 
         self.filter = filterBase
         self.n = 0
-        if (editingWindow > 0) :
-            self.E = zeros([editingWindow])
-            self.R = zeros([editingWindow])
-            self.trace = False
-        else :
-            self.E = []
-        
-    def clone(self, editor):
-        self.n = editor.n
-        self.E = editor.E
-        self.R = editor.R
+        self.E = RingBuffer(capacity=editingWindow, dtype=numpy.double)
+        self.R = RingBuffer(capacity=editingWindow, dtype=numpy.double)
         
     def reset(self):
         self.n = 0
-        if (len(self.E) > 0) :
-            self.E = 0*self.E
-            self.R = 0*self.R
+        self.E = RingBuffer(capacity=self.E.maxlen, dtype=numpy.double)
+        self.R = RingBuffer(capacity=self.R.maxlen, dtype=numpy.double)
 
     def updateResiduals(self, t, y, e):
         '''
         Add residual (observation - prediction) to history
         :param e: observation - prediction
         '''
-        if (len(self.E) > 0) :
-            self.E[self.n % len(self.E)] = e
-            self.R[self.n % len(self.R)] = y
+        self.E.appendleft(e)
+        self.R.appendleft(y)
         self.n += 1
-        if (abs(e) > 1e5) :
-            print('uR',t,y,e)
-#         if (t > 81.45 and t < 83.65) :
-#             self.trace = True
-#             s = array2string(self.R, max_line_width=256, formatter={'float_kind':lambda y: "%10.6g" % y})
-#             print(t, y, e, self.n, s)
-#         else:
-#             self.trace = False
         
     def getResidualStatistics(self):
-        if (len(self.E) > 0) :
-            m = min(len(self.E), self.n)
-            r = 0.0
-            if (self.trace) :
-                s = 'gRS %d' % (m)
-                s += array2string(self.R, max_line_width=256, formatter={'float_kind':lambda y: "%10.6g" % y})
-                print(s)
-                s = 'gRs: '
-            if (m > 1) :
-                for i in range(0, m-1) :
-                    r += (self.R[i] - self.R[i+1])**2
-                    if (self.trace) :
-                        s += '{%d %10.6g %10.6g}' % (i, self.R[i] - self.R[i+1], r)
-                r /= 2*m - 2
-                if (self.trace) :
-                    print( '%s %d %10.6g' % (s, m, r))
-            return (average(self.E[0:m]), var(self.E[0:m]), sqrt(r))
-        else :
-            return (0.0, sys.float_info.max, 0.0)
+        R = array(self.R)
+        r = 0.0
+        m = len(R)
+        if (m > 1) :
+            for i in range(0, m-1) :
+                r += (R[i] - R[i+1])**2
+            r /= 2*m - 2
+            return (average(array(self.E)), var(array(self.E)), sqrt(r))
+        else:
+            return (0, sys.float_info.max, sys.float_info.max)
     
     def isGoodObservation(self, t, y, e):
         if (self.n >= self.filter.getN0()) :
@@ -178,7 +150,8 @@ class FilterBase(ABC) :
         '''
         Return variance of last (editingWindow) residuals
         '''
-        return self.editor.getResidualStatistics()[0]
+        S = self.editor.getResidualStatistics()
+        return S[0]**2/S[2]
     
     def getBiasOfFit(self):
         '''
@@ -905,8 +878,8 @@ class ReynekeMorrison(FilterBase):
                 return True
         elif (self.n == self.Ns) :
             print("Switch from EMP to FMP")
-            self.fmp.getEditor().clone( self.emp.getEditor() )
             self.fmp.restart(self.emp.getTime(), self.emp.getState(self.emp.getTime()))
+            self.fmp.setEditor( self.emp.getEditor() )
             self.current = self.fmp
             if (self.fmp.add(t, y)):
                 self.n = self.n + 1
@@ -1070,18 +1043,13 @@ def testFMP():
         r = array2string(Yf, formatter={'float_kind':lambda y: "%10.4g" % y})
         print("FMPSet %5d %10.4g %10.4g %s %10.4g" % (i, times[i][0], truth[i,0], r, Yf[0]-truth[i,0]))
     
-if __name__ == '__main__':
-    pass
-#     testFMP()
-#     testFixedMemoryFilter()
+def testReynekeMorrison(theta):
     N = 1000
     order = 5
     Y0 = array([1e4, 1e3, 1e2, 1e1, 1e0, 1e-1]);
     (times, truth, observations, noise) = generateTestData(order, N, 0.0, Y0[0:order+1], 0.1,0,10)
-    rm = ReynekeMorrison(order, 0.99)
-    # 0.989 1.1473223964719268 0.005408347997476713
-    # 0.99 -0.6812054962317567 0.039003046505391145
-    # 0.991 -0.41491159636354885 0.007231186159149531
+
+    rm = ReynekeMorrison(order, theta)
 
     rm.initialize(0.0, array([Y0[0]]), 0.1)
     states = zeros([N,order+1])
@@ -1089,23 +1057,33 @@ if __name__ == '__main__':
     stats = Statistics()
     nstats = Statistics()
     for i in range(0,N) :
-        rm.add(times[i][0], truth[i,0]) #observations[i])
+        rm.add(times[i][0], observations[i])
         Yf = rm.getState(times[i][0])
         S[i,:] = rm.getResidualStatistics()
         states[i,0:len(Yf)] = Yf
         if (i > N-30) :
             stats.push( Yf[0] - truth[i,0] )
             nstats.push( observations[i] - truth[i,0] )
-        if (i > 700) :
-            r = array2string(Yf, formatter={'float_kind':lambda y: "%10.6g" % y})
-            print("RM %3d %10.4g %10.6g %s %10.4g" %(i, times[i], truth[i,0]-truth[i-1,0], r, S[i,2]))
+#         if (i > 700) :
+#             r = array2string(Yf, formatter={'float_kind':lambda y: "%10.6g" % y})
+#             print("RM %3d %10.4g %10.6g %s %10.4g" %(i, times[i], truth[i,0]-truth[i-1,0], r, S[i,2]))
 #         print("RM %5d %10.4g %10.4g %s %10.4g %10.4g %10.4g" % \
 #               (i, times[i][0], truth[i,0], r, Yf[0]-truth[i,0], rm.getGoodnessOfFit(), noise[i]))
 #     
+#     print(S[0:30,:])
+#     print(S[-30:,:])
     print(rm.theta, stats.mean()/nstats.mean(), stats.variance()/nstats.variance())
+    return (times, states, truth)
+
+if __name__ == '__main__':
+    pass
+#     testFMP()
+#     testFixedMemoryFilter()
+    for theta in range(90, 100) :
+        (times, states, truth) = testReynekeMorrison(0.01*theta)
     fig, ax = plt.subplots()
-#     ax.plot(times, states[:,0]-truth[:,0], 'r-') #,times, observations-truth[:,0],'.')
-    ax.plot(times, S[:,2])
+    ax.plot(times[10:], states[10:,0]-truth[10:,0], 'r-') #,times, observations-truth[:,0],'.')
+#     ax.plot(times, (S[:,1]/S[:,2]))
     plt.show()
 #     y0 = 100.0
 #     y1 = 10.0
