@@ -8,14 +8,17 @@ from math import sin, pow, ceil, sqrt
 pip install numpy_ringbuffer
 pip install runstats
 '''
+import os
 import sys
+import csv
 import numpy
 import warnings
+from math import pi
 from scipy.linalg.matfuncs import expm
 from numpy.linalg.linalg import solve
 warnings.simplefilter(action='ignore', category=FutureWarning)
 from numpy import array, average, var, diag, zeros,\
-    ones, argmin, array2string, abs
+    ones, argmin, array2string, abs, concatenate, isscalar
 from numpy.random import randn
 from numpy_ringbuffer import RingBuffer
 
@@ -24,6 +27,7 @@ from enum import Enum, auto
 
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
+from mpl_toolkits import mplot3d
 from runstats import Statistics
 
 
@@ -77,9 +81,10 @@ class EditorDefault :
         R = array(self.R)
         r = 0.0
         m = len(R)
+        math = self.filter.getMath()
         if (m > 1) :
             for i in range(0, m-1) :
-                r += (R[i] - R[i+1])**2
+                r += math.square(math.subtract(R[i], R[i+1]))
             r /= 2*m - 2
             return (average(array(self.E)), var(array(self.E)), sqrt(r))
         else:
@@ -110,7 +115,61 @@ class FilterStatus(Enum):
     COASTING = auto()     # Filter has not received a recent observation, but the predicted status should be usable
     RESETING = auto()     # Filter coast interval has been exceed and it will reinitialize on the next observation
         
-        
+    
+class AbstractObservationMath(ABC) :
+    def __init__(self):
+        pass
+
+    @abstractmethod   
+    def bound(self, o):
+        raise NotImplementedError()
+    
+    @abstractmethod   
+    def subtract(self, o1, o2):
+        raise NotImplementedError()
+    
+    @abstractmethod   
+    def scale(self, factor, o):
+        raise NotImplementedError()
+    
+    @abstractmethod   
+    def square(self, do):
+        raise NotImplementedError()
+    
+    
+    
+class DefaultObservationMath(AbstractObservationMath) :
+    def __init__(self):
+        AbstractObservationMath.__init__(self)       
+    
+    def bound(self, o):
+        return o
+    
+    def subtract(self, o1, o2):
+        return o1-o2
+    
+    def scale(self, factor, o):
+        return factor*o
+    
+    def square(self, do):
+        return do*do
+    
+class AngleObservationMath(AbstractObservationMath):
+    def __init__(self):
+        AbstractObservationMath.__init__(self)       
+
+    def bound(self, o):
+        return max(0.0, min(o, (2*pi())))-pi
+    
+    def subtract(self, o1, o2):
+        return self.bound(o1-o2)
+    
+    def scale(self, factor, o):
+        return self.bound(factor*o)
+    
+    def square(self, do):
+        return self.bound(do*do)
+    
 class FilterBase(ABC) :
     
     def __init__(self, n0 = 1):
@@ -119,14 +178,28 @@ class FilterBase(ABC) :
         self.Z = None
         self.n0 = n0  # number of samples required to initialize
         self.setStatus( FilterStatus.IDLE )
+        self.math = DefaultObservationMath()
         self.editor = EditorDefault(self)
+        self.name = ''
 
     def restart(self, t0, Z0):
         self.t0 = t0
         self.t = t0
         self.Z = Z0
         self.setStatus( FilterStatus.RESETING )
-        self.editor.reset()
+        # self.editor.reset()
+        
+    def getName(self):
+        return self.name
+    
+    def setName(self, name):
+        self.name = name
+        
+    def getMath(self):
+        return self.math
+    
+    def setMath(self, observationMath):
+        self.math = observationMath
         
     def getEditor(self):
         return self.editor
@@ -173,6 +246,15 @@ class FilterBase(ABC) :
     
     
 class RecursiveFilterBase(FilterBase) :
+    
+    factors = (2, 3.2, 4.3636, 5.5054, 6.6321, 7.7478)
+    
+    @classmethod            
+    def effectiveTheta(self, order, n):
+        if (n < 1 or order < 0 or order > len(RecursiveFilterBase.factors)):
+            return 0.0
+        return 1.0 - RecursiveFilterBase.factors[order]/n
+        
     def __init__(self, order) :
         FilterBase.__init__(self, order+2)
         if (order < 0 or order > 5) :
@@ -195,13 +277,13 @@ class RecursiveFilterBase(FilterBase) :
         self.D = zeros([self.order+1])
         for d in range(0,self.order+1):
             self.D[d] = pow(self.tau, d)
-        
+            
     def initialize(self, t0, Z0, tau):
         self.setTau(tau)
         FilterBase.restart(self, t0, self.D * self.conformState(Z0))
         
     def restart(self, t, Z):
-        print('restart', t, Z)
+        print(self.name + ' restart', t, Z)
         FilterBase.restart(self, t, self.D * self.conformState(Z))
     
     def _predict(self, dtau):
@@ -247,11 +329,11 @@ class RecursiveFilterBase(FilterBase) :
         dt = t - self.t
         dtau = self._normalizeDeltaTime(dt)
         Zstar = stateTransitionMatrix(self.order+1, dtau) @ self.Z
-        e = y - Zstar[0]
+        e = self.math.subtract(y, Zstar[0])
         self.getEditor().updateResiduals(t, y, e)
         if(self.getEditor().isGoodObservation(t, y, e)) :
             gamma = self.gamma(self.gammaParameter(t, dtau))
-            self.Z = Zstar + gamma * e
+            self.Z = self.math.bound(Zstar + gamma * e)
             self.t = t
             return True
         else :
@@ -342,8 +424,8 @@ class EMP3(EMPBase) :
         denom = 1.0/((n+4)*(n+3)*(n+2)*(n+1))
         return denom*array([8*(2*n3+3*n2+7*n+3), 
                             20*(6*n2+6*n+5), 
-                            (2*1)*120*(2*n+1), 
-                            (3*2*1)*140])
+                            (2*1)*120*(2*n+1), # 
+                            (3*2*1)*140])   # 
     
     def nSwitch(self, theta):
         return 5.50546/(1.0-theta)
@@ -364,9 +446,9 @@ class EMP4(EMPBase) :
         denom = 1.0/((n+5)*(n+4)*(n+3)*(n+2)*(n+1))
         return denom*array([5*(5*n4+10*n3+55*n2+50*n+24), 
                             25*(12*n3+18*n2+46*n+20), 
-                            (2*1)*1050*(n2+n+1), 
-                            (3*2*1)*700*(2*n+1), 
-                            (4*3*2*1)*630])
+                            (2*1)*1050*(n2+n+1), # 
+                            (3*2*1)*700*(2*n+1),  # 
+                            (4*3*2*1)*630]) #
     
     def nSwitch(self, theta):
         return 6.6321/(1.0-theta)
@@ -389,10 +471,10 @@ class EMP5(EMPBase) :
         denom = 1.0/((n+6)*(n+5)*(n+4)*(n+3)*(n+2)*(n+1))
         return denom*array([6*(2*n+1)*(3*n4+6*n3+77*n2+74*n+120), 
                             126*(5*n4+10*n3+55*n2+50*n+28), 
-                            (2*1)*420*(2*n+1)*(4*n2+4*n+15), 
-                            (3*2*1)*1260*(6*n2+6*n+7), 
-                            (4*3*2*1)*3780*(2*n+1), 
-                            (5*4*3*2*1)*2772])
+                            (2*1)*420*(2*n+1)*(4*n2+4*n+15), #
+                            (3*2*1)*1260*(6*n2+6*n+7), #  
+                            (4*3*2*1)*3780*(2*n+1),  # 
+                            (5*4*3*2*1)*2772]) #
         
     def nSwitch(self, theta):
         return 7.7478/(1.0-theta)
@@ -465,7 +547,7 @@ class EMPSet(FilterBase):
     status, and fit statistics
     '''
     
-    def __init__(self, order):
+    def __init__(self, order, name=''):
         '''
         Initialize this EMPSet object
         :param order: highest order of EMP filter to include
@@ -474,21 +556,24 @@ class EMPSet(FilterBase):
         self.emps = []
         self.current = None
         self.gofs = None
+        self.setName(name)
+        self.settlingFactor = 0.90 #TODO get/set
         for i in range(0, order+1) :
-            self.emps.append(EMP.emps[i]())
+            emp = EMP.emps[i]()
+            emp.setName('%s%d' % (self.name, emp.order))
+            self.emps.append(emp)
         FilterBase.__init__(self, order+1)
 
     def initialize(self, t0, Z0, tau):
         self.current = 0
         self.gofs = zeros([self.order+1])
         for emp in self.emps :
-            emp.initialize(t0, Z0[0:emp.order+1], tau)
+            emp.initialize(t0, Z0[0:0+1], tau)
         
     def restart(self, t0, Z0):
         self.current = 0
         self.gofs = zeros([self.order+1])
-        for emp in self.emps :
-            emp.restart(t0, Z0)
+        self.emps[self.current].restart(t0, Z0[0:0+1])
         
     def setEditor(self, editor):
         for emp in self.emps :
@@ -520,14 +605,23 @@ class EMPSet(FilterBase):
         return self.emps[self.current].VRF(n)
         
     def add(self, t, y):
+        n = self.emps[self.current].getN()
+#         if (self.current < self.order) :
+#             n = self.emps[self.current].getN()
+#             if (n > (self.current+1)**4) :
+#                 print('EMPSet switch', n, (self.current+1)**4)
+#                 self.emps[self.current+1].restart(self.emps[self.current].getTime(), self.emps[self.current].getState(self.emps[self.current].getTime()))
+#                 self.emps[self.current+1].setEditor( self.emps[self.current].getEditor() )
+#                 self.current += 1
+#         return self.emps[self.current].add(t, y)
         for emp in self.emps :
             emp.add(t, y)
             gof = emp.getGoodnessOfFit()
             self.gofs[emp.order] = gof
         j = argmin(self.gofs)
-        if (j > self.current and self.gofs[j] < 0.75*self.gofs[self.current]) :
-            print("%d %10.3g Switch from %d (%10.3g) to %d (%10.3g) %10.1f" % 
-                  (self.order, t, self.current, self.gofs[self.current], j, self.gofs[j], self.emps[self.current].nSwitch(0.9)))
+        if (j > self.current and self.gofs[j] < 0.90*self.gofs[self.current]) :
+            print("%d %10.3g %s Switch from %d (%10.3g) to %d (%10.3g) %10.1f" % 
+                  (self.order, t, self.emps[self.current].getName(), self.current, self.gofs[self.current], j, self.gofs[j], self.emps[self.current].nSwitch(0.9)))
             self.current = j
         return True
         
@@ -780,7 +874,7 @@ class FMPSet(FilterBase):
         self.current = 0
         self.gofs = zeros([self.order+1])
         for fmp in self.fmps :
-            fmp.filter.restart(t0, Z0)
+            fmp.restart(t0, Z0)
         
     def setEditor(self, editor):
         for fmp in self.fmps :
@@ -828,9 +922,10 @@ class FMPSet(FilterBase):
     
         
 class ReynekeMorrison(FilterBase):
+    #TODO intercept math and pass to children
     
-    def __init__(self, order, theta):
-        self.emp = EMPSet(order)
+    def __init__(self, order, theta, name=''):
+        self.emp = EMPSet(order, name)
         self.fmp = FMP(order, theta)
         self.current = self.emp
         self.tau = None
@@ -839,6 +934,7 @@ class ReynekeMorrison(FilterBase):
         print("Ns", self.Ns)
         self.order = order
         self.theta = theta
+        self.setName(name)
         FilterBase.__init__(self, order+1)
   
     def initialize(self, t0, Z0, tau):
@@ -872,12 +968,13 @@ class ReynekeMorrison(FilterBase):
         return self.current.getN0()
         
     def add(self, t, y):
+        # print('RM add', self.n, self.Ns )
         if (self.n < self.Ns) :
             if (self.emp.add(t, y)) :
                 self.n = self.n + 1
                 return True
         elif (self.n == self.Ns) :
-            print("Switch from EMP to FMP")
+            print("%s Switch from EMP to FMP" % (self.name))
             self.fmp.restart(self.emp.getTime(), self.emp.getState(self.emp.getTime()))
             self.fmp.setEditor( self.emp.getEditor() )
             self.current = self.fmp
@@ -1077,14 +1174,85 @@ def testReynekeMorrison(theta):
 
 if __name__ == '__main__':
     pass
+    with open('../test/landing.csv', newline='') as csvfile:
+        reader = csv.DictReader(csvfile)
+        track = zeros([0,7])
+        
+        for row in reader :
+            R = zeros([1,7])
+            R[0,0] = float(row['time'])
+            R[0,1] = float(row['east'])
+            R[0,2] = float(row['north'])
+            R[0,3] = float(row['up'])
+            R[0,4] = float(row['azimuth'])
+            R[0,5] = float(row['elevation'])
+            R[0,6] = float(row['range'])
+            track = concatenate([track, R], axis=0)
+#         print(track)
+
+        N = 100+0*track.shape[0] # 100+0*
+        track = track[0:N,:]
+        theta = 0.95
+        order = 5
+        Y0 = array([0]);
+        
+        rmAzimuth = ReynekeMorrison(order, theta, 'Az')
+        rmAzimuth.setMath( AngleObservationMath() )
+        rmElevation = ReynekeMorrison(order, theta, 'El')
+        rmElevation.setMath( AngleObservationMath() )
+        rmRange = ReynekeMorrison(order, theta, 'Rg')
+    
+        rmAzimuth.initialize(0.0, array([track[0,4]]), 2.72)
+        rmElevation.initialize(0.0, array([track[0,5]]), 2.72)
+        rmRange.initialize(0.0, array([track[0,6]]), 2.72)
+        statesAzimuth = zeros([N,order+1])
+        statesElevation = zeros([N,order+1])
+        statesRange = zeros([N,order+1])
+        
+        print(randn(N).shape)
+        print(track[:,4].shape)
+        
+        observations = zeros([N,3])
+        observations[:,0] = track[:,4] + 5e-5*randn(N)
+        observations[:,1] = track[:,5] + 5e-5*randn(N)
+        observations[:,2] = track[:,6] + 20*0.3048*randn(N)
+        
+        for i in range(0,N) :
+            rmAzimuth.add(track[i][0], observations[i,0])
+            Yazimuth = rmAzimuth.getState(track[i][0])
+            statesAzimuth[i,0:len(Yazimuth)] = Yazimuth
+             
+            rmElevation.add(track[i][0], observations[i,1])
+            Yelevation = rmElevation.getState(track[i][0])
+            statesElevation[i,0:len(Yelevation)] = Yelevation
+             
+            rmRange.add(track[i][0], observations[i,2])
+            Yrange = rmRange.getState(track[i][0])
+            statesRange[i,0:len(Yrange)] = Yrange
+#             print('%5d %10.2f  %12.6g %12.6g %12.6g' % (i, track[i][0], track[i,4], Yazimuth[0], Yazimuth[0] - track[i,4]))
+
+#         fig = plt.figure()
+#         ax = plt.axes(projection='3d')
+#         ax.plot3D(track[:,4], track[:,5], track[:,6], 'r')
+        for i in range(0,N) :
+            r = array2string(statesAzimuth[i,:], formatter={'float_kind':lambda y: "%+10.4g" % y})
+            r += array2string(statesElevation[i,:], formatter={'float_kind':lambda y: "%+10.4g" % y})
+            r += array2string(statesRange[i,:], formatter={'float_kind':lambda y: "%+10.4g" % y})
+            print("%10.4f %s" % (track[i,0], r))
+        fig, ax = plt.subplots()
+#         ax.plot(track[:,0], statesRange[:,0], 'b-', track[:,0], observations[:,2], 'r.')
+        ax.plot(track[:,0], statesRange[:,1], 'b-')
+        plt.show()
+        
+        
 #     testFMP()
 #     testFixedMemoryFilter()
-    for theta in range(90, 100) :
-        (times, states, truth) = testReynekeMorrison(0.01*theta)
-    fig, ax = plt.subplots()
-    ax.plot(times[10:], states[10:,0]-truth[10:,0], 'r-') #,times, observations-truth[:,0],'.')
-#     ax.plot(times, (S[:,1]/S[:,2]))
-    plt.show()
+#     for theta in range(90, 100) :
+#         (times, states, truth) = testReynekeMorrison(0.01*theta)
+#     fig, ax = plt.subplots()
+#     ax.plot(times[10:], states[10:,0]-truth[10:,0], 'r-') #,times, observations-truth[:,0],'.')
+# #     ax.plot(times, (S[:,1]/S[:,2]))
+#     plt.show()
 #     y0 = 100.0
 #     y1 = 10.0
 #     y2 = 5.0
