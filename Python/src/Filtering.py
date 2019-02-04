@@ -16,20 +16,23 @@ import warnings
 from math import pi
 from scipy.linalg.matfuncs import expm
 from numpy.linalg.linalg import solve
-warnings.simplefilter(action='ignore', category=FutureWarning)
 from numpy import array, average, var, diag, zeros,\
     ones, argmin, array2string, abs, concatenate, isscalar
 from numpy.random import randn
 from numpy_ringbuffer import RingBuffer
+from scipy.interpolate import PchipInterpolator
 
 from abc import ABC, abstractmethod
 from enum import Enum, auto
+
 
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 from mpl_toolkits import mplot3d
 from runstats import Statistics
 
+warnings.simplefilter(action='ignore', category=FutureWarning)
+# warnings.simplefilter(action='ignore', category=plt.warnings.MatplotlibDeprecationWarning)
 
 
 '''
@@ -86,7 +89,7 @@ class EditorDefault :
             for i in range(0, m-1) :
                 r += math.square(math.subtract(R[i], R[i+1]))
             r /= 2*m - 2
-            return (average(array(self.E)), var(array(self.E)), sqrt(r))
+            return (average(array(self.E)), var(array(self.E)), r)
         else:
             return (0, sys.float_info.max, sys.float_info.max)
     
@@ -172,14 +175,14 @@ class AngleObservationMath(AbstractObservationMath):
     
 class FilterBase(ABC) :
     
-    def __init__(self, n0 = 1):
+    def __init__(self, n0 = 1, editingWindow=15):
         self.t0 = None
         self.t = None
         self.Z = None
         self.n0 = n0  # number of samples required to initialize
         self.setStatus( FilterStatus.IDLE )
         self.math = DefaultObservationMath()
-        self.editor = EditorDefault(self)
+        self.editor = EditorDefault(self, editingWindow)
         self.name = ''
 
     def restart(self, t0, Z0):
@@ -255,8 +258,8 @@ class RecursiveFilterBase(FilterBase) :
             return 0.0
         return 1.0 - RecursiveFilterBase.factors[order]/n
         
-    def __init__(self, order) :
-        FilterBase.__init__(self, order+2)
+    def __init__(self, order, editingWindow=15) :
+        FilterBase.__init__(self, order+2, editingWindow)
         if (order < 0 or order > 5) :
             raise ValueError("Polynomial orders < 0 or > 5 are not supported; order %d" % order)
         self.order = order
@@ -283,7 +286,7 @@ class RecursiveFilterBase(FilterBase) :
         FilterBase.restart(self, t0, self.D * self.conformState(Z0))
         
     def restart(self, t, Z):
-        print(self.name + ' restart', t, Z)
+#         print(self.name + ' restart', t, Z)
         FilterBase.restart(self, t, self.D * self.conformState(Z))
     
     def _predict(self, dtau):
@@ -348,8 +351,8 @@ class RecursiveFilterBase(FilterBase) :
         raise NotImplementedError()
     
 class EMPBase(RecursiveFilterBase):    
-    def __init__(self, order) :
-        RecursiveFilterBase.__init__(self, order)
+    def __init__(self, order, editingWindow=15) :
+        RecursiveFilterBase.__init__(self, order, editingWindow)
         
     def gammaParameter(self, t, dtau):
         return self._normalizeTime(t)
@@ -365,8 +368,8 @@ class FMPBase(RecursiveFilterBase) :
         
             
 class EMP0(EMPBase) :
-    def __init__(self) :
-        EMPBase.__init__(self, 0)
+    def __init__(self, editingWindow=15) :
+        EMPBase.__init__(self, 0, editingWindow)
         
     def gamma(self, n):
         return array([1/(1+n)])
@@ -380,8 +383,8 @@ class EMP0(EMPBase) :
 
     
 class EMP1(EMPBase) :
-    def __init__(self) :
-        EMPBase.__init__(self, 1)
+    def __init__(self, editingWindow=15) :
+        EMPBase.__init__(self, 1, editingWindow)
         
     def gamma(self, n): #
         denom = 1.0/((n+2)*(n+1))
@@ -396,8 +399,8 @@ class EMP1(EMPBase) :
         return (4*n + 6) * denom
 
 class EMP2(EMPBase) :
-    def __init__(self) :
-        EMPBase.__init__(self, 2)
+    def __init__(self, editingWindow=15) :
+        EMPBase.__init__(self, 2, editingWindow)
         
     def gamma(self, n): #
         n2 = n*n 
@@ -415,8 +418,8 @@ class EMP2(EMPBase) :
         return (9*n2 + 27*n + 24) * denom
 
 class EMP3(EMPBase) :
-    def __init__(self) :
-        EMPBase.__init__(self, 3)
+    def __init__(self, editingWindow=15) :
+        EMPBase.__init__(self, 3, editingWindow)
         
     def gamma(self, n): #
         n2 = n*n 
@@ -436,8 +439,8 @@ class EMP3(EMPBase) :
         return (8*(2*n+3)*(n2 + 3*n + 5)) * denom
 
 class EMP4(EMPBase) :
-    def __init__(self) :
-        EMPBase.__init__(self, 4)
+    def __init__(self, editingWindow=15) :
+        EMPBase.__init__(self, 4, editingWindow)
         
     def gamma(self, n): # 
         n2 = n*n 
@@ -461,8 +464,8 @@ class EMP4(EMPBase) :
         return (25*n4 + 150*n3 + 575*n2 + 1050*n + 720) * denom
 
 class EMP5(EMPBase) :
-    def __init__(self) :
-        EMPBase.__init__(self, 5)
+    def __init__(self, editingWindow=15) :
+        EMPBase.__init__(self, 5, editingWindow)
         
     def gamma(self, n):
         n2 = n*n 
@@ -559,7 +562,7 @@ class EMPSet(FilterBase):
         self.setName(name)
         self.settlingFactor = 0.90 #TODO get/set
         for i in range(0, order+1) :
-            emp = EMP.emps[i]()
+            emp = EMP.emps[i](editingWindow=5)
             emp.setName('%s%d' % (self.name, emp.order))
             self.emps.append(emp)
         FilterBase.__init__(self, order+1)
@@ -619,9 +622,14 @@ class EMPSet(FilterBase):
             gof = emp.getGoodnessOfFit()
             self.gofs[emp.order] = gof
         j = argmin(self.gofs)
-        if (j > self.current and self.gofs[j] < 0.90*self.gofs[self.current]) :
+        r = array2string(self.gofs, formatter={'float_kind':lambda y: "%10.3g" % y})
+#         print("%d %10.3g %s from %d (%10.3g) %s" % 
+#                   (self.order, t, self.emps[self.current].getName(), self.current, self.gofs[self.current], r))
+        if (j > self.current and self.gofs[j] < 1.00*self.gofs[self.current]) :
             print("%d %10.3g %s Switch from %d (%10.3g) to %d (%10.3g) %10.1f" % 
                   (self.order, t, self.emps[self.current].getName(), self.current, self.gofs[self.current], j, self.gofs[j], self.emps[self.current].nSwitch(0.9)))
+#             self.emps[j].restart(self.emps[self.current].getTime(), self.emps[self.current].getState(self.emps[self.current].getTime()))
+#             self.emps[j].setEditor( self.emps[self.current].getEditor() )
             self.current = j
         return True
         
@@ -643,6 +651,15 @@ class EMPSet(FilterBase):
             r += ("{%10.4g, %10.4g} " % (emp.getState(self.getTime())[0], emp.getGoodnessOfFit()))
         r += array2string(self.getState(self.getTime()), formatter={'float_kind':lambda y: "%10.4g" % y})
         return r
+    
+    def getStates(self):
+        t = self.getTime()
+        S = zeros([len(self.emps),7])
+        for i in range(0,len(self.emps)) :
+            s = self.emps[i].getState(t)
+            S[i,0:len(s)] = s
+        return S
+            
     
         
 class FMP0(FMPBase):    
@@ -1190,9 +1207,9 @@ if __name__ == '__main__':
             track = concatenate([track, R], axis=0)
 #         print(track)
 
-        N = 100+0*track.shape[0] # 100+0*
+        N = 200+0*track.shape[0] # 100+0*
         track = track[0:N,:]
-        theta = 0.95
+        theta = 0.85
         order = 5
         Y0 = array([0]);
         
@@ -1209,23 +1226,49 @@ if __name__ == '__main__':
         statesElevation = zeros([N,order+1])
         statesRange = zeros([N,order+1])
         
-        print(randn(N).shape)
-        print(track[:,4].shape)
         
         observations = zeros([N,3])
         observations[:,0] = track[:,4] + 5e-5*randn(N)
         observations[:,1] = track[:,5] + 5e-5*randn(N)
         observations[:,2] = track[:,6] + 20*0.3048*randn(N)
         
+        P = PchipInterpolator(track[:,0], track[:,6])
+        dP = P.derivative()
+
+#         E = EMPSet(5)
+#         E.initialize(0.0, array([track[0,6]]), 2.72)
+#         
+#         rates = zeros([N, 5+2])
+#         for i in range(0,N) :
+#             E.add(track[i][0], observations[i,2])
+#             S = E.getStates()
+#             V = S[:,1] # - dP(track[i,0])
+#             rates[i,0:len(S[:,1])] = V
+#             rates[i,-1] = dP(track[i,0])
+#             r = array2string(S[:,1], formatter={'float_kind':lambda y: "%+10.4g" % y})
+#             print('%8.2f %10.4g %s' % (track[i][0], dP(track[i,0]), r))
+#             
+#         fig, ax = plt.subplots()
+#         l2 = ax.plot(track[10:,0], rates[10:,2], 'g-' )
+#         ax.hold(True)
+#         l3 = ax.plot(track[10:,0], rates[10:,3], 'y-' )
+#         l4 = ax.plot(track[10:,0], rates[10:,4], 'r-' )
+#         l5 = ax.plot(track[10:,0], rates[10:,5], 'b-' )
+#         ax.legend(['2', '3', '4', '5'])
+#         ax.plot(track[10:,0], rates[10:,-1], 'k-')
+#         plt.show()
+
+        V = zeros([N,1])
         for i in range(0,N) :
+            V[i] = dP(track[i,0])
             rmAzimuth.add(track[i][0], observations[i,0])
             Yazimuth = rmAzimuth.getState(track[i][0])
             statesAzimuth[i,0:len(Yazimuth)] = Yazimuth
-             
+              
             rmElevation.add(track[i][0], observations[i,1])
             Yelevation = rmElevation.getState(track[i][0])
             statesElevation[i,0:len(Yelevation)] = Yelevation
-             
+              
             rmRange.add(track[i][0], observations[i,2])
             Yrange = rmRange.getState(track[i][0])
             statesRange[i,0:len(Yrange)] = Yrange
@@ -1234,14 +1277,16 @@ if __name__ == '__main__':
 #         fig = plt.figure()
 #         ax = plt.axes(projection='3d')
 #         ax.plot3D(track[:,4], track[:,5], track[:,6], 'r')
-        for i in range(0,N) :
-            r = array2string(statesAzimuth[i,:], formatter={'float_kind':lambda y: "%+10.4g" % y})
-            r += array2string(statesElevation[i,:], formatter={'float_kind':lambda y: "%+10.4g" % y})
-            r += array2string(statesRange[i,:], formatter={'float_kind':lambda y: "%+10.4g" % y})
-            print("%10.4f %s" % (track[i,0], r))
+#         for i in range(0,N) :
+#             r = array2string(statesAzimuth[i,:], formatter={'float_kind':lambda y: "%+10.4g" % y})
+#             r += array2string(statesElevation[i,:], formatter={'float_kind':lambda y: "%+10.4g" % y})
+#             r += array2string(statesRange[i,:], formatter={'float_kind':lambda y: "%+10.4g" % y})
+#             print("%10.4f %s" % (track[i,0], r))
         fig, ax = plt.subplots()
 #         ax.plot(track[:,0], statesRange[:,0], 'b-', track[:,0], observations[:,2], 'r.')
-        ax.plot(track[:,0], statesRange[:,1], 'b-')
+        ax.plot(track[:,0], statesRange[:,1]-V, 'b-')
+#         ax.hold(True)
+#         ax.plot(track[:,0], V, 'k-')
         plt.show()
         
         
