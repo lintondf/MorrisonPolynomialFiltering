@@ -1,4 +1,6 @@
 Cpp/.vs
 Cpp/boost_1_69_0
+Java/bin
+Java/target
 Python/src/__pycache__
 Python/test/__pycache__
