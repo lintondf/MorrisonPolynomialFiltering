@@ -4,6 +4,7 @@ Created on Jan 24, 2019
 @author: D. F. Linton, Blue Lightning Development, LLC
 '''
 from math import sin, pow, ceil, sqrt
+from RadarCoordinates import RadarCoordinates
 '''
 pip install numpy_ringbuffer
 pip install runstats
@@ -1191,6 +1192,12 @@ def testReynekeMorrison(theta):
 
 if __name__ == '__main__':
     pass
+    rc = RadarCoordinates();
+    E = randn(6,1);
+    N = randn(6,1);
+    U = randn(6,1);
+    print( rc.d1AzimuthdENU1(E, N, U) )
+    exit(0)
     with open('../test/landing.csv', newline='') as csvfile:
         reader = csv.DictReader(csvfile)
         track = zeros([0,7])

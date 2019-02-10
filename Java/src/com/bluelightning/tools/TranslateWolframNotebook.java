@@ -7,8 +7,10 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Stack;
 
 import org.scijava.parse.ExpressionParser;
@@ -24,6 +26,12 @@ import com.x5.template.Theme;
 public class TranslateWolframNotebook {
 	
 	protected static Theme theme = new Theme();
+	
+	protected static void print( List<Object> list ) {
+		for (Object obj : list) {
+			System.out.printf("%-20s : %s\n", obj.toString(), obj.getClass().getName() );
+		}
+	}
 	
 	
 	protected static String replaceVariableStrings( String cform, String var, int maxOrder) {
@@ -48,53 +56,56 @@ public class TranslateWolframNotebook {
 		return cform;
 	}
 
-	protected static void translateNotebook( String inPath ) {
+	protected static List<String> translateNotebook( String inPath ) {
+		List<String> result = new ArrayList<>();
 		try {
 			byte[] bytes = Files.readAllBytes( Paths.get(inPath) );
 			String line = new String( bytes, "UTF-8" );
-			final String cformStartMarker = "\"\\<\\\"";
-			final String cformFinishMarker = "\\\"\\>\"";
-			int derivative = 1;
+			line = line.replace("\n", "");
+			final String cformStartMarker = "\"\\<\\";
+			final String cformFinishMarker = "\\>\"";
 			for (int iStart = 0; iStart < line.length(); ) {
 				iStart = line.indexOf(cformStartMarker, iStart);
 				if (iStart < 0)
 					break;
 				int jFinish = line.indexOf(cformFinishMarker, iStart);
 				String cform = line.substring(iStart+cformStartMarker.length(), jFinish);
+				cform = cform.replace("\"",  "");
 				cform = cform.replaceAll("\\s", "");
 				//System.out.println(cform);
-				cform = cform.replace("\\\\n", "");
+				cform = cform.replace("\\n", "");
+				cform = cform.replace("\\", "");
 				cform = replaceVariableStrings(cform, "x", 10);
 				cform = replaceVariableStrings(cform, "y", 10);
 				cform = replaceVariableStrings(cform, "z", 10);
-				//System.out.println(String.format("[%d, %d] : %s", iStart, derivative, cform));
-				try {
-					LinkedList<Object> list = new ExpressionParser().parsePostfix(cform);
-					String[] parameters = {"X","Y","Z"};
-					String signature = String.format("public static double d%dAzimuthdENU%d", derivative, derivative);
-					emitJava(System.out, signature, Arrays.asList(parameters), list );
-					derivative++;
-				} catch (Exception x) {
-					x.printStackTrace();
-				}
+				result.add(cform);
 				iStart = jFinish;
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
+		return result;
 	}
 	
-	public static void emitJava( PrintStream out, String functionSignature, List<String> parameterNames, LinkedList<Object> list) {
-		Stack<String> stack = new Stack<>();
-		out.printf("%s(", functionSignature);
-		if (!parameterNames.isEmpty()) {
-			out.printf(" RealVector %s", parameterNames.get(0));
-			for (int i = 1; i < parameterNames.size(); i++) {
-				out.printf(", RealVector %s", parameterNames.get(i));
-			}
-			out.printf(" ) {\n");
+	public static void emitJava( Chunk template, List<String> cforms, String signatureFormat, Map<String, String> parameters) {
+		int derivative = 1;
+		for (String cform : cforms) {
+			try {
+				System.out.println(cform);
+				LinkedList<Object> list = new ExpressionParser().parsePostfix(cform);
+				String signature = String.format(signatureFormat, derivative, derivative);
+				emitJava(template, signature, parameters, list );
+			} catch (Exception x) {
+				x.printStackTrace();
+			}	
+			derivative++;
 		}
+	}
+	
+	public static void emitJava( Chunk template, String functionSignature, Map<String, String> parameters, LinkedList<Object> list) {
+		System.out.println( functionSignature );
+//		print(list);
+		Stack<String> stack = new Stack<>();
 		for (Object obj : list) {
 			//System.out.printf("%s : %s\n", obj.toString(), obj.getClass().getName());
 			if (Tokens.isNumber(obj)) {
@@ -118,8 +129,8 @@ public class TranslateWolframNotebook {
 				if (obj instanceof Function) {
 					String params = stack.pop();
 					String name = stack.pop();
-					if (parameterNames.contains(name)) {
-						stack.push( String.format("%s.getEntry%s", name, params ));
+					if (parameters.containsKey(name)) {
+						stack.push( String.format("%s.getEntry%s", parameters.get(name), params ));
 					} else {
 						switch (name) {
 						case "Sqrt":
@@ -127,6 +138,12 @@ public class TranslateWolframNotebook {
 							break;
 						case "Power":
 							stack.push("POW" + params );
+							break;
+						case "Cos":
+							stack.push("Math.cos" + params );
+							break;
+						case "Sin":
+							stack.push("Math.sin" + params );
 							break;
 						default:
 							System.err.println("Unknown function: " + name );
@@ -155,32 +172,151 @@ public class TranslateWolframNotebook {
 				System.err.printf("%s : %s\n", obj.toString(), obj.getClass().getName());
 			}
 		}
-		out.println("  return " + stack.pop() + ";");
-		out.printf("}\n");
+		template.set(functionSignature, "autogenerated from Mathematica notebook\n        result = " + stack.pop() + ";" );
+	}
+	
+	public static void emitPython( Chunk template, List<String> cforms, String signatureFormat, Map<String, String> parameters) {
+		int derivative = 1;
+		for (String cform : cforms) {
+			try {
+				System.out.println(cform);
+				LinkedList<Object> list = new ExpressionParser().parsePostfix(cform);
+				String signature = String.format(signatureFormat, derivative, derivative);
+				emitPython(template, signature, parameters, list );
+			} catch (Exception x) {
+				x.printStackTrace();
+			}	
+			derivative++;
+		}
+	}
+	
+	public static void emitPython( Chunk template, String functionSignature, Map<String, String> parameters, LinkedList<Object> list) {
+		System.out.println( functionSignature );
+//		print(list);
+		Stack<String> stack = new Stack<>();
+		for (Object obj : list) {
+			//System.out.printf("%s : %s\n", obj.toString(), obj.getClass().getName());
+			if (Tokens.isNumber(obj)) {
+				stack.push( obj.toString() );
+			} else if (Tokens.isGroup(obj)) {
+				StringBuffer sb = new StringBuffer();
+				Group token = (Group) obj;
+				Stack<String> alist = new Stack<>();
+				for (int i = 0; i < token.getArity(); i++) {
+					alist.push( stack.pop() );
+				}
+				sb.append("(");
+				sb.append( alist.pop());
+				while( ! alist.isEmpty() ) {
+					sb.append(",");
+					sb.append(alist.pop());
+				}
+				sb.append(")");
+				stack.push( sb.toString() );
+			} else if (Tokens.isOperator(obj)) {
+				if (obj instanceof Function) {
+					String params = stack.pop();
+					String name = stack.pop();
+					if (parameters.containsKey(name)) {
+						stack.push( String.format("%s%s", parameters.get(name), params.replace("(", "[").replace(")", "]") ));
+					} else {
+						switch (name) {
+						case "Sqrt":
+							stack.push("sqrt" + params );
+							break;
+						case "Power":
+							stack.push("POW" + params );
+							break;
+						case "Cos":
+							stack.push("cos" + params );
+							break;
+						case "Sin":
+							stack.push("sin" + params );
+							break;
+						default:
+							System.err.println("Unknown function: " + name );
+						}
+					}
+				} else {
+					Operator token = (Operator) obj;
+					String o1;
+					String o2;
+					switch (token.getArity()) {
+					case 1:
+						stack.push( String.format("%s(%s)", token.toString(), stack.pop()));
+						break;
+					case 2:
+						o2 = stack.pop();
+						o1 = stack.pop();
+						stack.push( String.format("(%s)%s(%s)", o1, token.toString(), o2));
+						break;
+					default:
+						System.err.println("Unexpected arity " + token.getArity() );
+					}
+				}
+			} else if (Tokens.isVariable(obj)) {
+				stack.push( obj.toString() );
+			} else {
+				System.err.printf("%s : %s\n", obj.toString(), obj.getClass().getName());
+			}
+		}
+		template.set(functionSignature, "autogenerated from Mathematica notebook\n        return " + stack.pop() + ";" );
 	}
 	
 	public static void main(String[] args) {
-		Chunk template = theme.makeChunk();
+		Chunk javaTemplate = theme.makeChunk();
+		Chunk pythonTemplate = theme.makeChunk();
 		try {
-			byte[] bytes = Files.readAllBytes( Paths.get("src/com/bluelightning/tools/RadarCoordinatesTemplate.java") );
-			template.append( new String( bytes, "UTF-8" ) );
+			byte[] bytes = Files.readAllBytes( Paths.get("../Java/src/com/bluelightning/tools/RadarCoordinatesTemplate.java") );
+			javaTemplate.append( new String( bytes, "UTF-8" ) );
+			bytes = Files.readAllBytes( Paths.get("../Python/src/RadarCoordinatesTemplate.py") );
+			pythonTemplate.append( new String( bytes, "UTF-8" ) );
 		} catch (Exception x) {
 			x.printStackTrace();
 		}
 		
-		template.set("d1AzimuthdENU1", "autogenerated from Mathematica notebook\n        result = 1.0;");
+//		template.set("d1AzimuthdENU1", "autogenerated from Mathematica notebook\n        result = 1.0;");
 		
-		System.out.println( template.toString() );
+		Map<String, String> map = new HashMap<>();
+		map.put( "X", "E");
+		map.put( "Y", "N");
+		map.put( "Z", "U");
 		
-		translateNotebook( "C:/Users/NOOK/Downloads/dRange.nb" );
-//		try {
-//			LinkedList<Object> list = new ExpressionParser().parsePostfix("(X[0]*X[1]+Y[0]*Y[1]+Z[0]*Z[1])/Sqrt(Power(X[0],2)+Power(Y[0],2)+Power(Z[0],2))");
-////			System.out.println(list.toString());
-//			String[] parameters = {"X","Y","Z"};
-//			emitJava(System.out, "public static double dAzimuthdENU", Arrays.asList(parameters), list );
-//		} catch (Exception x) {
-//			x.printStackTrace();
-//		}
+		List<String> cforms = translateNotebook( "data/dAzimuth.nb" );
+		emitPython( pythonTemplate, cforms, "d%dAzimuthdENU%d", map );
+		emitJava( javaTemplate, cforms, "d%dAzimuthdENU%d", map );
+		cforms = translateNotebook( "data/dElevation.nb" );
+		emitPython( pythonTemplate, cforms, "d%dElevationdENU%d", map );
+		emitJava( javaTemplate, cforms, "d%dElevationdENU%d", map );
+		cforms = translateNotebook( "data/dRange.nb" );
+		emitPython( pythonTemplate, cforms, "d%dRangedENU%d", map );
+		emitJava( javaTemplate, cforms, "d%dRangedENU%d", map );
+		
+		map.clear();
+		map.put( "X", "A");
+		map.put( "Y", "E");
+		map.put( "Z", "R");
+
+		cforms = translateNotebook( "data/dEast.nb" );
+		emitPython( pythonTemplate, cforms, "d%dEastdAER%d", map );
+		emitJava( javaTemplate, cforms, "d%dEastdAER%d", map );
+		cforms = translateNotebook( "data/dNorth.nb" );
+		emitPython( pythonTemplate, cforms, "d%dNorthdAER%d", map );
+		emitJava( javaTemplate, cforms, "d%dNorthdAER%d", map );
+		cforms = translateNotebook( "data/dUp.nb" );
+		emitPython( pythonTemplate, cforms, "d%dUpdAER%d", map );
+		emitJava( javaTemplate, cforms, "d%dUpdAER%d", map );
+		
+//		String javaOutput = javaTemplate.toString();
+//		javaOutput = javaOutput.replace("public class RadarCoordinatesTemplate", "public class RadarCoordinates");
+//		System.out.println( javaOutput );
+		String pythonOutput = pythonTemplate.toString();
+		pythonOutput = pythonOutput.replace("class RadarCoordinatesTemplate", "class RadarCoordinates");
+		try {
+			Files.write(Paths.get("../Python/src/RadarCoordinates.py"), pythonOutput.getBytes());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 }
