@@ -6,7 +6,7 @@ Created on Feb 9, 2019
 
 from abc import ABC
 from numpy import array, zeros
-from math import sqrt, sin, cos, atan2
+from math import sqrt, sin, cos, atan2, pi
 
 def POW(a, b):
     return a**b;
@@ -52,7 +52,7 @@ class RadarCoordinatesTemplate(ABC):
     
     def ENU2AER(self, E, N, U) -> array:
         AER = zeros([len(E), 3])
-        AER[0, 0] = atan2( E[0], N[0] )
+        AER[0, 0] = atan2( E[0], N[0] ) % (2*pi)
         AER[0, 1] = atan2( U[0], sqrt(E[0]**2 + N[0]**2) )
         AER[0, 2] = sqrt(E[0]**2 + N[0]**2 + U[0]**2)
         if (len(E) > 1) :

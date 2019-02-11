@@ -59,7 +59,7 @@ public abstract class AbstractRadarCoordinates {
 	 */
 	public RealMatrix ENU2AER( RealVector E, RealVector N, RealVector U ) {
 		RealMatrix AER = new Array2DRowRealMatrix( E.getDimension(), 3 );
-		AER.setEntry(0,  0, Math.atan2(N.getEntry(0), E.getEntry(0)));  // azimuth
+		AER.setEntry(0,  0, Math.atan2(N.getEntry(0), E.getEntry(0)) % (2.0*Math.PI));  // azimuth
 		AER.setEntry(0,  1, Math.atan2(U.getEntry(0), Math.sqrt(POW(E.getEntry(0),2) + POW(N.getEntry(0),2))));
 		AER.setEntry(0,  2, Math.sqrt(POW(E.getEntry(0),2) + POW(N.getEntry(0),2) + POW(U.getEntry(0),2)));
 		if (E.getDimension() > 1) {
