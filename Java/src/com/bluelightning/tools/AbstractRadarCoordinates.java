@@ -25,11 +25,6 @@ public abstract class AbstractRadarCoordinates {
 		return re;
 	}
 
-	public static double POW(double a, double b) {
-		return Math.pow(a, b);
-	}
-
-	
 	protected abstract double d1AzimuthdENU1(RealVector E, RealVector N, RealVector U);
 	protected abstract double d2AzimuthdENU2(RealVector E, RealVector N, RealVector U);
 	protected abstract double d3AzimuthdENU3(RealVector E, RealVector N, RealVector U);
