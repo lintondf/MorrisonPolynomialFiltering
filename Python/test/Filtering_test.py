@@ -274,7 +274,6 @@ class Test(unittest.TestCase):
             if (i > N-30) :
                 stats.push( Yf[0] - truth[i,0] )
                 nstats.push( noise[i] )
-#         self.assertLess( stats.variance(), 1.5*filter.VRF(filter.theta)*nstats.variance(), 'Excess noise in state vectors')
         print(stats.variance(), nstats.variance(),filter.VRF(filter.theta))
         
     def testFMP0(self):

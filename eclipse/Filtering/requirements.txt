@@ -1,0 +1,6 @@
+matplotlib >= 2.1.2
+numpy-ringbuffer >= 0.2.1
+numpy >= 1.14.2
+pymap3d >= 1.7.13
+scipy >= 1.0.0
+typing >= 3.6.2

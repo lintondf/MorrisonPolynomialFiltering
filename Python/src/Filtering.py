@@ -5,6 +5,7 @@ Created on Jan 24, 2019
 '''
 from math import sin, pow, ceil, sqrt
 from RadarCoordinates import RadarCoordinates
+from scipy.stats._continuous_distns import chi2
 '''
 pip install numpy_ringbuffer
 pip install runstats
@@ -31,6 +32,10 @@ import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 from mpl_toolkits import mplot3d
 from runstats import Statistics
+
+import time
+from pip._internal.utils.misc import get_installed_distributions
+
 
 warnings.simplefilter(action='ignore', category=FutureWarning)
 # warnings.simplefilter(action='ignore', category=plt.warnings.MatplotlibDeprecationWarning)
@@ -120,60 +125,6 @@ class FilterStatus(Enum):
     RESETING = auto()     # Filter coast interval has been exceed and it will reinitialize on the next observation
         
     
-class AbstractObservationMath(ABC) :
-    def __init__(self):
-        pass
-
-    @abstractmethod   
-    def bound(self, o):
-        raise NotImplementedError()
-    
-    @abstractmethod   
-    def subtract(self, o1, o2):
-        raise NotImplementedError()
-    
-    @abstractmethod   
-    def scale(self, factor, o):
-        raise NotImplementedError()
-    
-    @abstractmethod   
-    def square(self, do):
-        raise NotImplementedError()
-    
-    
-    
-class DefaultObservationMath(AbstractObservationMath) :
-    def __init__(self):
-        AbstractObservationMath.__init__(self)       
-    
-    def bound(self, o):
-        return o
-    
-    def subtract(self, o1, o2):
-        return o1-o2
-    
-    def scale(self, factor, o):
-        return factor*o
-    
-    def square(self, do):
-        return do*do
-    
-class AngleObservationMath(AbstractObservationMath):
-    def __init__(self):
-        AbstractObservationMath.__init__(self)       
-
-    def bound(self, o):
-        return max(0.0, min(o, (2*pi())))-pi
-    
-    def subtract(self, o1, o2):
-        return self.bound(o1-o2)
-    
-    def scale(self, factor, o):
-        return self.bound(factor*o)
-    
-    def square(self, do):
-        return self.bound(do*do)
-    
 class FilterBase(ABC) :
     
     def __init__(self, n0 = 1, editingWindow=15):
@@ -182,7 +133,6 @@ class FilterBase(ABC) :
         self.Z = None
         self.n0 = n0  # number of samples required to initialize
         self.setStatus( FilterStatus.IDLE )
-        self.math = DefaultObservationMath()
         self.editor = EditorDefault(self, editingWindow)
         self.name = ''
 
@@ -198,12 +148,6 @@ class FilterBase(ABC) :
     
     def setName(self, name):
         self.name = name
-        
-    def getMath(self):
-        return self.math
-    
-    def setMath(self, observationMath):
-        self.math = observationMath
         
     def getEditor(self):
         return self.editor
@@ -251,6 +195,7 @@ class FilterBase(ABC) :
     
 class RecursiveFilterBase(FilterBase) :
     
+    # factors to compute effective theta from N [REF???]
     factors = (2, 3.2, 4.3636, 5.5054, 6.6321, 7.7478)
     
     @classmethod            
@@ -333,11 +278,11 @@ class RecursiveFilterBase(FilterBase) :
         dt = t - self.t
         dtau = self._normalizeDeltaTime(dt)
         Zstar = stateTransitionMatrix(self.order+1, dtau) @ self.Z
-        e = self.math.subtract(y, Zstar[0])
+        e = (y - Zstar[0])
         self.getEditor().updateResiduals(t, y, e)
         if(self.getEditor().isGoodObservation(t, y, e)) :
             gamma = self.gamma(self.gammaParameter(t, dtau))
-            self.Z = self.math.bound(Zstar + gamma * e)
+            self.Z = (Zstar + gamma * e)
             self.t = t
             return True
         else :
@@ -1192,6 +1137,11 @@ def testReynekeMorrison(theta):
 
 if __name__ == '__main__':
     pass
+    print(chi2.ppf(0.05,50))
+    exit(0)
+    for package in get_installed_distributions() :
+        print( package)
+    exit(0)
     rc = RadarCoordinates();
     E = randn(6,1);
     N = randn(6,1);
@@ -1221,9 +1171,7 @@ if __name__ == '__main__':
         Y0 = array([0]);
         
         rmAzimuth = ReynekeMorrison(order, theta, 'Az')
-        rmAzimuth.setMath( AngleObservationMath() )
         rmElevation = ReynekeMorrison(order, theta, 'El')
-        rmElevation.setMath( AngleObservationMath() )
         rmRange = ReynekeMorrison(order, theta, 'Rg')
     
         rmAzimuth.initialize(0.0, array([track[0,4]]), 2.72)
