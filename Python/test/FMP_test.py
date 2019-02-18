@@ -1,4 +1,4 @@
-    '''
+'''
 Created on Feb 15, 2019
 
 @author: NOOK
@@ -8,7 +8,7 @@ import unittest
 from PolynomialFiltering.Components.FadingMemoryPolynomialFilter import *
 
 from TestUtilities import *
-from numpy import arange, array2string, zeros
+from numpy import arange, array2string, cov, zeros
 from numpy.random import randn
 from numpy.testing import assert_almost_equal
 from math import sqrt, sin
@@ -46,6 +46,7 @@ class Test(unittest.TestCase):
         for i in range(0, order+1): 
             stats.append(Statistics())
         nstats = Statistics()
+        E = zeros([N,2]);
         for i in range(0,N) :
             (Zstar, dt, dtau) = filter.predict(times[i][0])
             e = observations[i] - Zstar[0]
@@ -55,6 +56,7 @@ class Test(unittest.TestCase):
             r = ("FMP%d: %5d %10.6g %10.6g %s %10.6g" % \
                  (order, i, times[i][0], truth[i,0], r, Yf[0]-truth[i,0]))
 #             print(r)
+            E[i,:] = Yf - truth[i,:]
             if (i > N-M) :
                 for o in range(0,len(Yf)) :
                     stats[o].push( Yf[o] - truth[i,o] )
@@ -70,16 +72,20 @@ class Test(unittest.TestCase):
         for o in range(0,len(Yf)) :
 #             print(o, stats[o].variance(), nstats.variance(), stats[o].variance()/nstats.variance())
             msg = "Excess variance %d %10.3f: sample: %10.6g, noise: %10.6g, VRF: %10.6g, ratio: %10.4g" % \
-              (o, times[i][0], stats[o].variance(), nstats.variance(), filter.VRF()[o], stats[o].variance()/(filter.VRF()[o]*nstats.variance()))
-            print( o, N, M, (M-1) * stats[o].variance() / (filter.VRF()[o]*nstats.variance()), 
-                   isChi2Valid(stats[o].variance(), filter.VRF()[o]*nstats.variance(), M, 0.05) )
-#             self.assertLess(stats[o].variance(), filter.VRF()[o]*nstats.variance(), msg)
-#             if (stats[o].variance() > 1.1*filter.VRF()[o]*nstats.variance()) :
+              (o, times[i][0], stats[o].variance(), nstats.variance(), filter.VRF()[o,o], stats[o].variance()/(filter.VRF()[o,o]*nstats.variance()))
+            print( o, N, M, (M-1) * stats[o].variance() / (filter.VRF()[o,o]*nstats.variance()), 
+                   isChi2Valid(stats[o].variance(), filter.VRF()[o,o]*nstats.variance(), M, 0.05) )
+#             self.assertLess(stats[o].variance(), filter.VRF()[o,o]*nstats.variance(), msg)
+#             if (stats[o].variance() > 1.1*filter.VRF()[o,o]*nstats.variance()) :
 #                 print(msg)
 #                 status = 1;
 #                 exit(0)
 #         return status
-        
+        C = cov(E, rowvar=False);
+        print(C)
+        Ce = (filter.VRF() * nstats.variance());
+        print(C / Ce )
+#         box_m(M, C, 1e4, np.eye(2,2))
 
 
 #     def test_FMP0(self):
@@ -89,11 +95,10 @@ class Test(unittest.TestCase):
  
     def test_FMP1(self):
         fmp = FMP1(0.95, 0.1)
-        print(fmp.VRF())
         self.fmpPerfect(1, fmp, tau=fmp.getTau(), N=500)
         failures = 0
         for i in range(0,10) :
-            self.fmpDriver(1, fmp, tau=fmp.getTau(), N=50000, M=40000)
+            self.fmpDriver(1, fmp, tau=fmp.getTau(), N=5000, M=4000)
 #         print(failures)
   
 #     def test_FMP2(self):

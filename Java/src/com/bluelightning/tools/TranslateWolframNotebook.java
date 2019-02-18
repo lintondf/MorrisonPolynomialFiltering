@@ -928,6 +928,14 @@ public class TranslateWolframNotebook {
 			}
 		}
 		
+		public String python() {
+			String out = String.format("V[%d,%d] = %s;\n", i, j, expression );
+			if (i != j) {
+				out += String.format("V[%d,%d] = V[%d,%d];\n", j, i, i, j );
+			}
+			return out;
+		}
+		
 		public String toString() {
 			return String.format("(%d,%d) = %s;", i, j, expression );
 		}
@@ -948,7 +956,8 @@ public class TranslateWolframNotebook {
 		}
 	}
 	
-	protected static void translateCVRFNotebook(String inPath) {
+	protected static List<CVRFCode> translateCVRFNotebook(String inPath) {
+		ArrayList<CVRFCode> out = new ArrayList<>();
 		final String[] names = {"", "EMP", "FMP"};
 		int iNames = 0;
 		CVRFCode code = null;
@@ -966,21 +975,27 @@ public class TranslateWolframNotebook {
 				if (iStart < 0)
 					break;
 				int kNext = line.indexOf(elementStartMarker, iStart+elementStartMarker.length());
+				if (kNext < 0)
+					kNext = line.length();
 				iStart = line.indexOf(indiciesStartMarker, iStart);
 				if (iStart < 0)
 					break;
-				while (iStart < kNext) {
+				while (iStart < kNext && iNames <= 2) {
 					int jFinish = line.indexOf("}", iStart);
 					String indicies = line.substring(iStart + indiciesStartMarker.length(), jFinish);
 					indicies = indicies.replace("\",\"", "");
 					indicies = indicies.replace("\"", "");
 					int[] orderIJ = parseIndicies(indicies);
-					if (orderIJ[0] == 0) {
+					if (orderIJ[0] == 0 && orderIJ[1] == 0 && orderIJ[2] == 0) {
+						System.out.println("Roll name");
 						iNames++;
+						if (iNames > 2)
+							break;
 					}
 					if (orderIJ[1] == 0 && orderIJ[2] == 0) {
 						if (code != null)
-							System.out.println(code);
+							out.add(code);
+						System.out.println(iNames + ": " + orderIJ[0]);
 						code = new CVRFCode();
 						code.nameOrder = String.format("%s%d", names[iNames], orderIJ[0] );
 					}
@@ -999,35 +1014,65 @@ public class TranslateWolframNotebook {
 				}
 			}
 			if (code != null)
-				System.out.println(code);
+				out.add(code);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-//		return result;
+		return out;
+	}
+	
+	protected static Chunk[] loadTemplates(String[] paths) {
+		Chunk[] out = new Chunk[2];
+		out[0] = theme.makeChunk();
+		out[1] = theme.makeChunk();
+		try {
+			byte[] bytes = Files.readAllBytes( Paths.get(paths[0]) );
+			out[0].append( new String( bytes, "UTF-8" ) );
+			bytes = Files.readAllBytes( Paths.get(paths[1]) );
+			out[1].append( new String( bytes, "UTF-8" ) );
+		} catch (Exception x) {
+			x.printStackTrace();
+			return null;
+		}
+		return out;
+	}
+	
+	protected static void writeTemplates(Chunk[] chunks, String[] paths) {
+		for (int i = 0; i < 2; i++) {
+			String output = chunks[i].toString().replace("{@$","{$");
+			try {
+				Files.write(Paths.get(paths[i]), output.getBytes());
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 	
 	public static void main(String[] args) {
-		translateCVRFNotebook("../Java/data/MorrisonCVRF.nb");
-		Chunk cppTemplate = theme.makeChunk();
-		Chunk javaTemplate = theme.makeChunk();
-		Chunk pythonTemplate = theme.makeChunk();
-		for (int order = 0; order <= 5; order++) {
-			pythonTemplate.append(String.format("# EMP%d VRF\n", order) );
-			pythonTemplate.append("tau = self.tau;\n");
-			pythonTemplate.append("return array([\n");
-			for (int i = 0; i <= order; i++) {
-				pythonTemplate.append( String.format("{$EMP%dVRF_%dth}", order, i));
-				if (i < order) {
-					pythonTemplate.append(",");
-				}
-				pythonTemplate.append("\n");
+		List<CVRFCode> codes = translateCVRFNotebook("../Java/data/MorrisonCVRF.nb");
+		String[] paths = {
+				"../Python/src//PolynomialFiltering/Components/ExpandingMemoryPolynomialFilter.py",
+				"../Python/src//PolynomialFiltering/Components/FadingMemoryPolynomialFilter.py"				
+		};
+		Chunk[] templates = loadTemplates(paths);
+//		System.out.println(pythonTemplate.toString());
+		templates[0].set("EMP0CVRF", "{@$EMP0CVRF} \nV(0,0) = 0;");
+		for (CVRFCode code : codes) {
+			int iTemplate = 0;
+			if (code.nameOrder.startsWith("EMP")) {
+				iTemplate = 0;
+			} else {
+				iTemplate = 1;
 			}
-			pythonTemplate.append("])\n");
+			String tag = code.nameOrder + "CVRF";
+			StringBuffer sb = new StringBuffer();
+			sb.append(String.format("{@$%sCVRF}\n", code.nameOrder ) );
+			for (CVRFElement element : code.elements) {
+				sb.append( element.python() );
+			}
+			templates[iTemplate].set( tag, sb.toString() );
 		}
-		System.out.println(pythonTemplate.toString());
-		pythonTemplate.set("EMP0VRF_0th", "{@EMP0VRF_0th} plus stuff");
-		System.out.println(pythonTemplate.toString());
-
+		writeTemplates( templates, paths );
 	}
 	
 

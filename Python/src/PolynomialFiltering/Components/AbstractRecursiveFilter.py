@@ -8,17 +8,14 @@ from abc import abstractmethod
 from typing import Tuple
 
 from numpy import array, diag, ones, zeros, isscalar
-from scipy.linalg.matfuncs import expm
-from PolynomialFiltering.Main import AbstractFilter
+
+from PolynomialFiltering.Main import AbstractFilter, FilterStatus
 from cantera.ctml_writer import state
 
 class IRecursiveFilter(AbstractFilter):
     def __init__(self):
         pass
     
-    @abstractmethod   
-    def conformState(self, state : array) -> array:
-        raise NotImplementedError()
 
     @abstractmethod   
     def start(self, t : array, Z : array) -> None:
@@ -60,23 +57,12 @@ class AbstractRecursiveFilter(IRecursiveFilter):
             return 0.0
         return 1.0 - AbstractRecursiveFilter.factors[order]/n
         
-    @classmethod            
-    def stateTransitionMatrix(self, N : int, dt : float) -> array:
-        '''
-        Return a Pade' expanded status transition matrix of order m [RMKdR(7)]
-            P(d)_i,j = (d^(j-i))/(j-i)! where 0 <= i <= j <= m elsewhere zero
-        
-        :param N: return matrix is (N,N)
-        :param dt: time step
-        '''
-        B = (diag(ones([N-1]),k=1))
-        return expm(dt*B)
-    
     def __init__(self, order : int, tau : float ) -> None :
         AbstractFilter.__init__(self)
         if (order < 0 or order > 5) :
             raise ValueError("Polynomial orders < 0 or > 5 are not supported; order %d" % order)
         self.n = 0
+        self.n0 = order+1
         self.order = order
         self.dtau = None
         self.t0 = None;
@@ -89,15 +75,6 @@ class AbstractRecursiveFilter(IRecursiveFilter):
         self.D = zeros([self.order+1])
         for d in range(0,self.order+1):
             self.D[d] = pow(self.tau, d)
-        
-    def conformState(self, state : array) -> array:
-        Z = zeros([self.order+1])
-        if isscalar(state) :
-            Z[0] = state
-        else:
-            m = min( self.order+1, len(state))
-            Z[0:m] = state[0:m]
-        return Z
         
     def start(self, t : array, Z : array) -> None:
         self.n = 0;
@@ -126,6 +103,8 @@ class AbstractRecursiveFilter(IRecursiveFilter):
     def predict(self, t : array) -> Tuple[array, array, array] :
         dt = t - self.t
         dtau = self._normalizeDeltaTime(dt)
+#         print(t,dt,dtau)
+#         print(AbstractRecursiveFilter.stateTransitionMatrix(self.order+1, dtau))
         Zstar = AbstractRecursiveFilter.stateTransitionMatrix(self.order+1, dtau) @ self.Z
         return (Zstar, dt, dtau)
     
@@ -136,6 +115,11 @@ class AbstractRecursiveFilter(IRecursiveFilter):
         self.Z = (Zstar + gamma * e)
         self.t = t
         self.n += 1;
+        if (self.n < self.n0) :
+            self.setStatus( FilterStatus.INITIALIZING )
+        else :
+            self.setStatus( FilterStatus.RUNNING )
+#         print(self.n, self.t, self.Z)
         
     def getN(self)->int:
         return self.n

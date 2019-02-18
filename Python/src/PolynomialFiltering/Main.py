@@ -7,7 +7,8 @@ https://filterpy.readthedocs.io/en/latest/kalman/UnscentedKalmanFilter.html
 
 from abc import ABC, abstractmethod
 from enum import Enum, auto
-from numpy import array
+from numpy import array, zeros, isscalar, diag, ones
+from scipy.linalg.matfuncs import expm
 # from typing import str
 
 class FilterStatus(Enum):
@@ -30,6 +31,28 @@ class AbstractFilter(ABC):
         '''
         self.setStatus( FilterStatus.IDLE )
         self.name = name
+        
+    def conformState(self, state : array) -> array:
+        Z = zeros([self.order+1])
+        if isscalar(state) :
+            Z[0] = state
+        else:
+            m = min( self.order+1, len(state))
+            Z[0:m] = state[0:m]
+        return Z
+        
+    @classmethod            
+    def stateTransitionMatrix(self, N : int, dt : float) -> array:
+        '''
+        Return a Pade' expanded status transition matrix of order m [RMKdR(7)]
+            P(d)_i,j = (d^(j-i))/(j-i)! where 0 <= i <= j <= m elsewhere zero
+        
+        :param N: return matrix is (N,N)
+        :param dt: time step
+        '''
+        B = (diag(ones([N-1]),k=1))
+        return expm(dt*B)
+    
     
     def getName(self):
         return self.name
