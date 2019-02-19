@@ -34,10 +34,10 @@ class FixedMemoryBase(IRecursiveFilter) :
     def getTime(self) -> array:
         return self.t
     
-    def getState(self, t : array) -> array:
+    def getState(self, t : float) -> array:
         pass
     
-    def _getTn(self, dt : array ) -> array:
+    def _getTn(self, dt : float ) -> array:
         Tn = zeros( [dt.shape[0], self.order+1] );
         Tn[:,0] = 1.0;
         C = -dt;

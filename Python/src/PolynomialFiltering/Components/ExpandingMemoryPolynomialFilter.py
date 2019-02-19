@@ -14,7 +14,7 @@ class EMPBase(AbstractRecursiveFilter):
     def __init__(self, order : int, tau : float) -> None :
         super().__init__(order, tau)
         
-    def gammaParameter(self, t : array, dtau : array) -> array:
+    def gammaParameter(self, t : float, dtau : array) -> array:
         return self._normalizeTime(t)
     
     @abstractmethod

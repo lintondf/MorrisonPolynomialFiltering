@@ -75,7 +75,7 @@ class AbstractFilter(ABC):
         raise NotImplementedError()
     
     @abstractmethod   
-    def getState(self, t : array = None) -> array:
+    def getState(self, t : float = None) -> array:
         raise NotImplementedError()
 
 class ManagedFilterBase(AbstractFilter):
@@ -91,7 +91,7 @@ class ManagedFilterBase(AbstractFilter):
         raise NotImplementedError()
         
     @abstractmethod   
-    def add(self, t : array, y : array, observationId : str = ''):    
+    def add(self, t : float, y : array, observationId : str = ''):    
         raise NotImplementedError()
     
     

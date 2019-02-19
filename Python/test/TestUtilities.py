@@ -9,6 +9,7 @@ from numpy import array, array2string, diag, eye, ones, zeros
 from numpy.random import randn
 from scipy.linalg.matfuncs import expm
 from scipy.stats import chi2
+from scipy.stats._continuous_distns import norm
 
 # def stateTransitionMatrix(N : int, dt : float) -> array:
 #     '''
@@ -121,7 +122,10 @@ def box_m(n_1,C0,n_2,C1):
      
 if __name__ == '__main__':
     pass
-    box_m(5000, np.cov(randn(2,5000)), 400000, np.eye(2,2))
+    print( norm.cdf(1., loc=0.997, scale=0.0285) - 0.5 )
+    print( norm.cdf(0.876, loc=0.997, scale=0.0285) - 0.5 )
+    print( norm.cdf(1.06, loc=0.997, scale=0.0285) - 0.5 )
+#     box_m(5000, np.cov(randn(2,5000)), 400000, np.eye(2,2))
 #     Y0 = array([1e4, 1e3, 1e2, 1e1, 1e0, 1e-1]);
 #     N = 10;
 #     order = 1

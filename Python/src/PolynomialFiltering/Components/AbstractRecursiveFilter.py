@@ -9,37 +9,9 @@ from typing import Tuple
 
 from numpy import array, diag, ones, zeros, isscalar
 
+from PolynomialFiltering.Components.IRecursiveFilter import IRecursiveFilter
 from PolynomialFiltering.Main import AbstractFilter, FilterStatus
-from cantera.ctml_writer import state
 
-class IRecursiveFilter(AbstractFilter):
-    def __init__(self):
-        pass
-    
-
-    @abstractmethod   
-    def start(self, t : array, Z : array) -> None:
-        raise NotImplementedError()
-        
-    @abstractmethod   
-    def predict(self, t : array) -> Tuple[array, array, array] :
-        raise NotImplementedError()
- 
-    @abstractmethod   
-    def update(self, t : array, dtau : array, Zstar : array, e : array) -> None:
-        raise NotImplementedError()
-       
-    @abstractmethod   
-    def getN(self)->int:
-        raise NotImplementedError()
-    
-    @abstractmethod   
-    def getTime(self) -> array:
-        raise NotImplementedError()
-    
-    @abstractmethod   
-    def getState(self, t : array) -> array:
-        raise NotImplementedError()
 
     
 class AbstractRecursiveFilter(IRecursiveFilter):
@@ -76,16 +48,16 @@ class AbstractRecursiveFilter(IRecursiveFilter):
         for d in range(0,self.order+1):
             self.D[d] = pow(self.tau, d)
         
-    def start(self, t : array, Z : array) -> None:
+    def start(self, t : float, Z : array) -> None:
         self.n = 0;
         self.t0 = t;
         self.t = t;
         self.Z = self._normalizeState(self.conformState(Z));
     
-    def _normalizeTime(self, t : array) -> array:
+    def _normalizeTime(self, t : float) -> array:
         return (t - self.t0)/self.tau
     
-    def _normalizeDeltaTime(self, dt : array) -> array:
+    def _normalizeDeltaTime(self, dt : float) -> array:
         return dt / self.tau
     
 #     def _denormalizeTime(self, n : array) -> array:
@@ -100,7 +72,7 @@ class AbstractRecursiveFilter(IRecursiveFilter):
     def _normalizeState(self, Z : array) -> array:
         return Z * self.D
     
-    def predict(self, t : array) -> Tuple[array, array, array] :
+    def predict(self, t : float) -> Tuple[array, array, array] :
         dt = t - self.t
         dtau = self._normalizeDeltaTime(dt)
 #         print(t,dt,dtau)
@@ -108,7 +80,7 @@ class AbstractRecursiveFilter(IRecursiveFilter):
         Zstar = AbstractRecursiveFilter.stateTransitionMatrix(self.order+1, dtau) @ self.Z
         return (Zstar, dt, dtau)
     
-    def update(self, t : array, dtau : array, Zstar : array, e : array) -> None:
+    def update(self, t : float, dtau : array, Zstar : array, e : array) -> None:
         p = self.gammaParameter(t, dtau)
         gamma = self.gamma(p)
 #         print(t, Zstar, gamma, p, e)
@@ -130,14 +102,14 @@ class AbstractRecursiveFilter(IRecursiveFilter):
     def getTime(self) -> array:
         return self.t
     
-    def getState(self, t : array) -> array:
+    def getState(self, t : float) -> array:
         if (t == self.t) :
             return self._denormalizeState(self.Z)
         else :
             Z = AbstractRecursiveFilter.stateTransitionMatrix(self.order+1, t-self.t) @ self.Z
             return self._denormalizeState(Z)
 
-#     def add(self, t : array, y : array) -> bool:
+#     def add(self, t : float, y : array) -> bool:
 #         dt = t - self.t
 #         dtau = self._normalizeDeltaTime(dt)
 #         Zstar = AbstractRecursiveFilter.stateTransitionMatrix(self.order+1, dtau) @ self.Z
@@ -152,7 +124,7 @@ class AbstractRecursiveFilter(IRecursiveFilter):
 #             return False
             
     @abstractmethod   
-    def gammaParameter(self, t : array, dtau : array) -> array:
+    def gammaParameter(self, t : float, dtau : array) -> array:
         raise NotImplementedError()
             
     @abstractmethod   

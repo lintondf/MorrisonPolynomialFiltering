@@ -17,7 +17,7 @@ class FMPBase(AbstractRecursiveFilter) :
         self.theta = theta
         self.n0 = 1
     
-    def gammaParameter(self, t : array, dtau : array) -> array:
+    def gammaParameter(self, t : float, dtau : array) -> array:
         return pow(self.theta, abs(dtau))
         
     @abstractmethod
@@ -29,7 +29,7 @@ class FMP0(FMPBase):
     def __init__(self, theta : float, tau : float) -> None:
         super().__init__(0, theta, tau)
 
-    def gamma(self, t : array) -> None:
+    def gamma(self, t : float) -> None:
         return array([1-t])
 
     def VRF(self) -> array:
@@ -44,7 +44,7 @@ class FMP1(FMPBase):
     def __init__(self, theta : float, tau : float) -> None:
         super().__init__(1, theta, tau)
 
-    def gamma(self, t : array) -> None:
+    def gamma(self, t : float) -> None:
         t2 = t*t 
         mt2 = (1-t)*(1-t)
         return array([1-t2, 
@@ -66,7 +66,7 @@ class FMP2(FMPBase):
     def __init__(self, theta : float, tau : float) -> None:
         super().__init__(2, theta, tau)
 
-    def gamma(self, t : array) -> None:
+    def gamma(self, t : float) -> None:
         t2 = t*t
         t3 = t2*t
         mt2 = (1-t)*(1-t)
@@ -96,7 +96,7 @@ class FMP3(FMPBase):
     def __init__(self, theta : float, tau : float) -> None:
         super().__init__(3, theta, tau)
 
-    def gamma(self, t : array) -> None:
+    def gamma(self, t : float) -> None:
         t2 = t*t 
         t3 = t2*t
         t4 = t3*t
@@ -136,7 +136,7 @@ class FMP4(FMPBase):
     def __init__(self, theta : float, tau : float) -> None:
         super().__init__(4, theta, tau)
 
-    def gamma(self, t : array) -> None:
+    def gamma(self, t : float) -> None:
         t2 = t*t 
         t3 = t2*t
         t5 = t2*t3
@@ -186,7 +186,7 @@ class FMP5(FMPBase):
     def __init__(self, theta : float, tau : float) -> None:
         super().__init__(5, theta, tau)
 
-    def gamma(self, t : array) -> None:
+    def gamma(self, t : float) -> None:
         t2 = t*t 
         t3 = t2*t
         t4 = t3*t
