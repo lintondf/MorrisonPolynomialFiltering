@@ -34,7 +34,11 @@
 	    <artifactId>chunk-templates</artifactId>
 	    <version>3.5.0</version>
 	</dependency>
-	
+	<dependency>
+	    <groupId>com.github.julianthome</groupId>
+	    <artifactId>inmemantlr-api</artifactId>
+	    <version>1.6</version>
+	</dependency>
   	
   </dependencies>
 </project>

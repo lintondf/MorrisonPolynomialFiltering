@@ -158,5 +158,3 @@ class AbstractRecursiveFilter(IRecursiveFilter):
     @abstractmethod   
     def gamma(self, x : array) -> array:
         raise NotImplementedError()
-    
-        

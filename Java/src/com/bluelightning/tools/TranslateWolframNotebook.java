@@ -887,7 +887,7 @@ public class TranslateWolframNotebook {
 	
 	protected static final Pattern powerPattern = Pattern.compile("(Power\\(([^,]*),(\\d+)\\))");
 	
-	protected static int[] parseIndicies( String str ) {
+	protected static int[] parseIndicies( String str ) throws NumberFormatException {
 		String[] fields = str.split(",");
 		int[] out = new int[3];
 		for (int i = 0; i < 3; i++) {
@@ -985,7 +985,12 @@ public class TranslateWolframNotebook {
 					String indicies = line.substring(iStart + indiciesStartMarker.length(), jFinish);
 					indicies = indicies.replace("\",\"", "");
 					indicies = indicies.replace("\"", "");
-					int[] orderIJ = parseIndicies(indicies);
+					int[] orderIJ = null;
+					try {
+						orderIJ = parseIndicies(indicies);
+					} catch (Exception x) {}
+					if (orderIJ == null)
+						break;
 					if (orderIJ[0] == 0 && orderIJ[1] == 0 && orderIJ[2] == 0) {
 						System.out.println("Roll name");
 						iNames++;
@@ -1022,23 +1027,22 @@ public class TranslateWolframNotebook {
 	}
 	
 	protected static Chunk[] loadTemplates(String[] paths) {
-		Chunk[] out = new Chunk[2];
-		out[0] = theme.makeChunk();
-		out[1] = theme.makeChunk();
-		try {
-			byte[] bytes = Files.readAllBytes( Paths.get(paths[0]) );
-			out[0].append( new String( bytes, "UTF-8" ) );
-			bytes = Files.readAllBytes( Paths.get(paths[1]) );
-			out[1].append( new String( bytes, "UTF-8" ) );
-		} catch (Exception x) {
-			x.printStackTrace();
-			return null;
+		Chunk[] out = new Chunk[paths.length];
+		for (int iC = 0; iC < paths.length; iC++) {
+			out[iC] = theme.makeChunk();
+			try {
+				byte[] bytes = Files.readAllBytes( Paths.get(paths[iC]) );
+				out[iC].append( new String( bytes, "UTF-8" ) );
+			} catch (Exception x) {
+				x.printStackTrace();
+				return null;
+			}
 		}
 		return out;
 	}
 	
 	protected static void writeTemplates(Chunk[] chunks, String[] paths) {
-		for (int i = 0; i < 2; i++) {
+		for (int i = 0; i < chunks.length; i++) {
 			String output = chunks[i].toString().replace("{@$","{$");
 			try {
 				Files.write(Paths.get(paths[i]), output.getBytes());
@@ -1049,10 +1053,10 @@ public class TranslateWolframNotebook {
 	}
 	
 	public static void main(String[] args) {
-		List<CVRFCode> codes = translateCVRFNotebook("../Java/data/MorrisonCVRF.nb");
+		List<CVRFCode> codes = translateCVRFNotebook("../Java/data/ComputedEMPVRF.nb" ); // MorrisonCVRF.nb");
 		String[] paths = {
 				"../Python/src//PolynomialFiltering/Components/ExpandingMemoryPolynomialFilter.py",
-				"../Python/src//PolynomialFiltering/Components/FadingMemoryPolynomialFilter.py"				
+				//"../Python/src//PolynomialFiltering/Components/FadingMemoryPolynomialFilter.py"				
 		};
 		Chunk[] templates = loadTemplates(paths);
 //		System.out.println(pythonTemplate.toString());
@@ -1063,6 +1067,7 @@ public class TranslateWolframNotebook {
 				iTemplate = 0;
 			} else {
 				iTemplate = 1;
+				break;
 			}
 			String tag = code.nameOrder + "CVRF";
 			StringBuffer sb = new StringBuffer();
