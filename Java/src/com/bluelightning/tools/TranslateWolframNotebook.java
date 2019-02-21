@@ -903,9 +903,9 @@ public class TranslateWolframNotebook {
 		
 		public void setExpression( String str ) {
 			this.expression = str.replace(" ", "").trim();
-			if (expression.startsWith("-")) {
-				expression = expression.substring(1);
-			}
+//			if (expression.startsWith("-")) {
+//				expression = expression.substring(1);
+//			}
 			Matcher matcher = powerPattern.matcher(expression);
 			while (matcher.find()) {
 				String sub = matcher.group(2);
@@ -958,7 +958,7 @@ public class TranslateWolframNotebook {
 	
 	protected static List<CVRFCode> translateCVRFNotebook(String inPath) {
 		ArrayList<CVRFCode> out = new ArrayList<>();
-		final String[] names = {"", "EMP", "FMP"};
+		final String[] names = {"", "FMP", "EMP", };
 		int iNames = 0;
 		CVRFCode code = null;
 		List<String> result = new ArrayList<>();
@@ -966,7 +966,8 @@ public class TranslateWolframNotebook {
 			byte[] bytes = Files.readAllBytes( Paths.get(inPath) );
 			String line = new String( bytes, "UTF-8" );
 			line = line.replace("\n", "");
-			final String elementStartMarker = "RowBox[{\"m\",\"=\"";
+			System.out.println(line.length() + " " + line.substring(0, 100));
+			final String elementStartMarker = "RowBox[{\"m\",\"=\",\"0\"";
 			final String indiciesStartMarker = "RowBox[{\"{\",RowBox[{";
 			final String cformStartMarker = "InterpretationBox[\"\\\"";
 			final String cformFinishMarker = "\\\"\"";
@@ -985,6 +986,7 @@ public class TranslateWolframNotebook {
 					String indicies = line.substring(iStart + indiciesStartMarker.length(), jFinish);
 					indicies = indicies.replace("\",\"", "");
 					indicies = indicies.replace("\"", "");
+					System.out.println(iStart + " : " + indicies + " : " + line.substring(iStart, iStart+50));
 					int[] orderIJ = null;
 					try {
 						orderIJ = parseIndicies(indicies);
@@ -994,13 +996,13 @@ public class TranslateWolframNotebook {
 					if (orderIJ[0] == 0 && orderIJ[1] == 0 && orderIJ[2] == 0) {
 						System.out.println("Roll name");
 						iNames++;
-						if (iNames > 2)
+						if (iNames > 1)
 							break;
 					}
 					if (orderIJ[1] == 0 && orderIJ[2] == 0) {
 						if (code != null)
 							out.add(code);
-						System.out.println(iNames + ": " + orderIJ[0]);
+						System.out.printf("%s %d %d %d\n", names[iNames], orderIJ[0], orderIJ[1], orderIJ[2]);
 						code = new CVRFCode();
 						code.nameOrder = String.format("%s%d", names[iNames], orderIJ[0] );
 					}
@@ -1053,23 +1055,27 @@ public class TranslateWolframNotebook {
 	}
 	
 	public static void main(String[] args) {
-		List<CVRFCode> codes = translateCVRFNotebook("../Java/data/ComputedEMPVRF.nb" ); // MorrisonCVRF.nb");
+		//List<CVRFCode> codes = translateCVRFNotebook("../Java/data/ComputedEMPVRF.nb" ); // MorrisonCVRF.nb");
+		List<CVRFCode> codes = translateCVRFNotebook("../Java/data/ComputedFMPVRF.nb" ); // MorrisonCVRF.nb");
+		for (CVRFCode code : codes) {
+			System.out.println(code);
+		}
 		String[] paths = {
-				"../Python/src//PolynomialFiltering/Components/ExpandingMemoryPolynomialFilter.py",
-				//"../Python/src//PolynomialFiltering/Components/FadingMemoryPolynomialFilter.py"				
+				//"../Python/src//PolynomialFiltering/Components/ExpandingMemoryPolynomialFilter.py",
+				"../Python/src//PolynomialFiltering/Components/FadingMemoryPolynomialFilter.py"				
 		};
 		Chunk[] templates = loadTemplates(paths);
 //		System.out.println(pythonTemplate.toString());
-		templates[0].set("EMP0CVRF", "{@$EMP0CVRF} \nV(0,0) = 0;");
+		//templates[0].set("EMP0CVRF", "{@$EMP0CVRF} \nV(0,0) = 0;");
 		for (CVRFCode code : codes) {
 			int iTemplate = 0;
-			if (code.nameOrder.startsWith("EMP")) {
-				iTemplate = 0;
-			} else {
-				iTemplate = 1;
-				break;
-			}
+//			if (code.nameOrder.startsWith("EMP")) {
+//				iTemplate = 0;
+//			} else {
+//				iTemplate = 1;
+//			}
 			String tag = code.nameOrder + "CVRF";
+			System.out.println(tag);
 			StringBuffer sb = new StringBuffer();
 			sb.append(String.format("{@$%sCVRF}\n", code.nameOrder ) );
 			for (CVRFElement element : code.elements) {

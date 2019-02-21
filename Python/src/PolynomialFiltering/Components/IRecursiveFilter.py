@@ -39,6 +39,3 @@ class IRecursiveFilter(AbstractFilter):
     @abstractmethod   
     def getState(self, t : float) -> array:
         raise NotImplementedError()
-
-    
-        
