@@ -49,15 +49,16 @@ class Test(unittest.TestCase):
             Yf = filter.getState(times[i][0])
 #             assert_almost_equal( Yf, truth[i,0:order+1] )
             E[i,:] = Yf - truth[i,:]
-            print(i, A2S(Yf), A2S(truth[i,:]), A2S(E[i,:]) )
-        C = cov(E,rowvar=False) / filter.VRF();
-        print('C/V', A2S(C.flatten()))
+#             print(i, A2S(Yf), A2S(truth[i,:]), A2S(E[i,:]) )
+        C = cov(E,rowvar=False); #  / filter.VRF()
+        print('C', A2S(C.flatten()))
          
     def fmpDriver(self, order, filter, tau=1.0, N=100, nK=10):
         K = zeros([nK,(order+1)**2])
         F = stateTransitionMatrix(order+1, -tau)
-        V = F @ filter.VRF() @ transpose(F);
-        print('V0', A2S(V.flatten()))
+#         V = F @ filter.VRF() @ transpose(F);
+        V = filter.VRF();
+        print('V', A2S(V.flatten()))
         dV = np.sqrt(diag(V))
 #         print(A2S(V))
         for k in range(0,nK) :
@@ -75,8 +76,8 @@ class Test(unittest.TestCase):
     #             print(r)
                 E[i,:] = Yf - truth[i,:]
 #             print(k, np.min(E,axis=0), np.max(E,axis=0) )
-            K[k,:] = (cov(E,rowvar=False) / (V) ).flatten();  # 
-        meanR = (mean(K/varN,axis=0))
+            K[k,:] = (cov(E,rowvar=False) ).flatten();  # 
+        meanR = (mean(K,axis=0))
         stdR = (std(K,axis=0))
         minR = np.min(K,axis=0)
         maxR = np.max(K,axis=0)
@@ -84,6 +85,7 @@ class Test(unittest.TestCase):
         print( "stds  = %s" % A2S(stdR) )
         print( "mins  = %s" % A2S(minR) )
         print( "maxs  = %s" % A2S(maxR) )
+        print( A2S(V.flatten() / meanR))
 
 
 
@@ -113,9 +115,10 @@ Ran 1 test in 32.635s
   
     def test_FMP2(self):
         fmp = FMP2(0.95, 0.1)
-        print('V=',fmp.VRF().flatten())
-#         self.fmpNoisy(fmp.order, fmp, tau=fmp.getTau(), N=100)
-        self.fmpDriver(fmp.order, fmp, tau=fmp.getTau(), N=100, nK=1000)
+        print('V=',A2S(fmp.VRF().flatten()))
+        self.fmpPerfect(fmp.order, fmp, tau=fmp.getTau(), N=50)
+#         self.fmpNoisy(fmp.order, fmp, tau=fmp.getTau(), N=10000)
+        self.fmpDriver(fmp.order, fmp, tau=fmp.getTau(), N=10000, nK=100)
         '''
         tau=0.1
             N=100, nK=50

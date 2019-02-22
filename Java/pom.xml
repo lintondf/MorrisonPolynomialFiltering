@@ -3,6 +3,11 @@
   <groupId>FilteringJava</groupId>
   <artifactId>FilteringJava</artifactId>
   <version>0.0.1-SNAPSHOT</version>
+  <properties>
+    <!-- <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding> -->
+    <antlr4.visitor>true</antlr4.visitor>
+    <antlr4.listener>true</antlr4.listener>
+  </properties>   
   <build>
     <sourceDirectory>src</sourceDirectory>
     <plugins>
@@ -13,7 +18,7 @@
           <source/>
           <target/>
         </configuration>
-      </plugin>
+      </plugin>   
     </plugins>
   </build>
   <dependencies>
@@ -34,11 +39,12 @@
 	    <artifactId>chunk-templates</artifactId>
 	    <version>3.5.0</version>
 	</dependency>
-	<dependency>
-	    <groupId>com.github.julianthome</groupId>
-	    <artifactId>inmemantlr-api</artifactId>
-	    <version>1.6</version>
-	</dependency>
-  	
+<!-- https://mvnrepository.com/artifact/org.antlr/antlr4 -->
+<dependency>
+    <groupId>org.antlr</groupId>
+    <artifactId>antlr4</artifactId>
+    <version>4.7.2</version>
+</dependency>
+
   </dependencies>
 </project>
