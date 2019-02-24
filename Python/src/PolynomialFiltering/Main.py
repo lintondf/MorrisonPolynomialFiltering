@@ -51,8 +51,6 @@ class AbstractFilter(ABC):
         :param dt: time step
         '''
         B = (diag(ones([N-1]),k=1))
-        A = diag(ones([N]));
-        A = A @ B * A / 1**0.5;
         return expm(dt*B)
     
     
@@ -95,4 +93,8 @@ class ManagedFilterBase(AbstractFilter):
     @abstractmethod   
     def add(self, t : float, y : array, observationId : str = ''):    
         raise NotImplementedError()
+
+    @abstractmethod   
+    def addWithVariance(self, t : float, y : array, R : array, observationId : str = ''):    
+        self.add(t, y, observationId=observationId);
 
