@@ -1,5 +1,5 @@
-// Generated from Python3.g4 by ANTLR 4.7.2
-package com.bluelightning.tools.antlr4;
+// Generated from LcdPython.g4 by ANTLR 4.7.2
+package com.bluelightning.tools.transpiler.antlr4;
 import org.antlr.v4.runtime.atn.*;
 import org.antlr.v4.runtime.dfa.DFA;
 import org.antlr.v4.runtime.*;
@@ -10,7 +10,7 @@ import java.util.Iterator;
 import java.util.ArrayList;
 
 @SuppressWarnings({"all", "warnings", "unchecked", "unused", "cast"})
-public class Python3Parser extends Parser {
+public class LcdPythonParser extends Parser {
 	static { RuntimeMetaData.checkVersion("4.7.2", RuntimeMetaData.VERSION); }
 
 	protected static final DFA[] _decisionToDFA;
@@ -149,7 +149,7 @@ public class Python3Parser extends Parser {
 	}
 
 	@Override
-	public String getGrammarFileName() { return "Python3.g4"; }
+	public String getGrammarFileName() { return "LcdPython.g4"; }
 
 	@Override
 	public String[] getRuleNames() { return ruleNames; }
@@ -160,13 +160,13 @@ public class Python3Parser extends Parser {
 	@Override
 	public ATN getATN() { return _ATN; }
 
-	public Python3Parser(TokenStream input) {
+	public LcdPythonParser(TokenStream input) {
 		super(input);
 		_interp = new ParserATNSimulator(this,_ATN,_decisionToDFA,_sharedContextCache);
 	}
 
 	public static class Single_inputContext extends ParserRuleContext {
-		public TerminalNode NEWLINE() { return getToken(Python3Parser.NEWLINE, 0); }
+		public TerminalNode NEWLINE() { return getToken(LcdPythonParser.NEWLINE, 0); }
 		public Simple_stmtContext simple_stmt() {
 			return getRuleContext(Simple_stmtContext.class,0);
 		}
@@ -179,15 +179,15 @@ public class Python3Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_single_input; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Python3Listener ) ((Python3Listener)listener).enterSingle_input(this);
+			if ( listener instanceof LcdPythonListener ) ((LcdPythonListener)listener).enterSingle_input(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Python3Listener ) ((Python3Listener)listener).exitSingle_input(this);
+			if ( listener instanceof LcdPythonListener ) ((LcdPythonListener)listener).exitSingle_input(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof Python3Visitor ) return ((Python3Visitor<? extends T>)visitor).visitSingle_input(this);
+			if ( visitor instanceof LcdPythonVisitor ) return ((LcdPythonVisitor<? extends T>)visitor).visitSingle_input(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -274,10 +274,10 @@ public class Python3Parser extends Parser {
 	}
 
 	public static class File_inputContext extends ParserRuleContext {
-		public TerminalNode EOF() { return getToken(Python3Parser.EOF, 0); }
-		public List<TerminalNode> NEWLINE() { return getTokens(Python3Parser.NEWLINE); }
+		public TerminalNode EOF() { return getToken(LcdPythonParser.EOF, 0); }
+		public List<TerminalNode> NEWLINE() { return getTokens(LcdPythonParser.NEWLINE); }
 		public TerminalNode NEWLINE(int i) {
-			return getToken(Python3Parser.NEWLINE, i);
+			return getToken(LcdPythonParser.NEWLINE, i);
 		}
 		public List<StmtContext> stmt() {
 			return getRuleContexts(StmtContext.class);
@@ -291,15 +291,15 @@ public class Python3Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_file_input; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Python3Listener ) ((Python3Listener)listener).enterFile_input(this);
+			if ( listener instanceof LcdPythonListener ) ((LcdPythonListener)listener).enterFile_input(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Python3Listener ) ((Python3Listener)listener).exitFile_input(this);
+			if ( listener instanceof LcdPythonListener ) ((LcdPythonListener)listener).exitFile_input(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof Python3Visitor ) return ((Python3Visitor<? extends T>)visitor).visitFile_input(this);
+			if ( visitor instanceof LcdPythonVisitor ) return ((LcdPythonVisitor<? extends T>)visitor).visitFile_input(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -395,10 +395,10 @@ public class Python3Parser extends Parser {
 		public TestlistContext testlist() {
 			return getRuleContext(TestlistContext.class,0);
 		}
-		public TerminalNode EOF() { return getToken(Python3Parser.EOF, 0); }
-		public List<TerminalNode> NEWLINE() { return getTokens(Python3Parser.NEWLINE); }
+		public TerminalNode EOF() { return getToken(LcdPythonParser.EOF, 0); }
+		public List<TerminalNode> NEWLINE() { return getTokens(LcdPythonParser.NEWLINE); }
 		public TerminalNode NEWLINE(int i) {
-			return getToken(Python3Parser.NEWLINE, i);
+			return getToken(LcdPythonParser.NEWLINE, i);
 		}
 		public Eval_inputContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -406,15 +406,15 @@ public class Python3Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_eval_input; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Python3Listener ) ((Python3Listener)listener).enterEval_input(this);
+			if ( listener instanceof LcdPythonListener ) ((LcdPythonListener)listener).enterEval_input(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Python3Listener ) ((Python3Listener)listener).exitEval_input(this);
+			if ( listener instanceof LcdPythonListener ) ((LcdPythonListener)listener).exitEval_input(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof Python3Visitor ) return ((Python3Visitor<? extends T>)visitor).visitEval_input(this);
+			if ( visitor instanceof LcdPythonVisitor ) return ((LcdPythonVisitor<? extends T>)visitor).visitEval_input(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -458,13 +458,13 @@ public class Python3Parser extends Parser {
 	}
 
 	public static class DecoratorContext extends ParserRuleContext {
-		public TerminalNode AT() { return getToken(Python3Parser.AT, 0); }
+		public TerminalNode AT() { return getToken(LcdPythonParser.AT, 0); }
 		public Dotted_nameContext dotted_name() {
 			return getRuleContext(Dotted_nameContext.class,0);
 		}
-		public TerminalNode NEWLINE() { return getToken(Python3Parser.NEWLINE, 0); }
-		public TerminalNode OPEN_PAREN() { return getToken(Python3Parser.OPEN_PAREN, 0); }
-		public TerminalNode CLOSE_PAREN() { return getToken(Python3Parser.CLOSE_PAREN, 0); }
+		public TerminalNode NEWLINE() { return getToken(LcdPythonParser.NEWLINE, 0); }
+		public TerminalNode OPEN_PAREN() { return getToken(LcdPythonParser.OPEN_PAREN, 0); }
+		public TerminalNode CLOSE_PAREN() { return getToken(LcdPythonParser.CLOSE_PAREN, 0); }
 		public ArglistContext arglist() {
 			return getRuleContext(ArglistContext.class,0);
 		}
@@ -474,15 +474,15 @@ public class Python3Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_decorator; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Python3Listener ) ((Python3Listener)listener).enterDecorator(this);
+			if ( listener instanceof LcdPythonListener ) ((LcdPythonListener)listener).enterDecorator(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Python3Listener ) ((Python3Listener)listener).exitDecorator(this);
+			if ( listener instanceof LcdPythonListener ) ((LcdPythonListener)listener).exitDecorator(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof Python3Visitor ) return ((Python3Visitor<? extends T>)visitor).visitDecorator(this);
+			if ( visitor instanceof LcdPythonVisitor ) return ((LcdPythonVisitor<? extends T>)visitor).visitDecorator(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -548,15 +548,15 @@ public class Python3Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_decorators; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Python3Listener ) ((Python3Listener)listener).enterDecorators(this);
+			if ( listener instanceof LcdPythonListener ) ((LcdPythonListener)listener).enterDecorators(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Python3Listener ) ((Python3Listener)listener).exitDecorators(this);
+			if ( listener instanceof LcdPythonListener ) ((LcdPythonListener)listener).exitDecorators(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof Python3Visitor ) return ((Python3Visitor<? extends T>)visitor).visitDecorators(this);
+			if ( visitor instanceof LcdPythonVisitor ) return ((LcdPythonVisitor<? extends T>)visitor).visitDecorators(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -614,15 +614,15 @@ public class Python3Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_decorated; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Python3Listener ) ((Python3Listener)listener).enterDecorated(this);
+			if ( listener instanceof LcdPythonListener ) ((LcdPythonListener)listener).enterDecorated(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Python3Listener ) ((Python3Listener)listener).exitDecorated(this);
+			if ( listener instanceof LcdPythonListener ) ((LcdPythonListener)listener).exitDecorated(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof Python3Visitor ) return ((Python3Visitor<? extends T>)visitor).visitDecorated(this);
+			if ( visitor instanceof LcdPythonVisitor ) return ((LcdPythonVisitor<? extends T>)visitor).visitDecorated(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -673,7 +673,7 @@ public class Python3Parser extends Parser {
 	}
 
 	public static class Async_funcdefContext extends ParserRuleContext {
-		public TerminalNode ASYNC() { return getToken(Python3Parser.ASYNC, 0); }
+		public TerminalNode ASYNC() { return getToken(LcdPythonParser.ASYNC, 0); }
 		public FuncdefContext funcdef() {
 			return getRuleContext(FuncdefContext.class,0);
 		}
@@ -683,15 +683,15 @@ public class Python3Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_async_funcdef; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Python3Listener ) ((Python3Listener)listener).enterAsync_funcdef(this);
+			if ( listener instanceof LcdPythonListener ) ((LcdPythonListener)listener).enterAsync_funcdef(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Python3Listener ) ((Python3Listener)listener).exitAsync_funcdef(this);
+			if ( listener instanceof LcdPythonListener ) ((LcdPythonListener)listener).exitAsync_funcdef(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof Python3Visitor ) return ((Python3Visitor<? extends T>)visitor).visitAsync_funcdef(this);
+			if ( visitor instanceof LcdPythonVisitor ) return ((LcdPythonVisitor<? extends T>)visitor).visitAsync_funcdef(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -720,16 +720,16 @@ public class Python3Parser extends Parser {
 	}
 
 	public static class FuncdefContext extends ParserRuleContext {
-		public TerminalNode DEF() { return getToken(Python3Parser.DEF, 0); }
-		public TerminalNode NAME() { return getToken(Python3Parser.NAME, 0); }
+		public TerminalNode DEF() { return getToken(LcdPythonParser.DEF, 0); }
+		public TerminalNode NAME() { return getToken(LcdPythonParser.NAME, 0); }
 		public ParametersContext parameters() {
 			return getRuleContext(ParametersContext.class,0);
 		}
-		public TerminalNode COLON() { return getToken(Python3Parser.COLON, 0); }
+		public TerminalNode COLON() { return getToken(LcdPythonParser.COLON, 0); }
 		public SuiteContext suite() {
 			return getRuleContext(SuiteContext.class,0);
 		}
-		public TerminalNode ARROW() { return getToken(Python3Parser.ARROW, 0); }
+		public TerminalNode ARROW() { return getToken(LcdPythonParser.ARROW, 0); }
 		public TestContext test() {
 			return getRuleContext(TestContext.class,0);
 		}
@@ -739,15 +739,15 @@ public class Python3Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_funcdef; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Python3Listener ) ((Python3Listener)listener).enterFuncdef(this);
+			if ( listener instanceof LcdPythonListener ) ((LcdPythonListener)listener).enterFuncdef(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Python3Listener ) ((Python3Listener)listener).exitFuncdef(this);
+			if ( listener instanceof LcdPythonListener ) ((LcdPythonListener)listener).exitFuncdef(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof Python3Visitor ) return ((Python3Visitor<? extends T>)visitor).visitFuncdef(this);
+			if ( visitor instanceof LcdPythonVisitor ) return ((LcdPythonVisitor<? extends T>)visitor).visitFuncdef(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -795,8 +795,8 @@ public class Python3Parser extends Parser {
 	}
 
 	public static class ParametersContext extends ParserRuleContext {
-		public TerminalNode OPEN_PAREN() { return getToken(Python3Parser.OPEN_PAREN, 0); }
-		public TerminalNode CLOSE_PAREN() { return getToken(Python3Parser.CLOSE_PAREN, 0); }
+		public TerminalNode OPEN_PAREN() { return getToken(LcdPythonParser.OPEN_PAREN, 0); }
+		public TerminalNode CLOSE_PAREN() { return getToken(LcdPythonParser.CLOSE_PAREN, 0); }
 		public TypedargslistContext typedargslist() {
 			return getRuleContext(TypedargslistContext.class,0);
 		}
@@ -806,15 +806,15 @@ public class Python3Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_parameters; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Python3Listener ) ((Python3Listener)listener).enterParameters(this);
+			if ( listener instanceof LcdPythonListener ) ((LcdPythonListener)listener).enterParameters(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Python3Listener ) ((Python3Listener)listener).exitParameters(this);
+			if ( listener instanceof LcdPythonListener ) ((LcdPythonListener)listener).exitParameters(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof Python3Visitor ) return ((Python3Visitor<? extends T>)visitor).visitParameters(this);
+			if ( visitor instanceof LcdPythonVisitor ) return ((LcdPythonVisitor<? extends T>)visitor).visitParameters(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -860,11 +860,11 @@ public class Python3Parser extends Parser {
 		public TfpdefContext tfpdef(int i) {
 			return getRuleContext(TfpdefContext.class,i);
 		}
-		public TerminalNode STAR() { return getToken(Python3Parser.STAR, 0); }
-		public TerminalNode POWER() { return getToken(Python3Parser.POWER, 0); }
-		public List<TerminalNode> ASSIGN() { return getTokens(Python3Parser.ASSIGN); }
+		public TerminalNode STAR() { return getToken(LcdPythonParser.STAR, 0); }
+		public TerminalNode POWER() { return getToken(LcdPythonParser.POWER, 0); }
+		public List<TerminalNode> ASSIGN() { return getTokens(LcdPythonParser.ASSIGN); }
 		public TerminalNode ASSIGN(int i) {
-			return getToken(Python3Parser.ASSIGN, i);
+			return getToken(LcdPythonParser.ASSIGN, i);
 		}
 		public List<TestContext> test() {
 			return getRuleContexts(TestContext.class);
@@ -872,9 +872,9 @@ public class Python3Parser extends Parser {
 		public TestContext test(int i) {
 			return getRuleContext(TestContext.class,i);
 		}
-		public List<TerminalNode> COMMA() { return getTokens(Python3Parser.COMMA); }
+		public List<TerminalNode> COMMA() { return getTokens(LcdPythonParser.COMMA); }
 		public TerminalNode COMMA(int i) {
-			return getToken(Python3Parser.COMMA, i);
+			return getToken(LcdPythonParser.COMMA, i);
 		}
 		public TypedargslistContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -882,15 +882,15 @@ public class Python3Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_typedargslist; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Python3Listener ) ((Python3Listener)listener).enterTypedargslist(this);
+			if ( listener instanceof LcdPythonListener ) ((LcdPythonListener)listener).enterTypedargslist(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Python3Listener ) ((Python3Listener)listener).exitTypedargslist(this);
+			if ( listener instanceof LcdPythonListener ) ((LcdPythonListener)listener).exitTypedargslist(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof Python3Visitor ) return ((Python3Visitor<? extends T>)visitor).visitTypedargslist(this);
+			if ( visitor instanceof LcdPythonVisitor ) return ((LcdPythonVisitor<? extends T>)visitor).visitTypedargslist(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -1181,8 +1181,8 @@ public class Python3Parser extends Parser {
 	}
 
 	public static class TfpdefContext extends ParserRuleContext {
-		public TerminalNode NAME() { return getToken(Python3Parser.NAME, 0); }
-		public TerminalNode COLON() { return getToken(Python3Parser.COLON, 0); }
+		public TerminalNode NAME() { return getToken(LcdPythonParser.NAME, 0); }
+		public TerminalNode COLON() { return getToken(LcdPythonParser.COLON, 0); }
 		public TestContext test() {
 			return getRuleContext(TestContext.class,0);
 		}
@@ -1192,15 +1192,15 @@ public class Python3Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_tfpdef; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Python3Listener ) ((Python3Listener)listener).enterTfpdef(this);
+			if ( listener instanceof LcdPythonListener ) ((LcdPythonListener)listener).enterTfpdef(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Python3Listener ) ((Python3Listener)listener).exitTfpdef(this);
+			if ( listener instanceof LcdPythonListener ) ((LcdPythonListener)listener).exitTfpdef(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof Python3Visitor ) return ((Python3Visitor<? extends T>)visitor).visitTfpdef(this);
+			if ( visitor instanceof LcdPythonVisitor ) return ((LcdPythonVisitor<? extends T>)visitor).visitTfpdef(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -1246,11 +1246,11 @@ public class Python3Parser extends Parser {
 		public VfpdefContext vfpdef(int i) {
 			return getRuleContext(VfpdefContext.class,i);
 		}
-		public TerminalNode STAR() { return getToken(Python3Parser.STAR, 0); }
-		public TerminalNode POWER() { return getToken(Python3Parser.POWER, 0); }
-		public List<TerminalNode> ASSIGN() { return getTokens(Python3Parser.ASSIGN); }
+		public TerminalNode STAR() { return getToken(LcdPythonParser.STAR, 0); }
+		public TerminalNode POWER() { return getToken(LcdPythonParser.POWER, 0); }
+		public List<TerminalNode> ASSIGN() { return getTokens(LcdPythonParser.ASSIGN); }
 		public TerminalNode ASSIGN(int i) {
-			return getToken(Python3Parser.ASSIGN, i);
+			return getToken(LcdPythonParser.ASSIGN, i);
 		}
 		public List<TestContext> test() {
 			return getRuleContexts(TestContext.class);
@@ -1258,9 +1258,9 @@ public class Python3Parser extends Parser {
 		public TestContext test(int i) {
 			return getRuleContext(TestContext.class,i);
 		}
-		public List<TerminalNode> COMMA() { return getTokens(Python3Parser.COMMA); }
+		public List<TerminalNode> COMMA() { return getTokens(LcdPythonParser.COMMA); }
 		public TerminalNode COMMA(int i) {
-			return getToken(Python3Parser.COMMA, i);
+			return getToken(LcdPythonParser.COMMA, i);
 		}
 		public VarargslistContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -1268,15 +1268,15 @@ public class Python3Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_varargslist; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Python3Listener ) ((Python3Listener)listener).enterVarargslist(this);
+			if ( listener instanceof LcdPythonListener ) ((LcdPythonListener)listener).enterVarargslist(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Python3Listener ) ((Python3Listener)listener).exitVarargslist(this);
+			if ( listener instanceof LcdPythonListener ) ((LcdPythonListener)listener).exitVarargslist(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof Python3Visitor ) return ((Python3Visitor<? extends T>)visitor).visitVarargslist(this);
+			if ( visitor instanceof LcdPythonVisitor ) return ((LcdPythonVisitor<? extends T>)visitor).visitVarargslist(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -1567,22 +1567,22 @@ public class Python3Parser extends Parser {
 	}
 
 	public static class VfpdefContext extends ParserRuleContext {
-		public TerminalNode NAME() { return getToken(Python3Parser.NAME, 0); }
+		public TerminalNode NAME() { return getToken(LcdPythonParser.NAME, 0); }
 		public VfpdefContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_vfpdef; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Python3Listener ) ((Python3Listener)listener).enterVfpdef(this);
+			if ( listener instanceof LcdPythonListener ) ((LcdPythonListener)listener).enterVfpdef(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Python3Listener ) ((Python3Listener)listener).exitVfpdef(this);
+			if ( listener instanceof LcdPythonListener ) ((LcdPythonListener)listener).exitVfpdef(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof Python3Visitor ) return ((Python3Visitor<? extends T>)visitor).visitVfpdef(this);
+			if ( visitor instanceof LcdPythonVisitor ) return ((LcdPythonVisitor<? extends T>)visitor).visitVfpdef(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -1621,15 +1621,15 @@ public class Python3Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_stmt; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Python3Listener ) ((Python3Listener)listener).enterStmt(this);
+			if ( listener instanceof LcdPythonListener ) ((LcdPythonListener)listener).enterStmt(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Python3Listener ) ((Python3Listener)listener).exitStmt(this);
+			if ( listener instanceof LcdPythonListener ) ((LcdPythonListener)listener).exitStmt(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof Python3Visitor ) return ((Python3Visitor<? extends T>)visitor).visitStmt(this);
+			if ( visitor instanceof LcdPythonVisitor ) return ((LcdPythonVisitor<? extends T>)visitor).visitStmt(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -1713,10 +1713,10 @@ public class Python3Parser extends Parser {
 		public Small_stmtContext small_stmt(int i) {
 			return getRuleContext(Small_stmtContext.class,i);
 		}
-		public TerminalNode NEWLINE() { return getToken(Python3Parser.NEWLINE, 0); }
-		public List<TerminalNode> SEMI_COLON() { return getTokens(Python3Parser.SEMI_COLON); }
+		public TerminalNode NEWLINE() { return getToken(LcdPythonParser.NEWLINE, 0); }
+		public List<TerminalNode> SEMI_COLON() { return getTokens(LcdPythonParser.SEMI_COLON); }
 		public TerminalNode SEMI_COLON(int i) {
-			return getToken(Python3Parser.SEMI_COLON, i);
+			return getToken(LcdPythonParser.SEMI_COLON, i);
 		}
 		public Simple_stmtContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -1724,15 +1724,15 @@ public class Python3Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_simple_stmt; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Python3Listener ) ((Python3Listener)listener).enterSimple_stmt(this);
+			if ( listener instanceof LcdPythonListener ) ((LcdPythonListener)listener).enterSimple_stmt(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Python3Listener ) ((Python3Listener)listener).exitSimple_stmt(this);
+			if ( listener instanceof LcdPythonListener ) ((LcdPythonListener)listener).exitSimple_stmt(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof Python3Visitor ) return ((Python3Visitor<? extends T>)visitor).visitSimple_stmt(this);
+			if ( visitor instanceof LcdPythonVisitor ) return ((LcdPythonVisitor<? extends T>)visitor).visitSimple_stmt(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -1821,15 +1821,15 @@ public class Python3Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_small_stmt; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Python3Listener ) ((Python3Listener)listener).enterSmall_stmt(this);
+			if ( listener instanceof LcdPythonListener ) ((LcdPythonListener)listener).enterSmall_stmt(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Python3Listener ) ((Python3Listener)listener).exitSmall_stmt(this);
+			if ( listener instanceof LcdPythonListener ) ((LcdPythonListener)listener).exitSmall_stmt(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof Python3Visitor ) return ((Python3Visitor<? extends T>)visitor).visitSmall_stmt(this);
+			if ( visitor instanceof LcdPythonVisitor ) return ((LcdPythonVisitor<? extends T>)visitor).visitSmall_stmt(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -1950,9 +1950,9 @@ public class Python3Parser extends Parser {
 		public TestlistContext testlist() {
 			return getRuleContext(TestlistContext.class,0);
 		}
-		public List<TerminalNode> ASSIGN() { return getTokens(Python3Parser.ASSIGN); }
+		public List<TerminalNode> ASSIGN() { return getTokens(LcdPythonParser.ASSIGN); }
 		public TerminalNode ASSIGN(int i) {
-			return getToken(Python3Parser.ASSIGN, i);
+			return getToken(LcdPythonParser.ASSIGN, i);
 		}
 		public Expr_stmtContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -1960,15 +1960,15 @@ public class Python3Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_expr_stmt; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Python3Listener ) ((Python3Listener)listener).enterExpr_stmt(this);
+			if ( listener instanceof LcdPythonListener ) ((LcdPythonListener)listener).enterExpr_stmt(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Python3Listener ) ((Python3Listener)listener).exitExpr_stmt(this);
+			if ( listener instanceof LcdPythonListener ) ((LcdPythonListener)listener).exitExpr_stmt(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof Python3Visitor ) return ((Python3Visitor<? extends T>)visitor).visitExpr_stmt(this);
+			if ( visitor instanceof LcdPythonVisitor ) return ((LcdPythonVisitor<? extends T>)visitor).visitExpr_stmt(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -2113,29 +2113,29 @@ public class Python3Parser extends Parser {
 	}
 
 	public static class AnnassignContext extends ParserRuleContext {
-		public TerminalNode COLON() { return getToken(Python3Parser.COLON, 0); }
+		public TerminalNode COLON() { return getToken(LcdPythonParser.COLON, 0); }
 		public List<TestContext> test() {
 			return getRuleContexts(TestContext.class);
 		}
 		public TestContext test(int i) {
 			return getRuleContext(TestContext.class,i);
 		}
-		public TerminalNode ASSIGN() { return getToken(Python3Parser.ASSIGN, 0); }
+		public TerminalNode ASSIGN() { return getToken(LcdPythonParser.ASSIGN, 0); }
 		public AnnassignContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_annassign; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Python3Listener ) ((Python3Listener)listener).enterAnnassign(this);
+			if ( listener instanceof LcdPythonListener ) ((LcdPythonListener)listener).enterAnnassign(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Python3Listener ) ((Python3Listener)listener).exitAnnassign(this);
+			if ( listener instanceof LcdPythonListener ) ((LcdPythonListener)listener).exitAnnassign(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof Python3Visitor ) return ((Python3Visitor<? extends T>)visitor).visitAnnassign(this);
+			if ( visitor instanceof LcdPythonVisitor ) return ((LcdPythonVisitor<? extends T>)visitor).visitAnnassign(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -2189,9 +2189,9 @@ public class Python3Parser extends Parser {
 		public Star_exprContext star_expr(int i) {
 			return getRuleContext(Star_exprContext.class,i);
 		}
-		public List<TerminalNode> COMMA() { return getTokens(Python3Parser.COMMA); }
+		public List<TerminalNode> COMMA() { return getTokens(LcdPythonParser.COMMA); }
 		public TerminalNode COMMA(int i) {
-			return getToken(Python3Parser.COMMA, i);
+			return getToken(LcdPythonParser.COMMA, i);
 		}
 		public Testlist_star_exprContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -2199,15 +2199,15 @@ public class Python3Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_testlist_star_expr; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Python3Listener ) ((Python3Listener)listener).enterTestlist_star_expr(this);
+			if ( listener instanceof LcdPythonListener ) ((LcdPythonListener)listener).enterTestlist_star_expr(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Python3Listener ) ((Python3Listener)listener).exitTestlist_star_expr(this);
+			if ( listener instanceof LcdPythonListener ) ((LcdPythonListener)listener).exitTestlist_star_expr(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof Python3Visitor ) return ((Python3Visitor<? extends T>)visitor).visitTestlist_star_expr(this);
+			if ( visitor instanceof LcdPythonVisitor ) return ((LcdPythonVisitor<? extends T>)visitor).visitTestlist_star_expr(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -2326,34 +2326,34 @@ public class Python3Parser extends Parser {
 	}
 
 	public static class AugassignContext extends ParserRuleContext {
-		public TerminalNode ADD_ASSIGN() { return getToken(Python3Parser.ADD_ASSIGN, 0); }
-		public TerminalNode SUB_ASSIGN() { return getToken(Python3Parser.SUB_ASSIGN, 0); }
-		public TerminalNode MULT_ASSIGN() { return getToken(Python3Parser.MULT_ASSIGN, 0); }
-		public TerminalNode AT_ASSIGN() { return getToken(Python3Parser.AT_ASSIGN, 0); }
-		public TerminalNode DIV_ASSIGN() { return getToken(Python3Parser.DIV_ASSIGN, 0); }
-		public TerminalNode MOD_ASSIGN() { return getToken(Python3Parser.MOD_ASSIGN, 0); }
-		public TerminalNode AND_ASSIGN() { return getToken(Python3Parser.AND_ASSIGN, 0); }
-		public TerminalNode OR_ASSIGN() { return getToken(Python3Parser.OR_ASSIGN, 0); }
-		public TerminalNode XOR_ASSIGN() { return getToken(Python3Parser.XOR_ASSIGN, 0); }
-		public TerminalNode LEFT_SHIFT_ASSIGN() { return getToken(Python3Parser.LEFT_SHIFT_ASSIGN, 0); }
-		public TerminalNode RIGHT_SHIFT_ASSIGN() { return getToken(Python3Parser.RIGHT_SHIFT_ASSIGN, 0); }
-		public TerminalNode POWER_ASSIGN() { return getToken(Python3Parser.POWER_ASSIGN, 0); }
-		public TerminalNode IDIV_ASSIGN() { return getToken(Python3Parser.IDIV_ASSIGN, 0); }
+		public TerminalNode ADD_ASSIGN() { return getToken(LcdPythonParser.ADD_ASSIGN, 0); }
+		public TerminalNode SUB_ASSIGN() { return getToken(LcdPythonParser.SUB_ASSIGN, 0); }
+		public TerminalNode MULT_ASSIGN() { return getToken(LcdPythonParser.MULT_ASSIGN, 0); }
+		public TerminalNode AT_ASSIGN() { return getToken(LcdPythonParser.AT_ASSIGN, 0); }
+		public TerminalNode DIV_ASSIGN() { return getToken(LcdPythonParser.DIV_ASSIGN, 0); }
+		public TerminalNode MOD_ASSIGN() { return getToken(LcdPythonParser.MOD_ASSIGN, 0); }
+		public TerminalNode AND_ASSIGN() { return getToken(LcdPythonParser.AND_ASSIGN, 0); }
+		public TerminalNode OR_ASSIGN() { return getToken(LcdPythonParser.OR_ASSIGN, 0); }
+		public TerminalNode XOR_ASSIGN() { return getToken(LcdPythonParser.XOR_ASSIGN, 0); }
+		public TerminalNode LEFT_SHIFT_ASSIGN() { return getToken(LcdPythonParser.LEFT_SHIFT_ASSIGN, 0); }
+		public TerminalNode RIGHT_SHIFT_ASSIGN() { return getToken(LcdPythonParser.RIGHT_SHIFT_ASSIGN, 0); }
+		public TerminalNode POWER_ASSIGN() { return getToken(LcdPythonParser.POWER_ASSIGN, 0); }
+		public TerminalNode IDIV_ASSIGN() { return getToken(LcdPythonParser.IDIV_ASSIGN, 0); }
 		public AugassignContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_augassign; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Python3Listener ) ((Python3Listener)listener).enterAugassign(this);
+			if ( listener instanceof LcdPythonListener ) ((LcdPythonListener)listener).enterAugassign(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Python3Listener ) ((Python3Listener)listener).exitAugassign(this);
+			if ( listener instanceof LcdPythonListener ) ((LcdPythonListener)listener).exitAugassign(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof Python3Visitor ) return ((Python3Visitor<? extends T>)visitor).visitAugassign(this);
+			if ( visitor instanceof LcdPythonVisitor ) return ((LcdPythonVisitor<? extends T>)visitor).visitAugassign(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -2389,7 +2389,7 @@ public class Python3Parser extends Parser {
 	}
 
 	public static class Del_stmtContext extends ParserRuleContext {
-		public TerminalNode DEL() { return getToken(Python3Parser.DEL, 0); }
+		public TerminalNode DEL() { return getToken(LcdPythonParser.DEL, 0); }
 		public ExprlistContext exprlist() {
 			return getRuleContext(ExprlistContext.class,0);
 		}
@@ -2399,15 +2399,15 @@ public class Python3Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_del_stmt; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Python3Listener ) ((Python3Listener)listener).enterDel_stmt(this);
+			if ( listener instanceof LcdPythonListener ) ((LcdPythonListener)listener).enterDel_stmt(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Python3Listener ) ((Python3Listener)listener).exitDel_stmt(this);
+			if ( listener instanceof LcdPythonListener ) ((LcdPythonListener)listener).exitDel_stmt(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof Python3Visitor ) return ((Python3Visitor<? extends T>)visitor).visitDel_stmt(this);
+			if ( visitor instanceof LcdPythonVisitor ) return ((LcdPythonVisitor<? extends T>)visitor).visitDel_stmt(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -2436,22 +2436,22 @@ public class Python3Parser extends Parser {
 	}
 
 	public static class Pass_stmtContext extends ParserRuleContext {
-		public TerminalNode PASS() { return getToken(Python3Parser.PASS, 0); }
+		public TerminalNode PASS() { return getToken(LcdPythonParser.PASS, 0); }
 		public Pass_stmtContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_pass_stmt; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Python3Listener ) ((Python3Listener)listener).enterPass_stmt(this);
+			if ( listener instanceof LcdPythonListener ) ((LcdPythonListener)listener).enterPass_stmt(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Python3Listener ) ((Python3Listener)listener).exitPass_stmt(this);
+			if ( listener instanceof LcdPythonListener ) ((LcdPythonListener)listener).exitPass_stmt(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof Python3Visitor ) return ((Python3Visitor<? extends T>)visitor).visitPass_stmt(this);
+			if ( visitor instanceof LcdPythonVisitor ) return ((LcdPythonVisitor<? extends T>)visitor).visitPass_stmt(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -2499,15 +2499,15 @@ public class Python3Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_flow_stmt; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Python3Listener ) ((Python3Listener)listener).enterFlow_stmt(this);
+			if ( listener instanceof LcdPythonListener ) ((LcdPythonListener)listener).enterFlow_stmt(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Python3Listener ) ((Python3Listener)listener).exitFlow_stmt(this);
+			if ( listener instanceof LcdPythonListener ) ((LcdPythonListener)listener).exitFlow_stmt(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof Python3Visitor ) return ((Python3Visitor<? extends T>)visitor).visitFlow_stmt(this);
+			if ( visitor instanceof LcdPythonVisitor ) return ((LcdPythonVisitor<? extends T>)visitor).visitFlow_stmt(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -2570,22 +2570,22 @@ public class Python3Parser extends Parser {
 	}
 
 	public static class Break_stmtContext extends ParserRuleContext {
-		public TerminalNode BREAK() { return getToken(Python3Parser.BREAK, 0); }
+		public TerminalNode BREAK() { return getToken(LcdPythonParser.BREAK, 0); }
 		public Break_stmtContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_break_stmt; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Python3Listener ) ((Python3Listener)listener).enterBreak_stmt(this);
+			if ( listener instanceof LcdPythonListener ) ((LcdPythonListener)listener).enterBreak_stmt(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Python3Listener ) ((Python3Listener)listener).exitBreak_stmt(this);
+			if ( listener instanceof LcdPythonListener ) ((LcdPythonListener)listener).exitBreak_stmt(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof Python3Visitor ) return ((Python3Visitor<? extends T>)visitor).visitBreak_stmt(this);
+			if ( visitor instanceof LcdPythonVisitor ) return ((LcdPythonVisitor<? extends T>)visitor).visitBreak_stmt(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -2612,22 +2612,22 @@ public class Python3Parser extends Parser {
 	}
 
 	public static class Continue_stmtContext extends ParserRuleContext {
-		public TerminalNode CONTINUE() { return getToken(Python3Parser.CONTINUE, 0); }
+		public TerminalNode CONTINUE() { return getToken(LcdPythonParser.CONTINUE, 0); }
 		public Continue_stmtContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_continue_stmt; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Python3Listener ) ((Python3Listener)listener).enterContinue_stmt(this);
+			if ( listener instanceof LcdPythonListener ) ((LcdPythonListener)listener).enterContinue_stmt(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Python3Listener ) ((Python3Listener)listener).exitContinue_stmt(this);
+			if ( listener instanceof LcdPythonListener ) ((LcdPythonListener)listener).exitContinue_stmt(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof Python3Visitor ) return ((Python3Visitor<? extends T>)visitor).visitContinue_stmt(this);
+			if ( visitor instanceof LcdPythonVisitor ) return ((LcdPythonVisitor<? extends T>)visitor).visitContinue_stmt(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -2654,7 +2654,7 @@ public class Python3Parser extends Parser {
 	}
 
 	public static class Return_stmtContext extends ParserRuleContext {
-		public TerminalNode RETURN() { return getToken(Python3Parser.RETURN, 0); }
+		public TerminalNode RETURN() { return getToken(LcdPythonParser.RETURN, 0); }
 		public TestlistContext testlist() {
 			return getRuleContext(TestlistContext.class,0);
 		}
@@ -2664,15 +2664,15 @@ public class Python3Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_return_stmt; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Python3Listener ) ((Python3Listener)listener).enterReturn_stmt(this);
+			if ( listener instanceof LcdPythonListener ) ((LcdPythonListener)listener).enterReturn_stmt(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Python3Listener ) ((Python3Listener)listener).exitReturn_stmt(this);
+			if ( listener instanceof LcdPythonListener ) ((LcdPythonListener)listener).exitReturn_stmt(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof Python3Visitor ) return ((Python3Visitor<? extends T>)visitor).visitReturn_stmt(this);
+			if ( visitor instanceof LcdPythonVisitor ) return ((LcdPythonVisitor<? extends T>)visitor).visitReturn_stmt(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -2719,15 +2719,15 @@ public class Python3Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_yield_stmt; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Python3Listener ) ((Python3Listener)listener).enterYield_stmt(this);
+			if ( listener instanceof LcdPythonListener ) ((LcdPythonListener)listener).enterYield_stmt(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Python3Listener ) ((Python3Listener)listener).exitYield_stmt(this);
+			if ( listener instanceof LcdPythonListener ) ((LcdPythonListener)listener).exitYield_stmt(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof Python3Visitor ) return ((Python3Visitor<? extends T>)visitor).visitYield_stmt(this);
+			if ( visitor instanceof LcdPythonVisitor ) return ((LcdPythonVisitor<? extends T>)visitor).visitYield_stmt(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -2754,29 +2754,29 @@ public class Python3Parser extends Parser {
 	}
 
 	public static class Raise_stmtContext extends ParserRuleContext {
-		public TerminalNode RAISE() { return getToken(Python3Parser.RAISE, 0); }
+		public TerminalNode RAISE() { return getToken(LcdPythonParser.RAISE, 0); }
 		public List<TestContext> test() {
 			return getRuleContexts(TestContext.class);
 		}
 		public TestContext test(int i) {
 			return getRuleContext(TestContext.class,i);
 		}
-		public TerminalNode FROM() { return getToken(Python3Parser.FROM, 0); }
+		public TerminalNode FROM() { return getToken(LcdPythonParser.FROM, 0); }
 		public Raise_stmtContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_raise_stmt; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Python3Listener ) ((Python3Listener)listener).enterRaise_stmt(this);
+			if ( listener instanceof LcdPythonListener ) ((LcdPythonListener)listener).enterRaise_stmt(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Python3Listener ) ((Python3Listener)listener).exitRaise_stmt(this);
+			if ( listener instanceof LcdPythonListener ) ((LcdPythonListener)listener).exitRaise_stmt(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof Python3Visitor ) return ((Python3Visitor<? extends T>)visitor).visitRaise_stmt(this);
+			if ( visitor instanceof LcdPythonVisitor ) return ((LcdPythonVisitor<? extends T>)visitor).visitRaise_stmt(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -2838,15 +2838,15 @@ public class Python3Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_import_stmt; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Python3Listener ) ((Python3Listener)listener).enterImport_stmt(this);
+			if ( listener instanceof LcdPythonListener ) ((LcdPythonListener)listener).enterImport_stmt(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Python3Listener ) ((Python3Listener)listener).exitImport_stmt(this);
+			if ( listener instanceof LcdPythonListener ) ((LcdPythonListener)listener).exitImport_stmt(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof Python3Visitor ) return ((Python3Visitor<? extends T>)visitor).visitImport_stmt(this);
+			if ( visitor instanceof LcdPythonVisitor ) return ((LcdPythonVisitor<? extends T>)visitor).visitImport_stmt(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -2888,7 +2888,7 @@ public class Python3Parser extends Parser {
 	}
 
 	public static class Import_nameContext extends ParserRuleContext {
-		public TerminalNode IMPORT() { return getToken(Python3Parser.IMPORT, 0); }
+		public TerminalNode IMPORT() { return getToken(LcdPythonParser.IMPORT, 0); }
 		public Dotted_as_namesContext dotted_as_names() {
 			return getRuleContext(Dotted_as_namesContext.class,0);
 		}
@@ -2898,15 +2898,15 @@ public class Python3Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_import_name; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Python3Listener ) ((Python3Listener)listener).enterImport_name(this);
+			if ( listener instanceof LcdPythonListener ) ((LcdPythonListener)listener).enterImport_name(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Python3Listener ) ((Python3Listener)listener).exitImport_name(this);
+			if ( listener instanceof LcdPythonListener ) ((LcdPythonListener)listener).exitImport_name(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof Python3Visitor ) return ((Python3Visitor<? extends T>)visitor).visitImport_name(this);
+			if ( visitor instanceof LcdPythonVisitor ) return ((LcdPythonVisitor<? extends T>)visitor).visitImport_name(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -2935,24 +2935,24 @@ public class Python3Parser extends Parser {
 	}
 
 	public static class Import_fromContext extends ParserRuleContext {
-		public TerminalNode FROM() { return getToken(Python3Parser.FROM, 0); }
-		public TerminalNode IMPORT() { return getToken(Python3Parser.IMPORT, 0); }
+		public TerminalNode FROM() { return getToken(LcdPythonParser.FROM, 0); }
+		public TerminalNode IMPORT() { return getToken(LcdPythonParser.IMPORT, 0); }
 		public Dotted_nameContext dotted_name() {
 			return getRuleContext(Dotted_nameContext.class,0);
 		}
-		public TerminalNode STAR() { return getToken(Python3Parser.STAR, 0); }
-		public TerminalNode OPEN_PAREN() { return getToken(Python3Parser.OPEN_PAREN, 0); }
+		public TerminalNode STAR() { return getToken(LcdPythonParser.STAR, 0); }
+		public TerminalNode OPEN_PAREN() { return getToken(LcdPythonParser.OPEN_PAREN, 0); }
 		public Import_as_namesContext import_as_names() {
 			return getRuleContext(Import_as_namesContext.class,0);
 		}
-		public TerminalNode CLOSE_PAREN() { return getToken(Python3Parser.CLOSE_PAREN, 0); }
-		public List<TerminalNode> DOT() { return getTokens(Python3Parser.DOT); }
+		public TerminalNode CLOSE_PAREN() { return getToken(LcdPythonParser.CLOSE_PAREN, 0); }
+		public List<TerminalNode> DOT() { return getTokens(LcdPythonParser.DOT); }
 		public TerminalNode DOT(int i) {
-			return getToken(Python3Parser.DOT, i);
+			return getToken(LcdPythonParser.DOT, i);
 		}
-		public List<TerminalNode> ELLIPSIS() { return getTokens(Python3Parser.ELLIPSIS); }
+		public List<TerminalNode> ELLIPSIS() { return getTokens(LcdPythonParser.ELLIPSIS); }
 		public TerminalNode ELLIPSIS(int i) {
-			return getToken(Python3Parser.ELLIPSIS, i);
+			return getToken(LcdPythonParser.ELLIPSIS, i);
 		}
 		public Import_fromContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -2960,15 +2960,15 @@ public class Python3Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_import_from; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Python3Listener ) ((Python3Listener)listener).enterImport_from(this);
+			if ( listener instanceof LcdPythonListener ) ((LcdPythonListener)listener).enterImport_from(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Python3Listener ) ((Python3Listener)listener).exitImport_from(this);
+			if ( listener instanceof LcdPythonListener ) ((LcdPythonListener)listener).exitImport_from(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof Python3Visitor ) return ((Python3Visitor<? extends T>)visitor).visitImport_from(this);
+			if ( visitor instanceof LcdPythonVisitor ) return ((LcdPythonVisitor<? extends T>)visitor).visitImport_from(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -3086,26 +3086,26 @@ public class Python3Parser extends Parser {
 	}
 
 	public static class Import_as_nameContext extends ParserRuleContext {
-		public List<TerminalNode> NAME() { return getTokens(Python3Parser.NAME); }
+		public List<TerminalNode> NAME() { return getTokens(LcdPythonParser.NAME); }
 		public TerminalNode NAME(int i) {
-			return getToken(Python3Parser.NAME, i);
+			return getToken(LcdPythonParser.NAME, i);
 		}
-		public TerminalNode AS() { return getToken(Python3Parser.AS, 0); }
+		public TerminalNode AS() { return getToken(LcdPythonParser.AS, 0); }
 		public Import_as_nameContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_import_as_name; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Python3Listener ) ((Python3Listener)listener).enterImport_as_name(this);
+			if ( listener instanceof LcdPythonListener ) ((LcdPythonListener)listener).enterImport_as_name(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Python3Listener ) ((Python3Listener)listener).exitImport_as_name(this);
+			if ( listener instanceof LcdPythonListener ) ((LcdPythonListener)listener).exitImport_as_name(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof Python3Visitor ) return ((Python3Visitor<? extends T>)visitor).visitImport_as_name(this);
+			if ( visitor instanceof LcdPythonVisitor ) return ((LcdPythonVisitor<? extends T>)visitor).visitImport_as_name(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -3148,23 +3148,23 @@ public class Python3Parser extends Parser {
 		public Dotted_nameContext dotted_name() {
 			return getRuleContext(Dotted_nameContext.class,0);
 		}
-		public TerminalNode AS() { return getToken(Python3Parser.AS, 0); }
-		public TerminalNode NAME() { return getToken(Python3Parser.NAME, 0); }
+		public TerminalNode AS() { return getToken(LcdPythonParser.AS, 0); }
+		public TerminalNode NAME() { return getToken(LcdPythonParser.NAME, 0); }
 		public Dotted_as_nameContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_dotted_as_name; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Python3Listener ) ((Python3Listener)listener).enterDotted_as_name(this);
+			if ( listener instanceof LcdPythonListener ) ((LcdPythonListener)listener).enterDotted_as_name(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Python3Listener ) ((Python3Listener)listener).exitDotted_as_name(this);
+			if ( listener instanceof LcdPythonListener ) ((LcdPythonListener)listener).exitDotted_as_name(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof Python3Visitor ) return ((Python3Visitor<? extends T>)visitor).visitDotted_as_name(this);
+			if ( visitor instanceof LcdPythonVisitor ) return ((LcdPythonVisitor<? extends T>)visitor).visitDotted_as_name(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -3210,9 +3210,9 @@ public class Python3Parser extends Parser {
 		public Import_as_nameContext import_as_name(int i) {
 			return getRuleContext(Import_as_nameContext.class,i);
 		}
-		public List<TerminalNode> COMMA() { return getTokens(Python3Parser.COMMA); }
+		public List<TerminalNode> COMMA() { return getTokens(LcdPythonParser.COMMA); }
 		public TerminalNode COMMA(int i) {
-			return getToken(Python3Parser.COMMA, i);
+			return getToken(LcdPythonParser.COMMA, i);
 		}
 		public Import_as_namesContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -3220,15 +3220,15 @@ public class Python3Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_import_as_names; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Python3Listener ) ((Python3Listener)listener).enterImport_as_names(this);
+			if ( listener instanceof LcdPythonListener ) ((LcdPythonListener)listener).enterImport_as_names(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Python3Listener ) ((Python3Listener)listener).exitImport_as_names(this);
+			if ( listener instanceof LcdPythonListener ) ((LcdPythonListener)listener).exitImport_as_names(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof Python3Visitor ) return ((Python3Visitor<? extends T>)visitor).visitImport_as_names(this);
+			if ( visitor instanceof LcdPythonVisitor ) return ((LcdPythonVisitor<? extends T>)visitor).visitImport_as_names(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -3291,9 +3291,9 @@ public class Python3Parser extends Parser {
 		public Dotted_as_nameContext dotted_as_name(int i) {
 			return getRuleContext(Dotted_as_nameContext.class,i);
 		}
-		public List<TerminalNode> COMMA() { return getTokens(Python3Parser.COMMA); }
+		public List<TerminalNode> COMMA() { return getTokens(LcdPythonParser.COMMA); }
 		public TerminalNode COMMA(int i) {
-			return getToken(Python3Parser.COMMA, i);
+			return getToken(LcdPythonParser.COMMA, i);
 		}
 		public Dotted_as_namesContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -3301,15 +3301,15 @@ public class Python3Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_dotted_as_names; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Python3Listener ) ((Python3Listener)listener).enterDotted_as_names(this);
+			if ( listener instanceof LcdPythonListener ) ((LcdPythonListener)listener).enterDotted_as_names(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Python3Listener ) ((Python3Listener)listener).exitDotted_as_names(this);
+			if ( listener instanceof LcdPythonListener ) ((LcdPythonListener)listener).exitDotted_as_names(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof Python3Visitor ) return ((Python3Visitor<? extends T>)visitor).visitDotted_as_names(this);
+			if ( visitor instanceof LcdPythonVisitor ) return ((LcdPythonVisitor<? extends T>)visitor).visitDotted_as_names(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -3353,13 +3353,13 @@ public class Python3Parser extends Parser {
 	}
 
 	public static class Dotted_nameContext extends ParserRuleContext {
-		public List<TerminalNode> NAME() { return getTokens(Python3Parser.NAME); }
+		public List<TerminalNode> NAME() { return getTokens(LcdPythonParser.NAME); }
 		public TerminalNode NAME(int i) {
-			return getToken(Python3Parser.NAME, i);
+			return getToken(LcdPythonParser.NAME, i);
 		}
-		public List<TerminalNode> DOT() { return getTokens(Python3Parser.DOT); }
+		public List<TerminalNode> DOT() { return getTokens(LcdPythonParser.DOT); }
 		public TerminalNode DOT(int i) {
-			return getToken(Python3Parser.DOT, i);
+			return getToken(LcdPythonParser.DOT, i);
 		}
 		public Dotted_nameContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -3367,15 +3367,15 @@ public class Python3Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_dotted_name; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Python3Listener ) ((Python3Listener)listener).enterDotted_name(this);
+			if ( listener instanceof LcdPythonListener ) ((LcdPythonListener)listener).enterDotted_name(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Python3Listener ) ((Python3Listener)listener).exitDotted_name(this);
+			if ( listener instanceof LcdPythonListener ) ((LcdPythonListener)listener).exitDotted_name(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof Python3Visitor ) return ((Python3Visitor<? extends T>)visitor).visitDotted_name(this);
+			if ( visitor instanceof LcdPythonVisitor ) return ((LcdPythonVisitor<? extends T>)visitor).visitDotted_name(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -3419,14 +3419,14 @@ public class Python3Parser extends Parser {
 	}
 
 	public static class Global_stmtContext extends ParserRuleContext {
-		public TerminalNode GLOBAL() { return getToken(Python3Parser.GLOBAL, 0); }
-		public List<TerminalNode> NAME() { return getTokens(Python3Parser.NAME); }
+		public TerminalNode GLOBAL() { return getToken(LcdPythonParser.GLOBAL, 0); }
+		public List<TerminalNode> NAME() { return getTokens(LcdPythonParser.NAME); }
 		public TerminalNode NAME(int i) {
-			return getToken(Python3Parser.NAME, i);
+			return getToken(LcdPythonParser.NAME, i);
 		}
-		public List<TerminalNode> COMMA() { return getTokens(Python3Parser.COMMA); }
+		public List<TerminalNode> COMMA() { return getTokens(LcdPythonParser.COMMA); }
 		public TerminalNode COMMA(int i) {
-			return getToken(Python3Parser.COMMA, i);
+			return getToken(LcdPythonParser.COMMA, i);
 		}
 		public Global_stmtContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -3434,15 +3434,15 @@ public class Python3Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_global_stmt; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Python3Listener ) ((Python3Listener)listener).enterGlobal_stmt(this);
+			if ( listener instanceof LcdPythonListener ) ((LcdPythonListener)listener).enterGlobal_stmt(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Python3Listener ) ((Python3Listener)listener).exitGlobal_stmt(this);
+			if ( listener instanceof LcdPythonListener ) ((LcdPythonListener)listener).exitGlobal_stmt(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof Python3Visitor ) return ((Python3Visitor<? extends T>)visitor).visitGlobal_stmt(this);
+			if ( visitor instanceof LcdPythonVisitor ) return ((LcdPythonVisitor<? extends T>)visitor).visitGlobal_stmt(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -3488,14 +3488,14 @@ public class Python3Parser extends Parser {
 	}
 
 	public static class Nonlocal_stmtContext extends ParserRuleContext {
-		public TerminalNode NONLOCAL() { return getToken(Python3Parser.NONLOCAL, 0); }
-		public List<TerminalNode> NAME() { return getTokens(Python3Parser.NAME); }
+		public TerminalNode NONLOCAL() { return getToken(LcdPythonParser.NONLOCAL, 0); }
+		public List<TerminalNode> NAME() { return getTokens(LcdPythonParser.NAME); }
 		public TerminalNode NAME(int i) {
-			return getToken(Python3Parser.NAME, i);
+			return getToken(LcdPythonParser.NAME, i);
 		}
-		public List<TerminalNode> COMMA() { return getTokens(Python3Parser.COMMA); }
+		public List<TerminalNode> COMMA() { return getTokens(LcdPythonParser.COMMA); }
 		public TerminalNode COMMA(int i) {
-			return getToken(Python3Parser.COMMA, i);
+			return getToken(LcdPythonParser.COMMA, i);
 		}
 		public Nonlocal_stmtContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -3503,15 +3503,15 @@ public class Python3Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_nonlocal_stmt; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Python3Listener ) ((Python3Listener)listener).enterNonlocal_stmt(this);
+			if ( listener instanceof LcdPythonListener ) ((LcdPythonListener)listener).enterNonlocal_stmt(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Python3Listener ) ((Python3Listener)listener).exitNonlocal_stmt(this);
+			if ( listener instanceof LcdPythonListener ) ((LcdPythonListener)listener).exitNonlocal_stmt(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof Python3Visitor ) return ((Python3Visitor<? extends T>)visitor).visitNonlocal_stmt(this);
+			if ( visitor instanceof LcdPythonVisitor ) return ((LcdPythonVisitor<? extends T>)visitor).visitNonlocal_stmt(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -3557,29 +3557,29 @@ public class Python3Parser extends Parser {
 	}
 
 	public static class Assert_stmtContext extends ParserRuleContext {
-		public TerminalNode ASSERT() { return getToken(Python3Parser.ASSERT, 0); }
+		public TerminalNode ASSERT() { return getToken(LcdPythonParser.ASSERT, 0); }
 		public List<TestContext> test() {
 			return getRuleContexts(TestContext.class);
 		}
 		public TestContext test(int i) {
 			return getRuleContext(TestContext.class,i);
 		}
-		public TerminalNode COMMA() { return getToken(Python3Parser.COMMA, 0); }
+		public TerminalNode COMMA() { return getToken(LcdPythonParser.COMMA, 0); }
 		public Assert_stmtContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_assert_stmt; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Python3Listener ) ((Python3Listener)listener).enterAssert_stmt(this);
+			if ( listener instanceof LcdPythonListener ) ((LcdPythonListener)listener).enterAssert_stmt(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Python3Listener ) ((Python3Listener)listener).exitAssert_stmt(this);
+			if ( listener instanceof LcdPythonListener ) ((LcdPythonListener)listener).exitAssert_stmt(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof Python3Visitor ) return ((Python3Visitor<? extends T>)visitor).visitAssert_stmt(this);
+			if ( visitor instanceof LcdPythonVisitor ) return ((LcdPythonVisitor<? extends T>)visitor).visitAssert_stmt(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -3654,15 +3654,15 @@ public class Python3Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_compound_stmt; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Python3Listener ) ((Python3Listener)listener).enterCompound_stmt(this);
+			if ( listener instanceof LcdPythonListener ) ((LcdPythonListener)listener).enterCompound_stmt(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Python3Listener ) ((Python3Listener)listener).exitCompound_stmt(this);
+			if ( listener instanceof LcdPythonListener ) ((LcdPythonListener)listener).exitCompound_stmt(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof Python3Visitor ) return ((Python3Visitor<? extends T>)visitor).visitCompound_stmt(this);
+			if ( visitor instanceof LcdPythonVisitor ) return ((LcdPythonVisitor<? extends T>)visitor).visitCompound_stmt(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -3753,7 +3753,7 @@ public class Python3Parser extends Parser {
 	}
 
 	public static class Async_stmtContext extends ParserRuleContext {
-		public TerminalNode ASYNC() { return getToken(Python3Parser.ASYNC, 0); }
+		public TerminalNode ASYNC() { return getToken(LcdPythonParser.ASYNC, 0); }
 		public FuncdefContext funcdef() {
 			return getRuleContext(FuncdefContext.class,0);
 		}
@@ -3769,15 +3769,15 @@ public class Python3Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_async_stmt; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Python3Listener ) ((Python3Listener)listener).enterAsync_stmt(this);
+			if ( listener instanceof LcdPythonListener ) ((LcdPythonListener)listener).enterAsync_stmt(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Python3Listener ) ((Python3Listener)listener).exitAsync_stmt(this);
+			if ( listener instanceof LcdPythonListener ) ((LcdPythonListener)listener).exitAsync_stmt(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof Python3Visitor ) return ((Python3Visitor<? extends T>)visitor).visitAsync_stmt(this);
+			if ( visitor instanceof LcdPythonVisitor ) return ((LcdPythonVisitor<? extends T>)visitor).visitAsync_stmt(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -3828,16 +3828,16 @@ public class Python3Parser extends Parser {
 	}
 
 	public static class If_stmtContext extends ParserRuleContext {
-		public TerminalNode IF() { return getToken(Python3Parser.IF, 0); }
+		public TerminalNode IF() { return getToken(LcdPythonParser.IF, 0); }
 		public List<TestContext> test() {
 			return getRuleContexts(TestContext.class);
 		}
 		public TestContext test(int i) {
 			return getRuleContext(TestContext.class,i);
 		}
-		public List<TerminalNode> COLON() { return getTokens(Python3Parser.COLON); }
+		public List<TerminalNode> COLON() { return getTokens(LcdPythonParser.COLON); }
 		public TerminalNode COLON(int i) {
-			return getToken(Python3Parser.COLON, i);
+			return getToken(LcdPythonParser.COLON, i);
 		}
 		public List<SuiteContext> suite() {
 			return getRuleContexts(SuiteContext.class);
@@ -3845,26 +3845,26 @@ public class Python3Parser extends Parser {
 		public SuiteContext suite(int i) {
 			return getRuleContext(SuiteContext.class,i);
 		}
-		public List<TerminalNode> ELIF() { return getTokens(Python3Parser.ELIF); }
+		public List<TerminalNode> ELIF() { return getTokens(LcdPythonParser.ELIF); }
 		public TerminalNode ELIF(int i) {
-			return getToken(Python3Parser.ELIF, i);
+			return getToken(LcdPythonParser.ELIF, i);
 		}
-		public TerminalNode ELSE() { return getToken(Python3Parser.ELSE, 0); }
+		public TerminalNode ELSE() { return getToken(LcdPythonParser.ELSE, 0); }
 		public If_stmtContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_if_stmt; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Python3Listener ) ((Python3Listener)listener).enterIf_stmt(this);
+			if ( listener instanceof LcdPythonListener ) ((LcdPythonListener)listener).enterIf_stmt(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Python3Listener ) ((Python3Listener)listener).exitIf_stmt(this);
+			if ( listener instanceof LcdPythonListener ) ((LcdPythonListener)listener).exitIf_stmt(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof Python3Visitor ) return ((Python3Visitor<? extends T>)visitor).visitIf_stmt(this);
+			if ( visitor instanceof LcdPythonVisitor ) return ((LcdPythonVisitor<? extends T>)visitor).visitIf_stmt(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -3932,13 +3932,13 @@ public class Python3Parser extends Parser {
 	}
 
 	public static class While_stmtContext extends ParserRuleContext {
-		public TerminalNode WHILE() { return getToken(Python3Parser.WHILE, 0); }
+		public TerminalNode WHILE() { return getToken(LcdPythonParser.WHILE, 0); }
 		public TestContext test() {
 			return getRuleContext(TestContext.class,0);
 		}
-		public List<TerminalNode> COLON() { return getTokens(Python3Parser.COLON); }
+		public List<TerminalNode> COLON() { return getTokens(LcdPythonParser.COLON); }
 		public TerminalNode COLON(int i) {
-			return getToken(Python3Parser.COLON, i);
+			return getToken(LcdPythonParser.COLON, i);
 		}
 		public List<SuiteContext> suite() {
 			return getRuleContexts(SuiteContext.class);
@@ -3946,22 +3946,22 @@ public class Python3Parser extends Parser {
 		public SuiteContext suite(int i) {
 			return getRuleContext(SuiteContext.class,i);
 		}
-		public TerminalNode ELSE() { return getToken(Python3Parser.ELSE, 0); }
+		public TerminalNode ELSE() { return getToken(LcdPythonParser.ELSE, 0); }
 		public While_stmtContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_while_stmt; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Python3Listener ) ((Python3Listener)listener).enterWhile_stmt(this);
+			if ( listener instanceof LcdPythonListener ) ((LcdPythonListener)listener).enterWhile_stmt(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Python3Listener ) ((Python3Listener)listener).exitWhile_stmt(this);
+			if ( listener instanceof LcdPythonListener ) ((LcdPythonListener)listener).exitWhile_stmt(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof Python3Visitor ) return ((Python3Visitor<? extends T>)visitor).visitWhile_stmt(this);
+			if ( visitor instanceof LcdPythonVisitor ) return ((LcdPythonVisitor<? extends T>)visitor).visitWhile_stmt(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -4009,17 +4009,17 @@ public class Python3Parser extends Parser {
 	}
 
 	public static class For_stmtContext extends ParserRuleContext {
-		public TerminalNode FOR() { return getToken(Python3Parser.FOR, 0); }
+		public TerminalNode FOR() { return getToken(LcdPythonParser.FOR, 0); }
 		public ExprlistContext exprlist() {
 			return getRuleContext(ExprlistContext.class,0);
 		}
-		public TerminalNode IN() { return getToken(Python3Parser.IN, 0); }
+		public TerminalNode IN() { return getToken(LcdPythonParser.IN, 0); }
 		public TestlistContext testlist() {
 			return getRuleContext(TestlistContext.class,0);
 		}
-		public List<TerminalNode> COLON() { return getTokens(Python3Parser.COLON); }
+		public List<TerminalNode> COLON() { return getTokens(LcdPythonParser.COLON); }
 		public TerminalNode COLON(int i) {
-			return getToken(Python3Parser.COLON, i);
+			return getToken(LcdPythonParser.COLON, i);
 		}
 		public List<SuiteContext> suite() {
 			return getRuleContexts(SuiteContext.class);
@@ -4027,22 +4027,22 @@ public class Python3Parser extends Parser {
 		public SuiteContext suite(int i) {
 			return getRuleContext(SuiteContext.class,i);
 		}
-		public TerminalNode ELSE() { return getToken(Python3Parser.ELSE, 0); }
+		public TerminalNode ELSE() { return getToken(LcdPythonParser.ELSE, 0); }
 		public For_stmtContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_for_stmt; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Python3Listener ) ((Python3Listener)listener).enterFor_stmt(this);
+			if ( listener instanceof LcdPythonListener ) ((LcdPythonListener)listener).enterFor_stmt(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Python3Listener ) ((Python3Listener)listener).exitFor_stmt(this);
+			if ( listener instanceof LcdPythonListener ) ((LcdPythonListener)listener).exitFor_stmt(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof Python3Visitor ) return ((Python3Visitor<? extends T>)visitor).visitFor_stmt(this);
+			if ( visitor instanceof LcdPythonVisitor ) return ((LcdPythonVisitor<? extends T>)visitor).visitFor_stmt(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -4094,10 +4094,10 @@ public class Python3Parser extends Parser {
 	}
 
 	public static class Try_stmtContext extends ParserRuleContext {
-		public TerminalNode TRY() { return getToken(Python3Parser.TRY, 0); }
-		public List<TerminalNode> COLON() { return getTokens(Python3Parser.COLON); }
+		public TerminalNode TRY() { return getToken(LcdPythonParser.TRY, 0); }
+		public List<TerminalNode> COLON() { return getTokens(LcdPythonParser.COLON); }
 		public TerminalNode COLON(int i) {
-			return getToken(Python3Parser.COLON, i);
+			return getToken(LcdPythonParser.COLON, i);
 		}
 		public List<SuiteContext> suite() {
 			return getRuleContexts(SuiteContext.class);
@@ -4105,29 +4105,29 @@ public class Python3Parser extends Parser {
 		public SuiteContext suite(int i) {
 			return getRuleContext(SuiteContext.class,i);
 		}
-		public TerminalNode FINALLY() { return getToken(Python3Parser.FINALLY, 0); }
+		public TerminalNode FINALLY() { return getToken(LcdPythonParser.FINALLY, 0); }
 		public List<Except_clauseContext> except_clause() {
 			return getRuleContexts(Except_clauseContext.class);
 		}
 		public Except_clauseContext except_clause(int i) {
 			return getRuleContext(Except_clauseContext.class,i);
 		}
-		public TerminalNode ELSE() { return getToken(Python3Parser.ELSE, 0); }
+		public TerminalNode ELSE() { return getToken(LcdPythonParser.ELSE, 0); }
 		public Try_stmtContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_try_stmt; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Python3Listener ) ((Python3Listener)listener).enterTry_stmt(this);
+			if ( listener instanceof LcdPythonListener ) ((LcdPythonListener)listener).enterTry_stmt(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Python3Listener ) ((Python3Listener)listener).exitTry_stmt(this);
+			if ( listener instanceof LcdPythonListener ) ((LcdPythonListener)listener).exitTry_stmt(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof Python3Visitor ) return ((Python3Visitor<? extends T>)visitor).visitTry_stmt(this);
+			if ( visitor instanceof LcdPythonVisitor ) return ((LcdPythonVisitor<? extends T>)visitor).visitTry_stmt(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -4227,20 +4227,20 @@ public class Python3Parser extends Parser {
 	}
 
 	public static class With_stmtContext extends ParserRuleContext {
-		public TerminalNode WITH() { return getToken(Python3Parser.WITH, 0); }
+		public TerminalNode WITH() { return getToken(LcdPythonParser.WITH, 0); }
 		public List<With_itemContext> with_item() {
 			return getRuleContexts(With_itemContext.class);
 		}
 		public With_itemContext with_item(int i) {
 			return getRuleContext(With_itemContext.class,i);
 		}
-		public TerminalNode COLON() { return getToken(Python3Parser.COLON, 0); }
+		public TerminalNode COLON() { return getToken(LcdPythonParser.COLON, 0); }
 		public SuiteContext suite() {
 			return getRuleContext(SuiteContext.class,0);
 		}
-		public List<TerminalNode> COMMA() { return getTokens(Python3Parser.COMMA); }
+		public List<TerminalNode> COMMA() { return getTokens(LcdPythonParser.COMMA); }
 		public TerminalNode COMMA(int i) {
-			return getToken(Python3Parser.COMMA, i);
+			return getToken(LcdPythonParser.COMMA, i);
 		}
 		public With_stmtContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -4248,15 +4248,15 @@ public class Python3Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_with_stmt; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Python3Listener ) ((Python3Listener)listener).enterWith_stmt(this);
+			if ( listener instanceof LcdPythonListener ) ((LcdPythonListener)listener).enterWith_stmt(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Python3Listener ) ((Python3Listener)listener).exitWith_stmt(this);
+			if ( listener instanceof LcdPythonListener ) ((LcdPythonListener)listener).exitWith_stmt(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof Python3Visitor ) return ((Python3Visitor<? extends T>)visitor).visitWith_stmt(this);
+			if ( visitor instanceof LcdPythonVisitor ) return ((LcdPythonVisitor<? extends T>)visitor).visitWith_stmt(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -4309,7 +4309,7 @@ public class Python3Parser extends Parser {
 		public TestContext test() {
 			return getRuleContext(TestContext.class,0);
 		}
-		public TerminalNode AS() { return getToken(Python3Parser.AS, 0); }
+		public TerminalNode AS() { return getToken(LcdPythonParser.AS, 0); }
 		public ExprContext expr() {
 			return getRuleContext(ExprContext.class,0);
 		}
@@ -4319,15 +4319,15 @@ public class Python3Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_with_item; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Python3Listener ) ((Python3Listener)listener).enterWith_item(this);
+			if ( listener instanceof LcdPythonListener ) ((LcdPythonListener)listener).enterWith_item(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Python3Listener ) ((Python3Listener)listener).exitWith_item(this);
+			if ( listener instanceof LcdPythonListener ) ((LcdPythonListener)listener).exitWith_item(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof Python3Visitor ) return ((Python3Visitor<? extends T>)visitor).visitWith_item(this);
+			if ( visitor instanceof LcdPythonVisitor ) return ((LcdPythonVisitor<? extends T>)visitor).visitWith_item(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -4367,27 +4367,27 @@ public class Python3Parser extends Parser {
 	}
 
 	public static class Except_clauseContext extends ParserRuleContext {
-		public TerminalNode EXCEPT() { return getToken(Python3Parser.EXCEPT, 0); }
+		public TerminalNode EXCEPT() { return getToken(LcdPythonParser.EXCEPT, 0); }
 		public TestContext test() {
 			return getRuleContext(TestContext.class,0);
 		}
-		public TerminalNode AS() { return getToken(Python3Parser.AS, 0); }
-		public TerminalNode NAME() { return getToken(Python3Parser.NAME, 0); }
+		public TerminalNode AS() { return getToken(LcdPythonParser.AS, 0); }
+		public TerminalNode NAME() { return getToken(LcdPythonParser.NAME, 0); }
 		public Except_clauseContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_except_clause; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Python3Listener ) ((Python3Listener)listener).enterExcept_clause(this);
+			if ( listener instanceof LcdPythonListener ) ((LcdPythonListener)listener).enterExcept_clause(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Python3Listener ) ((Python3Listener)listener).exitExcept_clause(this);
+			if ( listener instanceof LcdPythonListener ) ((LcdPythonListener)listener).exitExcept_clause(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof Python3Visitor ) return ((Python3Visitor<? extends T>)visitor).visitExcept_clause(this);
+			if ( visitor instanceof LcdPythonVisitor ) return ((LcdPythonVisitor<? extends T>)visitor).visitExcept_clause(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -4440,9 +4440,9 @@ public class Python3Parser extends Parser {
 		public Simple_stmtContext simple_stmt() {
 			return getRuleContext(Simple_stmtContext.class,0);
 		}
-		public TerminalNode NEWLINE() { return getToken(Python3Parser.NEWLINE, 0); }
-		public TerminalNode INDENT() { return getToken(Python3Parser.INDENT, 0); }
-		public TerminalNode DEDENT() { return getToken(Python3Parser.DEDENT, 0); }
+		public TerminalNode NEWLINE() { return getToken(LcdPythonParser.NEWLINE, 0); }
+		public TerminalNode INDENT() { return getToken(LcdPythonParser.INDENT, 0); }
+		public TerminalNode DEDENT() { return getToken(LcdPythonParser.DEDENT, 0); }
 		public List<StmtContext> stmt() {
 			return getRuleContexts(StmtContext.class);
 		}
@@ -4455,15 +4455,15 @@ public class Python3Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_suite; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Python3Listener ) ((Python3Listener)listener).enterSuite(this);
+			if ( listener instanceof LcdPythonListener ) ((LcdPythonListener)listener).enterSuite(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Python3Listener ) ((Python3Listener)listener).exitSuite(this);
+			if ( listener instanceof LcdPythonListener ) ((LcdPythonListener)listener).exitSuite(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof Python3Visitor ) return ((Python3Visitor<? extends T>)visitor).visitSuite(this);
+			if ( visitor instanceof LcdPythonVisitor ) return ((LcdPythonVisitor<? extends T>)visitor).visitSuite(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -4558,8 +4558,8 @@ public class Python3Parser extends Parser {
 		public Or_testContext or_test(int i) {
 			return getRuleContext(Or_testContext.class,i);
 		}
-		public TerminalNode IF() { return getToken(Python3Parser.IF, 0); }
-		public TerminalNode ELSE() { return getToken(Python3Parser.ELSE, 0); }
+		public TerminalNode IF() { return getToken(LcdPythonParser.IF, 0); }
+		public TerminalNode ELSE() { return getToken(LcdPythonParser.ELSE, 0); }
 		public TestContext test() {
 			return getRuleContext(TestContext.class,0);
 		}
@@ -4572,15 +4572,15 @@ public class Python3Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_test; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Python3Listener ) ((Python3Listener)listener).enterTest(this);
+			if ( listener instanceof LcdPythonListener ) ((LcdPythonListener)listener).enterTest(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Python3Listener ) ((Python3Listener)listener).exitTest(this);
+			if ( listener instanceof LcdPythonListener ) ((LcdPythonListener)listener).exitTest(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof Python3Visitor ) return ((Python3Visitor<? extends T>)visitor).visitTest(this);
+			if ( visitor instanceof LcdPythonVisitor ) return ((LcdPythonVisitor<? extends T>)visitor).visitTest(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -4665,15 +4665,15 @@ public class Python3Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_test_nocond; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Python3Listener ) ((Python3Listener)listener).enterTest_nocond(this);
+			if ( listener instanceof LcdPythonListener ) ((LcdPythonListener)listener).enterTest_nocond(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Python3Listener ) ((Python3Listener)listener).exitTest_nocond(this);
+			if ( listener instanceof LcdPythonListener ) ((LcdPythonListener)listener).exitTest_nocond(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof Python3Visitor ) return ((Python3Visitor<? extends T>)visitor).visitTest_nocond(this);
+			if ( visitor instanceof LcdPythonVisitor ) return ((LcdPythonVisitor<? extends T>)visitor).visitTest_nocond(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -4729,8 +4729,8 @@ public class Python3Parser extends Parser {
 	}
 
 	public static class LambdefContext extends ParserRuleContext {
-		public TerminalNode LAMBDA() { return getToken(Python3Parser.LAMBDA, 0); }
-		public TerminalNode COLON() { return getToken(Python3Parser.COLON, 0); }
+		public TerminalNode LAMBDA() { return getToken(LcdPythonParser.LAMBDA, 0); }
+		public TerminalNode COLON() { return getToken(LcdPythonParser.COLON, 0); }
 		public TestContext test() {
 			return getRuleContext(TestContext.class,0);
 		}
@@ -4743,15 +4743,15 @@ public class Python3Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_lambdef; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Python3Listener ) ((Python3Listener)listener).enterLambdef(this);
+			if ( listener instanceof LcdPythonListener ) ((LcdPythonListener)listener).enterLambdef(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Python3Listener ) ((Python3Listener)listener).exitLambdef(this);
+			if ( listener instanceof LcdPythonListener ) ((LcdPythonListener)listener).exitLambdef(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof Python3Visitor ) return ((Python3Visitor<? extends T>)visitor).visitLambdef(this);
+			if ( visitor instanceof LcdPythonVisitor ) return ((LcdPythonVisitor<? extends T>)visitor).visitLambdef(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -4793,8 +4793,8 @@ public class Python3Parser extends Parser {
 	}
 
 	public static class Lambdef_nocondContext extends ParserRuleContext {
-		public TerminalNode LAMBDA() { return getToken(Python3Parser.LAMBDA, 0); }
-		public TerminalNode COLON() { return getToken(Python3Parser.COLON, 0); }
+		public TerminalNode LAMBDA() { return getToken(LcdPythonParser.LAMBDA, 0); }
+		public TerminalNode COLON() { return getToken(LcdPythonParser.COLON, 0); }
 		public Test_nocondContext test_nocond() {
 			return getRuleContext(Test_nocondContext.class,0);
 		}
@@ -4807,15 +4807,15 @@ public class Python3Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_lambdef_nocond; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Python3Listener ) ((Python3Listener)listener).enterLambdef_nocond(this);
+			if ( listener instanceof LcdPythonListener ) ((LcdPythonListener)listener).enterLambdef_nocond(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Python3Listener ) ((Python3Listener)listener).exitLambdef_nocond(this);
+			if ( listener instanceof LcdPythonListener ) ((LcdPythonListener)listener).exitLambdef_nocond(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof Python3Visitor ) return ((Python3Visitor<? extends T>)visitor).visitLambdef_nocond(this);
+			if ( visitor instanceof LcdPythonVisitor ) return ((LcdPythonVisitor<? extends T>)visitor).visitLambdef_nocond(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -4863,9 +4863,9 @@ public class Python3Parser extends Parser {
 		public And_testContext and_test(int i) {
 			return getRuleContext(And_testContext.class,i);
 		}
-		public List<TerminalNode> OR() { return getTokens(Python3Parser.OR); }
+		public List<TerminalNode> OR() { return getTokens(LcdPythonParser.OR); }
 		public TerminalNode OR(int i) {
-			return getToken(Python3Parser.OR, i);
+			return getToken(LcdPythonParser.OR, i);
 		}
 		public Or_testContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -4873,15 +4873,15 @@ public class Python3Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_or_test; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Python3Listener ) ((Python3Listener)listener).enterOr_test(this);
+			if ( listener instanceof LcdPythonListener ) ((LcdPythonListener)listener).enterOr_test(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Python3Listener ) ((Python3Listener)listener).exitOr_test(this);
+			if ( listener instanceof LcdPythonListener ) ((LcdPythonListener)listener).exitOr_test(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof Python3Visitor ) return ((Python3Visitor<? extends T>)visitor).visitOr_test(this);
+			if ( visitor instanceof LcdPythonVisitor ) return ((LcdPythonVisitor<? extends T>)visitor).visitOr_test(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -4931,9 +4931,9 @@ public class Python3Parser extends Parser {
 		public Not_testContext not_test(int i) {
 			return getRuleContext(Not_testContext.class,i);
 		}
-		public List<TerminalNode> AND() { return getTokens(Python3Parser.AND); }
+		public List<TerminalNode> AND() { return getTokens(LcdPythonParser.AND); }
 		public TerminalNode AND(int i) {
-			return getToken(Python3Parser.AND, i);
+			return getToken(LcdPythonParser.AND, i);
 		}
 		public And_testContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -4941,15 +4941,15 @@ public class Python3Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_and_test; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Python3Listener ) ((Python3Listener)listener).enterAnd_test(this);
+			if ( listener instanceof LcdPythonListener ) ((LcdPythonListener)listener).enterAnd_test(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Python3Listener ) ((Python3Listener)listener).exitAnd_test(this);
+			if ( listener instanceof LcdPythonListener ) ((LcdPythonListener)listener).exitAnd_test(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof Python3Visitor ) return ((Python3Visitor<? extends T>)visitor).visitAnd_test(this);
+			if ( visitor instanceof LcdPythonVisitor ) return ((LcdPythonVisitor<? extends T>)visitor).visitAnd_test(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -4993,7 +4993,7 @@ public class Python3Parser extends Parser {
 	}
 
 	public static class Not_testContext extends ParserRuleContext {
-		public TerminalNode NOT() { return getToken(Python3Parser.NOT, 0); }
+		public TerminalNode NOT() { return getToken(LcdPythonParser.NOT, 0); }
 		public Not_testContext not_test() {
 			return getRuleContext(Not_testContext.class,0);
 		}
@@ -5006,15 +5006,15 @@ public class Python3Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_not_test; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Python3Listener ) ((Python3Listener)listener).enterNot_test(this);
+			if ( listener instanceof LcdPythonListener ) ((LcdPythonListener)listener).enterNot_test(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Python3Listener ) ((Python3Listener)listener).exitNot_test(this);
+			if ( listener instanceof LcdPythonListener ) ((LcdPythonListener)listener).exitNot_test(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof Python3Visitor ) return ((Python3Visitor<? extends T>)visitor).visitNot_test(this);
+			if ( visitor instanceof LcdPythonVisitor ) return ((LcdPythonVisitor<? extends T>)visitor).visitNot_test(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -5089,15 +5089,15 @@ public class Python3Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_comparison; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Python3Listener ) ((Python3Listener)listener).enterComparison(this);
+			if ( listener instanceof LcdPythonListener ) ((LcdPythonListener)listener).enterComparison(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Python3Listener ) ((Python3Listener)listener).exitComparison(this);
+			if ( listener instanceof LcdPythonListener ) ((LcdPythonListener)listener).exitComparison(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof Python3Visitor ) return ((Python3Visitor<? extends T>)visitor).visitComparison(this);
+			if ( visitor instanceof LcdPythonVisitor ) return ((LcdPythonVisitor<? extends T>)visitor).visitComparison(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -5141,31 +5141,31 @@ public class Python3Parser extends Parser {
 	}
 
 	public static class Comp_opContext extends ParserRuleContext {
-		public TerminalNode LESS_THAN() { return getToken(Python3Parser.LESS_THAN, 0); }
-		public TerminalNode GREATER_THAN() { return getToken(Python3Parser.GREATER_THAN, 0); }
-		public TerminalNode EQUALS() { return getToken(Python3Parser.EQUALS, 0); }
-		public TerminalNode GT_EQ() { return getToken(Python3Parser.GT_EQ, 0); }
-		public TerminalNode LT_EQ() { return getToken(Python3Parser.LT_EQ, 0); }
-		public TerminalNode NOT_EQ_1() { return getToken(Python3Parser.NOT_EQ_1, 0); }
-		public TerminalNode NOT_EQ_2() { return getToken(Python3Parser.NOT_EQ_2, 0); }
-		public TerminalNode IN() { return getToken(Python3Parser.IN, 0); }
-		public TerminalNode NOT() { return getToken(Python3Parser.NOT, 0); }
-		public TerminalNode IS() { return getToken(Python3Parser.IS, 0); }
+		public TerminalNode LESS_THAN() { return getToken(LcdPythonParser.LESS_THAN, 0); }
+		public TerminalNode GREATER_THAN() { return getToken(LcdPythonParser.GREATER_THAN, 0); }
+		public TerminalNode EQUALS() { return getToken(LcdPythonParser.EQUALS, 0); }
+		public TerminalNode GT_EQ() { return getToken(LcdPythonParser.GT_EQ, 0); }
+		public TerminalNode LT_EQ() { return getToken(LcdPythonParser.LT_EQ, 0); }
+		public TerminalNode NOT_EQ_1() { return getToken(LcdPythonParser.NOT_EQ_1, 0); }
+		public TerminalNode NOT_EQ_2() { return getToken(LcdPythonParser.NOT_EQ_2, 0); }
+		public TerminalNode IN() { return getToken(LcdPythonParser.IN, 0); }
+		public TerminalNode NOT() { return getToken(LcdPythonParser.NOT, 0); }
+		public TerminalNode IS() { return getToken(LcdPythonParser.IS, 0); }
 		public Comp_opContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_comp_op; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Python3Listener ) ((Python3Listener)listener).enterComp_op(this);
+			if ( listener instanceof LcdPythonListener ) ((LcdPythonListener)listener).enterComp_op(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Python3Listener ) ((Python3Listener)listener).exitComp_op(this);
+			if ( listener instanceof LcdPythonListener ) ((LcdPythonListener)listener).exitComp_op(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof Python3Visitor ) return ((Python3Visitor<? extends T>)visitor).visitComp_op(this);
+			if ( visitor instanceof LcdPythonVisitor ) return ((LcdPythonVisitor<? extends T>)visitor).visitComp_op(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -5272,7 +5272,7 @@ public class Python3Parser extends Parser {
 	}
 
 	public static class Star_exprContext extends ParserRuleContext {
-		public TerminalNode STAR() { return getToken(Python3Parser.STAR, 0); }
+		public TerminalNode STAR() { return getToken(LcdPythonParser.STAR, 0); }
 		public ExprContext expr() {
 			return getRuleContext(ExprContext.class,0);
 		}
@@ -5282,15 +5282,15 @@ public class Python3Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_star_expr; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Python3Listener ) ((Python3Listener)listener).enterStar_expr(this);
+			if ( listener instanceof LcdPythonListener ) ((LcdPythonListener)listener).enterStar_expr(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Python3Listener ) ((Python3Listener)listener).exitStar_expr(this);
+			if ( listener instanceof LcdPythonListener ) ((LcdPythonListener)listener).exitStar_expr(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof Python3Visitor ) return ((Python3Visitor<? extends T>)visitor).visitStar_expr(this);
+			if ( visitor instanceof LcdPythonVisitor ) return ((LcdPythonVisitor<? extends T>)visitor).visitStar_expr(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -5325,9 +5325,9 @@ public class Python3Parser extends Parser {
 		public Xor_exprContext xor_expr(int i) {
 			return getRuleContext(Xor_exprContext.class,i);
 		}
-		public List<TerminalNode> OR_OP() { return getTokens(Python3Parser.OR_OP); }
+		public List<TerminalNode> OR_OP() { return getTokens(LcdPythonParser.OR_OP); }
 		public TerminalNode OR_OP(int i) {
-			return getToken(Python3Parser.OR_OP, i);
+			return getToken(LcdPythonParser.OR_OP, i);
 		}
 		public ExprContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -5335,15 +5335,15 @@ public class Python3Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_expr; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Python3Listener ) ((Python3Listener)listener).enterExpr(this);
+			if ( listener instanceof LcdPythonListener ) ((LcdPythonListener)listener).enterExpr(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Python3Listener ) ((Python3Listener)listener).exitExpr(this);
+			if ( listener instanceof LcdPythonListener ) ((LcdPythonListener)listener).exitExpr(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof Python3Visitor ) return ((Python3Visitor<? extends T>)visitor).visitExpr(this);
+			if ( visitor instanceof LcdPythonVisitor ) return ((LcdPythonVisitor<? extends T>)visitor).visitExpr(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -5393,9 +5393,9 @@ public class Python3Parser extends Parser {
 		public And_exprContext and_expr(int i) {
 			return getRuleContext(And_exprContext.class,i);
 		}
-		public List<TerminalNode> XOR() { return getTokens(Python3Parser.XOR); }
+		public List<TerminalNode> XOR() { return getTokens(LcdPythonParser.XOR); }
 		public TerminalNode XOR(int i) {
-			return getToken(Python3Parser.XOR, i);
+			return getToken(LcdPythonParser.XOR, i);
 		}
 		public Xor_exprContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -5403,15 +5403,15 @@ public class Python3Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_xor_expr; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Python3Listener ) ((Python3Listener)listener).enterXor_expr(this);
+			if ( listener instanceof LcdPythonListener ) ((LcdPythonListener)listener).enterXor_expr(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Python3Listener ) ((Python3Listener)listener).exitXor_expr(this);
+			if ( listener instanceof LcdPythonListener ) ((LcdPythonListener)listener).exitXor_expr(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof Python3Visitor ) return ((Python3Visitor<? extends T>)visitor).visitXor_expr(this);
+			if ( visitor instanceof LcdPythonVisitor ) return ((LcdPythonVisitor<? extends T>)visitor).visitXor_expr(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -5461,9 +5461,9 @@ public class Python3Parser extends Parser {
 		public Shift_exprContext shift_expr(int i) {
 			return getRuleContext(Shift_exprContext.class,i);
 		}
-		public List<TerminalNode> AND_OP() { return getTokens(Python3Parser.AND_OP); }
+		public List<TerminalNode> AND_OP() { return getTokens(LcdPythonParser.AND_OP); }
 		public TerminalNode AND_OP(int i) {
-			return getToken(Python3Parser.AND_OP, i);
+			return getToken(LcdPythonParser.AND_OP, i);
 		}
 		public And_exprContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -5471,15 +5471,15 @@ public class Python3Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_and_expr; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Python3Listener ) ((Python3Listener)listener).enterAnd_expr(this);
+			if ( listener instanceof LcdPythonListener ) ((LcdPythonListener)listener).enterAnd_expr(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Python3Listener ) ((Python3Listener)listener).exitAnd_expr(this);
+			if ( listener instanceof LcdPythonListener ) ((LcdPythonListener)listener).exitAnd_expr(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof Python3Visitor ) return ((Python3Visitor<? extends T>)visitor).visitAnd_expr(this);
+			if ( visitor instanceof LcdPythonVisitor ) return ((LcdPythonVisitor<? extends T>)visitor).visitAnd_expr(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -5529,13 +5529,13 @@ public class Python3Parser extends Parser {
 		public Arith_exprContext arith_expr(int i) {
 			return getRuleContext(Arith_exprContext.class,i);
 		}
-		public List<TerminalNode> LEFT_SHIFT() { return getTokens(Python3Parser.LEFT_SHIFT); }
+		public List<TerminalNode> LEFT_SHIFT() { return getTokens(LcdPythonParser.LEFT_SHIFT); }
 		public TerminalNode LEFT_SHIFT(int i) {
-			return getToken(Python3Parser.LEFT_SHIFT, i);
+			return getToken(LcdPythonParser.LEFT_SHIFT, i);
 		}
-		public List<TerminalNode> RIGHT_SHIFT() { return getTokens(Python3Parser.RIGHT_SHIFT); }
+		public List<TerminalNode> RIGHT_SHIFT() { return getTokens(LcdPythonParser.RIGHT_SHIFT); }
 		public TerminalNode RIGHT_SHIFT(int i) {
-			return getToken(Python3Parser.RIGHT_SHIFT, i);
+			return getToken(LcdPythonParser.RIGHT_SHIFT, i);
 		}
 		public Shift_exprContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -5543,15 +5543,15 @@ public class Python3Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_shift_expr; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Python3Listener ) ((Python3Listener)listener).enterShift_expr(this);
+			if ( listener instanceof LcdPythonListener ) ((LcdPythonListener)listener).enterShift_expr(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Python3Listener ) ((Python3Listener)listener).exitShift_expr(this);
+			if ( listener instanceof LcdPythonListener ) ((LcdPythonListener)listener).exitShift_expr(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof Python3Visitor ) return ((Python3Visitor<? extends T>)visitor).visitShift_expr(this);
+			if ( visitor instanceof LcdPythonVisitor ) return ((LcdPythonVisitor<? extends T>)visitor).visitShift_expr(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -5609,13 +5609,13 @@ public class Python3Parser extends Parser {
 		public TermContext term(int i) {
 			return getRuleContext(TermContext.class,i);
 		}
-		public List<TerminalNode> ADD() { return getTokens(Python3Parser.ADD); }
+		public List<TerminalNode> ADD() { return getTokens(LcdPythonParser.ADD); }
 		public TerminalNode ADD(int i) {
-			return getToken(Python3Parser.ADD, i);
+			return getToken(LcdPythonParser.ADD, i);
 		}
-		public List<TerminalNode> MINUS() { return getTokens(Python3Parser.MINUS); }
+		public List<TerminalNode> MINUS() { return getTokens(LcdPythonParser.MINUS); }
 		public TerminalNode MINUS(int i) {
-			return getToken(Python3Parser.MINUS, i);
+			return getToken(LcdPythonParser.MINUS, i);
 		}
 		public Arith_exprContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -5623,15 +5623,15 @@ public class Python3Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_arith_expr; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Python3Listener ) ((Python3Listener)listener).enterArith_expr(this);
+			if ( listener instanceof LcdPythonListener ) ((LcdPythonListener)listener).enterArith_expr(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Python3Listener ) ((Python3Listener)listener).exitArith_expr(this);
+			if ( listener instanceof LcdPythonListener ) ((LcdPythonListener)listener).exitArith_expr(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof Python3Visitor ) return ((Python3Visitor<? extends T>)visitor).visitArith_expr(this);
+			if ( visitor instanceof LcdPythonVisitor ) return ((LcdPythonVisitor<? extends T>)visitor).visitArith_expr(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -5689,25 +5689,25 @@ public class Python3Parser extends Parser {
 		public FactorContext factor(int i) {
 			return getRuleContext(FactorContext.class,i);
 		}
-		public List<TerminalNode> STAR() { return getTokens(Python3Parser.STAR); }
+		public List<TerminalNode> STAR() { return getTokens(LcdPythonParser.STAR); }
 		public TerminalNode STAR(int i) {
-			return getToken(Python3Parser.STAR, i);
+			return getToken(LcdPythonParser.STAR, i);
 		}
-		public List<TerminalNode> AT() { return getTokens(Python3Parser.AT); }
+		public List<TerminalNode> AT() { return getTokens(LcdPythonParser.AT); }
 		public TerminalNode AT(int i) {
-			return getToken(Python3Parser.AT, i);
+			return getToken(LcdPythonParser.AT, i);
 		}
-		public List<TerminalNode> DIV() { return getTokens(Python3Parser.DIV); }
+		public List<TerminalNode> DIV() { return getTokens(LcdPythonParser.DIV); }
 		public TerminalNode DIV(int i) {
-			return getToken(Python3Parser.DIV, i);
+			return getToken(LcdPythonParser.DIV, i);
 		}
-		public List<TerminalNode> MOD() { return getTokens(Python3Parser.MOD); }
+		public List<TerminalNode> MOD() { return getTokens(LcdPythonParser.MOD); }
 		public TerminalNode MOD(int i) {
-			return getToken(Python3Parser.MOD, i);
+			return getToken(LcdPythonParser.MOD, i);
 		}
-		public List<TerminalNode> IDIV() { return getTokens(Python3Parser.IDIV); }
+		public List<TerminalNode> IDIV() { return getTokens(LcdPythonParser.IDIV); }
 		public TerminalNode IDIV(int i) {
-			return getToken(Python3Parser.IDIV, i);
+			return getToken(LcdPythonParser.IDIV, i);
 		}
 		public TermContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -5715,15 +5715,15 @@ public class Python3Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_term; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Python3Listener ) ((Python3Listener)listener).enterTerm(this);
+			if ( listener instanceof LcdPythonListener ) ((LcdPythonListener)listener).enterTerm(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Python3Listener ) ((Python3Listener)listener).exitTerm(this);
+			if ( listener instanceof LcdPythonListener ) ((LcdPythonListener)listener).exitTerm(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof Python3Visitor ) return ((Python3Visitor<? extends T>)visitor).visitTerm(this);
+			if ( visitor instanceof LcdPythonVisitor ) return ((LcdPythonVisitor<? extends T>)visitor).visitTerm(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -5778,9 +5778,9 @@ public class Python3Parser extends Parser {
 		public FactorContext factor() {
 			return getRuleContext(FactorContext.class,0);
 		}
-		public TerminalNode ADD() { return getToken(Python3Parser.ADD, 0); }
-		public TerminalNode MINUS() { return getToken(Python3Parser.MINUS, 0); }
-		public TerminalNode NOT_OP() { return getToken(Python3Parser.NOT_OP, 0); }
+		public TerminalNode ADD() { return getToken(LcdPythonParser.ADD, 0); }
+		public TerminalNode MINUS() { return getToken(LcdPythonParser.MINUS, 0); }
+		public TerminalNode NOT_OP() { return getToken(LcdPythonParser.NOT_OP, 0); }
 		public PowerContext power() {
 			return getRuleContext(PowerContext.class,0);
 		}
@@ -5790,15 +5790,15 @@ public class Python3Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_factor; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Python3Listener ) ((Python3Listener)listener).enterFactor(this);
+			if ( listener instanceof LcdPythonListener ) ((LcdPythonListener)listener).enterFactor(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Python3Listener ) ((Python3Listener)listener).exitFactor(this);
+			if ( listener instanceof LcdPythonListener ) ((LcdPythonListener)listener).exitFactor(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof Python3Visitor ) return ((Python3Visitor<? extends T>)visitor).visitFactor(this);
+			if ( visitor instanceof LcdPythonVisitor ) return ((LcdPythonVisitor<? extends T>)visitor).visitFactor(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -5866,7 +5866,7 @@ public class Python3Parser extends Parser {
 		public Atom_exprContext atom_expr() {
 			return getRuleContext(Atom_exprContext.class,0);
 		}
-		public TerminalNode POWER() { return getToken(Python3Parser.POWER, 0); }
+		public TerminalNode POWER() { return getToken(LcdPythonParser.POWER, 0); }
 		public FactorContext factor() {
 			return getRuleContext(FactorContext.class,0);
 		}
@@ -5876,15 +5876,15 @@ public class Python3Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_power; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Python3Listener ) ((Python3Listener)listener).enterPower(this);
+			if ( listener instanceof LcdPythonListener ) ((LcdPythonListener)listener).enterPower(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Python3Listener ) ((Python3Listener)listener).exitPower(this);
+			if ( listener instanceof LcdPythonListener ) ((LcdPythonListener)listener).exitPower(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof Python3Visitor ) return ((Python3Visitor<? extends T>)visitor).visitPower(this);
+			if ( visitor instanceof LcdPythonVisitor ) return ((LcdPythonVisitor<? extends T>)visitor).visitPower(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -5927,7 +5927,7 @@ public class Python3Parser extends Parser {
 		public AtomContext atom() {
 			return getRuleContext(AtomContext.class,0);
 		}
-		public TerminalNode AWAIT() { return getToken(Python3Parser.AWAIT, 0); }
+		public TerminalNode AWAIT() { return getToken(LcdPythonParser.AWAIT, 0); }
 		public List<TrailerContext> trailer() {
 			return getRuleContexts(TrailerContext.class);
 		}
@@ -5940,15 +5940,15 @@ public class Python3Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_atom_expr; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Python3Listener ) ((Python3Listener)listener).enterAtom_expr(this);
+			if ( listener instanceof LcdPythonListener ) ((LcdPythonListener)listener).enterAtom_expr(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Python3Listener ) ((Python3Listener)listener).exitAtom_expr(this);
+			if ( listener instanceof LcdPythonListener ) ((LcdPythonListener)listener).exitAtom_expr(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof Python3Visitor ) return ((Python3Visitor<? extends T>)visitor).visitAtom_expr(this);
+			if ( visitor instanceof LcdPythonVisitor ) return ((LcdPythonVisitor<? extends T>)visitor).visitAtom_expr(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -6000,18 +6000,18 @@ public class Python3Parser extends Parser {
 	}
 
 	public static class AtomContext extends ParserRuleContext {
-		public TerminalNode OPEN_PAREN() { return getToken(Python3Parser.OPEN_PAREN, 0); }
-		public TerminalNode CLOSE_PAREN() { return getToken(Python3Parser.CLOSE_PAREN, 0); }
-		public TerminalNode OPEN_BRACK() { return getToken(Python3Parser.OPEN_BRACK, 0); }
-		public TerminalNode CLOSE_BRACK() { return getToken(Python3Parser.CLOSE_BRACK, 0); }
-		public TerminalNode OPEN_BRACE() { return getToken(Python3Parser.OPEN_BRACE, 0); }
-		public TerminalNode CLOSE_BRACE() { return getToken(Python3Parser.CLOSE_BRACE, 0); }
-		public TerminalNode NAME() { return getToken(Python3Parser.NAME, 0); }
-		public TerminalNode NUMBER() { return getToken(Python3Parser.NUMBER, 0); }
-		public TerminalNode ELLIPSIS() { return getToken(Python3Parser.ELLIPSIS, 0); }
-		public TerminalNode NONE() { return getToken(Python3Parser.NONE, 0); }
-		public TerminalNode TRUE() { return getToken(Python3Parser.TRUE, 0); }
-		public TerminalNode FALSE() { return getToken(Python3Parser.FALSE, 0); }
+		public TerminalNode OPEN_PAREN() { return getToken(LcdPythonParser.OPEN_PAREN, 0); }
+		public TerminalNode CLOSE_PAREN() { return getToken(LcdPythonParser.CLOSE_PAREN, 0); }
+		public TerminalNode OPEN_BRACK() { return getToken(LcdPythonParser.OPEN_BRACK, 0); }
+		public TerminalNode CLOSE_BRACK() { return getToken(LcdPythonParser.CLOSE_BRACK, 0); }
+		public TerminalNode OPEN_BRACE() { return getToken(LcdPythonParser.OPEN_BRACE, 0); }
+		public TerminalNode CLOSE_BRACE() { return getToken(LcdPythonParser.CLOSE_BRACE, 0); }
+		public TerminalNode NAME() { return getToken(LcdPythonParser.NAME, 0); }
+		public TerminalNode NUMBER() { return getToken(LcdPythonParser.NUMBER, 0); }
+		public TerminalNode ELLIPSIS() { return getToken(LcdPythonParser.ELLIPSIS, 0); }
+		public TerminalNode NONE() { return getToken(LcdPythonParser.NONE, 0); }
+		public TerminalNode TRUE() { return getToken(LcdPythonParser.TRUE, 0); }
+		public TerminalNode FALSE() { return getToken(LcdPythonParser.FALSE, 0); }
 		public Yield_exprContext yield_expr() {
 			return getRuleContext(Yield_exprContext.class,0);
 		}
@@ -6021,9 +6021,9 @@ public class Python3Parser extends Parser {
 		public DictorsetmakerContext dictorsetmaker() {
 			return getRuleContext(DictorsetmakerContext.class,0);
 		}
-		public List<TerminalNode> STRING() { return getTokens(Python3Parser.STRING); }
+		public List<TerminalNode> STRING() { return getTokens(LcdPythonParser.STRING); }
 		public TerminalNode STRING(int i) {
-			return getToken(Python3Parser.STRING, i);
+			return getToken(LcdPythonParser.STRING, i);
 		}
 		public AtomContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -6031,15 +6031,15 @@ public class Python3Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_atom; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Python3Listener ) ((Python3Listener)listener).enterAtom(this);
+			if ( listener instanceof LcdPythonListener ) ((LcdPythonListener)listener).enterAtom(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Python3Listener ) ((Python3Listener)listener).exitAtom(this);
+			if ( listener instanceof LcdPythonListener ) ((LcdPythonListener)listener).exitAtom(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof Python3Visitor ) return ((Python3Visitor<? extends T>)visitor).visitAtom(this);
+			if ( visitor instanceof LcdPythonVisitor ) return ((LcdPythonVisitor<? extends T>)visitor).visitAtom(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -6220,9 +6220,9 @@ public class Python3Parser extends Parser {
 		public Comp_forContext comp_for() {
 			return getRuleContext(Comp_forContext.class,0);
 		}
-		public List<TerminalNode> COMMA() { return getTokens(Python3Parser.COMMA); }
+		public List<TerminalNode> COMMA() { return getTokens(LcdPythonParser.COMMA); }
 		public TerminalNode COMMA(int i) {
-			return getToken(Python3Parser.COMMA, i);
+			return getToken(LcdPythonParser.COMMA, i);
 		}
 		public Testlist_compContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -6230,15 +6230,15 @@ public class Python3Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_testlist_comp; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Python3Listener ) ((Python3Listener)listener).enterTestlist_comp(this);
+			if ( listener instanceof LcdPythonListener ) ((LcdPythonListener)listener).enterTestlist_comp(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Python3Listener ) ((Python3Listener)listener).exitTestlist_comp(this);
+			if ( listener instanceof LcdPythonListener ) ((LcdPythonListener)listener).exitTestlist_comp(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof Python3Visitor ) return ((Python3Visitor<? extends T>)visitor).visitTestlist_comp(this);
+			if ( visitor instanceof LcdPythonVisitor ) return ((LcdPythonVisitor<? extends T>)visitor).visitTestlist_comp(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -6376,33 +6376,33 @@ public class Python3Parser extends Parser {
 	}
 
 	public static class TrailerContext extends ParserRuleContext {
-		public TerminalNode OPEN_PAREN() { return getToken(Python3Parser.OPEN_PAREN, 0); }
-		public TerminalNode CLOSE_PAREN() { return getToken(Python3Parser.CLOSE_PAREN, 0); }
+		public TerminalNode OPEN_PAREN() { return getToken(LcdPythonParser.OPEN_PAREN, 0); }
+		public TerminalNode CLOSE_PAREN() { return getToken(LcdPythonParser.CLOSE_PAREN, 0); }
 		public ArglistContext arglist() {
 			return getRuleContext(ArglistContext.class,0);
 		}
-		public TerminalNode OPEN_BRACK() { return getToken(Python3Parser.OPEN_BRACK, 0); }
+		public TerminalNode OPEN_BRACK() { return getToken(LcdPythonParser.OPEN_BRACK, 0); }
 		public SubscriptlistContext subscriptlist() {
 			return getRuleContext(SubscriptlistContext.class,0);
 		}
-		public TerminalNode CLOSE_BRACK() { return getToken(Python3Parser.CLOSE_BRACK, 0); }
-		public TerminalNode DOT() { return getToken(Python3Parser.DOT, 0); }
-		public TerminalNode NAME() { return getToken(Python3Parser.NAME, 0); }
+		public TerminalNode CLOSE_BRACK() { return getToken(LcdPythonParser.CLOSE_BRACK, 0); }
+		public TerminalNode DOT() { return getToken(LcdPythonParser.DOT, 0); }
+		public TerminalNode NAME() { return getToken(LcdPythonParser.NAME, 0); }
 		public TrailerContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_trailer; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Python3Listener ) ((Python3Listener)listener).enterTrailer(this);
+			if ( listener instanceof LcdPythonListener ) ((LcdPythonListener)listener).enterTrailer(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Python3Listener ) ((Python3Listener)listener).exitTrailer(this);
+			if ( listener instanceof LcdPythonListener ) ((LcdPythonListener)listener).exitTrailer(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof Python3Visitor ) return ((Python3Visitor<? extends T>)visitor).visitTrailer(this);
+			if ( visitor instanceof LcdPythonVisitor ) return ((LcdPythonVisitor<? extends T>)visitor).visitTrailer(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -6476,9 +6476,9 @@ public class Python3Parser extends Parser {
 		public SubscriptContext subscript(int i) {
 			return getRuleContext(SubscriptContext.class,i);
 		}
-		public List<TerminalNode> COMMA() { return getTokens(Python3Parser.COMMA); }
+		public List<TerminalNode> COMMA() { return getTokens(LcdPythonParser.COMMA); }
 		public TerminalNode COMMA(int i) {
-			return getToken(Python3Parser.COMMA, i);
+			return getToken(LcdPythonParser.COMMA, i);
 		}
 		public SubscriptlistContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -6486,15 +6486,15 @@ public class Python3Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_subscriptlist; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Python3Listener ) ((Python3Listener)listener).enterSubscriptlist(this);
+			if ( listener instanceof LcdPythonListener ) ((LcdPythonListener)listener).enterSubscriptlist(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Python3Listener ) ((Python3Listener)listener).exitSubscriptlist(this);
+			if ( listener instanceof LcdPythonListener ) ((LcdPythonListener)listener).exitSubscriptlist(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof Python3Visitor ) return ((Python3Visitor<? extends T>)visitor).visitSubscriptlist(this);
+			if ( visitor instanceof LcdPythonVisitor ) return ((LcdPythonVisitor<? extends T>)visitor).visitSubscriptlist(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -6557,7 +6557,7 @@ public class Python3Parser extends Parser {
 		public TestContext test(int i) {
 			return getRuleContext(TestContext.class,i);
 		}
-		public TerminalNode COLON() { return getToken(Python3Parser.COLON, 0); }
+		public TerminalNode COLON() { return getToken(LcdPythonParser.COLON, 0); }
 		public SliceopContext sliceop() {
 			return getRuleContext(SliceopContext.class,0);
 		}
@@ -6567,15 +6567,15 @@ public class Python3Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_subscript; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Python3Listener ) ((Python3Listener)listener).enterSubscript(this);
+			if ( listener instanceof LcdPythonListener ) ((LcdPythonListener)listener).enterSubscript(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Python3Listener ) ((Python3Listener)listener).exitSubscript(this);
+			if ( listener instanceof LcdPythonListener ) ((LcdPythonListener)listener).exitSubscript(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof Python3Visitor ) return ((Python3Visitor<? extends T>)visitor).visitSubscript(this);
+			if ( visitor instanceof LcdPythonVisitor ) return ((LcdPythonVisitor<? extends T>)visitor).visitSubscript(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -6646,7 +6646,7 @@ public class Python3Parser extends Parser {
 	}
 
 	public static class SliceopContext extends ParserRuleContext {
-		public TerminalNode COLON() { return getToken(Python3Parser.COLON, 0); }
+		public TerminalNode COLON() { return getToken(LcdPythonParser.COLON, 0); }
 		public TestContext test() {
 			return getRuleContext(TestContext.class,0);
 		}
@@ -6656,15 +6656,15 @@ public class Python3Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_sliceop; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Python3Listener ) ((Python3Listener)listener).enterSliceop(this);
+			if ( listener instanceof LcdPythonListener ) ((LcdPythonListener)listener).enterSliceop(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Python3Listener ) ((Python3Listener)listener).exitSliceop(this);
+			if ( listener instanceof LcdPythonListener ) ((LcdPythonListener)listener).exitSliceop(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof Python3Visitor ) return ((Python3Visitor<? extends T>)visitor).visitSliceop(this);
+			if ( visitor instanceof LcdPythonVisitor ) return ((LcdPythonVisitor<? extends T>)visitor).visitSliceop(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -6714,9 +6714,9 @@ public class Python3Parser extends Parser {
 		public Star_exprContext star_expr(int i) {
 			return getRuleContext(Star_exprContext.class,i);
 		}
-		public List<TerminalNode> COMMA() { return getTokens(Python3Parser.COMMA); }
+		public List<TerminalNode> COMMA() { return getTokens(LcdPythonParser.COMMA); }
 		public TerminalNode COMMA(int i) {
-			return getToken(Python3Parser.COMMA, i);
+			return getToken(LcdPythonParser.COMMA, i);
 		}
 		public ExprlistContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -6724,15 +6724,15 @@ public class Python3Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_exprlist; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Python3Listener ) ((Python3Listener)listener).enterExprlist(this);
+			if ( listener instanceof LcdPythonListener ) ((LcdPythonListener)listener).enterExprlist(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Python3Listener ) ((Python3Listener)listener).exitExprlist(this);
+			if ( listener instanceof LcdPythonListener ) ((LcdPythonListener)listener).exitExprlist(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof Python3Visitor ) return ((Python3Visitor<? extends T>)visitor).visitExprlist(this);
+			if ( visitor instanceof LcdPythonVisitor ) return ((LcdPythonVisitor<? extends T>)visitor).visitExprlist(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -6853,9 +6853,9 @@ public class Python3Parser extends Parser {
 		public TestContext test(int i) {
 			return getRuleContext(TestContext.class,i);
 		}
-		public List<TerminalNode> COMMA() { return getTokens(Python3Parser.COMMA); }
+		public List<TerminalNode> COMMA() { return getTokens(LcdPythonParser.COMMA); }
 		public TerminalNode COMMA(int i) {
-			return getToken(Python3Parser.COMMA, i);
+			return getToken(LcdPythonParser.COMMA, i);
 		}
 		public TestlistContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -6863,15 +6863,15 @@ public class Python3Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_testlist; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Python3Listener ) ((Python3Listener)listener).enterTestlist(this);
+			if ( listener instanceof LcdPythonListener ) ((LcdPythonListener)listener).enterTestlist(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Python3Listener ) ((Python3Listener)listener).exitTestlist(this);
+			if ( listener instanceof LcdPythonListener ) ((LcdPythonListener)listener).exitTestlist(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof Python3Visitor ) return ((Python3Visitor<? extends T>)visitor).visitTestlist(this);
+			if ( visitor instanceof LcdPythonVisitor ) return ((LcdPythonVisitor<? extends T>)visitor).visitTestlist(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -6934,13 +6934,13 @@ public class Python3Parser extends Parser {
 		public TestContext test(int i) {
 			return getRuleContext(TestContext.class,i);
 		}
-		public List<TerminalNode> COLON() { return getTokens(Python3Parser.COLON); }
+		public List<TerminalNode> COLON() { return getTokens(LcdPythonParser.COLON); }
 		public TerminalNode COLON(int i) {
-			return getToken(Python3Parser.COLON, i);
+			return getToken(LcdPythonParser.COLON, i);
 		}
-		public List<TerminalNode> POWER() { return getTokens(Python3Parser.POWER); }
+		public List<TerminalNode> POWER() { return getTokens(LcdPythonParser.POWER); }
 		public TerminalNode POWER(int i) {
-			return getToken(Python3Parser.POWER, i);
+			return getToken(LcdPythonParser.POWER, i);
 		}
 		public List<ExprContext> expr() {
 			return getRuleContexts(ExprContext.class);
@@ -6957,9 +6957,9 @@ public class Python3Parser extends Parser {
 		public Star_exprContext star_expr(int i) {
 			return getRuleContext(Star_exprContext.class,i);
 		}
-		public List<TerminalNode> COMMA() { return getTokens(Python3Parser.COMMA); }
+		public List<TerminalNode> COMMA() { return getTokens(LcdPythonParser.COMMA); }
 		public TerminalNode COMMA(int i) {
-			return getToken(Python3Parser.COMMA, i);
+			return getToken(LcdPythonParser.COMMA, i);
 		}
 		public DictorsetmakerContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -6967,15 +6967,15 @@ public class Python3Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_dictorsetmaker; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Python3Listener ) ((Python3Listener)listener).enterDictorsetmaker(this);
+			if ( listener instanceof LcdPythonListener ) ((LcdPythonListener)listener).enterDictorsetmaker(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Python3Listener ) ((Python3Listener)listener).exitDictorsetmaker(this);
+			if ( listener instanceof LcdPythonListener ) ((LcdPythonListener)listener).exitDictorsetmaker(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof Python3Visitor ) return ((Python3Visitor<? extends T>)visitor).visitDictorsetmaker(this);
+			if ( visitor instanceof LcdPythonVisitor ) return ((LcdPythonVisitor<? extends T>)visitor).visitDictorsetmaker(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -7250,14 +7250,14 @@ public class Python3Parser extends Parser {
 	}
 
 	public static class ClassdefContext extends ParserRuleContext {
-		public TerminalNode CLASS() { return getToken(Python3Parser.CLASS, 0); }
-		public TerminalNode NAME() { return getToken(Python3Parser.NAME, 0); }
-		public TerminalNode COLON() { return getToken(Python3Parser.COLON, 0); }
+		public TerminalNode CLASS() { return getToken(LcdPythonParser.CLASS, 0); }
+		public TerminalNode NAME() { return getToken(LcdPythonParser.NAME, 0); }
+		public TerminalNode COLON() { return getToken(LcdPythonParser.COLON, 0); }
 		public SuiteContext suite() {
 			return getRuleContext(SuiteContext.class,0);
 		}
-		public TerminalNode OPEN_PAREN() { return getToken(Python3Parser.OPEN_PAREN, 0); }
-		public TerminalNode CLOSE_PAREN() { return getToken(Python3Parser.CLOSE_PAREN, 0); }
+		public TerminalNode OPEN_PAREN() { return getToken(LcdPythonParser.OPEN_PAREN, 0); }
+		public TerminalNode CLOSE_PAREN() { return getToken(LcdPythonParser.CLOSE_PAREN, 0); }
 		public ArglistContext arglist() {
 			return getRuleContext(ArglistContext.class,0);
 		}
@@ -7267,15 +7267,15 @@ public class Python3Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_classdef; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Python3Listener ) ((Python3Listener)listener).enterClassdef(this);
+			if ( listener instanceof LcdPythonListener ) ((LcdPythonListener)listener).enterClassdef(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Python3Listener ) ((Python3Listener)listener).exitClassdef(this);
+			if ( listener instanceof LcdPythonListener ) ((LcdPythonListener)listener).exitClassdef(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof Python3Visitor ) return ((Python3Visitor<? extends T>)visitor).visitClassdef(this);
+			if ( visitor instanceof LcdPythonVisitor ) return ((LcdPythonVisitor<? extends T>)visitor).visitClassdef(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -7337,9 +7337,9 @@ public class Python3Parser extends Parser {
 		public ArgumentContext argument(int i) {
 			return getRuleContext(ArgumentContext.class,i);
 		}
-		public List<TerminalNode> COMMA() { return getTokens(Python3Parser.COMMA); }
+		public List<TerminalNode> COMMA() { return getTokens(LcdPythonParser.COMMA); }
 		public TerminalNode COMMA(int i) {
-			return getToken(Python3Parser.COMMA, i);
+			return getToken(LcdPythonParser.COMMA, i);
 		}
 		public ArglistContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -7347,15 +7347,15 @@ public class Python3Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_arglist; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Python3Listener ) ((Python3Listener)listener).enterArglist(this);
+			if ( listener instanceof LcdPythonListener ) ((LcdPythonListener)listener).enterArglist(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Python3Listener ) ((Python3Listener)listener).exitArglist(this);
+			if ( listener instanceof LcdPythonListener ) ((LcdPythonListener)listener).exitArglist(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof Python3Visitor ) return ((Python3Visitor<? extends T>)visitor).visitArglist(this);
+			if ( visitor instanceof LcdPythonVisitor ) return ((LcdPythonVisitor<? extends T>)visitor).visitArglist(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -7418,9 +7418,9 @@ public class Python3Parser extends Parser {
 		public TestContext test(int i) {
 			return getRuleContext(TestContext.class,i);
 		}
-		public TerminalNode ASSIGN() { return getToken(Python3Parser.ASSIGN, 0); }
-		public TerminalNode POWER() { return getToken(Python3Parser.POWER, 0); }
-		public TerminalNode STAR() { return getToken(Python3Parser.STAR, 0); }
+		public TerminalNode ASSIGN() { return getToken(LcdPythonParser.ASSIGN, 0); }
+		public TerminalNode POWER() { return getToken(LcdPythonParser.POWER, 0); }
+		public TerminalNode STAR() { return getToken(LcdPythonParser.STAR, 0); }
 		public Comp_forContext comp_for() {
 			return getRuleContext(Comp_forContext.class,0);
 		}
@@ -7430,15 +7430,15 @@ public class Python3Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_argument; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Python3Listener ) ((Python3Listener)listener).enterArgument(this);
+			if ( listener instanceof LcdPythonListener ) ((LcdPythonListener)listener).enterArgument(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Python3Listener ) ((Python3Listener)listener).exitArgument(this);
+			if ( listener instanceof LcdPythonListener ) ((LcdPythonListener)listener).exitArgument(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof Python3Visitor ) return ((Python3Visitor<? extends T>)visitor).visitArgument(this);
+			if ( visitor instanceof LcdPythonVisitor ) return ((LcdPythonVisitor<? extends T>)visitor).visitArgument(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -7522,15 +7522,15 @@ public class Python3Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_comp_iter; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Python3Listener ) ((Python3Listener)listener).enterComp_iter(this);
+			if ( listener instanceof LcdPythonListener ) ((LcdPythonListener)listener).enterComp_iter(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Python3Listener ) ((Python3Listener)listener).exitComp_iter(this);
+			if ( listener instanceof LcdPythonListener ) ((LcdPythonListener)listener).exitComp_iter(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof Python3Visitor ) return ((Python3Visitor<? extends T>)visitor).visitComp_iter(this);
+			if ( visitor instanceof LcdPythonVisitor ) return ((LcdPythonVisitor<? extends T>)visitor).visitComp_iter(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -7573,15 +7573,15 @@ public class Python3Parser extends Parser {
 	}
 
 	public static class Comp_forContext extends ParserRuleContext {
-		public TerminalNode FOR() { return getToken(Python3Parser.FOR, 0); }
+		public TerminalNode FOR() { return getToken(LcdPythonParser.FOR, 0); }
 		public ExprlistContext exprlist() {
 			return getRuleContext(ExprlistContext.class,0);
 		}
-		public TerminalNode IN() { return getToken(Python3Parser.IN, 0); }
+		public TerminalNode IN() { return getToken(LcdPythonParser.IN, 0); }
 		public Or_testContext or_test() {
 			return getRuleContext(Or_testContext.class,0);
 		}
-		public TerminalNode ASYNC() { return getToken(Python3Parser.ASYNC, 0); }
+		public TerminalNode ASYNC() { return getToken(LcdPythonParser.ASYNC, 0); }
 		public Comp_iterContext comp_iter() {
 			return getRuleContext(Comp_iterContext.class,0);
 		}
@@ -7591,15 +7591,15 @@ public class Python3Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_comp_for; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Python3Listener ) ((Python3Listener)listener).enterComp_for(this);
+			if ( listener instanceof LcdPythonListener ) ((LcdPythonListener)listener).enterComp_for(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Python3Listener ) ((Python3Listener)listener).exitComp_for(this);
+			if ( listener instanceof LcdPythonListener ) ((LcdPythonListener)listener).exitComp_for(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof Python3Visitor ) return ((Python3Visitor<? extends T>)visitor).visitComp_for(this);
+			if ( visitor instanceof LcdPythonVisitor ) return ((LcdPythonVisitor<? extends T>)visitor).visitComp_for(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -7653,7 +7653,7 @@ public class Python3Parser extends Parser {
 	}
 
 	public static class Comp_ifContext extends ParserRuleContext {
-		public TerminalNode IF() { return getToken(Python3Parser.IF, 0); }
+		public TerminalNode IF() { return getToken(LcdPythonParser.IF, 0); }
 		public Test_nocondContext test_nocond() {
 			return getRuleContext(Test_nocondContext.class,0);
 		}
@@ -7666,15 +7666,15 @@ public class Python3Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_comp_if; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Python3Listener ) ((Python3Listener)listener).enterComp_if(this);
+			if ( listener instanceof LcdPythonListener ) ((LcdPythonListener)listener).enterComp_if(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Python3Listener ) ((Python3Listener)listener).exitComp_if(this);
+			if ( listener instanceof LcdPythonListener ) ((LcdPythonListener)listener).exitComp_if(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof Python3Visitor ) return ((Python3Visitor<? extends T>)visitor).visitComp_if(this);
+			if ( visitor instanceof LcdPythonVisitor ) return ((LcdPythonVisitor<? extends T>)visitor).visitComp_if(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -7714,22 +7714,22 @@ public class Python3Parser extends Parser {
 	}
 
 	public static class Encoding_declContext extends ParserRuleContext {
-		public TerminalNode NAME() { return getToken(Python3Parser.NAME, 0); }
+		public TerminalNode NAME() { return getToken(LcdPythonParser.NAME, 0); }
 		public Encoding_declContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_encoding_decl; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Python3Listener ) ((Python3Listener)listener).enterEncoding_decl(this);
+			if ( listener instanceof LcdPythonListener ) ((LcdPythonListener)listener).enterEncoding_decl(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Python3Listener ) ((Python3Listener)listener).exitEncoding_decl(this);
+			if ( listener instanceof LcdPythonListener ) ((LcdPythonListener)listener).exitEncoding_decl(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof Python3Visitor ) return ((Python3Visitor<? extends T>)visitor).visitEncoding_decl(this);
+			if ( visitor instanceof LcdPythonVisitor ) return ((LcdPythonVisitor<? extends T>)visitor).visitEncoding_decl(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -7756,7 +7756,7 @@ public class Python3Parser extends Parser {
 	}
 
 	public static class Yield_exprContext extends ParserRuleContext {
-		public TerminalNode YIELD() { return getToken(Python3Parser.YIELD, 0); }
+		public TerminalNode YIELD() { return getToken(LcdPythonParser.YIELD, 0); }
 		public Yield_argContext yield_arg() {
 			return getRuleContext(Yield_argContext.class,0);
 		}
@@ -7766,15 +7766,15 @@ public class Python3Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_yield_expr; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Python3Listener ) ((Python3Listener)listener).enterYield_expr(this);
+			if ( listener instanceof LcdPythonListener ) ((LcdPythonListener)listener).enterYield_expr(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Python3Listener ) ((Python3Listener)listener).exitYield_expr(this);
+			if ( listener instanceof LcdPythonListener ) ((LcdPythonListener)listener).exitYield_expr(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof Python3Visitor ) return ((Python3Visitor<? extends T>)visitor).visitYield_expr(this);
+			if ( visitor instanceof LcdPythonVisitor ) return ((LcdPythonVisitor<? extends T>)visitor).visitYield_expr(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -7812,7 +7812,7 @@ public class Python3Parser extends Parser {
 	}
 
 	public static class Yield_argContext extends ParserRuleContext {
-		public TerminalNode FROM() { return getToken(Python3Parser.FROM, 0); }
+		public TerminalNode FROM() { return getToken(LcdPythonParser.FROM, 0); }
 		public TestContext test() {
 			return getRuleContext(TestContext.class,0);
 		}
@@ -7825,15 +7825,15 @@ public class Python3Parser extends Parser {
 		@Override public int getRuleIndex() { return RULE_yield_arg; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof Python3Listener ) ((Python3Listener)listener).enterYield_arg(this);
+			if ( listener instanceof LcdPythonListener ) ((LcdPythonListener)listener).enterYield_arg(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof Python3Listener ) ((Python3Listener)listener).exitYield_arg(this);
+			if ( listener instanceof LcdPythonListener ) ((LcdPythonListener)listener).exitYield_arg(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof Python3Visitor ) return ((Python3Visitor<? extends T>)visitor).visitYield_arg(this);
+			if ( visitor instanceof LcdPythonVisitor ) return ((LcdPythonVisitor<? extends T>)visitor).visitYield_arg(this);
 			else return visitor.visitChildren(this);
 		}
 	}

@@ -1,1048 +1,1048 @@
-// Generated from Python3.g4 by ANTLR 4.7.2
-package com.bluelightning.tools.antlr4;
+// Generated from LcdPython.g4 by ANTLR 4.7.2
+package com.bluelightning.tools.transpiler.antlr4;
 
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ErrorNode;
 import org.antlr.v4.runtime.tree.TerminalNode;
 
 /**
- * This class provides an empty implementation of {@link Python3Listener},
+ * This class provides an empty implementation of {@link LcdPythonListener},
  * which can be extended to create a listener which only needs to handle a subset
  * of the available methods.
  */
-public class Python3BaseListener implements Python3Listener {
+public class LcdPythonBaseListener implements LcdPythonListener {
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterSingle_input(Python3Parser.Single_inputContext ctx) { }
+	@Override public void enterSingle_input(LcdPythonParser.Single_inputContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitSingle_input(Python3Parser.Single_inputContext ctx) { }
+	@Override public void exitSingle_input(LcdPythonParser.Single_inputContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterFile_input(Python3Parser.File_inputContext ctx) { }
+	@Override public void enterFile_input(LcdPythonParser.File_inputContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitFile_input(Python3Parser.File_inputContext ctx) { }
+	@Override public void exitFile_input(LcdPythonParser.File_inputContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterEval_input(Python3Parser.Eval_inputContext ctx) { }
+	@Override public void enterEval_input(LcdPythonParser.Eval_inputContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitEval_input(Python3Parser.Eval_inputContext ctx) { }
+	@Override public void exitEval_input(LcdPythonParser.Eval_inputContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterDecorator(Python3Parser.DecoratorContext ctx) { }
+	@Override public void enterDecorator(LcdPythonParser.DecoratorContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitDecorator(Python3Parser.DecoratorContext ctx) { }
+	@Override public void exitDecorator(LcdPythonParser.DecoratorContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterDecorators(Python3Parser.DecoratorsContext ctx) { }
+	@Override public void enterDecorators(LcdPythonParser.DecoratorsContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitDecorators(Python3Parser.DecoratorsContext ctx) { }
+	@Override public void exitDecorators(LcdPythonParser.DecoratorsContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterDecorated(Python3Parser.DecoratedContext ctx) { }
+	@Override public void enterDecorated(LcdPythonParser.DecoratedContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitDecorated(Python3Parser.DecoratedContext ctx) { }
+	@Override public void exitDecorated(LcdPythonParser.DecoratedContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterAsync_funcdef(Python3Parser.Async_funcdefContext ctx) { }
+	@Override public void enterAsync_funcdef(LcdPythonParser.Async_funcdefContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitAsync_funcdef(Python3Parser.Async_funcdefContext ctx) { }
+	@Override public void exitAsync_funcdef(LcdPythonParser.Async_funcdefContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterFuncdef(Python3Parser.FuncdefContext ctx) { }
+	@Override public void enterFuncdef(LcdPythonParser.FuncdefContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitFuncdef(Python3Parser.FuncdefContext ctx) { }
+	@Override public void exitFuncdef(LcdPythonParser.FuncdefContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterParameters(Python3Parser.ParametersContext ctx) { }
+	@Override public void enterParameters(LcdPythonParser.ParametersContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitParameters(Python3Parser.ParametersContext ctx) { }
+	@Override public void exitParameters(LcdPythonParser.ParametersContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterTypedargslist(Python3Parser.TypedargslistContext ctx) { }
+	@Override public void enterTypedargslist(LcdPythonParser.TypedargslistContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitTypedargslist(Python3Parser.TypedargslistContext ctx) { }
+	@Override public void exitTypedargslist(LcdPythonParser.TypedargslistContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterTfpdef(Python3Parser.TfpdefContext ctx) { }
+	@Override public void enterTfpdef(LcdPythonParser.TfpdefContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitTfpdef(Python3Parser.TfpdefContext ctx) { }
+	@Override public void exitTfpdef(LcdPythonParser.TfpdefContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterVarargslist(Python3Parser.VarargslistContext ctx) { }
+	@Override public void enterVarargslist(LcdPythonParser.VarargslistContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitVarargslist(Python3Parser.VarargslistContext ctx) { }
+	@Override public void exitVarargslist(LcdPythonParser.VarargslistContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterVfpdef(Python3Parser.VfpdefContext ctx) { }
+	@Override public void enterVfpdef(LcdPythonParser.VfpdefContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitVfpdef(Python3Parser.VfpdefContext ctx) { }
+	@Override public void exitVfpdef(LcdPythonParser.VfpdefContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterStmt(Python3Parser.StmtContext ctx) { }
+	@Override public void enterStmt(LcdPythonParser.StmtContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitStmt(Python3Parser.StmtContext ctx) { }
+	@Override public void exitStmt(LcdPythonParser.StmtContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterSimple_stmt(Python3Parser.Simple_stmtContext ctx) { }
+	@Override public void enterSimple_stmt(LcdPythonParser.Simple_stmtContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitSimple_stmt(Python3Parser.Simple_stmtContext ctx) { }
+	@Override public void exitSimple_stmt(LcdPythonParser.Simple_stmtContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterSmall_stmt(Python3Parser.Small_stmtContext ctx) { }
+	@Override public void enterSmall_stmt(LcdPythonParser.Small_stmtContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitSmall_stmt(Python3Parser.Small_stmtContext ctx) { }
+	@Override public void exitSmall_stmt(LcdPythonParser.Small_stmtContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterExpr_stmt(Python3Parser.Expr_stmtContext ctx) { }
+	@Override public void enterExpr_stmt(LcdPythonParser.Expr_stmtContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitExpr_stmt(Python3Parser.Expr_stmtContext ctx) { }
+	@Override public void exitExpr_stmt(LcdPythonParser.Expr_stmtContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterAnnassign(Python3Parser.AnnassignContext ctx) { }
+	@Override public void enterAnnassign(LcdPythonParser.AnnassignContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitAnnassign(Python3Parser.AnnassignContext ctx) { }
+	@Override public void exitAnnassign(LcdPythonParser.AnnassignContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterTestlist_star_expr(Python3Parser.Testlist_star_exprContext ctx) { }
+	@Override public void enterTestlist_star_expr(LcdPythonParser.Testlist_star_exprContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitTestlist_star_expr(Python3Parser.Testlist_star_exprContext ctx) { }
+	@Override public void exitTestlist_star_expr(LcdPythonParser.Testlist_star_exprContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterAugassign(Python3Parser.AugassignContext ctx) { }
+	@Override public void enterAugassign(LcdPythonParser.AugassignContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitAugassign(Python3Parser.AugassignContext ctx) { }
+	@Override public void exitAugassign(LcdPythonParser.AugassignContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterDel_stmt(Python3Parser.Del_stmtContext ctx) { }
+	@Override public void enterDel_stmt(LcdPythonParser.Del_stmtContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitDel_stmt(Python3Parser.Del_stmtContext ctx) { }
+	@Override public void exitDel_stmt(LcdPythonParser.Del_stmtContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterPass_stmt(Python3Parser.Pass_stmtContext ctx) { }
+	@Override public void enterPass_stmt(LcdPythonParser.Pass_stmtContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitPass_stmt(Python3Parser.Pass_stmtContext ctx) { }
+	@Override public void exitPass_stmt(LcdPythonParser.Pass_stmtContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterFlow_stmt(Python3Parser.Flow_stmtContext ctx) { }
+	@Override public void enterFlow_stmt(LcdPythonParser.Flow_stmtContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitFlow_stmt(Python3Parser.Flow_stmtContext ctx) { }
+	@Override public void exitFlow_stmt(LcdPythonParser.Flow_stmtContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterBreak_stmt(Python3Parser.Break_stmtContext ctx) { }
+	@Override public void enterBreak_stmt(LcdPythonParser.Break_stmtContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitBreak_stmt(Python3Parser.Break_stmtContext ctx) { }
+	@Override public void exitBreak_stmt(LcdPythonParser.Break_stmtContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterContinue_stmt(Python3Parser.Continue_stmtContext ctx) { }
+	@Override public void enterContinue_stmt(LcdPythonParser.Continue_stmtContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitContinue_stmt(Python3Parser.Continue_stmtContext ctx) { }
+	@Override public void exitContinue_stmt(LcdPythonParser.Continue_stmtContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterReturn_stmt(Python3Parser.Return_stmtContext ctx) { }
+	@Override public void enterReturn_stmt(LcdPythonParser.Return_stmtContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitReturn_stmt(Python3Parser.Return_stmtContext ctx) { }
+	@Override public void exitReturn_stmt(LcdPythonParser.Return_stmtContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterYield_stmt(Python3Parser.Yield_stmtContext ctx) { }
+	@Override public void enterYield_stmt(LcdPythonParser.Yield_stmtContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitYield_stmt(Python3Parser.Yield_stmtContext ctx) { }
+	@Override public void exitYield_stmt(LcdPythonParser.Yield_stmtContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterRaise_stmt(Python3Parser.Raise_stmtContext ctx) { }
+	@Override public void enterRaise_stmt(LcdPythonParser.Raise_stmtContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitRaise_stmt(Python3Parser.Raise_stmtContext ctx) { }
+	@Override public void exitRaise_stmt(LcdPythonParser.Raise_stmtContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterImport_stmt(Python3Parser.Import_stmtContext ctx) { }
+	@Override public void enterImport_stmt(LcdPythonParser.Import_stmtContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitImport_stmt(Python3Parser.Import_stmtContext ctx) { }
+	@Override public void exitImport_stmt(LcdPythonParser.Import_stmtContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterImport_name(Python3Parser.Import_nameContext ctx) { }
+	@Override public void enterImport_name(LcdPythonParser.Import_nameContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitImport_name(Python3Parser.Import_nameContext ctx) { }
+	@Override public void exitImport_name(LcdPythonParser.Import_nameContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterImport_from(Python3Parser.Import_fromContext ctx) { }
+	@Override public void enterImport_from(LcdPythonParser.Import_fromContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitImport_from(Python3Parser.Import_fromContext ctx) { }
+	@Override public void exitImport_from(LcdPythonParser.Import_fromContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterImport_as_name(Python3Parser.Import_as_nameContext ctx) { }
+	@Override public void enterImport_as_name(LcdPythonParser.Import_as_nameContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitImport_as_name(Python3Parser.Import_as_nameContext ctx) { }
+	@Override public void exitImport_as_name(LcdPythonParser.Import_as_nameContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterDotted_as_name(Python3Parser.Dotted_as_nameContext ctx) { }
+	@Override public void enterDotted_as_name(LcdPythonParser.Dotted_as_nameContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitDotted_as_name(Python3Parser.Dotted_as_nameContext ctx) { }
+	@Override public void exitDotted_as_name(LcdPythonParser.Dotted_as_nameContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterImport_as_names(Python3Parser.Import_as_namesContext ctx) { }
+	@Override public void enterImport_as_names(LcdPythonParser.Import_as_namesContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitImport_as_names(Python3Parser.Import_as_namesContext ctx) { }
+	@Override public void exitImport_as_names(LcdPythonParser.Import_as_namesContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterDotted_as_names(Python3Parser.Dotted_as_namesContext ctx) { }
+	@Override public void enterDotted_as_names(LcdPythonParser.Dotted_as_namesContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitDotted_as_names(Python3Parser.Dotted_as_namesContext ctx) { }
+	@Override public void exitDotted_as_names(LcdPythonParser.Dotted_as_namesContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterDotted_name(Python3Parser.Dotted_nameContext ctx) { }
+	@Override public void enterDotted_name(LcdPythonParser.Dotted_nameContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitDotted_name(Python3Parser.Dotted_nameContext ctx) { }
+	@Override public void exitDotted_name(LcdPythonParser.Dotted_nameContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterGlobal_stmt(Python3Parser.Global_stmtContext ctx) { }
+	@Override public void enterGlobal_stmt(LcdPythonParser.Global_stmtContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitGlobal_stmt(Python3Parser.Global_stmtContext ctx) { }
+	@Override public void exitGlobal_stmt(LcdPythonParser.Global_stmtContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterNonlocal_stmt(Python3Parser.Nonlocal_stmtContext ctx) { }
+	@Override public void enterNonlocal_stmt(LcdPythonParser.Nonlocal_stmtContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitNonlocal_stmt(Python3Parser.Nonlocal_stmtContext ctx) { }
+	@Override public void exitNonlocal_stmt(LcdPythonParser.Nonlocal_stmtContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterAssert_stmt(Python3Parser.Assert_stmtContext ctx) { }
+	@Override public void enterAssert_stmt(LcdPythonParser.Assert_stmtContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitAssert_stmt(Python3Parser.Assert_stmtContext ctx) { }
+	@Override public void exitAssert_stmt(LcdPythonParser.Assert_stmtContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterCompound_stmt(Python3Parser.Compound_stmtContext ctx) { }
+	@Override public void enterCompound_stmt(LcdPythonParser.Compound_stmtContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitCompound_stmt(Python3Parser.Compound_stmtContext ctx) { }
+	@Override public void exitCompound_stmt(LcdPythonParser.Compound_stmtContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterAsync_stmt(Python3Parser.Async_stmtContext ctx) { }
+	@Override public void enterAsync_stmt(LcdPythonParser.Async_stmtContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitAsync_stmt(Python3Parser.Async_stmtContext ctx) { }
+	@Override public void exitAsync_stmt(LcdPythonParser.Async_stmtContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterIf_stmt(Python3Parser.If_stmtContext ctx) { }
+	@Override public void enterIf_stmt(LcdPythonParser.If_stmtContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitIf_stmt(Python3Parser.If_stmtContext ctx) { }
+	@Override public void exitIf_stmt(LcdPythonParser.If_stmtContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterWhile_stmt(Python3Parser.While_stmtContext ctx) { }
+	@Override public void enterWhile_stmt(LcdPythonParser.While_stmtContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitWhile_stmt(Python3Parser.While_stmtContext ctx) { }
+	@Override public void exitWhile_stmt(LcdPythonParser.While_stmtContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterFor_stmt(Python3Parser.For_stmtContext ctx) { }
+	@Override public void enterFor_stmt(LcdPythonParser.For_stmtContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitFor_stmt(Python3Parser.For_stmtContext ctx) { }
+	@Override public void exitFor_stmt(LcdPythonParser.For_stmtContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterTry_stmt(Python3Parser.Try_stmtContext ctx) { }
+	@Override public void enterTry_stmt(LcdPythonParser.Try_stmtContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitTry_stmt(Python3Parser.Try_stmtContext ctx) { }
+	@Override public void exitTry_stmt(LcdPythonParser.Try_stmtContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterWith_stmt(Python3Parser.With_stmtContext ctx) { }
+	@Override public void enterWith_stmt(LcdPythonParser.With_stmtContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitWith_stmt(Python3Parser.With_stmtContext ctx) { }
+	@Override public void exitWith_stmt(LcdPythonParser.With_stmtContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterWith_item(Python3Parser.With_itemContext ctx) { }
+	@Override public void enterWith_item(LcdPythonParser.With_itemContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitWith_item(Python3Parser.With_itemContext ctx) { }
+	@Override public void exitWith_item(LcdPythonParser.With_itemContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterExcept_clause(Python3Parser.Except_clauseContext ctx) { }
+	@Override public void enterExcept_clause(LcdPythonParser.Except_clauseContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitExcept_clause(Python3Parser.Except_clauseContext ctx) { }
+	@Override public void exitExcept_clause(LcdPythonParser.Except_clauseContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterSuite(Python3Parser.SuiteContext ctx) { }
+	@Override public void enterSuite(LcdPythonParser.SuiteContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitSuite(Python3Parser.SuiteContext ctx) { }
+	@Override public void exitSuite(LcdPythonParser.SuiteContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterTest(Python3Parser.TestContext ctx) { }
+	@Override public void enterTest(LcdPythonParser.TestContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitTest(Python3Parser.TestContext ctx) { }
+	@Override public void exitTest(LcdPythonParser.TestContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterTest_nocond(Python3Parser.Test_nocondContext ctx) { }
+	@Override public void enterTest_nocond(LcdPythonParser.Test_nocondContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitTest_nocond(Python3Parser.Test_nocondContext ctx) { }
+	@Override public void exitTest_nocond(LcdPythonParser.Test_nocondContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterLambdef(Python3Parser.LambdefContext ctx) { }
+	@Override public void enterLambdef(LcdPythonParser.LambdefContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitLambdef(Python3Parser.LambdefContext ctx) { }
+	@Override public void exitLambdef(LcdPythonParser.LambdefContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterLambdef_nocond(Python3Parser.Lambdef_nocondContext ctx) { }
+	@Override public void enterLambdef_nocond(LcdPythonParser.Lambdef_nocondContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitLambdef_nocond(Python3Parser.Lambdef_nocondContext ctx) { }
+	@Override public void exitLambdef_nocond(LcdPythonParser.Lambdef_nocondContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterOr_test(Python3Parser.Or_testContext ctx) { }
+	@Override public void enterOr_test(LcdPythonParser.Or_testContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitOr_test(Python3Parser.Or_testContext ctx) { }
+	@Override public void exitOr_test(LcdPythonParser.Or_testContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterAnd_test(Python3Parser.And_testContext ctx) { }
+	@Override public void enterAnd_test(LcdPythonParser.And_testContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitAnd_test(Python3Parser.And_testContext ctx) { }
+	@Override public void exitAnd_test(LcdPythonParser.And_testContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterNot_test(Python3Parser.Not_testContext ctx) { }
+	@Override public void enterNot_test(LcdPythonParser.Not_testContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitNot_test(Python3Parser.Not_testContext ctx) { }
+	@Override public void exitNot_test(LcdPythonParser.Not_testContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterComparison(Python3Parser.ComparisonContext ctx) { }
+	@Override public void enterComparison(LcdPythonParser.ComparisonContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitComparison(Python3Parser.ComparisonContext ctx) { }
+	@Override public void exitComparison(LcdPythonParser.ComparisonContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterComp_op(Python3Parser.Comp_opContext ctx) { }
+	@Override public void enterComp_op(LcdPythonParser.Comp_opContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitComp_op(Python3Parser.Comp_opContext ctx) { }
+	@Override public void exitComp_op(LcdPythonParser.Comp_opContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterStar_expr(Python3Parser.Star_exprContext ctx) { }
+	@Override public void enterStar_expr(LcdPythonParser.Star_exprContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitStar_expr(Python3Parser.Star_exprContext ctx) { }
+	@Override public void exitStar_expr(LcdPythonParser.Star_exprContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterExpr(Python3Parser.ExprContext ctx) { }
+	@Override public void enterExpr(LcdPythonParser.ExprContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitExpr(Python3Parser.ExprContext ctx) { }
+	@Override public void exitExpr(LcdPythonParser.ExprContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterXor_expr(Python3Parser.Xor_exprContext ctx) { }
+	@Override public void enterXor_expr(LcdPythonParser.Xor_exprContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitXor_expr(Python3Parser.Xor_exprContext ctx) { }
+	@Override public void exitXor_expr(LcdPythonParser.Xor_exprContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterAnd_expr(Python3Parser.And_exprContext ctx) { }
+	@Override public void enterAnd_expr(LcdPythonParser.And_exprContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitAnd_expr(Python3Parser.And_exprContext ctx) { }
+	@Override public void exitAnd_expr(LcdPythonParser.And_exprContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterShift_expr(Python3Parser.Shift_exprContext ctx) { }
+	@Override public void enterShift_expr(LcdPythonParser.Shift_exprContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitShift_expr(Python3Parser.Shift_exprContext ctx) { }
+	@Override public void exitShift_expr(LcdPythonParser.Shift_exprContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterArith_expr(Python3Parser.Arith_exprContext ctx) { }
+	@Override public void enterArith_expr(LcdPythonParser.Arith_exprContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitArith_expr(Python3Parser.Arith_exprContext ctx) { }
+	@Override public void exitArith_expr(LcdPythonParser.Arith_exprContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterTerm(Python3Parser.TermContext ctx) { }
+	@Override public void enterTerm(LcdPythonParser.TermContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitTerm(Python3Parser.TermContext ctx) { }
+	@Override public void exitTerm(LcdPythonParser.TermContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterFactor(Python3Parser.FactorContext ctx) { }
+	@Override public void enterFactor(LcdPythonParser.FactorContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitFactor(Python3Parser.FactorContext ctx) { }
+	@Override public void exitFactor(LcdPythonParser.FactorContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterPower(Python3Parser.PowerContext ctx) { }
+	@Override public void enterPower(LcdPythonParser.PowerContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitPower(Python3Parser.PowerContext ctx) { }
+	@Override public void exitPower(LcdPythonParser.PowerContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterAtom_expr(Python3Parser.Atom_exprContext ctx) { }
+	@Override public void enterAtom_expr(LcdPythonParser.Atom_exprContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitAtom_expr(Python3Parser.Atom_exprContext ctx) { }
+	@Override public void exitAtom_expr(LcdPythonParser.Atom_exprContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterAtom(Python3Parser.AtomContext ctx) { }
+	@Override public void enterAtom(LcdPythonParser.AtomContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitAtom(Python3Parser.AtomContext ctx) { }
+	@Override public void exitAtom(LcdPythonParser.AtomContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterTestlist_comp(Python3Parser.Testlist_compContext ctx) { }
+	@Override public void enterTestlist_comp(LcdPythonParser.Testlist_compContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitTestlist_comp(Python3Parser.Testlist_compContext ctx) { }
+	@Override public void exitTestlist_comp(LcdPythonParser.Testlist_compContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterTrailer(Python3Parser.TrailerContext ctx) { }
+	@Override public void enterTrailer(LcdPythonParser.TrailerContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitTrailer(Python3Parser.TrailerContext ctx) { }
+	@Override public void exitTrailer(LcdPythonParser.TrailerContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterSubscriptlist(Python3Parser.SubscriptlistContext ctx) { }
+	@Override public void enterSubscriptlist(LcdPythonParser.SubscriptlistContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitSubscriptlist(Python3Parser.SubscriptlistContext ctx) { }
+	@Override public void exitSubscriptlist(LcdPythonParser.SubscriptlistContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterSubscript(Python3Parser.SubscriptContext ctx) { }
+	@Override public void enterSubscript(LcdPythonParser.SubscriptContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitSubscript(Python3Parser.SubscriptContext ctx) { }
+	@Override public void exitSubscript(LcdPythonParser.SubscriptContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterSliceop(Python3Parser.SliceopContext ctx) { }
+	@Override public void enterSliceop(LcdPythonParser.SliceopContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitSliceop(Python3Parser.SliceopContext ctx) { }
+	@Override public void exitSliceop(LcdPythonParser.SliceopContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterExprlist(Python3Parser.ExprlistContext ctx) { }
+	@Override public void enterExprlist(LcdPythonParser.ExprlistContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitExprlist(Python3Parser.ExprlistContext ctx) { }
+	@Override public void exitExprlist(LcdPythonParser.ExprlistContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterTestlist(Python3Parser.TestlistContext ctx) { }
+	@Override public void enterTestlist(LcdPythonParser.TestlistContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitTestlist(Python3Parser.TestlistContext ctx) { }
+	@Override public void exitTestlist(LcdPythonParser.TestlistContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterDictorsetmaker(Python3Parser.DictorsetmakerContext ctx) { }
+	@Override public void enterDictorsetmaker(LcdPythonParser.DictorsetmakerContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitDictorsetmaker(Python3Parser.DictorsetmakerContext ctx) { }
+	@Override public void exitDictorsetmaker(LcdPythonParser.DictorsetmakerContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterClassdef(Python3Parser.ClassdefContext ctx) { }
+	@Override public void enterClassdef(LcdPythonParser.ClassdefContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitClassdef(Python3Parser.ClassdefContext ctx) { }
+	@Override public void exitClassdef(LcdPythonParser.ClassdefContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterArglist(Python3Parser.ArglistContext ctx) { }
+	@Override public void enterArglist(LcdPythonParser.ArglistContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitArglist(Python3Parser.ArglistContext ctx) { }
+	@Override public void exitArglist(LcdPythonParser.ArglistContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterArgument(Python3Parser.ArgumentContext ctx) { }
+	@Override public void enterArgument(LcdPythonParser.ArgumentContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitArgument(Python3Parser.ArgumentContext ctx) { }
+	@Override public void exitArgument(LcdPythonParser.ArgumentContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterComp_iter(Python3Parser.Comp_iterContext ctx) { }
+	@Override public void enterComp_iter(LcdPythonParser.Comp_iterContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitComp_iter(Python3Parser.Comp_iterContext ctx) { }
+	@Override public void exitComp_iter(LcdPythonParser.Comp_iterContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterComp_for(Python3Parser.Comp_forContext ctx) { }
+	@Override public void enterComp_for(LcdPythonParser.Comp_forContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitComp_for(Python3Parser.Comp_forContext ctx) { }
+	@Override public void exitComp_for(LcdPythonParser.Comp_forContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterComp_if(Python3Parser.Comp_ifContext ctx) { }
+	@Override public void enterComp_if(LcdPythonParser.Comp_ifContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitComp_if(Python3Parser.Comp_ifContext ctx) { }
+	@Override public void exitComp_if(LcdPythonParser.Comp_ifContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterEncoding_decl(Python3Parser.Encoding_declContext ctx) { }
+	@Override public void enterEncoding_decl(LcdPythonParser.Encoding_declContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitEncoding_decl(Python3Parser.Encoding_declContext ctx) { }
+	@Override public void exitEncoding_decl(LcdPythonParser.Encoding_declContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterYield_expr(Python3Parser.Yield_exprContext ctx) { }
+	@Override public void enterYield_expr(LcdPythonParser.Yield_exprContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitYield_expr(Python3Parser.Yield_exprContext ctx) { }
+	@Override public void exitYield_expr(LcdPythonParser.Yield_exprContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterYield_arg(Python3Parser.Yield_argContext ctx) { }
+	@Override public void enterYield_arg(LcdPythonParser.Yield_argContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitYield_arg(Python3Parser.Yield_argContext ctx) { }
+	@Override public void exitYield_arg(LcdPythonParser.Yield_argContext ctx) { }
 
 	/**
 	 * {@inheritDoc}

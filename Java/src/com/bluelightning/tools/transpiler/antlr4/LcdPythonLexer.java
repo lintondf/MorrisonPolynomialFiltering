@@ -1,5 +1,5 @@
-// Generated from Python3.g4 by ANTLR 4.7.2
-package com.bluelightning.tools.antlr4;
+// Generated from LcdPython.g4 by ANTLR 4.7.2
+package com.bluelightning.tools.transpiler.antlr4;
 import org.antlr.v4.runtime.Lexer;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.Token;
@@ -10,7 +10,7 @@ import org.antlr.v4.runtime.dfa.DFA;
 import org.antlr.v4.runtime.misc.*;
 
 @SuppressWarnings({"all", "warnings", "unchecked", "unused", "cast"})
-public class Python3Lexer extends Lexer {
+public class LcdPythonLexer extends Lexer {
 	static { RuntimeMetaData.checkVersion("4.7.2", RuntimeMetaData.VERSION); }
 
 	protected static final DFA[] _decisionToDFA;
@@ -164,7 +164,7 @@ public class Python3Lexer extends Lexer {
 	      }
 
 	      // First emit an extra line break that serves as the end of the statement.
-	      this.emit(commonToken(Python3Parser.NEWLINE, "\n"));
+	      this.emit(commonToken(LcdPythonParser.NEWLINE, "\n"));
 
 	      // Now emit as much DEDENT tokens as needed.
 	      while (!indents.isEmpty()) {
@@ -173,7 +173,7 @@ public class Python3Lexer extends Lexer {
 	      }
 
 	      // Put the EOF back on the token stream.
-	      this.emit(commonToken(Python3Parser.EOF, "<EOF>"));
+	      this.emit(commonToken(LcdPythonParser.EOF, "<EOF>"));
 	    }
 
 	    Token next = super.nextToken();
@@ -187,7 +187,7 @@ public class Python3Lexer extends Lexer {
 	  }
 
 	  private Token createDedent() {
-	    CommonToken dedent = commonToken(Python3Parser.DEDENT, "");
+	    CommonToken dedent = commonToken(LcdPythonParser.DEDENT, "");
 	    dedent.setLine(this.lastToken.getLine());
 	    return dedent;
 	  }
@@ -227,13 +227,13 @@ public class Python3Lexer extends Lexer {
 	  }
 
 
-	public Python3Lexer(CharStream input) {
+	public LcdPythonLexer(CharStream input) {
 		super(input);
 		_interp = new LexerATNSimulator(this,_ATN,_decisionToDFA,_sharedContextCache);
 	}
 
 	@Override
-	public String getGrammarFileName() { return "Python3.g4"; }
+	public String getGrammarFileName() { return "LcdPython.g4"; }
 
 	@Override
 	public String[] getRuleNames() { return ruleNames; }
@@ -298,7 +298,7 @@ public class Python3Lexer extends Lexer {
 			       }
 			       else if (indent > previous) {
 			         indents.push(indent);
-			         emit(commonToken(Python3Parser.INDENT, spaces));
+			         emit(commonToken(LcdPythonParser.INDENT, spaces));
 			       }
 			       else {
 			         // Possibly emit more than 1 DEDENT token.

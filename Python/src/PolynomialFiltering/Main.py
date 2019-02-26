@@ -4,7 +4,6 @@ Created on Feb 13, 2019
 @author: NOOK
 https://filterpy.readthedocs.io/en/latest/kalman/UnscentedKalmanFilter.html
 '''
-
 from abc import ABC, abstractmethod
 from enum import Enum, auto
 from numpy import array, zeros, isscalar, diag, ones
