@@ -45,6 +45,12 @@
     <artifactId>antlr4</artifactId>
     <version>4.7.2</version>
 </dependency>
+<!-- https://mvnrepository.com/artifact/org.apache.commons/commons-lang3 -->
+<dependency>
+    <groupId>org.apache.commons</groupId>
+    <artifactId>commons-lang3</artifactId>
+    <version>3.8.1</version>
+</dependency>
 
   </dependencies>
 </project>

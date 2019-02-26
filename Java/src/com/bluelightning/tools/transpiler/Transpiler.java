@@ -1,11 +1,16 @@
-/**
- * 
+/** Polynomial Filtering Universal Transpiler
+ * SPDX-License-Identifier: MIT
+ *
+ * (C) Copyright 2019 - Blue Lightning Development, LLC.
+ * D. F. Linton. support@BlueLightningDevelopment.com
  */
-package com.bluelightning.tools;
+package com.bluelightning.tools.transpiler;
 
 import java.io.File;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -28,6 +33,7 @@ import com.bluelightning.tools.transpiler.antlr4.LcdPythonBaseVisitor;
 import com.bluelightning.tools.transpiler.antlr4.LcdPythonLexer;
 import com.bluelightning.tools.transpiler.antlr4.LcdPythonParser;
 
+
 /**
  * @author NOOK
  *
@@ -45,6 +51,19 @@ public class Transpiler {
 		errorReport.append(r);
 	}
 
+	protected void dumpChildren( RuleNode ctx ) {
+		if (ctx.getChildCount() > 1) {
+			parser.getRuleIndexMap().get(ctx.getRuleContext().getRuleIndex());
+			System.out.println(parser.getRuleNames()[ctx.getRuleContext().getRuleIndex()].toUpperCase() + " "
+					+ ctx.getChildCount() + " " + ctx.getText());
+			for (int i = 0; i < ctx.getChildCount(); i++) {
+				System.out.printf("%10d: %-30s %s\n", i,
+						ctx.getChild(i).getPayload().getClass().getSimpleName(),
+						valueMap.get(ctx.getChild(i).getPayload()));
+			}
+		}
+	}
+	
 	protected Map<Object, String> valueMap = new HashMap<>();
 	
 	protected static class Scope {
@@ -124,7 +143,7 @@ public class Transpiler {
 			}
 			scope.qualifiers = new String[this.qualifiers.length-1];
 			StringBuffer sb = new StringBuffer();
-			for (int i = 0; i < qualifiers.length; i++) {
+			for (int i = 0; i < scope.qualifiers.length; i++) {
 				sb.append(qualifiers[i]);
 				sb.append('/');
 				scope.qualifiers[i] = qualifiers[i];
@@ -140,6 +159,7 @@ public class Transpiler {
 		
 	}
 
+	protected Scope moduleScope = null;
 	protected Map<Object, Scope> scopeMap = new HashMap<>();
 	
 	protected static class Symbol {
@@ -164,11 +184,11 @@ public class Transpiler {
 		public String toString() {
 			StringBuffer sb = new StringBuffer();
 			for (String name : table.keySet()) {
-				sb.append( String.format("  %s\n", name) );
+				sb.append( String.format("  '%s'\n", name) );
 				Map<Scope, Symbol> aliases = table.get(name);
 				for (Scope scope : aliases.keySet()) {
 					sb.append( String.format("    %s\n", scope.toString() ));
-					sb.append( String.format("      %s\n", aliases.get(scope).toString()));
+					sb.append( String.format("      '%s'\n", aliases.get(scope).toString()));
 				}
 			}
 			return sb.toString();
@@ -179,17 +199,18 @@ public class Transpiler {
 			if (aliases == null) {
 				aliases = new HashMap<>();
 			}
-			Symbol symbol = new Symbol( scope, name, type);
+			Symbol symbol = new Symbol( scope, name.trim(), type.trim());
 			aliases.put( scope, symbol ); //TODO collisions
-			table.put(name,  aliases);
+			table.put(name.trim(),  aliases);
 		}
 		
 		public Symbol lookup( Scope scope, String name ) {
 			Map<Scope, Symbol> aliases = table.get(name);
-			Symbol symbol = aliases.get(scope);
-			if (symbol != null)
-				return symbol;
-			scope = scope.getParent();
+			if (aliases == null) {
+//				System.out.println("Unknown: {" + name + "}" );
+				return null;
+			}
+			Symbol symbol = null;
 			while (scope != null) {
 				symbol = aliases.get(scope);
 				if (symbol != null)
@@ -233,11 +254,6 @@ public class Transpiler {
 	protected class PopulateListener extends LcdPythonBaseListener {
 		@Override
 		public void exitEveryRule(ParserRuleContext ctx) {
-//			if (ctx.getChildCount() > 1) {
-//				parser.getRuleIndexMap().get(ctx.getRuleContext().getRuleIndex());
-//				System.out.println(parser.getRuleNames()[ctx.getRuleContext().getRuleIndex()].toUpperCase() + " "
-//						+ ctx.getChildCount() + " " + ctx.getText());
-//			}
 			StringBuffer result = new StringBuffer();
 			for (int i = 0; i < ctx.getChildCount(); i++) {
 				ParseTree child = ctx.getChild(i);
@@ -260,17 +276,6 @@ public class Transpiler {
 		public DeclarationsListener(Scope moduleScope) {
 			super();
 			scopeStack.push(moduleScope);
-		}
-		
-		protected void dumpChildren( RuleNode ctx ) {
-			if (ctx.getChildCount() > 1) {
-				parser.getRuleIndexMap().get(ctx.getRuleContext().getRuleIndex());
-				System.out.println(parser.getRuleNames()[ctx.getRuleContext().getRuleIndex()].toUpperCase() + " "
-						+ ctx.getChildCount() + " " + ctx.getText());
-				for (int i = 0; i < ctx.getChildCount(); i++) {
-					System.out.printf("%10d: %s\n", i, valueMap.get(ctx.getChild(i).getPayload()));
-				}
-			}
 		}
 		
 		protected String getChildText( RuleNode ctx, int iChild) {
@@ -299,6 +304,7 @@ public class Transpiler {
 			}
 			scopeStack.push( functionScope );
 			symbolTable.add(functionScope, name, getChildText(ctx, 4)); 
+			scopeMap.put( ctx.getPayload(), functionScope );
 			ParseTree parameterDeclaration = ctx.getChild(2);
 			if (parameterDeclaration.getChildCount() > 2) {
 				ParseTree parameters = parameterDeclaration.getChild(1);
@@ -335,6 +341,7 @@ public class Transpiler {
 			}
 			scopeStack.push( classScope );
 			symbolTable.add(classScope, name, "<CLASS>"); 
+			scopeMap.put( ctx.getPayload(), classScope );
 		}
 
 		@Override
@@ -346,13 +353,13 @@ public class Transpiler {
 		
 		@Override 
 		public void enterImport_name(LcdPythonParser.Import_nameContext ctx) { 
-			dumpChildren( ctx );
+//			dumpChildren( ctx );
 			reportError(ctx.start, "Full package imports are not allowed");
 		}
 		
 		@Override 
 		public void enterImport_from(LcdPythonParser.Import_fromContext ctx) { 
-			dumpChildren( ctx );
+//			dumpChildren( ctx );
 		}
 		
 		@Override
@@ -375,6 +382,256 @@ public class Transpiler {
 		}
 	}
 
+	protected class ExpressionCompilationListener extends LcdPythonBaseListener {
+		
+		Scope scope = moduleScope;
+		TranslationNode expressionRoot = null;
+		HashMap<Object, TranslationNode> translateMap = null;
+		
+
+		@Override
+		public void enterClassdef(LcdPythonParser.ClassdefContext ctx) {
+			scope = scopeMap.get(ctx.getPayload());
+			System.out.println(scope);
+		}
+		
+		@Override
+		public void exitClassdef(LcdPythonParser.ClassdefContext ctx) {
+			scope = scope.getParent();
+			System.out.println(scope);
+		}
+		
+		@Override
+		public void enterFuncdef(LcdPythonParser.FuncdefContext ctx) {
+			scope = scopeMap.get(ctx.getPayload());
+			System.out.println(scope);
+		}
+		
+		@Override
+		public void exitFuncdef(LcdPythonParser.FuncdefContext ctx) {
+			scope = scope.getParent();
+			System.out.println(scope);
+		}
+		
+		@Override
+		public void enterExpr_stmt(LcdPythonParser.Expr_stmtContext ctx) {
+			String value = valueMap.get(ctx.getPayload());
+			if (! value.startsWith("'''")) {
+				System.out.println("EXPR_STMT: [{" + value + "}]" );
+				dumpChildren( ctx );
+				expressionRoot = new TranslationNode(null, "EXPR_STMT");
+				translateMap = new HashMap<>();
+			}
+		}
+
+		@Override
+		public void exitExpr_stmt(LcdPythonParser.Expr_stmtContext ctx) {
+			if (expressionRoot != null) {
+				System.out.println(expressionRoot.traverse(2));
+			}
+		}		
+		
+		@Override
+		public void exitAnnassign(LcdPythonParser.AnnassignContext ctx) {
+			if (ctx.getChildCount() > 1) {
+				dumpChildren( ctx );
+			}
+		}
+
+		@Override
+		public void exitTestlist_star_expr(LcdPythonParser.Testlist_star_exprContext ctx) {
+			if (ctx.getChildCount() > 1) {
+				dumpChildren( ctx );
+			}
+		}
+
+		@Override
+		public void exitAugassign(LcdPythonParser.AugassignContext ctx) {
+			if (ctx.getChildCount() > 1) {
+				dumpChildren( ctx );
+			}
+		}
+
+//		@Override
+//		public void exitDotted_name(LcdPythonParser.Dotted_nameContext ctx) {
+//		}
+//
+		@Override
+		public void exitTest(LcdPythonParser.TestContext ctx) {
+			if (ctx.getChildCount() > 1) {
+				dumpChildren( ctx );
+			}
+		}
+
+		@Override
+		public void exitTest_nocond(LcdPythonParser.Test_nocondContext ctx) {
+			if (ctx.getChildCount() > 1) {
+				dumpChildren( ctx );
+			}
+		}
+
+		@Override
+		public void exitOr_test(LcdPythonParser.Or_testContext ctx) {
+			if (ctx.getChildCount() > 1) {
+				dumpChildren( ctx );
+			}
+		}
+
+		@Override
+		public void exitAnd_test(LcdPythonParser.And_testContext ctx) {
+			if (ctx.getChildCount() > 1) {
+				dumpChildren( ctx );
+			}
+		}
+
+		@Override
+		public void exitNot_test(LcdPythonParser.Not_testContext ctx) {
+			if (ctx.getChildCount() > 1) {
+				dumpChildren( ctx );
+			}
+		}
+
+		@Override
+		public void exitComparison(LcdPythonParser.ComparisonContext ctx) {
+			if (ctx.getChildCount() > 1) {
+				dumpChildren( ctx );
+			}
+		}
+
+		@Override
+		public void exitComp_op(LcdPythonParser.Comp_opContext ctx) {
+			if (ctx.getChildCount() > 1) {
+				dumpChildren( ctx );
+			}
+		}
+
+		@Override
+		public void exitExpr(LcdPythonParser.ExprContext ctx) {
+			if (ctx.getChildCount() > 1) {
+				dumpChildren( ctx );
+			}
+		}
+
+		@Override
+		public void exitXor_expr(LcdPythonParser.Xor_exprContext ctx) {
+			if (ctx.getChildCount() > 1) {
+				dumpChildren( ctx );
+			}
+		}
+
+		@Override
+		public void exitAnd_expr(LcdPythonParser.And_exprContext ctx) {
+			if (ctx.getChildCount() > 1) {
+				dumpChildren( ctx );
+			}
+		}
+
+		@Override
+		public void exitShift_expr(LcdPythonParser.Shift_exprContext ctx) {
+			if (ctx.getChildCount() > 1) {
+				dumpChildren( ctx );
+			}
+		}
+
+		//arith_expr: term (('+'|'-') term)*;
+		@Override
+		public void exitArith_expr(LcdPythonParser.Arith_exprContext ctx) {
+			if (ctx.getChildCount() > 1) {
+				dumpChildren( ctx );
+			}
+		}
+
+		@Override
+		public void exitTerm(LcdPythonParser.TermContext ctx) {
+			if (expressionRoot != null) {
+				for (int i = 0; i < ctx.getChildCount(); i++) {
+					if (ctx.getChild(i).getPayload() instanceof CommonToken) {
+						System.out.printf("TERM %d: %s %s\n", i, ctx.getChild(i).getPayload().toString(), valueMap.get(ctx.getChild(i).getPayload()) );
+					} else {
+						String lhs = valueMap.get(ctx.getChild(i).getPayload());
+						System.out.printf( "TERM %d: %s -> %s\n", i, lhs, symbolTable.lookup( scope , lhs ));
+					}
+				}
+				TranslationNode parent = new TranslationNode();
+				String operand = valueMap.get(ctx.getChild(0).getPayload());
+				Symbol symbol = symbolTable.lookup( scope , operand );
+				TranslationNode node = null;
+				if (symbol != null) {
+					node = new TranslationNode( parent, symbol.toString() );
+				}
+			}
+		}
+
+		@Override
+		public void exitFactor(LcdPythonParser.FactorContext ctx) {
+			if (ctx.getChildCount() > 1) {
+				dumpChildren( ctx );
+			}
+		}
+
+		@Override
+		public void exitPower(LcdPythonParser.PowerContext ctx) {
+			if (ctx.getChildCount() > 1) {
+				dumpChildren( ctx );
+			}
+		}
+
+		@Override
+		public void exitAtom_expr(LcdPythonParser.Atom_exprContext ctx) {
+//			if (ctx.getChildCount() > 1) {
+				dumpChildren( ctx );
+//			}
+		}
+
+		@Override
+		public void exitAtom(LcdPythonParser.AtomContext ctx) {
+			dumpChildren( ctx );
+		}
+		
+		@Override
+		public void exitSubscriptlist(LcdPythonParser.SubscriptlistContext ctx) {
+			if (ctx.getChildCount() > 1) {
+				dumpChildren( ctx );
+			}
+		}
+
+		@Override
+		public void exitSubscript(LcdPythonParser.SubscriptContext ctx) {
+			if (ctx.getChildCount() > 1) {
+				dumpChildren( ctx );
+			}
+		}
+
+		@Override
+		public void exitSliceop(LcdPythonParser.SliceopContext ctx) {
+			if (ctx.getChildCount() > 1) {
+				dumpChildren( ctx );
+			}
+		}
+
+		@Override
+		public void exitExprlist(LcdPythonParser.ExprlistContext ctx) {
+			if (ctx.getChildCount() > 1) {
+				dumpChildren( ctx );
+			}
+		}
+
+		@Override
+		public void exitTestlist(LcdPythonParser.TestlistContext ctx) {
+			if (ctx.getChildCount() > 1) {
+				dumpChildren( ctx );
+			}
+		}
+
+		@Override
+		public void exitDictorsetmaker(LcdPythonParser.DictorsetmakerContext ctx) {
+			if (ctx.getChildCount() > 1) {
+				dumpChildren( ctx );
+			}
+		}
+
+	}
+	
 	protected class FullCoverageListener extends LcdPythonBaseListener {
 
 		@Override
@@ -979,17 +1236,16 @@ public class Transpiler {
 	protected String content;
 	protected LcdPythonParser parser;
 
-	public Transpiler(String pythonSource) {
+	public Transpiler(Path where, List<String> dottedModule) {
+		String module = dottedModule.get(dottedModule.size()-1);
+		
 		try {
-			byte[] bytes = Files.readAllBytes(
-//					Paths.get("../Python/src/PolynomialFiltering/Main.py"));
-					Paths.get("../Python/src/TranspilerTest.py"));
+			byte[] bytes = Files.readAllBytes(where.resolve(module + ".py"));
 			content = new String(bytes, "UTF-8");
 		} catch (Exception x) {
 			x.printStackTrace();
 			return;
 		}
-		// content = "A*(B+1)**-0.5";
 		LcdPythonLexer java8Lexer = new LcdPythonLexer(CharStreams.fromString(content));
 		CommonTokenStream tokens = new CommonTokenStream(java8Lexer);
 		parser = new LcdPythonParser(tokens);
@@ -1001,16 +1257,18 @@ public class Transpiler {
 		walker.walk(populateListener, tree);
 		
 		// PASS 2 - handle all imports, variable, function, and class declarations
-		Scope moduleScope = new Scope(Scope.Level.MODULE, Arrays.asList( new String[] {
-				"TranspilerTest" } ) );
-//				"PolynomialFiltering",
-//				"Main"} ) );
-		DeclarationsListener scopeListener = new DeclarationsListener(moduleScope);
-		walker.walk(scopeListener, tree);
+		moduleScope = new Scope(Scope.Level.MODULE, dottedModule );
+		DeclarationsListener declarationsListener = new DeclarationsListener(moduleScope);
+		walker.walk(declarationsListener, tree);
+		if (true) {
+			System.out.println("\n\n-------------------------------------");
+			System.out.println("--SYMBOL TABLE\n");
+			System.out.println( symbolTable.toString() );
+		}
 		
-		System.out.println("\n\n-------------------------------------");
-		System.out.println("--SYMBOL TABLE\n");
-		System.out.println( symbolTable.toString() );
+		ExpressionCompilationListener expressionCompilationListener = new ExpressionCompilationListener();
+		walker.walk(expressionCompilationListener, tree);
+
 		if (errorReport.length() > 0) {
 			System.err.println("\n\n!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n");
 			System.err.println(errorReport.toString());
@@ -1037,7 +1295,20 @@ public class Transpiler {
 	public static void main(String[] args) {
 		// compileGrammar( "data", "LcdPython.g4",
 		// "src/com/bluelightning/tools/transpiler/antlr4/" );
-		Transpiler transpiler = new Transpiler("");
+		Path base = Paths.get("../Python/src");
+//		Path dir = Paths.get("PolynomialFiltering");
+//		String module = "Main";
+		Path dir = Paths.get("");
+		String module = "TranspilerTest";
+		ArrayList<String> dottedModule = new ArrayList<>();
+		for (int i = 0; i < dir.getNameCount(); i++) {
+			if (! dir.getName(i).toString().isEmpty())
+				dottedModule.add( dir.getName(i).toString());
+		}
+		dottedModule.add(module);
+		System.out.println(dottedModule);
+		Path where = base.resolve(dir);
+		Transpiler transpiler = new Transpiler(where, dottedModule);
 	}
 
 }

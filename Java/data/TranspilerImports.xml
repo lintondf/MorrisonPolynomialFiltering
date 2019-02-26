@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Module name="numpy">
+	<Class name="array">
+		<Methods>
+			<Method>
+			</Method>
+		</Methods>
+		<Attribute>
+		</Attribute>
+	</Class>
+</Module>

@@ -5,7 +5,7 @@ def test0() -> None:
 
 def test1(A : array, B: array) -> array:
     '''@C : array'''
-    C = A + B;
+    C = A + B + A*B;
     C[1,1] = 0;
     C[:,1] = 1;
     C[1,:] = 2;
