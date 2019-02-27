@@ -11,8 +11,6 @@
 #include "AbstractRadarCoordinates.hpp"
 
 /**
- * @author NOOK
- *
  * The code for these methods is machine translated from Mathematica CForm[]
  * output.  There are too many parenthesis, but better to have them and not
  * to need them than to not have them and to need them.

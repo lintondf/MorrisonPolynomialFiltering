@@ -19,8 +19,6 @@ public class TranslationNode  {
 	public TranslationNode parent;
 	public List<TranslationNode> children;
 	
-	public TranslationNode() {}
-	
 	TranslationNode( TranslationNode parent, String name) {
 		this.name = name;
 		this.parent = parent;
@@ -37,13 +35,26 @@ public class TranslationNode  {
 		sb.append( this.toString() );
 		sb.append('\n');
 		for (TranslationNode child : children) {
-			child.traverse(indent+1);
+			sb.append( child.traverse(indent+1) );
 		}
 		return sb.toString();		
 	}
 	
 	public String toString() {
-		return name;
+		return name + " C#" + children.size() + ((parent == null) ? "?" : parent.toString());
+	}
+
+	public void adopt(TranslationNode node) {
+		if (node.parent != null) {
+			node.parent.removeChild(node);
+		}
+		node.parent = this;
+		this.children.add(node);
+	}
+	
+
+	public void removeChild(TranslationNode node) {
+		children.remove(node);
 	}
 	
 }
