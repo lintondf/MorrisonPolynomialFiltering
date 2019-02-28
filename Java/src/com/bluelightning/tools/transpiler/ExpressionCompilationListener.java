@@ -38,7 +38,8 @@ class ExpressionCompilationListener extends LcdPythonBaseListener {
 		protected TranslationNode defaultOperandOperator( ParserRuleContext ctx, String tag ) {
 			if (expressionRoot != null) {
 //				System.out.println( tag + " (" + ctx.getChildCount() + ")");
-				TranslationNode parent = new TranslationNode(null, tag);
+//				transpiler.dumpChildren(ctx);
+				TranslationNode parent = new TranslationSubexpressionNode(null, tag);
 				if (ctx.getChildCount() == 1) {
 					TranslationNode node = translateMap.get(ctx.getChild(0).getPayload());
 					if (node == null) {
@@ -49,6 +50,7 @@ class ExpressionCompilationListener extends LcdPythonBaseListener {
 						}
 					}
 					translateMap.put( ctx.getPayload(), node );
+					parent.analyze();
 					return node;
 				} else if (ctx.getChildCount() == 2) {
 					TranslationNode node = new TranslationUnaryNode( parent, 
@@ -71,7 +73,7 @@ class ExpressionCompilationListener extends LcdPythonBaseListener {
 					}
 				}
 				translateMap.put( ctx.getPayload(), parent );
-//				System.out.println( parent.traverse(2));
+				parent.analyze();
 				return parent;
 			}	
 			return null;
@@ -146,8 +148,16 @@ class ExpressionCompilationListener extends LcdPythonBaseListener {
 			if (! value.startsWith("'''")) {
 				System.out.println("EXPR_STMT> [{" + value + "}]" );
 //				this.transpiler.dumpChildren( ctx );
-				expressionRoot = new TranslationNode(null, "EXPR_STMT");
+				expressionRoot = new TranslationSubexpressionNode(null, "EXPR_STMT");
 				translateMap = new HashMap<>();
+			} else if (value.startsWith("'''@")) {
+				value = value.trim().replaceAll(" +", "");
+				String[] fields = value.substring(4).replaceAll("'''", "").split("-"); // drop any comments
+				fields = fields[0].split(":");
+				Symbol symbol = transpiler.symbolTable.lookup(scope, fields[0]);
+				if (symbol != null) {
+					transpiler.dispatcher.emitSymbolDeclaration(symbol);
+				}
 			}
 		}
 
@@ -155,8 +165,10 @@ class ExpressionCompilationListener extends LcdPythonBaseListener {
 		public void exitExpr_stmt(LcdPythonParser.Expr_stmtContext ctx) {
 			if (expressionRoot != null) {
 				TranslationNode expr = defaultOperandOperator( ctx, "Expr_stmt" );
-				expressionRoot = expr; //.adopt(expr);
-				System.out.println( expressionRoot.traverse(2) );
+				expr.analyze();
+				expressionRoot = expr;
+				
+				System.out.println( expressionRoot.traverse(0) );
 				transpiler.dispatcher.emitExpressionStatement(scope, expressionRoot);
 			}
 		}		
@@ -166,11 +178,47 @@ class ExpressionCompilationListener extends LcdPythonBaseListener {
 			defaultOperandOperator( ctx, "Annassign" );
 		}
 
+		@Override 
+		public void exitArglist(LcdPythonParser.ArglistContext ctx) { 
+			defaultOperandOperator( ctx, "arglist" );
+		}
+		
+		@Override 
+		public void exitArgument(LcdPythonParser.ArgumentContext ctx) { 
+			defaultOperandOperator( ctx, "argument" );
+		}
+		
 		@Override
 		public void exitTestlist_star_expr(LcdPythonParser.Testlist_star_exprContext ctx) {
 			defaultOperandOperator( ctx, "testlist_expr" );
 		}
 
+		@Override 
+		public void exitTrailer(LcdPythonParser.TrailerContext ctx) { 
+			transpiler.dumpChildren(ctx);
+			//defaultOperandOperator( ctx, "trailer" );	
+			String operator = transpiler.valueMap.get(ctx.getChild(0).getPayload());
+			TranslationSubexpressionNode parent = new TranslationSubexpressionNode(null, operator);
+			TranslationNode node = null;
+			switch (operator) {
+			case "(": // function argument list
+			case "[": // array subscripts
+				for (int i = 1; i < ctx.getChildCount()-1; i++) {
+					node = translateMap.get(ctx.getChild(i).getPayload());
+					parent.adopt(node);
+				}
+				break;
+			case ".": // member access
+				transpiler.reportError(ctx, "NIY");
+				break;
+			default:
+				transpiler.reportError(ctx, "Unknown Trailer starting token: " + operator );
+				break;
+			}
+			translateMap.put( ctx.getPayload(), parent );
+			parent.analyze();
+		}	
+		
 		@Override
 		public void exitAugassign(LcdPythonParser.AugassignContext ctx) {
 			defaultOperandOperator( ctx, "augassign" );
@@ -257,9 +305,54 @@ class ExpressionCompilationListener extends LcdPythonBaseListener {
 			defaultOperandOperator( ctx, "atmoexpr" );
 		}
 
+//atom: ('(' (yield_expr|testlist_comp)? ')' |                      2 () or 3 (x)
+//       '[' (testlist_comp)? ']' |
+//       '{' (dictorsetmaker)? '}' |
+//       NAME | NUMBER | STRING+ | '...' | 'None' | 'True' | 'False');
 		@Override
 		public void exitAtom(LcdPythonParser.AtomContext ctx) {
-			defaultOperandOperator( ctx, "atom" );
+//			transpiler.dumpChildren(ctx);
+			if (expressionRoot != null) {
+				TranslationNode parent = new TranslationSubexpressionNode(null, "atom");
+				Object payload = ctx.getChild(0).getPayload();
+				TranslationNode node = getOperandNode( ctx, parent, payload);
+				if (node != null && ctx.getChildCount() == 1) {  // NAME | NUMBER |  '...' | 'None' | 'True' | 'False'
+					if (parent.getChildCount() == 1) {
+						parent = parent.getChild(0);
+					}
+					translateMap.put( ctx.getPayload(), parent );
+					parent.analyze();
+					return;
+				}
+				if (node != null) { // STRING+ 
+					for (int i = 1; i < ctx.getChildCount(); i++) {
+						payload = ctx.getChild(i).getPayload();
+						getOperandNode( ctx, parent, payload);
+					}
+					if (parent.getChildCount() == 1) {
+						parent = parent.getChild(0);
+					}
+					translateMap.put( ctx.getPayload(), parent );
+					parent.analyze();
+					return;
+				}
+				String value = transpiler.valueMap.get(payload);
+				if (value.length() != 1 || "([{".indexOf(value) == -1) {
+					//transpiler.reportError(ctx, "Unexpected ATOM token: " + value );
+					return;
+				}
+				parent = new TranslationListNode( null, value);
+				for (int i = 1; i < ctx.getChildCount()-1; i++) {
+					payload = ctx.getChild(i).getPayload();
+					node = translateMap.get(payload);
+					if (node == null) {
+						node = getOperandNode(ctx, parent, payload);
+					}
+					parent.adopt(node);
+				}
+				translateMap.put( ctx.getPayload(), parent );
+				parent.analyze();
+			}
 		}
 		
 		@Override
@@ -269,6 +362,7 @@ class ExpressionCompilationListener extends LcdPythonBaseListener {
 
 		@Override
 		public void exitSubscript(LcdPythonParser.SubscriptContext ctx) {
+			transpiler.dumpChildren(ctx);
 			defaultOperandOperator( ctx, "subscript" );
 		}
 
@@ -287,6 +381,11 @@ class ExpressionCompilationListener extends LcdPythonBaseListener {
 			defaultOperandOperator( ctx, "testlist" );
 		}
 
+		@Override 
+		public void exitTestlist_comp(LcdPythonParser.Testlist_compContext ctx) { 
+			defaultOperandOperator( ctx, "testlist_comp" );
+		}
+		
 		@Override
 		public void exitDictorsetmaker(LcdPythonParser.DictorsetmakerContext ctx) {
 			defaultOperandOperator( ctx, "dictorsetmaker" );

@@ -9,6 +9,11 @@ package com.bluelightning.tools.transpiler;
  */
 public interface ILanguageTarget {
 	
+	
+	public void setId(int id);
+	
+	public int getId();
+	
 	public void startModule( Scope scope );
 	
 	public void finishModule();
@@ -20,6 +25,8 @@ public interface ILanguageTarget {
 	public void startMethod( Scope scope );
 	
 	public void finishMethod( Scope scope );
+	
+	public void emitSymbolDeclaration( Symbol symbol );
 	
 	public void emitExpressionStatement( Scope scope, TranslationNode root );
 	

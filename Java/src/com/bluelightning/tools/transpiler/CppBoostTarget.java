@@ -11,6 +11,8 @@ import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
+
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
@@ -20,6 +22,8 @@ import freemarker.template.TemplateException;
  *
  */
 public class CppBoostTarget implements ILanguageTarget {
+	
+	protected int id;
 	
 	protected Configuration cfg;  // FreeMarker configuration
 	
@@ -38,9 +42,39 @@ public class CppBoostTarget implements ILanguageTarget {
 	
 	protected String define;
 	
+	public static class Indent {
+		int level = 0;
+		public Indent() {
+			level = 0;
+		}
+		
+		public void in() {
+			level += 1;
+		}
+
+		public void out() {
+			level -= 1;
+		}
+		
+		public String toString() {
+			return StringUtils.repeat("  ", 4*level);
+		}
+	}
+	
+	protected Indent indent = new Indent();
+	protected Scope currentScope = null;
+	
+	protected Map<String, String> typeRemap = new HashMap<>();
+	
 	public CppBoostTarget( Configuration cfg, Path outputDirectory ) {
 		this.cfg = cfg;
-		this.outputDirectory = outputDirectory;		
+		this.outputDirectory = outputDirectory;	
+		
+		typeRemap.put("int", "long");
+		typeRemap.put("float", "double");
+		typeRemap.put("vector", "RealVector");
+		typeRemap.put("array", "RealMatrix");
+		
 		try {
 			
 			hpp = cfg.getTemplate("CppBoost_hpp.ftlh");
@@ -55,6 +89,8 @@ public class CppBoostTarget implements ILanguageTarget {
 	public void startModule(Scope scope) {
 		System.out.println("CppBoost " + scope.toString() );
 		
+		currentScope = scope;
+		indent = new Indent();
 		String moduleName = scope.getLast();
 		hppFile = outputDirectory.resolve( moduleName + ".hpp" );
 		cppFile = outputDirectory.resolve( moduleName + ".cpp" );
@@ -73,13 +109,17 @@ public class CppBoostTarget implements ILanguageTarget {
 
 	@Override
 	public void startClass(Scope scope) {
+		currentScope = scope;
 		currentClass = scope.getLast();
+		indent.in();
 		// hpp
 		hppBody.append( String.format("class %s {\n", currentClass));
 	}
 
 	@Override
 	public void finishClass(Scope scope) {
+		currentScope = scope;
+		indent.out();
 		// hpp
 		hppBody.append( String.format("}; // class %s \n", currentClass));
 		currentClass = null;
@@ -87,18 +127,16 @@ public class CppBoostTarget implements ILanguageTarget {
 
 	@Override
 	public void startMethod(Scope scope) {
+		currentScope = scope;
+		indent.in();
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public void finishMethod(Scope scope) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void emitExpressionStatement(Scope scope, TranslationNode root) {
+		currentScope = scope;
+		indent.out();
 		// TODO Auto-generated method stub
 		
 	}
@@ -119,6 +157,68 @@ public class CppBoostTarget implements ILanguageTarget {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+
+	protected void traverseEmitter(Scope scope, TranslationNode root) {
+		for (TranslationNode node : root.getChildren()) {
+			System.out.println(node.getClass().getSimpleName() + " " + node.toString() );
+		}
+	}
+	
+	@Override
+	public void emitExpressionStatement(Scope scope, TranslationNode root) {
+//		cppBody.append(scope.toString());
+//		cppBody.append('\n');
+//		cppBody.append(root.traverse(0));
+//		cppBody.append('\n');
+		cppBody.append(indent.toString());
+		traverseEmitter( scope, root );
+		cppBody.append('\n');
+	}
+
+	@Override
+	public void emitSymbolDeclaration(Symbol symbol) {
+		String cppType = typeRemap.get(symbol.getType());
+		if (cppType == null) {
+			cppType = symbol.getType();
+		}
+		String declaration = String.format("%s %s", cppType, symbol.getName() );
+		switch (currentScope.getLevel()) {
+		case MODULE: 
+			cppBody.append( indent.toString() );
+			cppBody.append( declaration );
+			cppBody.append(";\n");
+			break;
+		case FUNCTION:
+			cppBody.append( indent.toString() );
+			cppBody.append( declaration );
+			cppBody.append(";\n");
+			break;
+		case CLASS:
+			hppBody.append( indent.toString() );
+			hppBody.append( declaration );
+			hppBody.append(";\n");
+			
+			cppBody.append( indent.toString() );
+			cppBody.append( currentScope.getLast() + "::" + declaration );
+			cppBody.append(";\n");
+			break;
+		case MEMBER:
+			cppBody.append( indent.toString() );
+			cppBody.append( declaration );
+			cppBody.append(";\n");
+			break;
+		}
+	}
+
+	@Override
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	@Override
+	public int getId() {
+		return id;
 	}
 
 }

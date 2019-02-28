@@ -1,11 +1,14 @@
 from numpy import array, diag, ones
 
-def test0() -> None:
-    pass
+def test0(n : int, m : int) -> int:
+    return n+m;
 
-def test1(A : array, B: array) -> array:
+def test1(A : array, B: array, D:int) -> array:
+    '''@N : int'''
+    test0(5, 7);
     '''@C : array'''
-    C = A + B + A*B;
+    C = A + (B + A/D)*B;
+#     C = A + B + A*B;
     C[1,1] = 0;
     C[:,1] = 1;
     C[1,:] = 2;
@@ -13,7 +16,7 @@ def test1(A : array, B: array) -> array:
     return C;
 
 class testClass :
-    '''@N : array'''
+    '''@N : int'''
     
     def __init__(self):
         pass;

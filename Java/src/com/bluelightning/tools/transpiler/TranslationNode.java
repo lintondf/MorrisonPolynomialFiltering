@@ -29,7 +29,7 @@ public class TranslationNode  {
 	}
 	
 	public String traverse( int indent ) {
-		String spaces = StringUtils.repeat("  ", indent);
+		String spaces = String.format("%5d:%s", indent, StringUtils.repeat("  ", indent));
 		StringBuffer sb = new StringBuffer();
 		sb.append(spaces);
 		sb.append( this.toString() );
@@ -41,7 +41,8 @@ public class TranslationNode  {
 	}
 	
 	public String toString() {
-		return name + " C#" + children.size() + ((parent == null) ? "?" : parent.toString());
+		return String.format("%s (%d)", name, children.size() );
+//		return name + " C#" + children.size() + ((parent == null) ? "?" : parent.toString());
 	}
 
 	public void adopt(TranslationNode node) {
@@ -52,9 +53,29 @@ public class TranslationNode  {
 		this.children.add(node);
 	}
 	
-
+    public void addChild(TranslationNode node ) {
+    	node.parent = this;
+    	children.add(node);
+    }
+    
 	public void removeChild(TranslationNode node) {
 		children.remove(node);
 	}
+	
+	public List<TranslationNode> getChildren() {
+		return children;
+	}
+
+	public int getChildCount() {
+		return children.size();
+	}
+
+	public TranslationNode getChild(int i) {
+		return children.get(i);
+	}
+	
+	public void analyze() {		
+	}
+
 	
 }

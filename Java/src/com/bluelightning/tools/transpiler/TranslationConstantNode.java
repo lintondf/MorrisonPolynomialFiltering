@@ -16,4 +16,8 @@ public class TranslationConstantNode extends TranslationNode {
 		this.value = value;
 	}
 
+	public String getValue() {
+		return value;
+	}
+
 }

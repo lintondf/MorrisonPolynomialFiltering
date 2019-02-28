@@ -8,7 +8,7 @@ class Scope {
 		public enum Level {
 			MODULE, FUNCTION, CLASS, MEMBER,
 		};
-		protected Scope.Level  level;
+		protected Level  level;
 		protected String qString;
 		
 		protected Scope() {}
@@ -96,6 +96,10 @@ class Scope {
 		@Override
 		public String toString() {
 			return qString;
+		}
+
+		public Scope.Level getLevel() {
+			return level;
 		}
 		
 	}

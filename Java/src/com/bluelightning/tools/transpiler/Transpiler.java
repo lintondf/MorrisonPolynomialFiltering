@@ -35,6 +35,7 @@ import com.bluelightning.tools.transpiler.antlr4.LcdPythonBaseVisitor;
 import com.bluelightning.tools.transpiler.antlr4.LcdPythonLexer;
 import com.bluelightning.tools.transpiler.antlr4.LcdPythonParser;
 
+import freemarker.core.PlainTextOutputFormat;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
@@ -54,10 +55,16 @@ public class Transpiler {
 	}
 	
 	protected void reportError(Token token, String message ) {
-		String r = String.format("ERROR [L%5d:C%3d]: %s\n", token.getLine(), token.getCharPositionInLine(), message );
+		String r = String.format("ERROR [L%5d:C%3d]: %s", token.getLine(), token.getCharPositionInLine(), message );
+		reportError(r);
+	}
+	
+	public void reportError(String r) {
 		System.out.println("!!!!!!!!!!!!!! " + r );
 		errorReport.append(r);
+		errorReport.append('\n');
 	}
+
 
 	protected void dumpChildren( RuleNode ctx ) {
 //		if (ctx.getChildCount() > 1) {
@@ -109,6 +116,11 @@ public class Transpiler {
 		// Wrap unchecked exceptions thrown during template processing into TemplateException-s.
 		cfg.setWrapUncheckedExceptions(true);	
 		
+		cfg.setRecognizeStandardFileExtensions(false);
+		
+		cfg.setWhitespaceStripping(false);
+		
+		cfg.setOutputFormat(PlainTextOutputFormat.INSTANCE);
 		return cfg;
 	}
 
@@ -119,6 +131,7 @@ public class Transpiler {
 		public TargetDispatcher() {}
 		
 		public void addTarget( ILanguageTarget target ) {
+			target.setId( targets.size() );
 			targets.add(target);
 		}
 
@@ -168,6 +181,22 @@ public class Transpiler {
 		public void finishModule() {
 			for (ILanguageTarget target : targets) {
 				target.finishModule();
+			}
+		}
+
+		@Override
+		public void setId(int id) {
+		}
+
+		@Override
+		public int getId() {
+			return 0;
+		}
+
+		@Override
+		public void emitSymbolDeclaration(Symbol symbol) {
+			for (ILanguageTarget target : targets) {
+				target.emitSymbolDeclaration(symbol);
 			}
 		}
 		
@@ -249,6 +278,7 @@ public class Transpiler {
 			System.out.println("\n\n-------------------------------------");
 			System.out.println("--SYMBOL TABLE\n");
 			System.out.println( symbolTable.toString() );
+			System.out.println("\n\n-------------------------------------");
 		}
 		
 		ExpressionCompilationListener expressionCompilationListener = new ExpressionCompilationListener(this);
@@ -298,5 +328,6 @@ public class Transpiler {
 		Path where = base.resolve(dir);
 		Transpiler transpiler = new Transpiler(where, dottedModule);
 	}
+
 
 }

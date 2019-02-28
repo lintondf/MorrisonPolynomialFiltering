@@ -14,4 +14,16 @@ class Symbol {
 		this.type = type;
 		this.scope = scope;
 	}
+
+	public String getName() {
+		return name;
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public Scope getScope() {
+		return scope;
+	}
 }
