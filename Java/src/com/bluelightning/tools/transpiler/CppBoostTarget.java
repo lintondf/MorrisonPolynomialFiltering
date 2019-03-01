@@ -10,7 +10,9 @@ import java.io.Writer;
 import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 import java.util.Stack;
+import java.util.TreeSet;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -58,18 +60,41 @@ public class CppBoostTarget implements ILanguageTarget {
 		}
 		
 		public String toString() {
-			return StringUtils.repeat("  ", 4*level);
+			return StringUtils.repeat("  ", 2*level);
+		}
+		
+		public void writeln( StringBuilder out, String text ) {
+			out.append(toString());
+			out.append(text);
+			out.append('\n');
 		}
 	}
 	
 	protected Indent indent = new Indent();
 	protected Scope currentScope = null;
 	
-	protected Map<String, String> typeRemap = new HashMap<>();
+	Set<String> ignoredSuperClasses = new TreeSet<>();
+	
 	
 	public static class BoostProgrammer {
 		
 		Stack<String> parens = new Stack<>();
+		private Map<String, String> typeRemap = new HashMap<>();
+		
+		public BoostProgrammer() {
+			typeRemap.put("int", "long");
+			typeRemap.put("float", "double");
+			typeRemap.put("vector", "RealVector");
+			typeRemap.put("array", "RealMatrix");
+			typeRemap.put("str", "std::string");			
+		}
+		
+		public String remapType( String type ) {
+			String t = typeRemap.get(type);
+			if (t != null)
+				return t;
+			return type;
+		}
 		
 		public void startExpression( StringBuilder out ) {
 		}
@@ -83,7 +108,6 @@ public class CppBoostTarget implements ILanguageTarget {
 			while (! parens.isEmpty() ) {
 				out.append( parens.pop() );
 			}
-			out.append(";");
 		}
 
 		public void writeSymbol(StringBuilder out, Symbol symbol) {
@@ -107,10 +131,7 @@ public class CppBoostTarget implements ILanguageTarget {
 		this.cfg = cfg;
 		this.outputDirectory = outputDirectory;	
 		
-		typeRemap.put("int", "long");
-		typeRemap.put("float", "double");
-		typeRemap.put("vector", "RealVector");
-		typeRemap.put("array", "RealMatrix");
+		ignoredSuperClasses.add("ABC");
 		
 		try {
 			
@@ -123,6 +144,8 @@ public class CppBoostTarget implements ILanguageTarget {
 	}
 
 	protected BoostProgrammer programmer = new BoostProgrammer();
+	
+	Stack<String> namespaceStack = new Stack<String>();
 	
 	@Override
 	public void startModule(Scope scope) {
@@ -142,54 +165,126 @@ public class CppBoostTarget implements ILanguageTarget {
 		templateDataModel.put("systemIncludes", "");
 		templateDataModel.put("hppBody", "");
 		templateDataModel.put("cppBody", "");
+		hppBody = new StringBuilder();
+		cppBody = new StringBuilder();
+		
+		for (int i = 0; i < scope.qualifiers.length-1; i++) {
+			hppBody.append(indent.toString());
+			hppBody.append(String.format("namespace %s {\n", scope.qualifiers[i]));
+			cppBody.append(indent.toString());
+			cppBody.append(String.format("namespace %s {\n", scope.qualifiers[i]));
+			namespaceStack.push(String.format("%s}; // namespace %s\n", indent.toString(), scope.qualifiers[i]));
+			indent.in();
+		}
 	}
 	
 	String currentClass = null;
+	boolean inEnum = false;
 
 	@Override
 	public void startClass(Scope scope) {
 		currentScope = scope;
 		currentClass = scope.getLast();
-		indent.in();
 		// hpp
-		hppBody.append( String.format("class %s {\n", currentClass));
+		String decl = "class " + currentClass;
+		Symbol symbol = Transpiler.instance().symbolTable.lookup(currentScope, currentClass);
+		if (symbol != null) {
+			if (symbol != null && !symbol.getSuperClassInfo().superClass.isEmpty()) {
+				String superClass = symbol.getSuperClassInfo().superClass;
+				if (!ignoredSuperClasses.contains(superClass)) {
+					decl += " : public " + symbol.getSuperClassInfo().superClass;
+				}
+				if (superClass.equals("Enum")) {
+					inEnum = true;
+					decl = "enum " + currentClass;
+				}
+			}
+		}
+		hppBody.append( String.format("%s%s {\n", indent.toString(), decl));
+		indent.in();
+		indent.writeln(hppBody, "public:\n");
+		indent.in();
 	}
 
 	@Override
 	public void finishClass(Scope scope) {
+		inEnum = false;
 		currentScope = scope;
-		indent.out();
 		// hpp
-		hppBody.append( String.format("}; // class %s \n", currentClass));
+		indent.out();
+		indent.out();
+		hppBody.append( String.format("%s}; // class %s \n", indent.toString(), currentClass));
 		currentClass = null;
 	}
 
 	@Override
 	public void startMethod(Scope scope) {
 		currentScope = scope;
-		indent.in();
-		// TODO Auto-generated method stub
-		
+		String currentFunction = scope.getLast();
+		Symbol symbol = Transpiler.instance().symbolTable.lookup(currentScope, currentFunction);
+		Symbol.FunctionParametersInfo fpi = symbol.getFunctionParametersInfo();
+		if (symbol != null && fpi != null) {
+			if (currentClass == null) { // non-class function
+				
+			} else { // class member
+				String name = symbol.getName();
+				String type = programmer.remapType(symbol.getType()) + " ";
+				if (name.equals("__init__")) {
+					name = currentClass;
+					type = "";
+				}
+//				System.out.println(">>> " + currentClass + "::" + currentFunction + fpi.toString());
+				hppBody.append( indent.toString() );
+				StringBuilder p = new StringBuilder();
+				for (Symbol parameter : fpi.parameters ) {
+					if (parameter.getName().equals("self"))
+						continue;
+					if (p.length() != 0)
+						p.append(", ");
+					p.append("const ");
+					p.append(programmer.remapType(parameter.getType()));
+					p.append(" ");
+					//TODO default values
+					p.append( parameter.getName() );
+				}
+				String decl = String.format("%s%s(%s)", type, name, p.toString() ); 
+				hppBody.append(decl);
+				hppBody.append(";\n");
+				decl = String.format("%s%s::%s (%s)", type, currentClass, name, p.toString() );
+				cppBody.append(decl);
+				cppBody.append(" {\n");
+			}
+		}
+		indent.in();		
 	}
 
 	@Override
 	public void finishMethod(Scope scope) {
 		currentScope = scope;
 		indent.out();
+		indent.writeln(cppBody, "}");
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public void finishModule() {
+		while (! namespaceStack.isEmpty() ) {
+			String close = namespaceStack.pop();
+			hppBody.append( close );
+			cppBody.append( close );
+			indent.out();
+		}
 		templateDataModel.put("hppBody", hppBody.toString());
 		templateDataModel.put("cppBody", cppBody.toString());
 		try {
 			Writer out = new OutputStreamWriter(System.out);
-			System.out.println(hppFile.toString());
+			//System.out.println(hppFile.toString());
 			hpp.process(templateDataModel, out);
-			System.out.println(cppFile.toString());
+			System.out.println();
+			//System.out.println(cppFile.toString());
 			cpp.process(templateDataModel, out);
+			System.out.println();
 		} catch (IOException iox ) {
 			iox.printStackTrace();
 		} catch (TemplateException e) {
@@ -240,12 +335,16 @@ public class CppBoostTarget implements ILanguageTarget {
 //		cppBody.append('\n');
 //		cppBody.append(root.traverse(0));
 //		cppBody.append('\n');
-		programmer.startExpression(cppBody);
+		StringBuilder out = cppBody;
+		if (inEnum)
+			out = hppBody;
+		out.append( indent.toString() );
+		programmer.startExpression(out);
 		cppBody.append(indent.toString());
 		if (root.getChildCount() > 2 && isOperator(root.getChild(1), "=")) { // assignment
 			if (isSymbol(root.getChild(0))) { // simple symbol
 				Symbol symbol = ((TranslationSymbolNode)root.getChild(0)).getSymbol();
-				programmer.writeAssignmentTarget(cppBody, symbol);
+				programmer.writeAssignmentTarget(out, symbol);
 				traverseEmitter( scope, root, 2 );
 			} else {
 				System.out.println("?1 " + root.getChild(0).getClass().getSimpleName() + " " + root.getChild(0).toString() );				
@@ -254,13 +353,19 @@ public class CppBoostTarget implements ILanguageTarget {
 			System.out.println("?2 " + root.getChild(0).getClass().getSimpleName() + " " + root.getChild(0).toString() );				
 		}
 		
-		programmer.finishExpression(cppBody);
-		cppBody.append('\n');
+		programmer.finishExpression(out);
+		if (inEnum) {
+			out.append(",");			
+		} else {
+			out.append(";");
+		}
+
+		out.append('\n');
 	}
 
 	@Override
 	public void emitSymbolDeclaration(Symbol symbol) {
-		String cppType = typeRemap.get(symbol.getType());
+		String cppType = programmer.typeRemap.get(symbol.getType());
 		if (cppType == null) {
 			cppType = symbol.getType();
 		}
@@ -269,28 +374,17 @@ public class CppBoostTarget implements ILanguageTarget {
 		String declaration = String.format("%s %s", cppType, symbol.getName() );
 		switch (currentScope.getLevel()) {
 		case MODULE: 
-			cppBody.append( indent.toString() );
-			cppBody.append( declaration );
-			cppBody.append(";\n");
+			indent.writeln(cppBody, declaration + ";");
 			break;
 		case FUNCTION:
-			cppBody.append( indent.toString() );
-			cppBody.append( declaration );
-			cppBody.append(";\n");
+			indent.writeln(cppBody, declaration + ";");
 			break;
 		case CLASS:
-			hppBody.append( indent.toString() );
-			hppBody.append( declaration );
-			hppBody.append(";\n");
-			
-			cppBody.append( indent.toString() );
-			cppBody.append( currentScope.getLast() + "::" + declaration );
-			cppBody.append(";\n");
+			indent.writeln(hppBody, declaration + ";");
+			indent.writeln(cppBody, currentScope.getLast() + "::" + declaration + ";");
 			break;
 		case MEMBER:
-			cppBody.append( indent.toString() );
-			cppBody.append( declaration );
-			cppBody.append(";\n");
+			indent.writeln(hppBody, declaration + ";");
 			break;
 		}
 	}

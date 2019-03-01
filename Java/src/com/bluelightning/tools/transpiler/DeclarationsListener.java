@@ -42,7 +42,7 @@ class DeclarationsListener extends LcdPythonBaseListener {
 		
 		@Override
 		public void enterFuncdef(LcdPythonParser.FuncdefContext ctx) {
-			transpiler.dumpChildren( ctx );
+//			transpiler.dumpChildren( ctx );
 			Scope currentScope = scopeStack.peek();
 			String name = getChildText(ctx, 1);
 			Scope functionScope = currentScope.getChild(Scope.Level.FUNCTION, name);

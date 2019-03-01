@@ -166,9 +166,10 @@ class ExpressionCompilationListener extends LcdPythonBaseListener {
 				TranslationNode expr = defaultOperandOperator( ctx, expressionRoot.name );
 				expr.analyze();
 				expressionRoot = expr;
-				
-				System.out.println( expressionRoot.traverse(0) );
-				transpiler.dispatcher.emitExpressionStatement(scope, expressionRoot);
+				if ( ! transpiler.valueMap.get(ctx.getPayload()).startsWith("'''@")) {
+					System.out.println( expressionRoot.traverse(0) );
+					transpiler.dispatcher.emitExpressionStatement(scope, expressionRoot);
+				}
 			}
 		}		
 		
