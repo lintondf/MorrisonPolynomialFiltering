@@ -10,6 +10,7 @@ import java.io.Writer;
 import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Stack;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -66,6 +67,42 @@ public class CppBoostTarget implements ILanguageTarget {
 	
 	protected Map<String, String> typeRemap = new HashMap<>();
 	
+	public static class BoostProgrammer {
+		
+		Stack<String> parens = new Stack<>();
+		
+		public void startExpression( StringBuilder out ) {
+		}
+		
+		public void writeAssignmentTarget( StringBuilder out, Symbol symbol) {
+			out.append(symbol.getName());
+			out.append(" = ");
+		}
+		
+		public void finishExpression( StringBuilder out ) {
+			while (! parens.isEmpty() ) {
+				out.append( parens.pop() );
+			}
+			out.append(";");
+		}
+
+		public void writeSymbol(StringBuilder out, Symbol symbol) {
+			out.append(symbol.getName());
+		}
+
+		public void writeOperator(StringBuilder out, String operator) {
+			out.append(operator);
+		}
+
+		public void openParenthesis(StringBuilder out) {
+			out.append('(');
+		}
+
+		public void closeParenthesis(StringBuilder out) {
+			out.append(')');
+		}
+	}
+	
 	public CppBoostTarget( Configuration cfg, Path outputDirectory ) {
 		this.cfg = cfg;
 		this.outputDirectory = outputDirectory;	
@@ -85,6 +122,8 @@ public class CppBoostTarget implements ILanguageTarget {
 		}
 	}
 
+	protected BoostProgrammer programmer = new BoostProgrammer();
+	
 	@Override
 	public void startModule(Scope scope) {
 		System.out.println("CppBoost " + scope.toString() );
@@ -158,10 +197,40 @@ public class CppBoostTarget implements ILanguageTarget {
 			e.printStackTrace();
 		}
 	}
+	
+	protected boolean isList(TranslationNode root) {
+		return (root instanceof TranslationListNode);
+	}
 
-	protected void traverseEmitter(Scope scope, TranslationNode root) {
-		for (TranslationNode node : root.getChildren()) {
-			System.out.println(node.getClass().getSimpleName() + " " + node.toString() );
+	protected boolean isOperator(TranslationNode root, String op) {
+		if (root instanceof TranslationOperatorNode) {
+			return ((TranslationOperatorNode) root).getOperator().equals(op);
+		}
+		return false;
+	}
+
+	protected boolean isSymbol(TranslationNode root) {
+		return (root instanceof TranslationSymbolNode);
+	}
+	
+	protected void traverseEmitter(Scope scope, TranslationNode root, int iChild) {
+		while (iChild < root.getChildCount()) {
+			TranslationNode child = root.getChild(iChild);
+			if (child instanceof TranslationSymbolNode) {
+				programmer.writeSymbol( cppBody, ((TranslationSymbolNode) child).getSymbol() );
+			} else if (child instanceof TranslationOperatorNode) {
+				programmer.writeOperator( cppBody, ((TranslationOperatorNode) child).getOperator() );
+			} else if (child instanceof TranslationListNode) {
+				String open = ((TranslationListNode) child).getListOpen();
+				if (open.equals("(")) {
+					programmer.openParenthesis( cppBody );
+					traverseEmitter( scope, child, 0);
+					programmer.closeParenthesis( cppBody );
+				}
+			} else {
+				traverseEmitter( scope, child, 0);				
+			}
+			iChild++;
 		}
 	}
 	
@@ -171,8 +240,21 @@ public class CppBoostTarget implements ILanguageTarget {
 //		cppBody.append('\n');
 //		cppBody.append(root.traverse(0));
 //		cppBody.append('\n');
+		programmer.startExpression(cppBody);
 		cppBody.append(indent.toString());
-		traverseEmitter( scope, root );
+		if (root.getChildCount() > 2 && isOperator(root.getChild(1), "=")) { // assignment
+			if (isSymbol(root.getChild(0))) { // simple symbol
+				Symbol symbol = ((TranslationSymbolNode)root.getChild(0)).getSymbol();
+				programmer.writeAssignmentTarget(cppBody, symbol);
+				traverseEmitter( scope, root, 2 );
+			} else {
+				System.out.println("?1 " + root.getChild(0).getClass().getSimpleName() + " " + root.getChild(0).toString() );				
+			}
+		} else if (root.getChildCount() > 0) { // function call
+			System.out.println("?2 " + root.getChild(0).getClass().getSimpleName() + " " + root.getChild(0).toString() );				
+		}
+		
+		programmer.finishExpression(cppBody);
 		cppBody.append('\n');
 	}
 
@@ -182,6 +264,8 @@ public class CppBoostTarget implements ILanguageTarget {
 		if (cppType == null) {
 			cppType = symbol.getType();
 		}
+		if (cppType.equals("enum"))
+			return;
 		String declaration = String.format("%s %s", cppType, symbol.getName() );
 		switch (currentScope.getLevel()) {
 		case MODULE: 

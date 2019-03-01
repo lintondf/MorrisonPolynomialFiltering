@@ -15,9 +15,9 @@ import org.apache.commons.lang3.StringUtils;
  */
 public class TranslationNode  {
 	
-	public String name;
-	public TranslationNode parent;
-	public List<TranslationNode> children;
+	protected String name;
+	protected  TranslationNode parent;
+	protected List<TranslationNode> children;
 	
 	TranslationNode( TranslationNode parent, String name) {
 		this.name = name;
@@ -75,6 +75,14 @@ public class TranslationNode  {
 	}
 	
 	public void analyze() {		
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public TranslationNode getParent() {
+		return parent;
 	}
 
 	

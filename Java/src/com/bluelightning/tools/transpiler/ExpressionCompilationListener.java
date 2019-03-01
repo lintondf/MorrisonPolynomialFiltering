@@ -143,12 +143,11 @@ class ExpressionCompilationListener extends LcdPythonBaseListener {
 		
 		@Override
 		public void enterExpr_stmt(LcdPythonParser.Expr_stmtContext ctx) {
-			System.out.println( ctx.toStringTree(transpiler.parser));
 			String value = this.transpiler.valueMap.get(ctx.getPayload());
 			if (! value.startsWith("'''")) {
-				System.out.println("EXPR_STMT> [{" + value + "}]" );
+				System.out.println("EXPR_STMT> [{" + value + "}] <- " + ctx.toStringTree(transpiler.parser));
 //				this.transpiler.dumpChildren( ctx );
-				expressionRoot = new TranslationSubexpressionNode(null, "EXPR_STMT");
+				expressionRoot = new TranslationSubexpressionNode(null, value);
 				translateMap = new HashMap<>();
 			} else if (value.startsWith("'''@")) {
 				value = value.trim().replaceAll(" +", "");
@@ -164,7 +163,7 @@ class ExpressionCompilationListener extends LcdPythonBaseListener {
 		@Override
 		public void exitExpr_stmt(LcdPythonParser.Expr_stmtContext ctx) {
 			if (expressionRoot != null) {
-				TranslationNode expr = defaultOperandOperator( ctx, "Expr_stmt" );
+				TranslationNode expr = defaultOperandOperator( ctx, expressionRoot.name );
 				expr.analyze();
 				expressionRoot = expr;
 				
@@ -180,6 +179,7 @@ class ExpressionCompilationListener extends LcdPythonBaseListener {
 
 		@Override 
 		public void exitArglist(LcdPythonParser.ArglistContext ctx) { 
+//			transpiler.dumpChildren(ctx);
 			defaultOperandOperator( ctx, "arglist" );
 		}
 		
@@ -209,7 +209,9 @@ class ExpressionCompilationListener extends LcdPythonBaseListener {
 				}
 				break;
 			case ".": // member access
-				transpiler.reportError(ctx, "NIY");
+				String name = transpiler.valueMap.get(ctx.getChild(1).getPayload());
+				Symbol symbol = transpiler.symbolTable.lookup(scope, name);
+				System.out.println(". " + name + " " + symbol );
 				break;
 			default:
 				transpiler.reportError(ctx, "Unknown Trailer starting token: " + operator );
@@ -300,9 +302,14 @@ class ExpressionCompilationListener extends LcdPythonBaseListener {
 			defaultOperandOperator( ctx, "power" );
 		}
 
+//atom_expr: (AWAIT)? atom trailer*;
+//trailer: '(' (arglist)? ')' | '[' subscriptlist ']' | '.' NAME;		
 		@Override
 		public void exitAtom_expr(LcdPythonParser.Atom_exprContext ctx) {
-			defaultOperandOperator( ctx, "atmoexpr" );
+			defaultOperandOperator( ctx, "atom_expr" );
+			if (ctx.getChildCount() > 1) {
+				transpiler.dumpChildren(ctx);
+			}
 		}
 
 //atom: ('(' (yield_expr|testlist_comp)? ')' |                      2 () or 3 (x)
@@ -362,7 +369,6 @@ class ExpressionCompilationListener extends LcdPythonBaseListener {
 
 		@Override
 		public void exitSubscript(LcdPythonParser.SubscriptContext ctx) {
-			transpiler.dumpChildren(ctx);
 			defaultOperandOperator( ctx, "subscript" );
 		}
 

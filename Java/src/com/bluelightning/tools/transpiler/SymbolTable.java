@@ -31,7 +31,7 @@ class SymbolTable {
 			return sb.toString();
 		}
 		
-		public void add( Scope scope, String name, String type ) {
+		public Symbol add( Scope scope, String name, String type ) {
 			Map<Scope, Symbol> aliases = table.get(name);
 			if (aliases == null) {
 				aliases = new HashMap<>();
@@ -39,6 +39,7 @@ class SymbolTable {
 			Symbol symbol = new Symbol( scope, name.trim(), type.trim());
 			aliases.put( scope, symbol ); //TODO collisions
 			table.put(name.trim(),  aliases);
+			return symbol;
 		}
 		
 		public Symbol lookup( Scope scope, String name ) {

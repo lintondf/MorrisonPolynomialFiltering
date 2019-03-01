@@ -7,8 +7,8 @@ Created on Feb 18, 2019
 from typing import Tuple
 from abc import abstractmethod
 
-from numpy import array, copy, diag, zeros, transpose
-from numpy.linalg.linalg import solve
+from numpy import array, copy, diag, ones, zeros, transpose, matrix
+from numpy.linalg.linalg import solve, inv
 from scipy.special import binom
 
 from PolynomialFiltering.Main import AbstractFilter
@@ -82,8 +82,14 @@ if __name__ == '__main__':
     dt = zeros([11]);
     for d in range(0, 11) :
         dt[d] = -d * 0.1;
-    print(dt)
     Tn = fixed._getTn(dt);
-    print(Tn)
-#    print( transpose(Tn) @ Tn )
+    TntYn = transpose(Tn) @ dt;
+    TntTn = transpose(Tn) @ Tn;
+    print(solve(TntTn, TntYn) )
+    print( inv(TntTn) @ TntYn)
+    iR = diag(0.1*ones([11]));
+    TntiRTn = transpose(Tn) @ iR @ Tn;
+    TntiRYn = transpose(Tn) @ iR @ dt;
+    print(solve(TntiRTn, TntiRYn) )
+    print(inv(TntiRTn)@TntiRYn )
     

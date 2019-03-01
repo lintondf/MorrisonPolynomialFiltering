@@ -274,7 +274,7 @@ public class Transpiler {
 		// PASS 2 - handle all imports, variable, function, and class declarations
 		DeclarationsListener declarationsListener = new DeclarationsListener(this, moduleScope);
 		walker.walk(declarationsListener, tree);
-		if (false) {
+		if (true) {
 			System.out.println("\n\n-------------------------------------");
 			System.out.println("--SYMBOL TABLE\n");
 			System.out.println( symbolTable.toString() );
@@ -314,10 +314,10 @@ public class Transpiler {
 		// compileGrammar( "data", "LcdPython.g4",
 		// "src/com/bluelightning/tools/transpiler/antlr4/" );
 		Path base = Paths.get("../Python/src");
-//		Path dir = Paths.get("PolynomialFiltering");
-//		String module = "Main";
-		Path dir = Paths.get("");
-		String module = "TranspilerTest";
+		Path dir = Paths.get("PolynomialFiltering");
+		String module = "Main";
+//		Path dir = Paths.get("");
+//		String module = "TranspilerTest";
 		ArrayList<String> dottedModule = new ArrayList<>();
 		for (int i = 0; i < dir.getNameCount(); i++) {
 			if (! dir.getName(i).toString().isEmpty())

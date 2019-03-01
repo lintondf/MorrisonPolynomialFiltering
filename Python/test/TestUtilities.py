@@ -3,6 +3,8 @@ Created on Feb 15, 2019
 
 @author: NOOK
 '''
+
+import time
 from math import sin, cos
 import numpy as np
 from numpy import array, array2string, diag, eye, ones, zeros
@@ -10,6 +12,7 @@ from numpy.random import randn
 from scipy.linalg.matfuncs import expm
 from scipy.stats import chi2
 from scipy.stats._continuous_distns import norm
+from PolynomialFiltering.Main import AbstractFilter
 
 # def stateTransitionMatrix(N : int, dt : float) -> array:
 #     '''
@@ -22,16 +25,9 @@ from scipy.stats._continuous_distns import norm
 #     B = (diag(ones([N-1]),k=1))
 #     return expm(dt*B)
 
-def stateTransitionMatrix(N : int, dt : float) -> array:
-    B = eye(N)
-    for i in range(0,N) :
-        for j in range(i+1,N):
-            ji = j-i
-            fji = ji
-            for x in range(2,ji) :
-                fji *= x 
-            B[i,j] = pow(dt,ji)/fji
-    return B
+def stateTransitionMatrix(N : int, dt : float) -> array:        
+    B = (diag(ones([N-1]),k=1))
+    return expm(dt*B)
 
 def generateTestData(order, N, t0, Y0, dt, bias=0.0, sigma=1.0):
     if (order >= 0) :
@@ -122,11 +118,10 @@ def box_m(n_1,C0,n_2,C1):
      
 if __name__ == '__main__':
     pass
-    print( norm.cdf(1., loc=0.997, scale=0.0285) - 0.5 )
-    print( norm.cdf(0.876, loc=0.997, scale=0.0285) - 0.5 )
-    print( norm.cdf(1.06, loc=0.997, scale=0.0285) - 0.5 )
+#     print( norm.cdf(1., loc=0.997, scale=0.0285) - 0.5 )
+#     print( norm.cdf(0.876, loc=0.997, scale=0.0285) - 0.5 )
+#     print( norm.cdf(1.06, loc=0.997, scale=0.0285) - 0.5 )
     
-    print( stateTransitionMatrix(4, 0.1))
 #     box_m(5000, np.cov(randn(2,5000)), 400000, np.eye(2,2))
 #     Y0 = array([1e4, 1e3, 1e2, 1e1, 1e0, 1e-1]);
 #     N = 10;

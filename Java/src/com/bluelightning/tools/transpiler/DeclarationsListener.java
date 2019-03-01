@@ -28,20 +28,21 @@ class DeclarationsListener extends LcdPythonBaseListener {
 			return this.transpiler.valueMap.get(ctx.getChild(iChild).getPayload());
 		}
 
-		protected void declareSymbol( Token token, String declaration ) {
+		protected Symbol declareSymbol( Token token, String declaration ) {
 			declaration = declaration.trim().replaceAll(" +", " ");
 			String[] fields = declaration.split(":");
 			if (fields.length == 2) {
 				Scope currentScope = scopeStack.peek();
-				this.transpiler.symbolTable.add(currentScope, fields[0], fields[1]);
+				return transpiler.symbolTable.add(currentScope, fields[0], fields[1]);
 			} else {
 				this.transpiler.reportError(token, "Ill-formed declaration: " + declaration );
 			}
+			return null;
 		}
 		
 		@Override
 		public void enterFuncdef(LcdPythonParser.FuncdefContext ctx) {
-//			dumpChildren( ctx );
+			transpiler.dumpChildren( ctx );
 			Scope currentScope = scopeStack.peek();
 			String name = getChildText(ctx, 1);
 			Scope functionScope = currentScope.getChild(Scope.Level.FUNCTION, name);
@@ -49,8 +50,9 @@ class DeclarationsListener extends LcdPythonBaseListener {
 				this.transpiler.reportError(ctx.start, "Invalid function scope");
 			}
 			scopeStack.push( functionScope );
-			this.transpiler.symbolTable.add(functionScope, name, getChildText(ctx, 4)); 
-			this.transpiler.scopeMap.put( ctx.getPayload(), functionScope );
+			Symbol symbol = transpiler.symbolTable.add(functionScope, name, getChildText(ctx, 4));
+			Symbol.FunctionParametersInfo fpi = new Symbol.FunctionParametersInfo();
+			transpiler.scopeMap.put( ctx.getPayload(), functionScope );
 			ParseTree parameterDeclaration = ctx.getChild(2);
 			if (parameterDeclaration.getChildCount() > 2) {
 				ParseTree parameters = parameterDeclaration.getChild(1);
@@ -63,11 +65,14 @@ class DeclarationsListener extends LcdPythonBaseListener {
 						continue;
 					}
 //					System.out.printf("P %10d : [%s]\n", i, declaration);
-					if ( !declaration.equals("self")) {
-						declareSymbol( ctx.getStart(), declaration);
+					if ( declaration.equals("self")) {
+						declaration += ":"+currentScope.getLast();
 					}
+					Symbol p = declareSymbol( ctx.getStart(), declaration);
+					fpi.parameters.add(p);
 				}
 			}
+			symbol.setFunctionParametersInfo(fpi);
 		}
 
 		@Override
@@ -78,7 +83,6 @@ class DeclarationsListener extends LcdPythonBaseListener {
 
 		@Override
 		public void enterClassdef(LcdPythonParser.ClassdefContext ctx) {
-//			dumpChildren( ctx );
 			Scope currentScope = scopeStack.peek();
 			String name = getChildText(ctx, 1);
 			Scope classScope = currentScope.getChild(Scope.Level.CLASS, name);
@@ -87,6 +91,13 @@ class DeclarationsListener extends LcdPythonBaseListener {
 			}
 			scopeStack.push( classScope );
 			this.transpiler.symbolTable.add(classScope, name, "<CLASS>"); 
+			Symbol symbol = transpiler.symbolTable.lookup(classScope, name);
+			Symbol.SuperClassInfo sci = new Symbol.SuperClassInfo();
+			sci.superClass = null;
+			if (ctx.getChildCount() >= 5) {
+				sci.superClass = getChildText(ctx, 3);
+			}
+			symbol.setSuperClassInfo(sci);
 			this.transpiler.scopeMap.put( ctx.getPayload(), classScope );
 		}
 
@@ -107,6 +118,14 @@ class DeclarationsListener extends LcdPythonBaseListener {
 		public void enterImport_from(LcdPythonParser.Import_fromContext ctx) { 
 //			dumpChildren( ctx );
 		}
+		
+//		//atom_expr: (AWAIT)? atom trailer*;
+//		//trailer: '(' (arglist)? ')' | '[' subscriptlist ']' | '.' NAME;				
+//		@Override
+//		public void exitAtom_expr(LcdPythonParser.Atom_exprContext ctx) {
+//			
+//		}
+		
 		
 		@Override
 		public void enterAtom(LcdPythonParser.AtomContext ctx) {

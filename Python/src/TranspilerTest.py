@@ -5,7 +5,7 @@ def test0(n : int, m : int) -> int:
 
 def test1(A : array, B: array, D:int) -> array:
     '''@N : int'''
-    test0(5, 7);
+#    test0(5, 7);
     '''@C : array'''
     C = A + (B + A/D)*B;
 #     C = A + B + A*B;
@@ -17,9 +17,9 @@ def test1(A : array, B: array, D:int) -> array:
 
 class testClass :
     '''@N : int'''
-    
+    '''@r : array - test array'''
     def __init__(self):
-        pass;
+        self.method(1+2*3).r[self.N,1].s.t = 4;
     
     def method(self, n : int) -> float:
         return 1.0*n;

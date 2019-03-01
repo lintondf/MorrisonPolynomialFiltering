@@ -6,16 +6,21 @@ https://filterpy.readthedocs.io/en/latest/kalman/UnscentedKalmanFilter.html
 '''
 from abc import ABC, abstractmethod
 from enum import Enum, auto
-from numpy import array, zeros, isscalar, diag, ones
+from numpy import array, eye, zeros, isscalar, diag, ones
 from scipy.linalg.matfuncs import expm
 # from typing import str
 
 class FilterStatus(Enum):
-    IDLE = auto()         # Filter is awaiting the first observation    
-    INITIALIZING = auto() # Filter has processed one or more observations, but status estimate is not reliable
-    RUNNING = auto()      # Filter status estimate is reliable 
-    COASTING = auto()     # Filter has not received a recent observation, but the predicted status should be usable
-    RESETING = auto()     # Filter coast interval has been exceed and it will reinitialize on the next observation
+    '''@IDLE : enum'''
+    IDLE = 0;        # Filter is awaiting the first observation    
+    '''@INITIALIZING : enum'''
+    INITIALIZING = 1; # Filter has processed one or more observations, but status estimate is not reliable
+    '''@RUNNING : enum'''
+    RUNNING = 2;      # Filter status estimate is reliable 
+    '''@COASTING : enum'''
+    COASTING = 3;     # Filter has not received a recent observation, but the predicted status should be usable
+    '''@RESETING : enum'''
+    RESETING = 4;     # Filter coast interval has been exceed and it will reinitialize on the next observation
         
 
 class AbstractFilter(ABC):
@@ -49,8 +54,15 @@ class AbstractFilter(ABC):
         :param N: return matrix is (N,N)
         :param dt: time step
         '''
-        B = (diag(ones([N-1]),k=1))
-        return expm(dt*B)
+        B = eye(N)
+        for i in range(0,N) :
+            for j in range(i+1,N):
+                ji = j-i
+                fji = ji
+                for x in range(2,ji) :
+                    fji *= x 
+                B[i,j] = pow(dt,ji)/fji
+        return B
     
     
     def getName(self):
