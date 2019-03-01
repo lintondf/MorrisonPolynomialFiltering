@@ -50,7 +50,8 @@ class DeclarationsListener extends LcdPythonBaseListener {
 				this.transpiler.reportError(ctx.start, "Invalid function scope");
 			}
 			scopeStack.push( functionScope );
-			Symbol symbol = transpiler.symbolTable.add(functionScope, name, getChildText(ctx, 4));
+			System.out.println(currentScope + " " + functionScope + " " + name + " " + getChildText(ctx, 4) );
+			Symbol symbol = transpiler.symbolTable.add(currentScope, name, getChildText(ctx, 4));
 			Symbol.FunctionParametersInfo fpi = new Symbol.FunctionParametersInfo();
 			transpiler.scopeMap.put( ctx.getPayload(), functionScope );
 			ParseTree parameterDeclaration = ctx.getChild(2);
@@ -73,12 +74,23 @@ class DeclarationsListener extends LcdPythonBaseListener {
 				}
 			}
 			symbol.setFunctionParametersInfo(fpi);
+			System.out.println("FUNCDEF " + symbol.toString());
 		}
 
 		@Override
 		public void exitFuncdef(LcdPythonParser.FuncdefContext ctx) {
 //			dumpChildren( ctx );
 			scopeStack.pop();
+		}
+		
+		@Override public void exitDecorated(LcdPythonParser.DecoratedContext ctx) { 
+//			transpiler.dumpChildren(ctx);
+			String decoration = getChildText(ctx, 0).trim();
+			String functionName = transpiler.valueMap.get(ctx.getChild(1).getChild(1).getPayload()).trim();
+			System.out.println( functionName + " @ " + decoration + " " + scopeStack.peek());
+			Symbol symbol = transpiler.symbolTable.lookup(scopeStack.peek(), functionName);
+			Symbol.FunctionParametersInfo fpi = symbol.getFunctionParametersInfo();
+			fpi.decorators.add(decoration);
 		}
 
 		@Override
@@ -90,8 +102,7 @@ class DeclarationsListener extends LcdPythonBaseListener {
 				this.transpiler.reportError(ctx.start, "Invalid class scope");
 			}
 			scopeStack.push( classScope );
-			this.transpiler.symbolTable.add(classScope, name, "<CLASS>"); 
-			Symbol symbol = transpiler.symbolTable.lookup(classScope, name);
+			Symbol symbol = transpiler.symbolTable.add(currentScope, name, "<CLASS>"); 
 			Symbol.SuperClassInfo sci = new Symbol.SuperClassInfo();
 			sci.superClass = null;
 			if (ctx.getChildCount() >= 5) {

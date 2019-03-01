@@ -70,7 +70,7 @@ public class Transpiler {
 //		if (ctx.getChildCount() > 1) {
 			parser.getRuleIndexMap().get(ctx.getRuleContext().getRuleIndex());
 			System.out.println(parser.getRuleNames()[ctx.getRuleContext().getRuleIndex()].toUpperCase() + " "
-					+ ctx.getChildCount() + " " + ctx.getText());
+					+ ctx.getChildCount() ); // + " " + ctx.getText());
 			for (int i = 0; i < ctx.getChildCount(); i++) {
 				System.out.printf("%10d: %-30s %s\n", i,
 						ctx.getChild(i).getPayload().getClass().getSimpleName(),

@@ -29,7 +29,7 @@ class AbstractFilter(ABC):
     '''
 
 
-    def __init__(self, name : str = ''):
+    def __init__(self, name : str = '') -> None:
         '''
         Constructor
         '''
@@ -65,7 +65,7 @@ class AbstractFilter(ABC):
         return B
     
     
-    def getName(self):
+    def getName(self) -> str:
         return self.name
     
     def setName(self, name : str) -> str:
@@ -74,7 +74,7 @@ class AbstractFilter(ABC):
     def getStatus(self) -> FilterStatus:
         return self.status    
         
-    def setStatus(self, status : FilterStatus):
+    def setStatus(self, status : FilterStatus) -> None:
         self.status = status
         
     @abstractmethod   
@@ -102,10 +102,10 @@ class ManagedFilterBase(AbstractFilter):
         raise NotImplementedError()
         
     @abstractmethod   
-    def add(self, t : float, y : array, observationId : str = ''):    
+    def add(self, t : float, y : array, observationId : str = '') -> None:    
         raise NotImplementedError()
 
     @abstractmethod   
-    def addWithVariance(self, t : float, y : array, R : array, observationId : str = ''):    
+    def addWithVariance(self, t : float, y : array, R : array, observationId : str = '') -> None:    
         self.add(t, y, observationId=observationId);
 

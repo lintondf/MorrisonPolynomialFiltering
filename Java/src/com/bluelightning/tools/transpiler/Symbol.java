@@ -2,6 +2,8 @@ package com.bluelightning.tools.transpiler;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 class Symbol {
 	
@@ -15,9 +17,25 @@ class Symbol {
 	
 	public static class FunctionParametersInfo {
 		public List<Symbol> parameters;
+		public Set<String>  decorators;
 		
 		public FunctionParametersInfo() {
 			parameters = new ArrayList<>();
+			decorators = new TreeSet<>();
+		}
+		
+		public String toString() {
+			StringBuilder sb = new StringBuilder();
+			for (Symbol parameter : parameters) {
+				sb.append( parameter.toString() );
+				sb.append( "," );
+			}
+			sb.append( " | ");
+			for (String dec : decorators) {
+				sb.append(dec);
+				sb.append(";");
+			}
+			return sb.toString();
 		}
 	}
 	
@@ -28,16 +46,13 @@ class Symbol {
 	protected FunctionParametersInfo functionParametersInfo = null;
 	
 	public String toString() {
-		String r = String.format("%s : %s", name, type );
+		String r = String.format("%s::%s : %s", scope.toString(), name, type );
 		if  (superClassInfo != null) {
-			r += "(" +  superClassInfo.superClass + ")";
+			r += "; supers(" +  superClassInfo.superClass + ")";
 		}
 		if (functionParametersInfo != null) {
-			r += "(";
-			for (Symbol parameter : functionParametersInfo.parameters) {
-				r += parameter.toString();
-				r += ",";
-			}
+			r += "; params(";
+			r += functionParametersInfo.toString();
 			r += ")";
 		}
 		return r;

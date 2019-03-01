@@ -82,6 +82,7 @@ public class CppBoostTarget implements ILanguageTarget {
 		private Map<String, String> typeRemap = new HashMap<>();
 		
 		public BoostProgrammer() {
+			typeRemap.put("None", "void");
 			typeRemap.put("int", "long");
 			typeRemap.put("float", "double");
 			typeRemap.put("vector", "RealVector");
@@ -221,11 +222,11 @@ public class CppBoostTarget implements ILanguageTarget {
 	public void startMethod(Scope scope) {
 		currentScope = scope;
 		String currentFunction = scope.getLast();
-		Symbol symbol = Transpiler.instance().symbolTable.lookup(currentScope, currentFunction);
+		Symbol symbol = Transpiler.instance().symbolTable.lookup(currentScope.getParent(), currentFunction);
 		Symbol.FunctionParametersInfo fpi = symbol.getFunctionParametersInfo();
 		if (symbol != null && fpi != null) {
 			if (currentClass == null) { // non-class function
-				
+				//TODO
 			} else { // class member
 				String name = symbol.getName();
 				String type = programmer.remapType(symbol.getType()) + " ";
@@ -233,7 +234,7 @@ public class CppBoostTarget implements ILanguageTarget {
 					name = currentClass;
 					type = "";
 				}
-//				System.out.println(">>> " + currentClass + "::" + currentFunction + fpi.toString());
+				System.out.println(">>> " + currentClass + "::" + currentFunction + fpi.toString());
 				hppBody.append( indent.toString() );
 				StringBuilder p = new StringBuilder();
 				for (Symbol parameter : fpi.parameters ) {
@@ -248,11 +249,23 @@ public class CppBoostTarget implements ILanguageTarget {
 					p.append( parameter.getName() );
 				}
 				String decl = String.format("%s%s(%s)", type, name, p.toString() ); 
+				if (fpi.decorators.contains("@classmethod")) {
+					hppBody.append("static ");
+				}
 				hppBody.append(decl);
+				
+				if (fpi.decorators.contains("@abstractmethod")) {
+					hppBody.append(" = 0");
+				}
 				hppBody.append(";\n");
-				decl = String.format("%s%s::%s (%s)", type, currentClass, name, p.toString() );
-				cppBody.append(decl);
-				cppBody.append(" {\n");
+				if (! fpi.decorators.contains("@abstractmethod")) {
+					decl = String.format("%s%s::%s (%s)", type, currentClass, name, p.toString() );
+					if (fpi.decorators.contains("@classmethod")) {
+						cppBody.append(" static");
+					}
+					cppBody.append(decl);
+					cppBody.append(" {\n");
+				}
 			}
 		}
 		indent.in();		
@@ -352,7 +365,6 @@ public class CppBoostTarget implements ILanguageTarget {
 		} else if (root.getChildCount() > 0) { // function call
 			System.out.println("?2 " + root.getChild(0).getClass().getSimpleName() + " " + root.getChild(0).toString() );				
 		}
-		
 		programmer.finishExpression(out);
 		if (inEnum) {
 			out.append(",");			
