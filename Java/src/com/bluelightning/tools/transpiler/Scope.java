@@ -6,12 +6,16 @@ import java.util.List;
 class Scope {
 		protected String[] qualifiers; // e.g. com.bluelightning.Filtering
 		public enum Level {
-			MODULE, FUNCTION, CLASS, MEMBER,
+			IMPORT, MODULE, FUNCTION, CLASS, MEMBER,
 		};
 		protected Level  level;
 		protected String qString;
 		
-		protected Scope() {}
+		protected Scope() {
+			level = Level.IMPORT;
+			this.qualifiers = new String[] {""};
+			this.qString = "/";
+		}
 		
 		public Scope( Scope.Level level, List<String> qualifiers) {
 			this.level = level;
@@ -32,8 +36,19 @@ class Scope {
 //			System.out.println( this.toString() );
 			Scope scope = new Scope();
 			switch (level) {
+			case IMPORT:
+				switch (childLevel) {
+				case MODULE:
+					scope.level = childLevel;
+					break;
+				default:
+					return null;
+				}
+				break; 
+				
 			case MODULE: 
 				switch (childLevel) {
+				case MODULE: 
 				case FUNCTION:
 				case CLASS:
 					scope.level = childLevel;
@@ -70,8 +85,11 @@ class Scope {
 		public Scope getParent() {
 			Scope scope = new Scope();
 			switch (level) {
-			case MODULE:
+			case IMPORT:
 				return null;
+			case MODULE:
+				scope.level = Level.MODULE;
+				break;
 			case FUNCTION:
 				scope.level = Level.MODULE;
 				break;
@@ -82,6 +100,8 @@ class Scope {
 				scope.level = Level.CLASS;
 				break;
 			}
+			if (this.qualifiers.length == 0)
+				return null;
 			scope.qualifiers = new String[this.qualifiers.length-1];
 			StringBuffer sb = new StringBuffer();
 			for (int i = 0; i < scope.qualifiers.length; i++) {

@@ -1,13 +1,14 @@
 /***** ${scope}
- * SPDX-License-Identifier: MIT
- *
  * (C) Copyright 2019 - Blue Lightning Development, LLC.
  * D. F. Linton. support@BlueLightningDevelopment.com
  *
+ * SPDX-License-Identifier: MIT
+ * See separate LICENSE file for full text
+ *
  * AUTO-GENERATED C++
  */
-#define ${hppDefine}
 #ifndef ${hppDefine}
+#define ${hppDefine}
 
 ${systemIncludes}
 #include "PolynomialFiltering.hpp"

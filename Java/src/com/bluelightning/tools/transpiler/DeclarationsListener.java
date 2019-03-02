@@ -50,7 +50,6 @@ class DeclarationsListener extends LcdPythonBaseListener {
 				this.transpiler.reportError(ctx.start, "Invalid function scope");
 			}
 			scopeStack.push( functionScope );
-			System.out.println(currentScope + " " + functionScope + " " + name + " " + getChildText(ctx, 4) );
 			Symbol symbol = transpiler.symbolTable.add(currentScope, name, getChildText(ctx, 4));
 			Symbol.FunctionParametersInfo fpi = new Symbol.FunctionParametersInfo();
 			transpiler.scopeMap.put( ctx.getPayload(), functionScope );
@@ -65,7 +64,6 @@ class DeclarationsListener extends LcdPythonBaseListener {
 						i++;
 						continue;
 					}
-//					System.out.printf("P %10d : [%s]\n", i, declaration);
 					if ( declaration.equals("self")) {
 						declaration += ":"+currentScope.getLast();
 					}
@@ -74,7 +72,6 @@ class DeclarationsListener extends LcdPythonBaseListener {
 				}
 			}
 			symbol.setFunctionParametersInfo(fpi);
-			System.out.println("FUNCDEF " + symbol.toString());
 		}
 
 		@Override
@@ -87,7 +84,6 @@ class DeclarationsListener extends LcdPythonBaseListener {
 //			transpiler.dumpChildren(ctx);
 			String decoration = getChildText(ctx, 0).trim();
 			String functionName = transpiler.valueMap.get(ctx.getChild(1).getChild(1).getPayload()).trim();
-			System.out.println( functionName + " @ " + decoration + " " + scopeStack.peek());
 			Symbol symbol = transpiler.symbolTable.lookup(scopeStack.peek(), functionName);
 			Symbol.FunctionParametersInfo fpi = symbol.getFunctionParametersInfo();
 			fpi.decorators.add(decoration);

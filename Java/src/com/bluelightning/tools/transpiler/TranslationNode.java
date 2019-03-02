@@ -41,7 +41,7 @@ public class TranslationNode  {
 	}
 	
 	public String toString() {
-		return String.format("%s (%d)", name, children.size() );
+		return String.format("[%d] %s ", children.size(), name );
 //		return name + " C#" + children.size() + ((parent == null) ? "?" : parent.toString());
 	}
 

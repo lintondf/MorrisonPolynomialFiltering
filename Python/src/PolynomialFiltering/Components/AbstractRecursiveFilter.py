@@ -48,6 +48,17 @@ class AbstractRecursiveFilter(IRecursiveFilter):
         for d in range(0,self.order+1):
             self.D[d] = pow(self.tau, d)
         
+    def conformState(self, state : array) -> array:
+        '''@Z : array'''
+        '''@m : int'''
+        Z = zeros([self.order+1])
+        if isscalar(state) :
+            Z[0] = state
+        else:
+            m = min( self.order+1, len(state))
+            Z[0:m] = state[0:m]
+        return Z
+        
     def start(self, t : float, Z : array) -> None:
         self.n = 0;
         self.t0 = t;

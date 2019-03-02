@@ -5,10 +5,8 @@ Created on Feb 13, 2019
 https://filterpy.readthedocs.io/en/latest/kalman/UnscentedKalmanFilter.html
 '''
 from abc import ABC, abstractmethod
-from enum import Enum, auto
-from numpy import array, eye, zeros, isscalar, diag, ones
-from scipy.linalg.matfuncs import expm
-# from typing import str
+from enum import Enum
+from numpy import array, eye, zeros, isscalar
 
 class FilterStatus(Enum):
     '''@IDLE : enum'''
@@ -27,7 +25,9 @@ class AbstractFilter(ABC):
     '''
     classdocs
     '''
-
+    
+    '''@name : str'''
+    '''@status : FilterStatus'''
 
     def __init__(self, name : str = '') -> None:
         '''
@@ -35,15 +35,6 @@ class AbstractFilter(ABC):
         '''
         self.setStatus( FilterStatus.IDLE )
         self.name = name
-        
-    def conformState(self, state : array) -> array:
-        Z = zeros([self.order+1])
-        if isscalar(state) :
-            Z[0] = state
-        else:
-            m = min( self.order+1, len(state))
-            Z[0:m] = state[0:m]
-        return Z
         
     @classmethod            
     def stateTransitionMatrix(self, N : int, dt : float) -> array:
@@ -54,6 +45,12 @@ class AbstractFilter(ABC):
         :param N: return matrix is (N,N)
         :param dt: time step
         '''
+        '''@B: array'''
+        '''@i : int'''
+        '''@j : int'''
+        '''@ji : int'''
+        '''@fji : float'''
+        
         B = eye(N)
         for i in range(0,N) :
             for j in range(i+1,N):
@@ -82,7 +79,7 @@ class AbstractFilter(ABC):
         raise NotImplementedError()
         
     @abstractmethod   
-    def getTime(self) -> array:
+    def getTime(self) -> float:
         raise NotImplementedError()
     
     @abstractmethod   
@@ -108,4 +105,3 @@ class ManagedFilterBase(AbstractFilter):
     @abstractmethod   
     def addWithVariance(self, t : float, y : array, R : array, observationId : str = '') -> None:    
         self.add(t, y, observationId=observationId);
-

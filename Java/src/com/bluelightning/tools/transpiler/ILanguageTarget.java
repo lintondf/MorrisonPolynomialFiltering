@@ -30,4 +30,10 @@ public interface ILanguageTarget {
 	
 	public void emitExpressionStatement( Scope scope, TranslationNode root );
 	
+	public void emitSubExpression( Scope scope, TranslationNode root );
+	
+	public void emitReturnStatement();
+	
+	public void emitCloseStatement();
+	
 }

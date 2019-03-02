@@ -14,6 +14,8 @@ public class TranslationSymbolNode extends TranslationNode {
 	TranslationSymbolNode(TranslationNode parent, Symbol symbol) {
 		super(parent, "<SYMBOL>" + symbol);
 		this.symbol = symbol;
+		if (symbol == null)
+			throw new NullPointerException();
 	}
 
 	public Symbol getSymbol() {

@@ -7,8 +7,10 @@
 package com.bluelightning.tools.transpiler;
 
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
 import java.io.Writer;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -29,6 +31,9 @@ import org.antlr.v4.runtime.tree.ParseTreeListener;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
 import org.antlr.v4.runtime.tree.RuleNode;
 import org.antlr.v4.runtime.tree.TerminalNode;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.bluelightning.tools.transpiler.antlr4.LcdPythonBaseListener;
 import com.bluelightning.tools.transpiler.antlr4.LcdPythonBaseVisitor;
@@ -47,6 +52,8 @@ import freemarker.template.TemplateExceptionHandler;
  *
  */
 public class Transpiler {
+	
+	protected Logger logger;
 	
 	protected StringBuffer errorReport = new StringBuffer();
 	
@@ -67,16 +74,27 @@ public class Transpiler {
 
 
 	protected void dumpChildren( RuleNode ctx ) {
-//		if (ctx.getChildCount() > 1) {
-			parser.getRuleIndexMap().get(ctx.getRuleContext().getRuleIndex());
-			System.out.println(parser.getRuleNames()[ctx.getRuleContext().getRuleIndex()].toUpperCase() + " "
+		dumpChildren( ctx, 0 );
+	}
+	
+	protected void dumpChildren( RuleNode ctx, int indent ) {
+		if (ctx.getChildCount() == 1) {
+			if (ctx.getChild(0) instanceof RuleNode)
+				dumpChildren( (RuleNode) ctx.getChild(0), indent+1 );
+		} else {
+			//parser.getRuleIndexMap().get(ctx.getRuleContext().getRuleIndex());
+			System.out.println(StringUtils.repeat("  ", indent) + parser.getRuleNames()[ctx.getRuleContext().getRuleIndex()].toUpperCase() + " "
 					+ ctx.getChildCount() ); // + " " + ctx.getText());
 			for (int i = 0; i < ctx.getChildCount(); i++) {
-				System.out.printf("%10d: %-30s %s\n", i,
+				System.out.printf("%s%10d: %-30s %s\n", StringUtils.repeat("  ", indent), i,
 						ctx.getChild(i).getPayload().getClass().getSimpleName(),
 						valueMap.get(ctx.getChild(i).getPayload()));
+				if (indent > 0) {
+					if (ctx.getChild(i) instanceof RuleNode)
+						dumpChildren( (RuleNode) ctx.getChild(i), indent+1 );
+				}
 			}
-//		}
+		}
 	}
 	
 	protected Map<Object, String> valueMap = new HashMap<>();
@@ -90,7 +108,7 @@ public class Transpiler {
 		String[] fields = str.split(":");
 		if (fields.length == 2) {
 			symbolTable.add(scope, fields[0], fields[1]);
-			System.out.println("DECLARED: " + str);
+//			System.out.println("DECLARED: " + str);
 		} else {
 			reportError(token, "bad declaration syntax");
 		}
@@ -199,6 +217,26 @@ public class Transpiler {
 				target.emitSymbolDeclaration(symbol);
 			}
 		}
+
+		public void emitReturnStatement() {
+			for (ILanguageTarget target : targets) {
+				target.emitReturnStatement();
+			}
+		}
+
+		@Override
+		public void emitSubExpression(Scope scope, TranslationNode root) {
+			for (ILanguageTarget target : targets) {
+				target.emitSubExpression(scope, root);
+			}
+		}
+
+		@Override
+		public void emitCloseStatement() {
+			for (ILanguageTarget target : targets) {
+				target.emitCloseStatement();
+			}
+		}
 		
 	}
 
@@ -210,17 +248,46 @@ public class Transpiler {
 	protected class PopulateListener extends LcdPythonBaseListener {
 		@Override
 		public void exitEveryRule(ParserRuleContext ctx) {
+			if (parser.getRuleNames()[ctx.getRuleIndex()].equals("trailer")) {
+				int limit = ctx.getChildCount();
+				CommonToken token = (CommonToken) ctx.getChild(0).getPayload();
+				valueMap.put(ctx.getChild(0).getPayload(), token.getText());
+				switch (token.getText()) {
+				case "[":
+					limit--;
+					valueMap.put(ctx.getChild(limit).getPayload(), ((CommonToken)ctx.getChild(limit).getPayload()).getText());
+					break;
+				case "(":
+					limit--;
+					valueMap.put(ctx.getChild(limit).getPayload(), ((CommonToken)ctx.getChild(limit).getPayload()).getText());
+					break;
+				case ".":
+					break;
+				}
+				for (int i = 1; i < limit; i++) {
+					if (ctx.getChild(i).getPayload() instanceof CommonToken) {
+						valueMap.put(ctx.getChild(i).getPayload(), ((CommonToken)ctx.getChild(i).getPayload()).getText());
+					} else {
+						String value = valueMap.get(ctx.getChild(i).getPayload());
+						valueMap.put(ctx.getChild(i).getPayload(), value );
+					}
+				}
+				valueMap.put(ctx.getPayload(), ctx.getText() );
+				return;
+			}
 			StringBuffer result = new StringBuffer();
 			for (int i = 0; i < ctx.getChildCount(); i++) {
 				ParseTree child = ctx.getChild(i);
 				if (child.getPayload() instanceof CommonToken) {
 					result.append(child.getText());
+//					System.out.println( child.getText() + " : " + child.toStringTree(parser));
 					valueMap.put(child.getPayload(), child.getText());
 				} else {
 					result.append(valueMap.get(child.getPayload()));
 				}
 				//result.append(' ');
-			}
+			} 
+			//System.out.println( result.toString() + " : " + parser.getRuleNames()[ctx.getRuleIndex()] + " / " + ctx.toStringTree(parser));
 			valueMap.put(ctx.getPayload(), result.toString());
 		}
 	}
@@ -240,6 +307,10 @@ public class Transpiler {
 
 	public Transpiler(Path where, List<String> dottedModule) {
 		singleton = this;
+		
+		logger = LoggerFactory.getLogger("com.bluelightning.Transpiler");
+		logger.info("--------->Transpiler");
+		
 		try {
 			cfg = configure();
 		} catch (IOException | TemplateException e) {
@@ -258,8 +329,14 @@ public class Transpiler {
 			return;
 		}
 		
-		moduleScope = new Scope(Scope.Level.MODULE, dottedModule );
+		Scope importScope = new Scope();
+		moduleScope = importScope;
+		for (String dot : dottedModule) {
+			moduleScope = moduleScope.getChild(Scope.Level.MODULE, dot );
+		}
 		dispatcher.startModule(moduleScope);
+		
+		symbolTable.add( importScope, "eye", "array");
 
 		LcdPythonLexer java8Lexer = new LcdPythonLexer(CharStreams.fromString(content));
 		CommonTokenStream tokens = new CommonTokenStream(java8Lexer);
@@ -274,11 +351,15 @@ public class Transpiler {
 		// PASS 2 - handle all imports, variable, function, and class declarations
 		DeclarationsListener declarationsListener = new DeclarationsListener(this, moduleScope);
 		walker.walk(declarationsListener, tree);
-		if (true) {
-			System.out.println("\n\n-------------------------------------");
-			System.out.println("--SYMBOL TABLE\n");
-			System.out.println( symbolTable.toString() );
-			System.out.println("\n\n-------------------------------------");
+		try {
+			PrintWriter sym = new PrintWriter("out/symbols.txt");
+			sym.println("\n\n-------------------------------------");
+			sym.println("--SYMBOL TABLE\n");
+			sym.println( symbolTable.toString() );
+			sym.println("\n\n-------------------------------------");
+			sym.close();
+		} catch (Exception x) {
+			x.printStackTrace();
 		}
 		
 		ExpressionCompilationListener expressionCompilationListener = new ExpressionCompilationListener(this);
@@ -316,8 +397,10 @@ public class Transpiler {
 		Path base = Paths.get("../Python/src");
 		Path dir = Paths.get("PolynomialFiltering");
 		String module = "Main";
-//		Path dir = Paths.get("");
-//		String module = "TranspilerTest";
+		if (false) {
+			dir = Paths.get("");
+			module = "TranspilerTest";
+		}
 		ArrayList<String> dottedModule = new ArrayList<>();
 		for (int i = 0; i < dir.getNameCount(); i++) {
 			if (! dir.getName(i).toString().isEmpty())

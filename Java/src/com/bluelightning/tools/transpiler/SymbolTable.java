@@ -3,6 +3,7 @@ package com.bluelightning.tools.transpiler;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.TreeMap;
 
 class SymbolTable {
 		/**
@@ -17,7 +18,7 @@ class SymbolTable {
 			this.transpiler = transpiler;
 		}
 
-		protected Map<String, Map<String, Symbol> > table = new HashMap<>();
+		protected Map<String, Map<String, Symbol> > table = new TreeMap<>();
 		
 		public String toString() {
 			StringBuffer sb = new StringBuffer();
@@ -44,6 +45,7 @@ class SymbolTable {
 			aliases.put( scope.toString(), symbol ); //TODO collisions
 			table.put(name,  aliases);
 //			System.err.println(lookup(scope,name));
+			transpiler.valueMap.put(symbol, name );
 			return symbol;
 		}
 		

@@ -8,7 +8,7 @@ public class TranslationSubexpressionNode extends TranslationNode {
 	protected String type;
 
 	TranslationSubexpressionNode(TranslationNode parent, String name) {
-		super(parent, name);
+		super(parent, "<SUBEXPRESSION> " + name);
 	}
 	
 	public String getType() {

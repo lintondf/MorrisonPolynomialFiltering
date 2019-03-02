@@ -6,7 +6,10 @@ import java.util.regex.Pattern;
 
 import org.antlr.v4.runtime.CommonToken;
 import org.antlr.v4.runtime.ParserRuleContext;
+import org.antlr.v4.runtime.tree.ParseTree;
+import org.antlr.v4.runtime.tree.RuleNode;
 
+import com.bluelightning.tools.transpiler.TranslationConstantNode.Kind;
 import com.bluelightning.tools.transpiler.antlr4.LcdPythonBaseListener;
 import com.bluelightning.tools.transpiler.antlr4.LcdPythonParser;
 
@@ -16,6 +19,10 @@ class ExpressionCompilationListener extends LcdPythonBaseListener {
 		 * 
 		 */
 		private final Transpiler transpiler;
+		Scope scope = null;
+		TranslationNode expressionRoot = null;
+		HashMap<Object, TranslationNode> translateMap = null;
+		
 		
 		/**
 		 * @param transpiler
@@ -23,14 +30,8 @@ class ExpressionCompilationListener extends LcdPythonBaseListener {
 		ExpressionCompilationListener(Transpiler transpiler) {
 			this.transpiler = transpiler;
 			scope = this.transpiler.moduleScope;
-			System.out.println("module > " + scope);
+			transpiler.logger.info("module > " + scope);
 		}
-
-		Scope scope = null;
-		TranslationNode expressionRoot = null;
-		HashMap<Object, TranslationNode> translateMap = null;
-		
-
 		
 		protected static final Pattern integerPattern = Pattern.compile("^(\\d+)$");
 		protected static final Pattern floatPattern = Pattern.compile("^(\\d+)\\.(\\\\d*)$");
@@ -53,6 +54,7 @@ class ExpressionCompilationListener extends LcdPythonBaseListener {
 					parent.analyze();
 					return node;
 				} else if (ctx.getChildCount() == 2) {
+					transpiler.dumpChildren(ctx);
 					TranslationNode node = new TranslationUnaryNode( parent, 
 							ctx.getChild(0).getPayload(), ctx.getChild(1).getPayload());
 				} else {
@@ -65,13 +67,20 @@ class ExpressionCompilationListener extends LcdPythonBaseListener {
 					}
 					for (int i = 1; i < ctx.getChildCount(); i += 2) {
 						String operator = this.transpiler.valueMap.get(ctx.getChild(i).getPayload());
-						node = new TranslationOperatorNode( parent, operator );
+						if (operator.startsWith(".")) {
+//							transpiler.dumpChildren((RuleNode) ctx.getChild(i) );
+							Symbol symbol = transpiler.symbolTable.lookup(scope, operator.substring(1));
+							node = new TranslationUnaryNode( parent, ctx.getChild(i).getChild(0).getPayload(), symbol );
+						} else {
+							node = new TranslationOperatorNode( parent, operator );
+						}
 						node = getOperandNode( ctx, parent, ctx.getChild(i+1).getPayload());
 						if (node == null) {
 							transpiler.reportError(ctx, "No operand node: " + (i+1));
 						}
 					}
 				}
+//				parent.traverse(2); /////////////
 				translateMap.put( ctx.getPayload(), parent );
 				parent.analyze();
 				return parent;
@@ -93,19 +102,19 @@ class ExpressionCompilationListener extends LcdPythonBaseListener {
 				return node;
 			}
 			if (value.startsWith("'") || value.startsWith("\"")) {
-				node = new TranslationConstantNode( parent, value );
+				node = new TranslationConstantNode( parent, value, Kind.STRING );
 				translateMap.put( payload, node );
 				return node;
 			}
 			Matcher matcher = integerPattern.matcher(value);
 			if (matcher.matches()) {
-				node = new TranslationConstantNode( parent, value );
+				node = new TranslationConstantNode( parent, value, Kind.INTEGER );
 				translateMap.put( payload, node );
 				return node;				
 			}
 			matcher = floatPattern.matcher(value);
 			if (matcher.matches()) {
-				node = new TranslationConstantNode( parent, value );
+				node = new TranslationConstantNode( parent, value, Kind.FLOAT );
 				translateMap.put( payload, node );
 				return node;				
 			}
@@ -115,29 +124,49 @@ class ExpressionCompilationListener extends LcdPythonBaseListener {
 		@Override
 		public void enterClassdef(LcdPythonParser.ClassdefContext ctx) {
 			scope = this.transpiler.scopeMap.get(ctx.getPayload());
-			System.out.println("class > " + scope);
+//			System.out.println("class > " + scope);
 			transpiler.dispatcher.startClass(scope);
 		}
 		
 		@Override
 		public void exitClassdef(LcdPythonParser.ClassdefContext ctx) {
 			scope = scope.getParent();
-			System.out.println("class < " + scope);
+//			System.out.println("class < " + scope);
 			transpiler.dispatcher.finishClass(scope);
 		}
 		
 		@Override
 		public void enterFuncdef(LcdPythonParser.FuncdefContext ctx) {
 			scope = this.transpiler.scopeMap.get(ctx.getPayload());
-			System.out.println("function > " + scope);
+//			System.out.println("function > " + scope);
 			transpiler.dispatcher.startMethod(scope);
 		}
 		
 		@Override
 		public void exitFuncdef(LcdPythonParser.FuncdefContext ctx) {
 			scope = scope.getParent();
-			System.out.println("function < " + scope);
+//			System.out.println("function < " + scope);
 			transpiler.dispatcher.finishMethod(scope);
+		}
+		
+		@Override 
+		public void enterReturn_stmt(LcdPythonParser.Return_stmtContext ctx) {
+			expressionRoot = new TranslationSubexpressionNode(null, "RETURN_STMT");
+			translateMap = new HashMap<>();
+			
+		}
+		// return_stmt: 'return' (testlist)?;
+		@Override 
+		public void exitReturn_stmt(LcdPythonParser.Return_stmtContext ctx) { 
+			transpiler.dispatcher.emitReturnStatement();
+			if (ctx.getChildCount() > 1) {
+				expressionRoot = translateMap.get( ctx.getChild(1).getPayload() );
+				System.out.println("RETURN< " + expressionRoot.toString() );
+				System.out.println( expressionRoot.traverse(1));
+				transpiler.dispatcher.emitSubExpression(scope, expressionRoot);
+				transpiler.dispatcher.emitCloseStatement();
+			}
+			expressionRoot = null;
 		}
 		
 		
@@ -146,7 +175,7 @@ class ExpressionCompilationListener extends LcdPythonBaseListener {
 			String value = this.transpiler.valueMap.get(ctx.getPayload());
 			if (! value.startsWith("'''")) {
 				System.out.println("EXPR_STMT> [{" + value + "}] <- " + ctx.toStringTree(transpiler.parser));
-//				this.transpiler.dumpChildren( ctx );
+//				this.transpiler.dumpChildren( ctx, 1 );
 				expressionRoot = new TranslationSubexpressionNode(null, value);
 				translateMap = new HashMap<>();
 			} else if (value.startsWith("'''@")) {
@@ -166,11 +195,22 @@ class ExpressionCompilationListener extends LcdPythonBaseListener {
 				TranslationNode expr = defaultOperandOperator( ctx, expressionRoot.name );
 				expr.analyze();
 				expressionRoot = expr;
+//				System.out.println("EXPR_STMT< " + expr.toString() );
+//				System.out.println( expr.traverse(1));
+				while (expressionRoot.getChildCount() == 1) {
+					expr = expressionRoot.getChild(0);
+					if (expr.getChildCount() == 0)
+						break;
+					expressionRoot = expr;
+				}
 				if ( ! transpiler.valueMap.get(ctx.getPayload()).startsWith("'''@")) {
-					System.out.println( expressionRoot.traverse(0) );
+//					System.out.println( expr.traverse(1));
 					transpiler.dispatcher.emitExpressionStatement(scope, expressionRoot);
+				} else {
+					//TODO docstring?
 				}
 			}
+			expressionRoot = null;
 		}		
 		
 		@Override
@@ -196,24 +236,34 @@ class ExpressionCompilationListener extends LcdPythonBaseListener {
 
 		@Override 
 		public void exitTrailer(LcdPythonParser.TrailerContext ctx) { 
-			transpiler.dumpChildren(ctx);
+//			transpiler.dumpChildren(ctx);
 			//defaultOperandOperator( ctx, "trailer" );	
 			String operator = transpiler.valueMap.get(ctx.getChild(0).getPayload());
-			TranslationSubexpressionNode parent = new TranslationSubexpressionNode(null, operator);
+			TranslationSubexpressionNode parent = new TranslationListNode(null, operator);
 			TranslationNode node = null;
 			switch (operator) {
 			case "(": // function argument list
 			case "[": // array subscripts
-				for (int i = 1; i < ctx.getChildCount()-1; i++) {
-					node = translateMap.get(ctx.getChild(i).getPayload());
-					parent.adopt(node);
+				if (ctx.getChildCount() > 2) {
+					ParseTree list = ctx.getChild(1);
+					for (int i = 0; i < list.getChildCount(); i += 2) {
+						node = getOperandNode(ctx, parent, list.getChild(i).getPayload());
+						if (node == null) {
+							transpiler.reportError("Untranlated: " + list.getChild(i).toStringTree(transpiler.parser) );
+						}
+						parent.adopt(node);
+					}
 				}
 				break;
 			case ".": // member access
 				String name = transpiler.valueMap.get(ctx.getChild(1).getPayload());
 				Symbol symbol = transpiler.symbolTable.lookup(scope, name);
-				System.out.println(". " + name + " " + symbol );
-				break;
+				if (symbol == null) {
+					transpiler.reportError("Undeclared member: " + name + " " + scope );
+				}
+				node = new TranslationUnaryNode( parent, name, symbol );
+				translateMap.put( ctx.getPayload(), node );
+				return;
 			default:
 				transpiler.reportError(ctx, "Unknown Trailer starting token: " + operator );
 				break;
@@ -307,9 +357,36 @@ class ExpressionCompilationListener extends LcdPythonBaseListener {
 //trailer: '(' (arglist)? ')' | '[' subscriptlist ']' | '.' NAME;		
 		@Override
 		public void exitAtom_expr(LcdPythonParser.Atom_exprContext ctx) {
-			defaultOperandOperator( ctx, "atom_expr" );
-			if (ctx.getChildCount() > 1) {
-				transpiler.dumpChildren(ctx);
+			if (ctx.getChildCount() == 1) {
+				defaultOperandOperator( ctx, "atom_expr" );
+			} else {
+				TranslationNode parent = new TranslationSubexpressionNode(null, "atom_expr");
+				Symbol symbol = transpiler.symbolTable.lookup(scope, ctx.getChild(0).getText() );
+				if (symbol != null) {
+					transpiler.reportError("Unknown symbol: " + ctx.getChild(0).getText() + " " + scope);
+					return;
+				}
+				new TranslationSymbolNode( parent, symbol );
+				for (int iTrailer = 0; iTrailer < ctx.getChildCount(); iTrailer++) {
+					ParseTree trailer = ctx.getChild(iTrailer);
+					for (int i = 0; i < trailer.getChildCount(); i++) {
+						String unary = trailer.getChild(i).getText().substring(0,1); 
+						switch (unary) {
+						case "(":
+						case "[":
+							TranslationListNode list = new TranslationListNode( parent, unary );
+							for (int j = 1; j < trailer.getChildCount()-1; j++) {
+								list.adopt(translateMap.get(trailer.getChild(j).getPayload()));
+							}
+							break;
+						case ".":
+							symbol = transpiler.symbolTable.lookup(scope, trailer.getChild(i+1).getText());
+							new TranslationUnaryNode( parent, trailer.getChild(i).getPayload(), symbol );
+							break;
+						}
+					}
+				}
+				this.translateMap.put( ctx.getPayload(), parent);
 			}
 		}
 
