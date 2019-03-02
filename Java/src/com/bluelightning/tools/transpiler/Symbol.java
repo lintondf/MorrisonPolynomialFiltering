@@ -82,6 +82,9 @@ class Symbol {
 
 	public void setSuperClassInfo(SuperClassInfo superClassInfo) {
 		this.superClassInfo = superClassInfo;
+		if (superClassInfo.superClass.equals("Enum")) {
+			type = "<ENUM>";
+		}
 	}
 
 	public FunctionParametersInfo getFunctionParametersInfo() {

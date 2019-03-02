@@ -9,6 +9,7 @@ import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.RuleNode;
 
+import com.bluelightning.tools.transpiler.Scope.Level;
 import com.bluelightning.tools.transpiler.TranslationConstantNode.Kind;
 import com.bluelightning.tools.transpiler.antlr4.LcdPythonBaseListener;
 import com.bluelightning.tools.transpiler.antlr4.LcdPythonParser;
@@ -155,6 +156,12 @@ class ExpressionCompilationListener extends LcdPythonBaseListener {
 			translateMap = new HashMap<>();
 			
 		}
+		
+		//raise_stmt: 'raise' (test ('from' test)?)?;
+		@Override 
+		public void exitRaise_stmt(LcdPythonParser.Raise_stmtContext ctx) { 
+		}
+		
 		// return_stmt: 'return' (testlist)?;
 		@Override 
 		public void exitReturn_stmt(LcdPythonParser.Return_stmtContext ctx) { 
@@ -234,43 +241,52 @@ class ExpressionCompilationListener extends LcdPythonBaseListener {
 			defaultOperandOperator( ctx, "testlist_expr" );
 		}
 
-		@Override 
-		public void exitTrailer(LcdPythonParser.TrailerContext ctx) { 
-//			transpiler.dumpChildren(ctx);
-			//defaultOperandOperator( ctx, "trailer" );	
-			String operator = transpiler.valueMap.get(ctx.getChild(0).getPayload());
-			TranslationSubexpressionNode parent = new TranslationListNode(null, operator);
-			TranslationNode node = null;
-			switch (operator) {
-			case "(": // function argument list
-			case "[": // array subscripts
-				if (ctx.getChildCount() > 2) {
-					ParseTree list = ctx.getChild(1);
-					for (int i = 0; i < list.getChildCount(); i += 2) {
-						node = getOperandNode(ctx, parent, list.getChild(i).getPayload());
-						if (node == null) {
-							transpiler.reportError("Untranlated: " + list.getChild(i).toStringTree(transpiler.parser) );
-						}
-						parent.adopt(node);
-					}
-				}
-				break;
-			case ".": // member access
-				String name = transpiler.valueMap.get(ctx.getChild(1).getPayload());
-				Symbol symbol = transpiler.symbolTable.lookup(scope, name);
-				if (symbol == null) {
-					transpiler.reportError("Undeclared member: " + name + " " + scope );
-				}
-				node = new TranslationUnaryNode( parent, name, symbol );
-				translateMap.put( ctx.getPayload(), node );
-				return;
-			default:
-				transpiler.reportError(ctx, "Unknown Trailer starting token: " + operator );
-				break;
-			}
-			translateMap.put( ctx.getPayload(), parent );
-			parent.analyze();
-		}	
+//		@Override 
+//		public void exitTrailer(LcdPythonParser.TrailerContext ctx) { 
+////			transpiler.dumpChildren(ctx);
+//			//defaultOperandOperator( ctx, "trailer" );	
+//			String operator = transpiler.valueMap.get(ctx.getChild(0).getPayload());
+//			TranslationSubexpressionNode parent = new TranslationListNode(null, operator);
+//			TranslationNode node = null;
+//			switch (operator) {
+//			case "(": // function argument list
+//			case "[": // array subscripts
+//				if (ctx.getChildCount() > 2) {
+//					ParseTree list = ctx.getChild(1);
+//					for (int i = 0; i < list.getChildCount(); i += 2) {
+//						node = getOperandNode(ctx, parent, list.getChild(i).getPayload());
+//						if (node == null) {
+//							transpiler.reportError("Untranlated: " + list.getChild(i).toStringTree(transpiler.parser) );
+//						}
+//						parent.adopt(node);
+//					}
+//				}
+//				break;
+//			case ".": // member access
+//				String name = transpiler.valueMap.get(ctx.getChild(1).getPayload());
+//				Symbol field = transpiler.symbolTable.lookup(scope, name);
+//				if (field == null) {
+//					if (parent.getLastChild() instanceof TranslationSymbolNode) {
+//						TranslationSymbolNode tsn = (TranslationSymbolNode) parent.getLastChild();
+//						if (tsn.getSymbol().getType().equals("<ENUM>")) {
+//							Scope enumScope = tsn.getSymbol().getScope().getChild(Level.CLASS, tsn.getSymbol().getName());
+//							field = transpiler.symbolTable.lookup(enumScope, name );
+//							System.out.println("ENUM> " + field.toString());
+//						}
+//					}
+//					if (field == null)
+//						transpiler.reportError("Undeclared member: " + name + " " + scope );
+//				}
+//				node = new TranslationUnaryNode( parent, name, field );
+//				translateMap.put( ctx.getPayload(), node );
+//				return;
+//			default:
+//				transpiler.reportError(ctx, "Unknown Trailer starting token: " + operator );
+//				break;
+//			}
+//			translateMap.put( ctx.getPayload(), parent );
+//			parent.analyze();
+//		}	
 		
 		@Override
 		public void exitAugassign(LcdPythonParser.AugassignContext ctx) {
@@ -362,7 +378,7 @@ class ExpressionCompilationListener extends LcdPythonBaseListener {
 			} else {
 				TranslationNode parent = new TranslationSubexpressionNode(null, "atom_expr");
 				Symbol symbol = transpiler.symbolTable.lookup(scope, ctx.getChild(0).getText() );
-				if (symbol != null) {
+				if (symbol == null) {
 					transpiler.reportError("Unknown symbol: " + ctx.getChild(0).getText() + " " + scope);
 					return;
 				}
@@ -374,14 +390,35 @@ class ExpressionCompilationListener extends LcdPythonBaseListener {
 						switch (unary) {
 						case "(":
 						case "[":
-							TranslationListNode list = new TranslationListNode( parent, unary );
-							for (int j = 1; j < trailer.getChildCount()-1; j++) {
-								list.adopt(translateMap.get(trailer.getChild(j).getPayload()));
+							if (ctx.getChildCount() > 2) {
+								ParseTree list = trailer.getChild(1);
+								for (int iList = 0; iList < list.getChildCount(); iList += 2) {
+									TranslationNode node = getOperandNode(ctx, parent, list.getChild(iList).getPayload());
+									if (node == null) {
+										transpiler.reportError("Untranlated: " + list.getChild(iList).toStringTree(transpiler.parser) );
+									}
+									parent.adopt(node);
+								}
 							}
+//							TranslationListNode list = new TranslationListNode( parent, unary );
+//							for (int j = 1; j < trailer.getChildCount()-1; j++) {
+//								System.out.println(unary + " " + trailer.getChild(j).getText() );
+//								list.adopt(translateMap.get(trailer.getChild(j).getPayload()));
+//							}
 							break;
 						case ".":
-							symbol = transpiler.symbolTable.lookup(scope, trailer.getChild(i+1).getText());
-							new TranslationUnaryNode( parent, trailer.getChild(i).getPayload(), symbol );
+							Symbol field = transpiler.symbolTable.lookup(scope, trailer.getChild(i+1).getText());
+							if (field == null) {
+								if (parent.getLastChild() instanceof TranslationSymbolNode) {
+									TranslationSymbolNode tsn = (TranslationSymbolNode) parent.getLastChild();
+									if (tsn.getSymbol().getType().equals("<ENUM>")) {
+										Scope enumScope = tsn.getSymbol().getScope().getChild(Level.CLASS, tsn.getSymbol().getName());
+										field = transpiler.symbolTable.lookup(enumScope, trailer.getChild(i+1).getText() );
+										System.out.println("ENUM> " + field.toString());
+									}
+								}
+							}
+							new TranslationUnaryNode( parent, trailer.getChild(i).getPayload(), field );
 							break;
 						}
 					}

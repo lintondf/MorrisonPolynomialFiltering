@@ -74,6 +74,12 @@ public class TranslationNode  {
 		return children.get(i);
 	}
 	
+	public TranslationNode getLastChild() {
+		if (children.isEmpty())
+			return null;
+		return children.get( children.size()-1 );
+	}
+	
 	public void analyze() {		
 	}
 

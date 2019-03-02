@@ -337,6 +337,9 @@ public class Transpiler {
 		dispatcher.startModule(moduleScope);
 		
 		symbolTable.add( importScope, "eye", "array");
+		symbolTable.add( importScope, "pow", "float");
+		symbolTable.add( importScope, "range", "range");
+		symbolTable.add( importScope, "NotImplementedError", "exception");
 
 		LcdPythonLexer java8Lexer = new LcdPythonLexer(CharStreams.fromString(content));
 		CommonTokenStream tokens = new CommonTokenStream(java8Lexer);
