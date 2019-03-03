@@ -99,10 +99,18 @@ public class Transpiler {
 	
 	protected Map<Object, String> valueMap = new HashMap<>();
 	
+	public String getValue( Object payload ) {
+		return valueMap.get(payload);
+	}
+	
 	protected Scope moduleScope = null;
 	protected Map<Object, Scope> scopeMap = new HashMap<>();
 	
 	protected SymbolTable symbolTable = new SymbolTable(this);
+	
+	public Symbol lookup( Scope scope, String name ) {
+		return symbolTable.lookup(scope, name);
+	}
 
 	protected void processDeclaration(Token token, Scope scope, String str) {
 		String[] fields = str.split(":");
@@ -237,6 +245,20 @@ public class Transpiler {
 				target.emitCloseStatement();
 			}
 		}
+
+		@Override
+		public void closeBlock() {
+			for (ILanguageTarget target : targets) {
+				target.closeBlock();
+			}
+		}
+
+		@Override
+		public void emitForStatement(Symbol symbol, TranslationNode expressionRoot) {
+			for (ILanguageTarget target : targets) {
+				target.emitForStatement( symbol, expressionRoot);
+			}
+		}
 		
 	}
 
@@ -300,6 +322,8 @@ public class Transpiler {
 	protected Configuration cfg;
 	
 	private static Transpiler singleton = null;
+
+	public ParseTreeWalker walker;
 	
 	public static Transpiler instance() { 
 		return singleton;
@@ -317,7 +341,7 @@ public class Transpiler {
 			e.printStackTrace();
 		}
 		
-		dispatcher.addTarget( new CppBoostTarget(cfg, Paths.get("../Cpp/src/")) );
+		dispatcher.addTarget( new CppBoostTarget(cfg, Paths.get("../Cpp/include/"), Paths.get("../Cpp/src/")) );
 		
 		String module = dottedModule.get(dottedModule.size()-1);
 		
@@ -340,6 +364,8 @@ public class Transpiler {
 		symbolTable.add( importScope, "pow", "float");
 		symbolTable.add( importScope, "range", "range");
 		symbolTable.add( importScope, "NotImplementedError", "exception");
+		
+		valueMap.put( TranslationUnaryNode.staticFieldReference, "::");
 
 		LcdPythonLexer java8Lexer = new LcdPythonLexer(CharStreams.fromString(content));
 		CommonTokenStream tokens = new CommonTokenStream(java8Lexer);
@@ -348,7 +374,7 @@ public class Transpiler {
 		
 		// PASS 1 - fully populate parse tree contents map
 		PopulateListener populateListener = new PopulateListener();
-		ParseTreeWalker walker = new ParseTreeWalker();
+		walker = new ParseTreeWalker();
 		walker.walk(populateListener, tree);
 		
 		// PASS 2 - handle all imports, variable, function, and class declarations

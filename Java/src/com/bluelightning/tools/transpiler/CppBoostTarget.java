@@ -29,7 +29,8 @@ public class CppBoostTarget implements ILanguageTarget {
 	
 	protected Configuration cfg;  // FreeMarker configuration
 	
-	Path outputDirectory;
+	Path includeDirectory;
+	Path srcDirectory;
 	
 	Map<String, Object> templateDataModel = new HashMap<>();
 	
@@ -37,8 +38,11 @@ public class CppBoostTarget implements ILanguageTarget {
 	
 	public static class Indent {
 		int level = 0;
+		public StringBuilder out = new StringBuilder();;
+		
 		public Indent() {
 			level = 0;
+			this.out = out;
 		}
 		
 		public void in() {
@@ -53,29 +57,31 @@ public class CppBoostTarget implements ILanguageTarget {
 			return StringUtils.repeat("  ", 2*level);
 		}
 		
-		public void write( StringBuilder out, String text ) {
+		public void append( String text ) {
+			out.append(text);
+		}
+		
+		public void write( String text ) {
 			out.append(toString());
 			out.append(text);
 		}
 
-		public void writeln( StringBuilder out, String text ) {
+		public void writeln( String text ) {
 			out.append(toString());
 			out.append(text);
 			out.append('\n');
 		}
 	}
 	
-	protected Indent hppIndent = new Indent();
-	protected Indent cppIndent = new Indent();
-	
 	Template hpp;
 	Template cpp;
 	
-	Path     hppFile;
-	Path     cppFile;
+	Path     hppPath;
+	Path     cppPath;
 	
-	protected StringBuilder hppBody = new StringBuilder();
-	protected StringBuilder cppBody = new StringBuilder();
+	protected Indent hppIndent = new Indent();
+	protected Indent cppIndent = new Indent();
+	
 	
 	
 	protected Scope currentScope = null;
@@ -104,21 +110,21 @@ public class CppBoostTarget implements ILanguageTarget {
 			return type;
 		}
 		
-		public void startExpression( StringBuilder out ) {
+		public void startExpression( Indent out ) {
 		}
 		
-		public void writeAssignmentTarget( StringBuilder out, Symbol symbol) {
+		public void writeAssignmentTarget( Indent out, Symbol symbol) {
 			out.append(symbol.getName());
 			out.append(" = ");
 		}
 		
-		public void finishExpression( StringBuilder out ) {
+		public void finishExpression( Indent out ) {
 			while (! parens.isEmpty() ) {
 				out.append( parens.pop() );
 			}
 		}
 
-		public void writeSymbol(StringBuilder out, Symbol symbol) {
+		public void writeSymbol(Indent out, Symbol symbol) {
 			if (symbol.getName().equals("self")) {
 				out.append("(*this)");  
 			} else {
@@ -126,19 +132,19 @@ public class CppBoostTarget implements ILanguageTarget {
 			}
 		}
 
-		public void writeOperator(StringBuilder out, String operator) {
+		public void writeOperator(Indent out, String operator) {
 			out.append(operator);
 		}
 
-		public void openParenthesis(StringBuilder out) {
-			out.append('(');
+		public void openParenthesis(Indent out) {
+			out.append("(");
 		}
 
-		public void closeParenthesis(StringBuilder out) {
-			out.append(')');
+		public void closeParenthesis(Indent out) {
+			out.append(")");
 		}
 
-		public void writeConstant(StringBuilder out, TranslationConstantNode node ) {
+		public void writeConstant(Indent out, TranslationConstantNode node ) {
 			switch (node.getKind()) {
 			case INTEGER:
 				out.append(node.getValue());
@@ -160,9 +166,10 @@ public class CppBoostTarget implements ILanguageTarget {
 		}
 	}
 	
-	public CppBoostTarget( Configuration cfg, Path outputDirectory ) {
+	public CppBoostTarget( Configuration cfg, Path includeDirectory, Path srcDirectory ) {
 		this.cfg = cfg;
-		this.outputDirectory = outputDirectory;	
+		this.includeDirectory = includeDirectory;	
+		this.srcDirectory = srcDirectory;	
 		
 		ignoredSuperClasses.add("ABC");
 		
@@ -188,25 +195,36 @@ public class CppBoostTarget implements ILanguageTarget {
 		hppIndent = new Indent();
 		cppIndent = new Indent();
 		String moduleName = scope.getLast();
-		hppFile = outputDirectory.resolve( moduleName + ".hpp" );
-		cppFile = outputDirectory.resolve( moduleName + ".cpp" );
+		hppPath = includeDirectory;
+		cppPath = srcDirectory;
+		StringBuilder moduleIncludeFile = new StringBuilder();
+		for (int i = 0; i < scope.getLevelCount()-1; i++) {
+			String level = scope.getLevel(i).toLowerCase();
+			if (i > 0) {
+				moduleIncludeFile.append(level);
+				moduleIncludeFile.append('/');
+			}
+			hppPath = hppPath.resolve(level);
+			cppPath = cppPath.resolve(level);
+		}
+		hppPath = hppPath.resolve( moduleName + ".hpp" );
+		cppPath = cppPath.resolve( moduleName + ".cpp" );
+		moduleIncludeFile.append( moduleName + ".hpp" );
+		System.out.println(hppPath.toString());
+		System.out.println(cppPath.toString());
 		templateDataModel.put("scope", scope);
 		define = String.format("__%sHPP", scope.toString().replace("/", "_").toUpperCase());
 		templateDataModel.put("hppDefine", define);
 		templateDataModel.put("systemIncludes", "");
 		templateDataModel.put("localIncludes", "");
-		templateDataModel.put("moduleInclude", hppFile.getFileName().toString());
+		templateDataModel.put("moduleInclude", moduleIncludeFile.toString());
 		templateDataModel.put("systemIncludes", "");
 		templateDataModel.put("hppBody", "");
 		templateDataModel.put("cppBody", "");
-		hppBody = new StringBuilder();
-		cppBody = new StringBuilder();
 		
 		for (int i = 0; i < scope.qualifiers.length-1; i++) {
-			hppBody.append(hppIndent.toString());
-			hppBody.append(String.format("namespace %s {\n", scope.qualifiers[i]));
-			cppBody.append(cppIndent.toString());
-			cppBody.append(String.format("namespace %s {\n", scope.qualifiers[i]));
+			hppIndent.write(String.format("namespace %s {\n", scope.qualifiers[i]));
+			cppIndent.write(String.format("namespace %s {\n", scope.qualifiers[i]));
 			namespaceStack.push(String.format("%s}; // namespace %s\n", hppIndent.toString(), scope.qualifiers[i]));
 			hppIndent.in();
 			cppIndent.in();
@@ -236,11 +254,11 @@ public class CppBoostTarget implements ILanguageTarget {
 				}
 			}
 		}
-		hppBody.append( String.format("%s%s {\n", hppIndent.toString(), decl));
+		hppIndent.writeln( String.format("%s {", decl));
 		hppIndent.in();
 		cppIndent.in();
 		if (! inEnum) {
-			hppIndent.writeln(hppBody, "public:");
+			hppIndent.writeln("public:");
 			hppIndent.in();
 		}
 	}
@@ -255,7 +273,7 @@ public class CppBoostTarget implements ILanguageTarget {
 		inEnum = false;
 		hppIndent.out();
 		cppIndent.out();
-		hppBody.append( String.format("%s}; // class %s \n\n", hppIndent.toString(), currentClass));
+		hppIndent.writeln( String.format("}; // class %s \n", currentClass));
 		currentClass = null;
 	}
 
@@ -271,7 +289,7 @@ public class CppBoostTarget implements ILanguageTarget {
 		Symbol.FunctionParametersInfo fpi = symbol.getFunctionParametersInfo();
 		if (symbol != null && fpi != null) {
 			if (currentClass == null) { // non-class function
-				//TODO
+				Transpiler.instance().reportError("TODO non-class function");
 			} else { // class member
 				String name = symbol.getName();
 				String type = programmer.remapType(symbol.getType()) + " ";
@@ -280,7 +298,7 @@ public class CppBoostTarget implements ILanguageTarget {
 					type = "";
 				}
 //				System.out.println(">>> " + currentClass + "::" + currentFunction + fpi.toString());
-				hppBody.append( hppIndent.toString() );
+				hppIndent.write( "" );
 				StringBuilder p = new StringBuilder();
 				for (Symbol parameter : fpi.parameters ) {
 					if (parameter.getName().equals("self"))
@@ -295,21 +313,21 @@ public class CppBoostTarget implements ILanguageTarget {
 				}
 				String decl = String.format("%s%s(%s)", type, name, p.toString() ); 
 				if (fpi.decorators.contains("@classmethod")) {
-					hppBody.append("static ");
+					hppIndent.append("static " + decl);
+				} else if (fpi.decorators.contains("@abstractmethod")) {
+					hppIndent.append("virtual " + decl);
+				} else {
+					hppIndent.append(decl);
 				}
-				hppBody.append(decl);
 				
 				if (fpi.decorators.contains("@abstractmethod")) {
-					hppBody.append(" = 0");
+					hppIndent.append(" = 0");
 					isAbstract = true;
 				}
-				hppBody.append(";\n");
+				hppIndent.append(";\n");
 				if (! fpi.decorators.contains("@abstractmethod")) {
 					decl = String.format("%s%s::%s (%s)", type, currentClass, name, p.toString() );
-					if (fpi.decorators.contains("@classmethod")) {
-						decl = "static " + decl;
-					}
-					cppIndent.writeln(cppBody, decl + " {");
+					cppIndent.writeln( decl + " {");
 				}
 			}
 		}
@@ -323,7 +341,7 @@ public class CppBoostTarget implements ILanguageTarget {
 		hppIndent.out();
 		cppIndent.out();
 		if (!isAbstract) {
-			cppIndent.writeln(cppBody, "}\n");
+			cppIndent.writeln("}\n");
 		}
 		isAbstract = false;
 	}
@@ -332,20 +350,20 @@ public class CppBoostTarget implements ILanguageTarget {
 	public void finishModule() {
 		while (! namespaceStack.isEmpty() ) {
 			String close = namespaceStack.pop();
-			hppBody.append( close );
-			cppBody.append( close );
+			hppIndent.append( close );
+			cppIndent.append( close );
 			hppIndent.out();
 			cppIndent.out();
 		}
-		templateDataModel.put("hppBody", hppBody.toString());
-		templateDataModel.put("cppBody", cppBody.toString());
+		templateDataModel.put("hppBody", hppIndent.out.toString());
+		templateDataModel.put("cppBody", cppIndent.out.toString());
 		try {
-			Writer out = new OutputStreamWriter(new FileOutputStream("out/hpp.txt"));
+			Writer out = new OutputStreamWriter(new FileOutputStream(hppPath.toFile()));
 			//System.out.println(hppFile.toString());
 			hpp.process(templateDataModel, out);
 			out.close();
 			
-			out = new OutputStreamWriter(new FileOutputStream("out/cpp.txt"));
+			out = new OutputStreamWriter(new FileOutputStream(cppPath.toFile()));
 			cpp.process(templateDataModel, out);
 			out.close();
 		} catch (IOException iox ) {
@@ -371,7 +389,7 @@ public class CppBoostTarget implements ILanguageTarget {
 		return (root instanceof TranslationSymbolNode);
 	}
 	
-	protected void emitChild(StringBuilder out, Scope scope, TranslationNode child) {
+	protected void emitChild(Indent out, Scope scope, TranslationNode child) {
 		if (child instanceof TranslationSymbolNode) {
 			programmer.writeSymbol( out, ((TranslationSymbolNode) child).getSymbol() );
 		} else if (child instanceof TranslationConstantNode) {
@@ -391,7 +409,13 @@ public class CppBoostTarget implements ILanguageTarget {
 			String open = ((TranslationListNode) child).getListOpen();
 			if (open.equals("(")) {
 				programmer.openParenthesis( out );
-				traverseEmitter( out, scope, child, 0);
+				for (int i = 0; i < child.getChildCount(); i++) {
+					if (i > 0) {
+						out.append(", ");
+					}
+					emitChild( out, scope, child.getChild(i));
+					
+				}
 				programmer.closeParenthesis( out );
 			}
 		} else {
@@ -399,7 +423,7 @@ public class CppBoostTarget implements ILanguageTarget {
 		}
 	}
 	
-	protected void traverseEmitter(StringBuilder out, Scope scope, TranslationNode root, int iChild) {
+	protected void traverseEmitter(Indent out, Scope scope, TranslationNode root, int iChild) {
 		while (iChild < root.getChildCount()) {
 			TranslationNode child = root.getChild(iChild);
 			emitChild(out, scope, child);
@@ -407,19 +431,11 @@ public class CppBoostTarget implements ILanguageTarget {
 		}
 	}
 	
-	public void emitSubExpression(StringBuilder out, Scope scope, TranslationNode root) {
+	public void emitSubExpression(Indent out, Scope scope, TranslationNode root) {
 		programmer.startExpression(out);
-		if (root.getChildCount() > 2 && isOperator(root.getChild(1), "=")) { // assignment
-			traverseEmitter( out, scope, root, 0 );
-//			if (isSymbol(root.getChild(0))) { // simple symbol
-//				Symbol symbol = ((TranslationSymbolNode)root.getChild(0)).getSymbol();
-//				programmer.writeAssignmentTarget(out, symbol);
-//				traverseEmitter( out, scope, root, 2 );
-//			} else {
-//				System.out.println("?1 [" + root.getChildCount() + "] " +
-//						root.getChild(0).getClass().getSimpleName() + " " + root.getChild(0).toString() );				
-//			}
-		} else if (root.getChildCount() > 0) { // non-assignment
+		if (root.getChildCount() == 0) {
+			emitChild( out, scope, root);
+		} else {
 			traverseEmitter( out, scope, root, 0 );
 		}
 		programmer.finishExpression(out);
@@ -428,22 +444,17 @@ public class CppBoostTarget implements ILanguageTarget {
 	
 	@Override
 	public void emitSubExpression(Scope scope, TranslationNode root) {
-		emitSubExpression( cppBody, scope, root);
+		emitSubExpression( cppIndent, scope, root);
 	}
 	
 	@Override
 	public void emitExpressionStatement(Scope scope, TranslationNode root) {
-		System.out.println("eES: " + root );
-//		cppBody.append(scope.toString());
-//		cppBody.append('\n');
-//		cppBody.append(root.traverse(0));
-//		cppBody.append('\n');
-		StringBuilder out = cppBody;
+		Indent out = cppIndent;
 		if (inEnum) {
-			out = hppBody;
-			out.append( hppIndent.toString() );
+			out = hppIndent;
+			out.write( "" );
 		} else {
-			out.append( cppIndent.toString() );
+			out.write( "" );
 		}
 		emitSubExpression( out, scope, root );
 		if (inEnum) {
@@ -451,7 +462,7 @@ public class CppBoostTarget implements ILanguageTarget {
 		} else {
 			out.append(";");
 		}
-		out.append('\n');
+		out.append("\n");
 	}
 
 	@Override
@@ -465,18 +476,20 @@ public class CppBoostTarget implements ILanguageTarget {
 		String declaration = String.format("%s %s", cppType, symbol.getName() );
 		switch (currentScope.getLevel()) {
 		case MODULE: 
-			cppIndent.writeln(cppBody, declaration + ";");
+			cppIndent.writeln( declaration + ";");
 			break;
 		case FUNCTION:
-			cppIndent.writeln(cppBody, declaration + ";");
+			cppIndent.writeln( declaration + ";");
 			break;
 		case CLASS:
-			hppIndent.writeln(hppBody, declaration + ";");
-			cppIndent.writeln(cppBody, currentScope.getLast() + "::" + declaration + ";");
+			hppIndent.writeln( declaration + ";");
+			if (symbol.isStatic()) {
+				cppIndent.writeln( String.format("%s %s::%s;", 
+						cppType, currentScope.getLast(), symbol.getName()) );
+			}
 			break;
 		case MEMBER:
-			hppIndent.writeln(hppBody, declaration + ";");
-			cppIndent.writeln(cppBody, currentScope.getLast() + "::" + declaration + ";");
+			cppIndent.writeln( declaration + ";");
 			break;
 		}
 	}
@@ -493,12 +506,32 @@ public class CppBoostTarget implements ILanguageTarget {
 
 	@Override
 	public void emitReturnStatement() {
-		cppIndent.write(cppBody, "return ");
+		cppIndent.write("return ");
+//		System.out.println("return<"+cppIndent.out.toString() +">");
 	}
 
 	@Override
 	public void emitCloseStatement() {
-		cppBody.append(";\n");
+		cppIndent.append(";");
+	}
+
+	@Override
+	public void emitForStatement(Symbol symbol, TranslationNode atomExpr) {
+		System.out.println(atomExpr.traverse(1));
+		TranslationSymbolNode tsn = (TranslationSymbolNode) atomExpr.getChild(0); // range
+		TranslationListNode tln = (TranslationListNode) atomExpr.getChild(1);
+		cppIndent.write( String.format("for (%s %s = ", symbol.getType(), symbol.getName()));
+		emitSubExpression( symbol.getScope(), tln.getChild(0) );
+		cppIndent.append( String.format("; %s < ", symbol.getName()));
+		emitSubExpression( symbol.getScope(), tln.getChild(1) );
+		cppIndent.append( String.format("; %s++) {\n", symbol.getName()) );
+		cppIndent.in();
+	}
+
+	@Override
+	public void closeBlock() {
+		cppIndent.out();
+		cppIndent.writeln( "}");
 	}
 
 }

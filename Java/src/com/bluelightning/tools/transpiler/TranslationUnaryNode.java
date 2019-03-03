@@ -9,6 +9,8 @@ package com.bluelightning.tools.transpiler;
  */
 public class TranslationUnaryNode extends TranslationSubexpressionNode {
 	
+	public static Object staticFieldReference = new Object();
+	
 	Object lhs;
 	Object rhs;
 

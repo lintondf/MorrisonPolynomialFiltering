@@ -121,5 +121,13 @@ class Scope {
 		public Scope.Level getLevel() {
 			return level;
 		}
+
+		public int getLevelCount() {
+			return qualifiers.length;
+		}
+		
+		public String getLevel(int level) {
+			return qualifiers[level];
+		}
 		
 	}

@@ -94,4 +94,8 @@ class Symbol {
 	public void setFunctionParametersInfo(FunctionParametersInfo functionParametersInfo) {
 		this.functionParametersInfo = functionParametersInfo;
 	}
+
+	public boolean isStatic() {
+		return false;
+	}
 }

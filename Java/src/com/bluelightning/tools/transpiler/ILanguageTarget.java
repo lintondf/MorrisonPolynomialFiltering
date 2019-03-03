@@ -35,5 +35,8 @@ public interface ILanguageTarget {
 	public void emitReturnStatement();
 	
 	public void emitCloseStatement();
+
+	public void emitForStatement(Symbol symbol, TranslationNode expressionRoot);
 	
+	public void closeBlock();
 }

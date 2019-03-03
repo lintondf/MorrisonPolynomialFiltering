@@ -48,6 +48,7 @@ class AbstractFilter(ABC):
         '''@B: array'''
         '''@i : int'''
         '''@j : int'''
+        '''@x : float'''
         '''@ji : int'''
         '''@fji : float'''
         
@@ -102,6 +103,5 @@ class ManagedFilterBase(AbstractFilter):
     def add(self, t : float, y : array, observationId : str = '') -> None:    
         raise NotImplementedError()
 
-    @abstractmethod   
     def addWithVariance(self, t : float, y : array, R : array, observationId : str = '') -> None:    
-        self.add(t, y, observationId=observationId);
+        self.add(t, y, observationId);
