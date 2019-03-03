@@ -10,54 +10,54 @@
 
 #include "polynomialfiltering/Main.hpp"
 
-namespace  {
-    namespace PolynomialFiltering {
-            AbstractFilter::AbstractFilter (const std::string name = "") {
-                (*this).setStatus(FilterStatus::IDLE);
-                (*this).name=name;
-            }
+namespace PolynomialFiltering {
+    using namespace boost::numeric::ublas;
+    
+        AbstractFilter::AbstractFilter (const std::string name) {
+            (*this).setStatus(FilterStatus::IDLE);
+            (*this).name=name;
+        }
 
-            RealMatrix AbstractFilter::stateTransitionMatrix (const long N, const double dt) {
-                RealMatrix B;
-                long i;
-                long j;
-                double x;
-                long ji;
-                double fji;
-                B=eye(N);
-                for (int i = 0; i < N; i++) {
-                    for (int j = i+1; j < N; j++) {
-                        ji=j-i;
-                        fji=ji;
-                        for (float x = 2; x < ji; x++) {
-                            fji*=x;
-                        }
-                        B=pow(dt, ji)/fji;
+        RealMatrix AbstractFilter::stateTransitionMatrix (const long N, const double dt) {
+            RealMatrix B;
+            long i;
+            long j;
+            double x;
+            long ji;
+            double fji;
+            B=identity_matrix<double>(N);
+            for (long i = 0; i < N; i++) {
+                for (long j = i+1; j < N; j++) {
+                    ji=j-i;
+                    fji=ji;
+                    for (double x = 2; x < ji; x++) {
+                        fji*=x;
                     }
+                    B(i, j)=pow(dt, ji)/fji;
                 }
-                return B;            }
-
-            std::string AbstractFilter::getName () {
-                return (*this).name;            }
-
-            std::string AbstractFilter::setName (const std::string name) {
-                (*this).name=name;
             }
+            return B;        }
 
-            FilterStatus AbstractFilter::getStatus () {
-                return (*this).status;            }
+        std::string AbstractFilter::getName () {
+            return (*this).name;        }
 
-            void AbstractFilter::setStatus (const FilterStatus status) {
-                (*this).status=status;
-            }
+        void AbstractFilter::setName (const std::string name) {
+            (*this).name=name;
+        }
 
-            ManagedFilterBase::ManagedFilterBase () {
-            }
+        FilterStatus AbstractFilter::getStatus () {
+            return (*this).status;        }
 
-            void ManagedFilterBase::addWithVariance (const double t, const RealMatrix y, const RealMatrix R, const std::string observationId) {
-                (*this).add(t, y, observationId);
-            }
+        void AbstractFilter::setStatus (const FilterStatus status) {
+            (*this).status=status;
+        }
 
-    }; // namespace PolynomialFiltering
-}; // namespace 
+        ManagedFilterBase::ManagedFilterBase () {
+        }
+
+        void ManagedFilterBase::addWithVariance (const double t, const RealMatrix y, const RealMatrix R, const std::string observationId) {
+            (*this).add(t, y, observationId);
+        }
+
+}; // namespace PolynomialFiltering
 

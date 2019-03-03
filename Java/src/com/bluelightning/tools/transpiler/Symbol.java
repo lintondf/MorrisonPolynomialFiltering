@@ -42,6 +42,7 @@ class Symbol {
 	protected String name;
 	protected String type;
 	protected Scope  scope;
+	protected String initialization;
 	protected SuperClassInfo superClassInfo = null;
 	protected FunctionParametersInfo functionParametersInfo = null;
 	
@@ -97,5 +98,13 @@ class Symbol {
 
 	public boolean isStatic() {
 		return false;
+	}
+
+	public void setInitialization(String initialization) {
+		this.initialization = initialization;
+	}
+	
+	public String getInitialization() {
+		return this.initialization;
 	}
 }

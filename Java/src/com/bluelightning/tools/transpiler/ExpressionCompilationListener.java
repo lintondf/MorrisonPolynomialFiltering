@@ -94,6 +94,25 @@ class ExpressionCompilationListener extends LcdPythonBaseListener {
 			return null;
 		}
 		
+		public static TranslationConstantNode getConstantNode(TranslationNode parent, Object payload, String value) {
+			TranslationConstantNode node;
+			if (value.startsWith("'") || value.startsWith("\"")) {
+				node = new TranslationConstantNode( parent, value, Kind.STRING );
+				return node;
+			}
+			Matcher matcher = integerPattern.matcher(value);
+			if (matcher.matches()) {
+				node = new TranslationConstantNode( parent, value, Kind.INTEGER );
+				return node;				
+			}
+			matcher = floatPattern.matcher(value);
+			if (matcher.matches()) {
+				node = new TranslationConstantNode( parent, value, Kind.FLOAT );
+				return node;				
+			}
+			return null;
+		}
+		
 		protected TranslationNode getOperandNode(ParserRuleContext context, TranslationNode parent, Object payload) {
 			String value = this.transpiler.valueMap.get(payload);
 			TranslationNode node = translateMap.get(payload);
@@ -107,22 +126,10 @@ class ExpressionCompilationListener extends LcdPythonBaseListener {
 				translateMap.put( payload, node );
 				return node;
 			}
-			if (value.startsWith("'") || value.startsWith("\"")) {
-				node = new TranslationConstantNode( parent, value, Kind.STRING );
-				translateMap.put( payload, node );
-				return node;
-			}
-			Matcher matcher = integerPattern.matcher(value);
-			if (matcher.matches()) {
-				node = new TranslationConstantNode( parent, value, Kind.INTEGER );
-				translateMap.put( payload, node );
-				return node;				
-			}
-			matcher = floatPattern.matcher(value);
-			if (matcher.matches()) {
-				node = new TranslationConstantNode( parent, value, Kind.FLOAT );
-				translateMap.put( payload, node );
-				return node;				
+			TranslationConstantNode tcn = getConstantNode( parent, payload, value );
+			if (tcn != null) {
+				translateMap.put( payload, tcn );
+				return tcn;
 			}
 			return null;
 		}
@@ -157,12 +164,12 @@ class ExpressionCompilationListener extends LcdPythonBaseListener {
 		
 		@Override 
 		public void enterFor_stmt(LcdPythonParser.For_stmtContext ctx) { 
-			transpiler.dumpChildren(ctx);
+//			transpiler.dumpChildren(ctx);
 //			defaultOperandOperator( ctx, "for_stmt" );
 			String iName = transpiler.getValue( ctx.getChild(1));
-			System.out.printf("FOR %s %s\n", 
-					iName,
-					transpiler.getValue( ctx.getChild(3)));
+//			System.out.printf("FOR %s %s\n", 
+//					iName,
+//					transpiler.getValue( ctx.getChild(3)));
 
 			Symbol symbol = transpiler.lookup(scope, iName );
 			if (symbol == null) {
@@ -396,8 +403,6 @@ class ExpressionCompilationListener extends LcdPythonBaseListener {
 									translateMap.put( list.getChild(iList).getPayload(), node);
 								}
 								translateMap.put( trailer.getChild(1).getPayload(), tln);
-//								System.out.println("LIST/366 " + list.hashCode());
-//								System.out.println(tln.traverse(1));
 							}
 							break;
 						case ".":
@@ -408,7 +413,6 @@ class ExpressionCompilationListener extends LcdPythonBaseListener {
 									if (tsn.getSymbol().getType().equals("<ENUM>")) {
 										Scope enumScope = tsn.getSymbol().getScope().getChild(Level.CLASS, tsn.getSymbol().getName());
 										field = transpiler.symbolTable.lookup(enumScope, trailer.getChild(i+1).getText() );
-										System.out.println("ENUM> " + field.toString());
 										payload = TranslationUnaryNode.staticFieldReference;
 									}
 								}

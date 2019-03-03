@@ -61,6 +61,8 @@ class DeclarationsListener extends LcdPythonBaseListener {
 					if (declaration.equals(","))
 						continue;
 					if (declaration.equals("=")) {
+						String initialization = this.transpiler.valueMap.get(parameters.getChild(i+1).getPayload()).trim();
+						fpi.parameters.get(fpi.parameters.size()-1).setInitialization(initialization);
 						i++;
 						continue;
 					}

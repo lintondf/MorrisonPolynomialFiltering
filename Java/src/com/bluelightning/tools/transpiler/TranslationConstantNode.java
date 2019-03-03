@@ -15,7 +15,7 @@ public class TranslationConstantNode extends TranslationNode {
 	Kind   kind;
 	
 	TranslationConstantNode(TranslationNode parent, String value, Kind kind) {
-		super(parent, "<CONSTANT>" + value);
+		super(parent, "<CONSTANT>:" + kind.toString() + " = " + value);
 		this.value = value;
 		this.kind = kind;
 	}

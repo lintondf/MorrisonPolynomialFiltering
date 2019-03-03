@@ -66,7 +66,7 @@ class AbstractFilter(ABC):
     def getName(self) -> str:
         return self.name
     
-    def setName(self, name : str) -> str:
+    def setName(self, name : str) -> None:
         self.name = name
         
     def getStatus(self) -> FilterStatus:
@@ -84,8 +84,11 @@ class AbstractFilter(ABC):
         raise NotImplementedError()
     
     @abstractmethod   
-    def getState(self, t : float = None) -> array:
+    def getState(self, t : float) -> array:
         raise NotImplementedError()
+    
+#     def getState(self) -> array:
+#         return self.getState( self.getTime() );
 
 class ManagedFilterBase(AbstractFilter):
     def __init__(self):

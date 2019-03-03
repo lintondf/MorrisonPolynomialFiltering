@@ -1,6 +1,6 @@
 /**
  * TODO docstrings
- * TODO parameter defaults
+ * TODO do not declare for loop variables
  */
 package com.bluelightning.tools.transpiler;
 
@@ -128,7 +128,17 @@ public class CppBoostTarget implements ILanguageTarget {
 			if (symbol.getName().equals("self")) {
 				out.append("(*this)");  
 			} else {
-				out.append(symbol.getName());
+				String name = symbol.getName(); 
+				if (symbol.getScope().getLevel() == Scope.Level.IMPORT) {
+					switch (name) {
+					default:
+						break;
+					case "eye":
+						name = "identity_matrix<double>";
+						break;
+					}
+				}
+				out.append(name);
 			}
 		}
 
@@ -144,6 +154,14 @@ public class CppBoostTarget implements ILanguageTarget {
 			out.append(")");
 		}
 
+		public void openBracket(Indent out) {
+			out.append("(");  // boost uses () for array references
+		} 
+
+		public void closeBracket(Indent out) {
+			out.append(")");
+		}
+
 		public void writeConstant(Indent out, TranslationConstantNode node ) {
 			switch (node.getKind()) {
 			case INTEGER:
@@ -155,7 +173,7 @@ public class CppBoostTarget implements ILanguageTarget {
 			case STRING:
 				String str = node.getValue();
 				if (str.startsWith("'")) {  // convert to C++ double quoted
-					str = str.substring(1, str.length()-2);
+					str = str.substring(1, str.length()-1);
 					str = str.replaceAll("\"", "\\\"");
 					out.append( String.format("\"%s\"", str));
 				} else {
@@ -218,17 +236,30 @@ public class CppBoostTarget implements ILanguageTarget {
 		templateDataModel.put("systemIncludes", "");
 		templateDataModel.put("localIncludes", "");
 		templateDataModel.put("moduleInclude", moduleIncludeFile.toString());
-		templateDataModel.put("systemIncludes", "");
+		
+		StringBuilder systemIncludes = new StringBuilder();
+		systemIncludes.append("#include <math.h>\n");
+		
+		templateDataModel.put("systemIncludes", systemIncludes.toString());
 		templateDataModel.put("hppBody", "");
 		templateDataModel.put("cppBody", "");
 		
-		for (int i = 0; i < scope.qualifiers.length-1; i++) {
+		// start at 1 to skip import scope
+		for (int i = 1; i < scope.qualifiers.length-1; i++) {
 			hppIndent.write(String.format("namespace %s {\n", scope.qualifiers[i]));
 			cppIndent.write(String.format("namespace %s {\n", scope.qualifiers[i]));
 			namespaceStack.push(String.format("%s}; // namespace %s\n", hppIndent.toString(), scope.qualifiers[i]));
 			hppIndent.in();
 			cppIndent.in();
 		}
+		
+		String[] usingNamespaces = {
+			"using namespace boost::numeric::ublas;",	
+		};
+		for (String using : usingNamespaces) {
+			cppIndent.writeln(using);
+		}
+		cppIndent.writeln("");
 	}
 	
 	String currentClass = null;
@@ -299,19 +330,31 @@ public class CppBoostTarget implements ILanguageTarget {
 				}
 //				System.out.println(">>> " + currentClass + "::" + currentFunction + fpi.toString());
 				hppIndent.write( "" );
-				StringBuilder p = new StringBuilder();
+				Indent header = new Indent();
+				Indent body = new Indent();
 				for (Symbol parameter : fpi.parameters ) {
 					if (parameter.getName().equals("self"))
 						continue;
-					if (p.length() != 0)
-						p.append(", ");
-					p.append("const ");
-					p.append(programmer.remapType(parameter.getType()));
-					p.append(" ");
-					//TODO default values
-					p.append( parameter.getName() );
+					if (header.out.length() != 0) {
+						header.append(", ");
+						body.append(", ");
+					}
+					header.append("const ");
+					header.append(programmer.remapType(parameter.getType()));
+					header.append(" ");
+					header.append( parameter.getName() );
+					body.append("const ");
+					body.append(programmer.remapType(parameter.getType()));
+					body.append(" ");
+					body.append( parameter.getName() );
+					if (parameter.getInitialization() != null) {
+						String value = parameter.getInitialization();
+						TranslationConstantNode tcn = ExpressionCompilationListener.getConstantNode(null, value, value);
+						header.append("=");
+						programmer.writeConstant(header, tcn);
+					}
 				}
-				String decl = String.format("%s%s(%s)", type, name, p.toString() ); 
+				String decl = String.format("%s%s(%s)", type, name, header.out.toString() ); 
 				if (fpi.decorators.contains("@classmethod")) {
 					hppIndent.append("static " + decl);
 				} else if (fpi.decorators.contains("@abstractmethod")) {
@@ -326,7 +369,7 @@ public class CppBoostTarget implements ILanguageTarget {
 				}
 				hppIndent.append(";\n");
 				if (! fpi.decorators.contains("@abstractmethod")) {
-					decl = String.format("%s%s::%s (%s)", type, currentClass, name, p.toString() );
+					decl = String.format("%s%s::%s (%s)", type, currentClass, name, body.out.toString() );
 					cppIndent.writeln( decl + " {");
 				}
 			}
@@ -414,9 +457,17 @@ public class CppBoostTarget implements ILanguageTarget {
 						out.append(", ");
 					}
 					emitChild( out, scope, child.getChild(i));
-					
 				}
 				programmer.closeParenthesis( out );
+			} else {
+				programmer.openBracket( out );
+				for (int i = 0; i < child.getChildCount(); i++) {
+					if (i > 0) {
+						out.append(", ");
+					}
+					emitChild( out, scope, child.getChild(i));
+				}
+				programmer.closeBracket( out );
 			}
 		} else {
 			traverseEmitter( out, scope, child, 0);				
@@ -517,10 +568,12 @@ public class CppBoostTarget implements ILanguageTarget {
 
 	@Override
 	public void emitForStatement(Symbol symbol, TranslationNode atomExpr) {
-		System.out.println(atomExpr.traverse(1));
+//		System.out.println(atomExpr.traverse(1));
 		TranslationSymbolNode tsn = (TranslationSymbolNode) atomExpr.getChild(0); // range
 		TranslationListNode tln = (TranslationListNode) atomExpr.getChild(1);
-		cppIndent.write( String.format("for (%s %s = ", symbol.getType(), symbol.getName()));
+		cppIndent.write( String.format("for (%s %s = ", 
+				programmer.remapType( symbol.getType() ), 
+				symbol.getName()));
 		emitSubExpression( symbol.getScope(), tln.getChild(0) );
 		cppIndent.append( String.format("; %s < ", symbol.getName()));
 		emitSubExpression( symbol.getScope(), tln.getChild(1) );
