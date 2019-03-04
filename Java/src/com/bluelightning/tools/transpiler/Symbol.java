@@ -43,6 +43,7 @@ public class Symbol {
 	protected String type;
 	protected Scope  scope;
 	protected String initialization;
+	protected boolean isForVariable;
 	protected SuperClassInfo superClassInfo = null;
 	protected FunctionParametersInfo functionParametersInfo = null;
 	
@@ -114,5 +115,13 @@ public class Symbol {
 	
 	public String getInitialization() {
 		return this.initialization;
+	}
+
+	public boolean isForVariable() {
+		return isForVariable;
+	}
+
+	public void setForVariable(boolean isForVariable) {
+		this.isForVariable = isForVariable;
 	}
 }

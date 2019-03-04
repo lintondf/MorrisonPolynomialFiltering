@@ -43,6 +43,10 @@ namespace PolynomialFiltering {
 		return a.array() * b.array();
 	}
 
+	inline RealMatrix arrayDivide(RealMatrix a, RealMatrix b) {
+		return a.array() / b.array();
+	}
+
 }
 
 

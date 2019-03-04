@@ -157,15 +157,19 @@ class DeclarationsListener extends LcdPythonBaseListener {
 		public void enterImport_from(LcdPythonParser.Import_fromContext ctx) { 
 //			dumpChildren( ctx );
 		}
+
+		// for <var> in <range> :
+		@Override 
+		public void enterFor_stmt(LcdPythonParser.For_stmtContext ctx) {
+			Scope currentScope = scopeStack.peek();
+			Symbol symbol = transpiler.lookup(currentScope, ctx.getChild(1).getText());
+			if (symbol != null) {
+				symbol.setForVariable(true);
+			}
+		}
 		
 //		//atom_expr: (AWAIT)? atom trailer*;
 //		//trailer: '(' (arglist)? ')' | '[' subscriptlist ']' | '.' NAME;				
-//		@Override
-//		public void exitAtom_expr(LcdPythonParser.Atom_exprContext ctx) {
-//			
-//		}
-		
-		
 		@Override
 		public void enterAtom(LcdPythonParser.AtomContext ctx) {
 			for (int i = 0; i < ctx.getChildCount(); i++) {

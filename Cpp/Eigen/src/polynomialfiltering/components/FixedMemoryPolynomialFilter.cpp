@@ -65,7 +65,6 @@ namespace PolynomialFiltering {
                 RealMatrix Tn;
                 RealVector C;
                 double fact;
-                long i;
                 Tn = ArrayXXd::Zero(dt.rows(), this->order + 1);
                 Tn.col(0) = ones(dt.rows(), 1);
                 C = copy(dt);

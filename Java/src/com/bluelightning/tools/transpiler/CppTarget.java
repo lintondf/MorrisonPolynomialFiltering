@@ -492,7 +492,6 @@ public class CppTarget implements ILanguageTarget {
 				TranslationSubexpressionNode tsn = (TranslationSubexpressionNode) child;
 				tsn.analyze();
 				if (tsn.getName().equals("SUBEXPRESSION::Term")) {
-					System.out.println( child.traverse(1));
 					String operator = ((TranslationOperatorNode) tsn.getChild(1)).getOperator();
 					String lhsType =  ((TranslationSubexpressionNode) tsn.getChild(0)).getType();
 					if (lhsType == null)
@@ -559,6 +558,8 @@ public class CppTarget implements ILanguageTarget {
 
 	@Override
 	public void emitSymbolDeclaration(Symbol symbol) {
+		if ( symbol.isForVariable() )
+			return;
 		String cppType = programmer.remapType(symbol.getType());
 		if (cppType == null) {
 			cppType = symbol.getType();

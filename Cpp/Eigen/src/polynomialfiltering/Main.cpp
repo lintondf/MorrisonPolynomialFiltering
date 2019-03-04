@@ -20,9 +20,6 @@ namespace PolynomialFiltering {
 
         RealMatrix AbstractFilter::stateTransitionMatrix (const long N, const double dt) {
             RealMatrix B;
-            long i;
-            long j;
-            double x;
             long ji;
             double fji;
             B = identity(N);

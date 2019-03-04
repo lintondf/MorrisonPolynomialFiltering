@@ -115,7 +115,7 @@ public class EigenProgrammer implements IProgrammer {
 
 	@Override
 	public boolean isSpecialTerm(String operator, String lhsType, String rhsType) {
-		System.out.printf("isSpecial (%s) (%s) (%s)\n", operator, lhsType, rhsType);
+//		System.out.printf("isSpecial (%s) (%s) (%s)\n", operator, lhsType, rhsType);
 		if (lhsType.equals("array") || lhsType.equals("vector")) {
 			if (rhsType.equals("array") || rhsType.equals("vector")) {
 				return true;
