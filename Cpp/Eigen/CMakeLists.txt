@@ -11,8 +11,10 @@ include_directories(include)
 
 #include_directories(src) 
 #set(SOURCES src/polynomialfiltering/Main.cpp src/polynomialfiltering/components/FixedMemoryPolynomialFilter.cpp)
-set(SOURCES src/polynomialfiltering/Main.cpp 
-	src/polynomialfiltering/components/FixedMemoryPolynomialFilter.cpp
+#set(SOURCES src/polynomialfiltering/Main.cpp 
+#	src/polynomialfiltering/components/FixedMemoryPolynomialFilter.cpp
+set(SOURCES  src/polynomialfiltering/Main.cpp 
+    src/polynomialfiltering/components/FixedMemoryPolynomialFilter.cpp
 	src/EigenTest.cpp)
 #add_executable(PolynomialFilteringCpp ${SOURCES})
 add_executable(EigenTest ${SOURCES})

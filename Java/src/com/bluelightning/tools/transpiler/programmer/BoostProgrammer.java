@@ -13,12 +13,6 @@ import com.bluelightning.tools.transpiler.nodes.TranslationConstantNode;
 
 public class BoostProgrammer implements IProgrammer {
 	
-	Stack<String> parens = new Stack<>();
-	Map<String, String> typeRemap = new HashMap<>();
-	
-	// index by function-name yields map indexed by type yields boost name
-	protected Map<String, Map<String,Symbol>> functionRewrites = new HashMap<>();
-	
 	public BoostProgrammer() {
 		typeRemap.put("None", "void");
 		typeRemap.put("int", "long");
@@ -29,7 +23,6 @@ public class BoostProgrammer implements IProgrammer {
 		
 		//Map<String, Symbol>  eye->identity_matrix<double>
 		//                   zeros->zero_matrix<double> | zero_vector<double>
-		
 		Scope libraryScope = new Scope();
 		Map<String, Symbol> boostNames = new HashMap<>();
 		boostNames.put("array",  new Symbol(libraryScope, "identity_matrix<double>", "array") );
@@ -41,6 +34,13 @@ public class BoostProgrammer implements IProgrammer {
 		functionRewrites.put("zeros", boostNames);
 	}
 	
+	
+	Stack<String> parens = new Stack<>();
+	Map<String, String> typeRemap = new HashMap<>();
+	
+	// index by function-name yields map indexed by type yields boost name
+	protected Map<String, Map<String,Symbol>> functionRewrites = new HashMap<>();
+
 	/* (non-Javadoc)
 	 * @see com.bluelightning.tools.transpiler.IProgrammer#remapFunctionName(java.lang.String, java.lang.String)
 	 */
@@ -186,5 +186,37 @@ public class BoostProgrammer implements IProgrammer {
 	@Override
 	public String getInclude() {
 		return "#include <polynomialfiltering/PolynomialFilteringBoost.hpp>";
+	}
+
+	@Override
+	public String[] getUsings() {
+		String[] usingNamespaces = {
+				"using namespace boost::numeric::ublas;",	
+			};
+		return usingNamespaces;
+	}
+
+	@Override
+	public Symbol getDimensionSymbol(String value) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Symbol getRowColSymbol(String value) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void writeSpecialTerm(Indent out, String operator, Indent lhs, Indent rhs) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public boolean isSpecialTerm(String operator, String lhsType, String rhsType) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 }

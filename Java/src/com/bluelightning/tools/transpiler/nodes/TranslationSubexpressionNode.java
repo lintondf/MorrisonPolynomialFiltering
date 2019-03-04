@@ -9,7 +9,7 @@ public class TranslationSubexpressionNode extends TranslationNode {
 	protected String type;
 
 	public TranslationSubexpressionNode(TranslationNode parent, String name) {
-		super(parent, "<SUBEXPRESSION> " + name);
+		super(parent, "SUBEXPRESSION::" + name);
 	}
 	
 	public String getType() {

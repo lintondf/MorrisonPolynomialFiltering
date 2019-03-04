@@ -9,7 +9,7 @@ import com.bluelightning.tools.transpiler.Symbol;
  * @author NOOK
  *
  */
-public class TranslationSymbolNode extends TranslationNode {
+public class TranslationSymbolNode extends TranslationSubexpressionNode {
 
 	Symbol symbol;
 	
@@ -18,6 +18,7 @@ public class TranslationSymbolNode extends TranslationNode {
 		this.symbol = symbol;
 		if (symbol == null)
 			throw new NullPointerException();
+		this.type = symbol.getType();
 	}
 
 	public Symbol getSymbol() {

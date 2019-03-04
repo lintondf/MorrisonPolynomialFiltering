@@ -42,6 +42,7 @@ import com.bluelightning.tools.transpiler.antlr4.LcdPythonParser;
 import com.bluelightning.tools.transpiler.nodes.TranslationNode;
 import com.bluelightning.tools.transpiler.nodes.TranslationUnaryNode;
 import com.bluelightning.tools.transpiler.programmer.BoostProgrammer;
+import com.bluelightning.tools.transpiler.programmer.EigenProgrammer;
 
 import freemarker.core.PlainTextOutputFormat;
 import freemarker.template.Configuration;
@@ -344,13 +345,18 @@ public class Transpiler {
 			e.printStackTrace();
 		}
 		
-		dispatcher.addTarget( new CppTarget(new BoostProgrammer(), cfg, Paths.get("../Cpp/include/"), Paths.get("../Cpp/src/")) );
+//		dispatcher.addTarget( new CppTarget(new BoostProgrammer(), 
+//				cfg, Paths.get("../Cpp/Boost/") ) );
+		dispatcher.addTarget( new CppTarget(new EigenProgrammer(), 
+				cfg, Paths.get("../Cpp/Eigen/") ) );
 
 		Scope importScope = new Scope();
 		symbolTable.add( importScope, "copy", "array");
 		symbolTable.add( importScope, "eye", "array");
+		symbolTable.add( importScope, "ones", "array");
 		symbolTable.add( importScope, "pow", "float");
 		symbolTable.add( importScope, "range", "range");
+		symbolTable.add( importScope, "shape", "dimensions");
 		symbolTable.add( importScope, "solve", "array");
 		symbolTable.add( importScope, "super", "super" );
 		symbolTable.add( importScope, "transpose", "array");

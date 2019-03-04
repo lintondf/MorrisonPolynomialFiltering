@@ -6,6 +6,8 @@ import com.bluelightning.tools.transpiler.nodes.TranslationConstantNode;
 public interface IProgrammer {
 	
 	String getInclude();
+	
+	String[] getUsings();
 
 	Symbol remapFunctionName(String functionName, String type);
 
@@ -19,7 +21,11 @@ public interface IProgrammer {
 
 	void writeSymbol(Indent out, Symbol symbol);
 
-	void writeOperator(Indent out, String operator);
+	void writeOperator(Indent out, String operator );
+	
+	boolean isSpecialTerm( String operator, String lhsType, String rhsType );
+	
+	void writeSpecialTerm(Indent out, String operator, Indent lhs, Indent rhs );
 
 	void openParenthesis(Indent out);
 
@@ -30,5 +36,9 @@ public interface IProgrammer {
 	void closeBracket(Indent out);
 
 	void writeConstant(Indent out, TranslationConstantNode node);
+
+	Symbol getDimensionSymbol(String value);
+
+	Symbol getRowColSymbol(String value);
 
 }

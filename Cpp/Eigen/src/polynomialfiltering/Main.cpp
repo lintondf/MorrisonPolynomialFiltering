@@ -11,7 +11,7 @@
 #include "polynomialfiltering/Main.hpp"
 
 namespace PolynomialFiltering {
-    using namespace boost::numeric::ublas;
+    using namespace Eigen;
     
         AbstractFilter::AbstractFilter (const std::string name) {
             this->setStatus(FilterStatus :: IDLE);
@@ -25,7 +25,7 @@ namespace PolynomialFiltering {
             double x;
             long ji;
             double fji;
-            B = identity_matrix<double>(N);
+            B = identity(N);
             for (long i = 0; i < N; i++) {
                 for (long j = i + 1; j < N; j++) {
                     ji = j - i;

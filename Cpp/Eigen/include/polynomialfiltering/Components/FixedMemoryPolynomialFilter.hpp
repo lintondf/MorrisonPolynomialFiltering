@@ -12,7 +12,7 @@
 
 #include <math.h>
 
-#include <polynomialfiltering/PolynomialFilteringBoost.hpp>
+#include <polynomialfiltering/PolynomialFilteringEigen.hpp>
 
 #include <polynomialfiltering/Main.hpp>
 
@@ -36,7 +36,7 @@ namespace PolynomialFiltering {
                 double getTau();
                 double getTime();
                 RealMatrix getState(const double t);
-                void add(const double t, const RealMatrix y, const std::string observationId="");
+                void add(const double t, const double y, const std::string observationId="");
                 RealMatrix _getTn(const RealVector dt);
         }; // class FixedMemoryFilter 
 

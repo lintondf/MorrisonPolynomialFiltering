@@ -6,7 +6,7 @@ Created on Feb 18, 2019
 
 from abc import abstractmethod
 
-from numpy import array, copy, zeros, transpose
+from numpy import array, copy, ones, zeros, transpose
 from numpy import array as vector
 from numpy.linalg.linalg import solve
 
@@ -63,7 +63,7 @@ class FixedMemoryFilter(AbstractFilter) :
         self.Z = solve(TntTn, TntYn);
         return self.Z;
     
-    def add(self, t : float, y : array, observationId : str = '') -> None:
+    def add(self, t : float, y : float, observationId : str = '') -> None:
         self.t = t;
         self.tRing[ self.n % self.L ] = t;    
         self.yRing[ self.n % self.L ] = y;
@@ -71,18 +71,18 @@ class FixedMemoryFilter(AbstractFilter) :
 
     
     def _getTn(self, dt : vector ) -> array:
-        '''@Tn : vector'''
-        '''@C : array'''
+        '''@Tn : array'''
+        '''@C : vector'''
         '''@fact : float'''
         '''@i : int'''
         Tn = zeros( [dt.shape[0], self.order+1] );
-        Tn[:,0] = 1.0;
+        Tn[:,0] = ones([dt.shape[0], 1]);
         C = copy(dt);
         fact = 1.0
         for i in range(1, self.order+1) :
             fact /= i;
             Tn[:,i] = C*fact;
-            C *= dt;
+            C = C * dt;
         return Tn;
 
 

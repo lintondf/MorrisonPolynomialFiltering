@@ -12,7 +12,7 @@
 
 namespace PolynomialFiltering {
     namespace Components {
-        using namespace boost::numeric::ublas;
+        using namespace Eigen;
         
             FixedMemoryFilter::FixedMemoryFilter (const long order, const long memorySize) : AbstractFilter() {
                 this->order = order;
@@ -22,9 +22,9 @@ namespace PolynomialFiltering {
                 this->t0 =  0.0 ;
                 this->t =  0.0 ;
                 this->tau =  1.0 ;
-                this->Z = zero_vector<double>(this->order + 1);
-                this->tRing = zero_vector<double>(memorySize);
-                this->yRing = zero_vector<double>(memorySize);
+                this->Z = ArrayXd::Zero(this->order + 1);
+                this->tRing = ArrayXd::Zero(memorySize);
+                this->yRing = ArrayXd::Zero(memorySize);
             }
 
             long FixedMemoryFilter::getN () {
@@ -48,13 +48,13 @@ namespace PolynomialFiltering {
                 dt = this->tRing - t;
                 Tn = this->_getTn(dt);
                 Tnt = transpose(Tn);
-                TntTn = Tnt @ Tn;
-                TntYn = Tnt @ this->yRing;
+                TntTn = Tnt * Tn;
+                TntYn = Tnt * this->yRing;
                 this->Z = solve(TntTn, TntYn);
                 return this->Z;
             }
 
-            void FixedMemoryFilter::add (const double t, const RealMatrix y, const std::string observationId) {
+            void FixedMemoryFilter::add (const double t, const double y, const std::string observationId) {
                 this->t = t;
                 this->tRing(this->n % this->L) = t;
                 this->yRing(this->n % this->L) = y;
@@ -62,18 +62,18 @@ namespace PolynomialFiltering {
             }
 
             RealMatrix FixedMemoryFilter::_getTn (const RealVector dt) {
-                RealVector Tn;
-                RealMatrix C;
+                RealMatrix Tn;
+                RealVector C;
                 double fact;
                 long i;
-                Tn = zero_vector<double>(dt.(0), this->order + 1);
-                Tn( : , 0) =  1.0 ;
+                Tn = ArrayXXd::Zero(dt.rows(), this->order + 1);
+                Tn.col(0) = ones(dt.rows(), 1);
                 C = copy(dt);
                 fact =  1.0 ;
                 for (long i = 1; i < this->order + 1; i++) {
                     fact /= i;
-                    Tn( : , i) = C * fact;
-                    C *= dt;
+                    Tn.col(i) = C * fact;
+                    C = arrayTimes(C, dt);
                 }
                 return Tn;
             }

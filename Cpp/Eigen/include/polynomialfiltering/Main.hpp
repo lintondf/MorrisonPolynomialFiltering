@@ -12,7 +12,7 @@
 
 #include <math.h>
 
-#include <polynomialfiltering/PolynomialFilteringBoost.hpp>
+#include <polynomialfiltering/PolynomialFilteringEigen.hpp>
 
 #include <polynomialfiltering/Main.hpp>
 
