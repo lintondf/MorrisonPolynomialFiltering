@@ -1,7 +1,7 @@
-Cpp/.vs
-Cpp/boost_1_69_0
-Cpp/eigen
-Cpp/include/Eigen
+Cpp/Boost/.vs
+Cpp/Boost/include/boost
+Cpp/Eigen/.vs
+Cpp/Eigen/include/Eigen
 Java/*.log
 Java/bin
 Java/out
