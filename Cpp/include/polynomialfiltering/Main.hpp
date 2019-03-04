@@ -18,11 +18,11 @@
 
 namespace PolynomialFiltering {
     enum FilterStatus {
-        IDLE=0,
-        INITIALIZING=1,
-        RUNNING=2,
-        COASTING=3,
-        RESETING=4,
+        IDLE = 0,
+        INITIALIZING = 1,
+        RUNNING = 2,
+        COASTING = 3,
+        RESETING = 4,
     }; // class FilterStatus 
 
     class AbstractFilter {

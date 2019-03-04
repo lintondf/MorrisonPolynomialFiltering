@@ -27,16 +27,16 @@ namespace PolynomialFiltering {
                 double t0;
                 double t;
                 double tau;
-                RealMatrix Z;
-                RealMatrix tRing;
-                RealMatrix yRing;
+                RealVector Z;
+                RealVector tRing;
+                RealVector yRing;
                 FixedMemoryFilter(const long order, const long memorySize=51);
                 long getN();
                 double getTau();
                 double getTime();
                 RealMatrix getState(const double t);
                 void add(const double t, const RealMatrix y, const std::string observationId="");
-                RealMatrix _getTn(const RealMatrix dt);
+                RealMatrix _getTn(const RealVector dt);
         }; // class FixedMemoryFilter 
 
     }; // namespace Components

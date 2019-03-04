@@ -341,7 +341,7 @@ public class Transpiler {
 			e.printStackTrace();
 		}
 		
-		dispatcher.addTarget( new CppBoostTarget(cfg, Paths.get("../Cpp/include/"), Paths.get("../Cpp/src/")) );
+		dispatcher.addTarget( new CppTarget(new BoostProgrammer(), cfg, Paths.get("../Cpp/include/"), Paths.get("../Cpp/src/")) );
 
 		Scope importScope = new Scope();
 		symbolTable.add( importScope, "copy", "array");

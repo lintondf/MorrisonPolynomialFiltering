@@ -80,15 +80,45 @@ public class TranslationNode  {
 		return children.get( children.size()-1 );
 	}
 	
+	public TranslationNode getParent() {
+		return parent;
+	}
+	
+	public TranslationNode getTop() {
+		TranslationNode node = this;
+		while (node.getParent() != null) {
+			node = node.getParent();
+		}
+		return node;
+	}
+
+	public TranslationNode getFirstChild() {
+		if (children.isEmpty())
+			return null;
+		return children.get(0);
+	}
+
+	public TranslationNode getLeftSibling() {
+		int i = parent.children.indexOf(this);
+		if (i <= 0) {
+			return null;
+		}
+		return parent.children.get(i-1);
+	}
+	
+	public TranslationNode getRightSibling() {
+		int i = parent.children.indexOf(this);
+		if (i >= parent.children.size()-1) {
+			return null;
+		}
+		return parent.children.get(i+1);
+	}
+	
 	public void analyze() {		
 	}
 
 	public String getName() {
 		return name;
-	}
-
-	public TranslationNode getParent() {
-		return parent;
 	}
 
 	

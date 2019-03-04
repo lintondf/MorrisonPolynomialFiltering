@@ -391,6 +391,8 @@ class ExpressionCompilationListener extends LcdPythonBaseListener {
 						switch (unary) {
 						case "(":
 						case "[":
+//							System.out.println("Compiling LIST " + trailer.getChild(i).getText() );
+							//transpiler.dumpChildren(ctx, 1);
 							if (trailer.getChildCount() > 2) {
 								TranslationListNode tln = new TranslationListNode( parent, unary );
 								ParseTree list = trailer.getChild(1);
@@ -402,6 +404,7 @@ class ExpressionCompilationListener extends LcdPythonBaseListener {
 										transpiler.reportError("Untranlated: " + list.getChild(iList).getText() + " " + list.getChild(iList).toStringTree(transpiler.parser) );
 										return;
 									}
+//									System.out.printf("%d %d %s\n", iTrailer, iList, node.toString() );
 									translateMap.put( list.getChild(iList).getPayload(), node);
 								}
 								translateMap.put( trailer.getChild(1).getPayload(), tln);

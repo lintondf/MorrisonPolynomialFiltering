@@ -7,6 +7,7 @@ Created on Feb 18, 2019
 from abc import abstractmethod
 
 from numpy import array, copy, zeros, transpose
+from numpy import array as vector
 from numpy.linalg.linalg import solve
 
 from PolynomialFiltering.Main import AbstractFilter
@@ -20,9 +21,9 @@ class FixedMemoryFilter(AbstractFilter) :
     '''@t0 :float'''
     '''@t :float'''
     '''@tau :float'''
-    '''@Z :array'''
-    '''@tRing :array'''
-    '''@yRing :array'''
+    '''@Z :vector'''
+    '''@tRing :vector'''
+    '''@yRing :vector'''
     
     def __init__(self, order : int, memorySize : int =51 ) -> None:
         super().__init__();  # TODO name
@@ -49,7 +50,7 @@ class FixedMemoryFilter(AbstractFilter) :
         return self.t
     
     def getState(self, t : float) -> array:
-        '''@dt : array'''
+        '''@dt : vector'''
         '''@Tn : array'''
         '''@Tnt : array'''
         '''@TntTn : array'''
@@ -69,8 +70,8 @@ class FixedMemoryFilter(AbstractFilter) :
         self.n += 1;    
 
     
-    def _getTn(self, dt : array ) -> array:
-        '''@Tn : array'''
+    def _getTn(self, dt : vector ) -> array:
+        '''@Tn : vector'''
         '''@C : array'''
         '''@fact : float'''
         '''@i : int'''

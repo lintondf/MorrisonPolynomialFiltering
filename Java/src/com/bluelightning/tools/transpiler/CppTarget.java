@@ -23,7 +23,7 @@ import freemarker.template.Template;
 import freemarker.template.TemplateException;
 
 
-public class CppBoostTarget implements ILanguageTarget {
+public class CppTarget implements ILanguageTarget {
 	
 	protected int id;
 	
@@ -89,105 +89,11 @@ public class CppBoostTarget implements ILanguageTarget {
 	Set<String> ignoredSuperClasses = new TreeSet<>();
 	
 	
-	public static class BoostProgrammer {
-		
-		Stack<String> parens = new Stack<>();
-		private Map<String, String> typeRemap = new HashMap<>();
-		
-		public BoostProgrammer() {
-			typeRemap.put("None", "void");
-			typeRemap.put("int", "long");
-			typeRemap.put("float", "double");
-			typeRemap.put("vector", "RealVector");
-			typeRemap.put("array", "RealMatrix");
-			typeRemap.put("str", "std::string");			
-		}
-		
-		public String remapType( String type ) {
-			String t = typeRemap.get(type);
-			if (t != null)
-				return t;
-			return type;
-		}
-		
-		public void startExpression( Indent out ) {
-		}
-		
-		public void writeAssignmentTarget( Indent out, Symbol symbol) {
-			out.append(symbol.getName());
-			out.append(" = ");
-		}
-		
-		public void finishExpression( Indent out ) {
-			while (! parens.isEmpty() ) {
-				out.append( parens.pop() );
-			}
-		}
-
-		public void writeSymbol(Indent out, Symbol symbol) {
-			if (symbol.getName().equals("self")) {
-				out.append("(*this)");  
-			} else {
-				String name = symbol.getName(); 
-				if (symbol.getScope().getLevel() == Scope.Level.IMPORT) {
-					switch (name) {
-					default:
-						break;
-					case "eye":
-						name = "identity_matrix<double>";
-						break;
-					}
-				}
-				out.append(name);
-			}
-		}
-
-		public void writeOperator(Indent out, String operator) {
-			out.append(operator);
-		}
-
-		public void openParenthesis(Indent out) {
-			out.append("(");
-		}
-
-		public void closeParenthesis(Indent out) {
-			out.append(")");
-		}
-
-		public void openBracket(Indent out) {
-			out.append("(");  // boost uses () for array references
-		} 
-
-		public void closeBracket(Indent out) {
-			out.append(")");
-		}
-
-		public void writeConstant(Indent out, TranslationConstantNode node ) {
-			switch (node.getKind()) {
-			case INTEGER:
-				out.append(node.getValue());
-				break;
-			case FLOAT:
-				out.append(node.getValue());
-				break;
-			case STRING:
-				String str = node.getValue();
-				if (str.startsWith("'")) {  // convert to C++ double quoted
-					str = str.substring(1, str.length()-1);
-					str = str.replaceAll("\"", "\\\"");
-					out.append( String.format("\"%s\"", str));
-				} else {
-					out.append( str );
-				}
-				break;
-			}
-		}
-	}
-	
-	public CppBoostTarget( Configuration cfg, Path includeDirectory, Path srcDirectory ) {
+	public CppTarget( IProgrammer programmer, Configuration cfg, Path includeDirectory, Path srcDirectory ) {
 		this.cfg = cfg;
 		this.includeDirectory = includeDirectory;	
-		this.srcDirectory = srcDirectory;	
+		this.srcDirectory = srcDirectory;
+		this.programmer = programmer;
 		
 		ignoredSuperClasses.add("ABC");
 		
@@ -201,7 +107,7 @@ public class CppBoostTarget implements ILanguageTarget {
 		}
 	}
 
-	protected BoostProgrammer programmer = new BoostProgrammer();
+	protected IProgrammer programmer = null;
 	
 	Stack<String> namespaceStack = new Stack<String>();
 	
@@ -406,7 +312,7 @@ public class CppBoostTarget implements ILanguageTarget {
 			cppIndent.out();
 		}
 		templateDataModel.put("hppBody", hppIndent.out.toString());
-		templateDataModel.put("cppBody", cppIndent.out.toString());
+		templateDataModel.put("cppBody", cppIndent.out.toString().replace("(*this).", "this->"));
 		try {
 			Writer out = new OutputStreamWriter(new FileOutputStream(hppPath.toFile()));
 			//System.out.println(hppFile.toString());
@@ -439,9 +345,74 @@ public class CppBoostTarget implements ILanguageTarget {
 		return (root instanceof TranslationSymbolNode);
 	}
 	
+	protected String getAssignmentTargetType( TranslationNode child ) {
+		if (child.getTop() instanceof TranslationSubexpressionNode) {
+			TranslationSubexpressionNode top = (TranslationSubexpressionNode) child.getTop();
+			if (top.getChildCount() > 2) {
+				if (top.getChild(1) instanceof TranslationOperatorNode) {
+					if (((TranslationOperatorNode)top.getChild(1)).getOperator().equals("=")) {
+						TranslationNode lhs = top.getChild(0);
+						while (lhs instanceof TranslationSubexpressionNode) {
+							lhs = lhs.getChild(0);
+						}
+						// TODO self.name
+						if (lhs instanceof TranslationSymbolNode) {
+							Symbol s = ((TranslationSymbolNode) lhs).getSymbol();
+							if (s.getName().equals("self")) {
+								TranslationNode u = lhs.getRightSibling();
+								if (u instanceof TranslationUnaryNode) {
+									return ((TranslationUnaryNode) u).getType();
+								} else {
+									return s.getType();
+								}
+							} else {
+								return s.getType();
+							}
+						}
+					}
+				}
+			}
+		}
+		return null;
+	}
+	
+	protected void emitBracketedList(Indent out, Scope scope, TranslationNode child, String open) {
+		if (open.equals("(")) {
+			programmer.openParenthesis( out );
+			for (int i = 0; i < child.getChildCount(); i++) {
+				if (i > 0) {
+					out.append(", ");
+				}
+				emitChild( out, scope, child.getChild(i));
+			}
+			programmer.closeParenthesis( out );
+		} else {
+			programmer.openBracket( out );
+			for (int i = 0; i < child.getChildCount(); i++) {
+				if (i > 0) {
+					out.append(", ");
+				}
+				emitChild( out, scope, child.getChild(i));
+			}
+			programmer.closeBracket( out );
+		}
+	}
+
+
+	
 	protected void emitChild(Indent out, Scope scope, TranslationNode child) {
 		if (child instanceof TranslationSymbolNode) {
-			programmer.writeSymbol( out, ((TranslationSymbolNode) child).getSymbol() );
+			Symbol symbol = ((TranslationSymbolNode) child).getSymbol();
+			if (symbol.getScope().getLevel() == Scope.Level.IMPORT) {
+				String type = getAssignmentTargetType(child);
+				System.out.println( symbol.getName() + "======" + child.getTop().toString() + " / " + type );
+				System.out.println( child.getTop().traverse(1));
+				Symbol rename = programmer.remapFunctionName( symbol.getName(), type );
+				if (rename != null) {
+					symbol = rename;
+				}
+			}
+			programmer.writeSymbol( out, symbol );
 		} else if (child instanceof TranslationConstantNode) {
 			programmer.writeConstant( out, (TranslationConstantNode) child );
 		} else if (child instanceof TranslationOperatorNode) {
@@ -456,26 +427,22 @@ public class CppBoostTarget implements ILanguageTarget {
 				System.out.println(unary);
 			}
 		} else if (child instanceof TranslationListNode) {
-			String open = ((TranslationListNode) child).getListOpen();
-			if (open.equals("(")) {
-				programmer.openParenthesis( out );
-				for (int i = 0; i < child.getChildCount(); i++) {
-					if (i > 0) {
-						out.append(", ");
-					}
-					emitChild( out, scope, child.getChild(i));
+			TranslationListNode tln = (TranslationListNode) child;
+			if (tln.getListOpen().equals("(") && tln.getChildCount() == 0) {
+				// may be ([...]) which compiles to LIST(:0, LIST[{LIST[...}
+				TranslationNode next = tln.getRightSibling();
+				if (next != null && next instanceof TranslationListNode) {
+					return;
 				}
-				programmer.closeParenthesis( out );
-			} else {
-				programmer.openBracket( out );
-				for (int i = 0; i < child.getChildCount(); i++) {
-					if (i > 0) {
-						out.append(", ");
-					}
-					emitChild( out, scope, child.getChild(i));
-				}
-				programmer.closeBracket( out );
 			}
+			if (tln.getListOpen().equals("[") && tln.getChildCount() == 1) {
+				TranslationNode sublist = tln.getFirstChild();
+				if (sublist != null && sublist instanceof TranslationListNode) {
+					child = sublist;
+				}
+			}
+			String open = tln.getListOpen();
+			emitBracketedList( out, scope, child, open );
 		} else {
 			traverseEmitter( out, scope, child, 0);				
 		}
@@ -525,7 +492,7 @@ public class CppBoostTarget implements ILanguageTarget {
 
 	@Override
 	public void emitSymbolDeclaration(Symbol symbol) {
-		String cppType = programmer.typeRemap.get(symbol.getType());
+		String cppType = programmer.remapType(symbol.getType());
 		if (cppType == null) {
 			cppType = symbol.getType();
 		}
@@ -570,7 +537,7 @@ public class CppBoostTarget implements ILanguageTarget {
 
 	@Override
 	public void emitCloseStatement() {
-		cppIndent.append(";");
+		cppIndent.append(";\n");
 	}
 
 	@Override
