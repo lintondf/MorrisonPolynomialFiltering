@@ -76,7 +76,7 @@ class FixedMemoryFilter(AbstractFilter) :
         '''@fact : float'''
         '''@i : int'''
         Tn = zeros( [dt.shape[0], self.order+1] );
-        Tn[:,0] = ones([dt.shape[0], 1]);
+        Tn[:,0] = ones([dt.shape[0]]);
         C = copy(dt);
         fact = 1.0
         for i in range(1, self.order+1) :

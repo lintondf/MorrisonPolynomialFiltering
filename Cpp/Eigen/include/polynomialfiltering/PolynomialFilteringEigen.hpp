@@ -19,7 +19,7 @@ namespace PolynomialFiltering {
 		return MatrixXd::Identity(N, N);
 	}
 
-	inline RealMatrix ones(Index N, Index M) {
+	inline RealMatrix ones(Index N, Index M = 1) {
 		return MatrixXd::Constant(N, M, 1.0);
 	}
 
