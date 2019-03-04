@@ -3,6 +3,8 @@ package com.bluelightning.tools.transpiler;
 import com.bluelightning.tools.transpiler.CppTarget.Indent;
 
 public interface IProgrammer {
+	
+	String getInclude();
 
 	Symbol remapFunctionName(String functionName, String type);
 

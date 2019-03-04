@@ -99,8 +99,8 @@ public class CppTarget implements ILanguageTarget {
 		
 		try {
 			
-			hpp = cfg.getTemplate("CppBoost_hpp.ftlh");
-			cpp = cfg.getTemplate("CppBoost_cpp.ftlh");
+			hpp = cfg.getTemplate("Hpp.ftlh");
+			cpp = cfg.getTemplate("Cpp.ftlh");
 			
 		} catch (IOException iox ) {
 			iox.printStackTrace();
@@ -142,6 +142,7 @@ public class CppTarget implements ILanguageTarget {
 		templateDataModel.put("systemIncludes", "");
 		String localInclude = "#include <polynomialfiltering/Main.hpp>\n";
 		templateDataModel.put("localIncludes", localInclude);
+		templateDataModel.put("interfaceInclude", programmer.getInclude() + "\n");
 		templateDataModel.put("moduleInclude", moduleIncludeFile.toString());
 		
 		StringBuilder systemIncludes = new StringBuilder();

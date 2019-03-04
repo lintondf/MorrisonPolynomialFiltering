@@ -11,7 +11,7 @@
 #define ${hppDefine}
 
 ${systemIncludes}
-#include <polynomialfiltering/PolynomialFiltering.hpp>
+${interfaceInclude}
 ${localIncludes}
 
 ${hppBody}

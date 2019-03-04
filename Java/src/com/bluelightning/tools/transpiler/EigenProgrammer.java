@@ -119,4 +119,9 @@ public class EigenProgrammer implements IProgrammer {
 
 	}
 
+	@Override
+	public String getInclude() {
+		return "#include <polynomialfiltering/PolynomialFilteringEigen.hpp>";
+	}
+
 }

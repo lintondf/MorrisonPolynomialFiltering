@@ -177,4 +177,9 @@ public class BoostProgrammer implements IProgrammer {
 			break;
 		}
 	}
+
+	@Override
+	public String getInclude() {
+		return "#include <polynomialfiltering/PolynomialFilteringBoost.hpp>";
+	}
 }
