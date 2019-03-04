@@ -1,9 +1,13 @@
 /**
  * 
  */
-package com.bluelightning.tools.transpiler;
+package com.bluelightning.tools.transpiler.programmer;
 
+import com.bluelightning.tools.transpiler.CppTarget;
+import com.bluelightning.tools.transpiler.IProgrammer;
+import com.bluelightning.tools.transpiler.Symbol;
 import com.bluelightning.tools.transpiler.CppTarget.Indent;
+import com.bluelightning.tools.transpiler.nodes.TranslationConstantNode;
 
 /**
  * @author NOOK

@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
-class Symbol {
+public class Symbol {
 	
 	public static class SuperClassInfo {
 		public String superClass;

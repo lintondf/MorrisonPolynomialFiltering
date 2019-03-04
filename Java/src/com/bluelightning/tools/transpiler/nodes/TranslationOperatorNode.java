@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.bluelightning.tools.transpiler;
+package com.bluelightning.tools.transpiler.nodes;
 
 /**
  * @author NOOK
@@ -11,7 +11,7 @@ public class TranslationOperatorNode extends TranslationNode {
 
 	String operator;
 	
-	TranslationOperatorNode(TranslationNode parent, String operator) {
+	public TranslationOperatorNode(TranslationNode parent, String operator) {
 		super(parent, "<OPERATOR>" + operator);
 		this.operator = operator;
 	}

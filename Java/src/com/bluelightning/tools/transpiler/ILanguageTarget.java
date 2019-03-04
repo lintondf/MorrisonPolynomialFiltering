@@ -3,6 +3,8 @@
  */
 package com.bluelightning.tools.transpiler;
 
+import com.bluelightning.tools.transpiler.nodes.TranslationNode;
+
 /**
  * @author NOOK
  *

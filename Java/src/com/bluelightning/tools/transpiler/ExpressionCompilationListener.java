@@ -10,9 +10,16 @@ import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.RuleNode;
 
 import com.bluelightning.tools.transpiler.Scope.Level;
-import com.bluelightning.tools.transpiler.TranslationConstantNode.Kind;
 import com.bluelightning.tools.transpiler.antlr4.LcdPythonBaseListener;
 import com.bluelightning.tools.transpiler.antlr4.LcdPythonParser;
+import com.bluelightning.tools.transpiler.nodes.TranslationConstantNode;
+import com.bluelightning.tools.transpiler.nodes.TranslationListNode;
+import com.bluelightning.tools.transpiler.nodes.TranslationNode;
+import com.bluelightning.tools.transpiler.nodes.TranslationOperatorNode;
+import com.bluelightning.tools.transpiler.nodes.TranslationSubexpressionNode;
+import com.bluelightning.tools.transpiler.nodes.TranslationSymbolNode;
+import com.bluelightning.tools.transpiler.nodes.TranslationUnaryNode;
+import com.bluelightning.tools.transpiler.nodes.TranslationConstantNode.Kind;
 
 class ExpressionCompilationListener extends LcdPythonBaseListener {
 		
@@ -241,7 +248,7 @@ class ExpressionCompilationListener extends LcdPythonBaseListener {
 		@Override
 		public void exitExpr_stmt(LcdPythonParser.Expr_stmtContext ctx) {
 			if (expressionRoot != null) {
-				TranslationNode expr = defaultOperandOperator( ctx, expressionRoot.name );
+				TranslationNode expr = defaultOperandOperator( ctx, expressionRoot.getName() );
 				expr.analyze();
 				expressionRoot = expr;
 				while (expressionRoot.getChildCount() == 1) {

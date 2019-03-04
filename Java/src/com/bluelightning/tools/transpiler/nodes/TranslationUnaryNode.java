@@ -1,7 +1,10 @@
 /**
  * 
  */
-package com.bluelightning.tools.transpiler;
+package com.bluelightning.tools.transpiler.nodes;
+
+import com.bluelightning.tools.transpiler.Symbol;
+import com.bluelightning.tools.transpiler.Transpiler;
 
 /**
  * @author NOOK
@@ -14,8 +17,8 @@ public class TranslationUnaryNode extends TranslationSubexpressionNode {
 	Object lhs;
 	Object rhs;
 
-	TranslationUnaryNode(TranslationNode parent, Object lhs, Object rhs) {
-		super(parent, "<UNARY>:" + Transpiler.instance().valueMap.get(lhs) + " " + Transpiler.instance().valueMap.get(rhs) );
+	public TranslationUnaryNode(TranslationNode parent, Object lhs, Object rhs) {
+		super(parent, "<UNARY>:" + Transpiler.instance().getValue(lhs) + " " + Transpiler.instance().getValue(rhs) );
 		this.lhs = lhs;
 		this.rhs = rhs;
 		if (rhs instanceof Symbol) {
@@ -24,11 +27,11 @@ public class TranslationUnaryNode extends TranslationSubexpressionNode {
 	}
 	
 	public String getLhs() {
-		return Transpiler.instance().valueMap.get(lhs);
+		return Transpiler.instance().getValue(lhs);
 	}
 
 	public String getRhs() {
-		return Transpiler.instance().valueMap.get(rhs);
+		return Transpiler.instance().getValue(rhs);
 	}
 	
 	public Symbol getRhsSymbol() {

@@ -39,6 +39,9 @@ import com.bluelightning.tools.transpiler.antlr4.LcdPythonBaseListener;
 import com.bluelightning.tools.transpiler.antlr4.LcdPythonBaseVisitor;
 import com.bluelightning.tools.transpiler.antlr4.LcdPythonLexer;
 import com.bluelightning.tools.transpiler.antlr4.LcdPythonParser;
+import com.bluelightning.tools.transpiler.nodes.TranslationNode;
+import com.bluelightning.tools.transpiler.nodes.TranslationUnaryNode;
+import com.bluelightning.tools.transpiler.programmer.BoostProgrammer;
 
 import freemarker.core.PlainTextOutputFormat;
 import freemarker.template.Configuration;
@@ -57,11 +60,11 @@ public class Transpiler {
 	
 	protected StringBuffer errorReport = new StringBuffer();
 	
-	protected void reportError(ParserRuleContext context, String message ) {
+	public void reportError(ParserRuleContext context, String message ) {
 		reportError( context.start, message );
 	}
 	
-	protected void reportError(Token token, String message ) {
+	public void reportError(Token token, String message ) {
 		String r = String.format("ERROR [L%5d:C%3d]: %s", token.getLine(), token.getCharPositionInLine(), message );
 		reportError(r);
 	}
@@ -73,11 +76,11 @@ public class Transpiler {
 	}
 
 
-	protected void dumpChildren( RuleNode ctx ) {
+	public void dumpChildren( RuleNode ctx ) {
 		dumpChildren( ctx, 0 );
 	}
 	
-	protected void dumpChildren( RuleNode ctx, int indent ) {
+	public void dumpChildren( RuleNode ctx, int indent ) {
 		if (ctx.getChildCount() == 1) {
 			if (ctx.getChild(0) instanceof RuleNode)
 				dumpChildren( (RuleNode) ctx.getChild(0), indent+1 );
@@ -150,7 +153,7 @@ public class Transpiler {
 		return cfg;
 	}
 
-	public class TargetDispatcher implements ILanguageTarget {
+	protected class TargetDispatcher implements ILanguageTarget {
 		
 		List<ILanguageTarget> targets = new ArrayList<>();
 		
@@ -426,7 +429,7 @@ public class Transpiler {
 		System.setProperty("user.dir", lwd);
 	}
 
-	private static class Target {
+	public static class Target {
 		public Path  dir;
 		public String module;
 		

@@ -3,7 +3,7 @@ package com.bluelightning.tools.transpiler;
 import java.util.List;
 
 
-class Scope {
+public class Scope {
 		protected String[] qualifiers; // e.g. com.bluelightning.Filtering
 		public enum Level {
 			IMPORT, MODULE, FUNCTION, CLASS, MEMBER,
@@ -11,7 +11,7 @@ class Scope {
 		protected Level  level;
 		protected String qString;
 		
-		protected Scope() {
+		public Scope() {
 			level = Level.IMPORT;
 			this.qualifiers = new String[] {""};
 			this.qString = "/";

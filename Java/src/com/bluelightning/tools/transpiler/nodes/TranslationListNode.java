@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.bluelightning.tools.transpiler;
+package com.bluelightning.tools.transpiler.nodes;
 
 /**
  * @author NOOK
@@ -11,7 +11,7 @@ public class TranslationListNode extends TranslationSubexpressionNode {
 	
 	protected String listOpen;
 
-	TranslationListNode(TranslationNode parent, String name) {
+	public TranslationListNode(TranslationNode parent, String name) {
 		super(parent, "<LIST>"+name);
 		this.listOpen = name;
 	}

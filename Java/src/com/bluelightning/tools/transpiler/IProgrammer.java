@@ -1,6 +1,7 @@
 package com.bluelightning.tools.transpiler;
 
 import com.bluelightning.tools.transpiler.CppTarget.Indent;
+import com.bluelightning.tools.transpiler.nodes.TranslationConstantNode;
 
 public interface IProgrammer {
 	

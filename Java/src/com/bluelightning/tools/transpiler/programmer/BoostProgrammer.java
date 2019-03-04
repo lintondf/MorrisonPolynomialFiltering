@@ -1,10 +1,15 @@
-package com.bluelightning.tools.transpiler;
+package com.bluelightning.tools.transpiler.programmer;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
 
+import com.bluelightning.tools.transpiler.CppTarget;
+import com.bluelightning.tools.transpiler.IProgrammer;
+import com.bluelightning.tools.transpiler.Scope;
+import com.bluelightning.tools.transpiler.Symbol;
 import com.bluelightning.tools.transpiler.CppTarget.Indent;
+import com.bluelightning.tools.transpiler.nodes.TranslationConstantNode;
 
 public class BoostProgrammer implements IProgrammer {
 	
