@@ -234,7 +234,8 @@ public class CppBoostTarget implements ILanguageTarget {
 		define = String.format("__%sHPP", scope.toString().replace("/", "_").toUpperCase());
 		templateDataModel.put("hppDefine", define);
 		templateDataModel.put("systemIncludes", "");
-		templateDataModel.put("localIncludes", "");
+		String localInclude = "#include <polynomialfiltering/Main.hpp>\n";
+		templateDataModel.put("localIncludes", localInclude);
 		templateDataModel.put("moduleInclude", moduleIncludeFile.toString());
 		
 		StringBuilder systemIncludes = new StringBuilder();
@@ -315,7 +316,7 @@ public class CppBoostTarget implements ILanguageTarget {
 		Scope functionScope = scope.getParent();
 		Symbol symbol = Transpiler.instance().symbolTable.lookup(functionScope, currentFunction);
 		if (symbol == null) {
-			Transpiler.instance().reportError("Unknown symbol: " + currentFunction + " " + functionScope );
+			Transpiler.instance().reportError("startMethod::Unknown symbol: " + currentFunction + " " + functionScope );
 		}
 		Symbol.FunctionParametersInfo fpi = symbol.getFunctionParametersInfo();
 		if (symbol != null && fpi != null) {
@@ -370,6 +371,12 @@ public class CppBoostTarget implements ILanguageTarget {
 				hppIndent.append(";\n");
 				if (! fpi.decorators.contains("@abstractmethod")) {
 					decl = String.format("%s%s::%s (%s)", type, currentClass, name, body.out.toString() );
+					if (fpi.decorators.contains("@superClassConstructor")) {
+						String className = symbol.getScope().getLast();
+						Scope superScope = symbol.getScope().getParent();
+						Symbol c = Transpiler.instance().lookup(superScope, className);
+						decl += " : " + c.getSuperClassInfo().superClass + "()";
+					}
 					cppIndent.writeln( decl + " {");
 				}
 			}

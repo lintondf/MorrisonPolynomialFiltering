@@ -329,7 +329,7 @@ public class Transpiler {
 		return singleton;
 	}
 
-	public Transpiler(Path where, List<String> dottedModule) {
+	public Transpiler() {
 		singleton = this;
 		
 		logger = LoggerFactory.getLogger("com.bluelightning.Transpiler");
@@ -342,9 +342,25 @@ public class Transpiler {
 		}
 		
 		dispatcher.addTarget( new CppBoostTarget(cfg, Paths.get("../Cpp/include/"), Paths.get("../Cpp/src/")) );
+
+		Scope importScope = new Scope();
+		symbolTable.add( importScope, "copy", "array");
+		symbolTable.add( importScope, "eye", "array");
+		symbolTable.add( importScope, "pow", "float");
+		symbolTable.add( importScope, "range", "range");
+		symbolTable.add( importScope, "solve", "array");
+		symbolTable.add( importScope, "super", "super" );
+		symbolTable.add( importScope, "transpose", "array");
+		symbolTable.add( importScope, "zeros", "array");
+		symbolTable.add( importScope, "NotImplementedError", "exception");
+		
+		valueMap.put( TranslationUnaryNode.staticFieldReference, "::");
+
+	}
+	
+	public void compile(Path where, List<String> dottedModule) {
 		
 		String module = dottedModule.get(dottedModule.size()-1);
-		
 		try {
 			byte[] bytes = Files.readAllBytes(where.resolve(module + ".py"));
 			content = new String(bytes, "UTF-8");
@@ -360,13 +376,6 @@ public class Transpiler {
 		}
 		dispatcher.startModule(moduleScope);
 		
-		symbolTable.add( importScope, "eye", "array");
-		symbolTable.add( importScope, "pow", "float");
-		symbolTable.add( importScope, "range", "range");
-		symbolTable.add( importScope, "NotImplementedError", "exception");
-		
-		valueMap.put( TranslationUnaryNode.staticFieldReference, "::");
-
 		LcdPythonLexer java8Lexer = new LcdPythonLexer(CharStreams.fromString(content));
 		CommonTokenStream tokens = new CommonTokenStream(java8Lexer);
 		parser = new LcdPythonParser(tokens);
@@ -417,28 +426,41 @@ public class Transpiler {
 		System.setProperty("user.dir", lwd);
 	}
 
+	private static class Target {
+		public Path  dir;
+		public String module;
+		
+		public Target( Path dir, String module ) {
+			this.dir = dir;
+			this.module = module;
+		}
+	}
+	
+	static Target[] targets = {
+		//new Target(Paths.get(""), "TranspilerTest"),
+		new Target(Paths.get("PolynomialFiltering"), "Main"),
+		new Target(Paths.get("PolynomialFiltering/Components"), "FixedMemoryPolynomialFilter"),
+	};
+	
 	/**
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		// compileGrammar( "data", "LcdPython.g4",
-		// "src/com/bluelightning/tools/transpiler/antlr4/" );
+		Transpiler transpiler = new Transpiler();
+		
 		Path base = Paths.get("../Python/src");
-		Path dir = Paths.get("PolynomialFiltering");
-		String module = "Main";
-		if (false) {
-			dir = Paths.get("");
-			module = "TranspilerTest";
+		for (Target target : targets) {
+			Path where = base;
+			ArrayList<String> dottedModule = new ArrayList<>();
+			for (int i = 0; i < target.dir.getNameCount(); i++) {
+				if (! target.dir.getName(i).toString().isEmpty()) {
+					dottedModule.add( target.dir.getName(i).toString());
+					where = where.resolve(target.dir.getName(i).toString());
+				}
+			}
+			dottedModule.add(target.module);
+			transpiler.compile( where, dottedModule);
 		}
-		ArrayList<String> dottedModule = new ArrayList<>();
-		for (int i = 0; i < dir.getNameCount(); i++) {
-			if (! dir.getName(i).toString().isEmpty())
-				dottedModule.add( dir.getName(i).toString());
-		}
-		dottedModule.add(module);
-//		System.out.println(dottedModule);
-		Path where = base.resolve(dir);
-		Transpiler transpiler = new Transpiler(where, dottedModule);
 	}
 
 

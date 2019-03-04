@@ -244,15 +244,17 @@ class ExpressionCompilationListener extends LcdPythonBaseListener {
 				TranslationNode expr = defaultOperandOperator( ctx, expressionRoot.name );
 				expr.analyze();
 				expressionRoot = expr;
-//				System.out.println("EXPR_STMT< " + expr.toString() );
-//				System.out.println( expr.traverse(1));
 				while (expressionRoot.getChildCount() == 1) {
 					expr = expressionRoot.getChild(0);
 					if (expr.getChildCount() == 0)
 						break;
 					expressionRoot = expr;
 				}
-				if ( ! transpiler.valueMap.get(ctx.getPayload()).startsWith("'''@")) {
+//				System.out.println("EXPR_STMT< " + expr.toString() );
+//				System.out.println( expr.traverse(1));
+				if (ctx.getText().trim().startsWith("super().__init__")) {
+					// ignored
+				} else if ( ! transpiler.valueMap.get(ctx.getPayload()).startsWith("'''@")) {
 //					System.out.println( expr.traverse(1));
 					transpiler.dispatcher.emitExpressionStatement(scope, expressionRoot);
 				} else {
@@ -377,7 +379,7 @@ class ExpressionCompilationListener extends LcdPythonBaseListener {
 				String text = ctx.getChild(0).getText();
 				Symbol symbol = transpiler.symbolTable.lookup(scope, text );
 				if (symbol == null) {
-					transpiler.reportError("Unknown symbol: " + ctx.getChild(0).getText() + " " + scope);
+					transpiler.reportError("atmo_expr::Unknown symbol: " + ctx.getChild(0).getText() + " " + scope);
 					return;
 				}
 				new TranslationSymbolNode( parent, symbol );

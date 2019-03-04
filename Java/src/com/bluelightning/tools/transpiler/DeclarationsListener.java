@@ -1,5 +1,6 @@
 package com.bluelightning.tools.transpiler;
 
+import java.util.List;
 import java.util.Stack;
 
 import org.antlr.v4.runtime.CommonToken;
@@ -7,8 +8,10 @@ import org.antlr.v4.runtime.Token;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.RuleNode;
 
+import com.bluelightning.tools.transpiler.Scope.Level;
 import com.bluelightning.tools.transpiler.antlr4.LcdPythonBaseListener;
 import com.bluelightning.tools.transpiler.antlr4.LcdPythonParser;
+import com.bluelightning.tools.transpiler.antlr4.LcdPythonParser.SuiteContext;
 
 class DeclarationsListener extends LcdPythonBaseListener {
 
@@ -74,6 +77,15 @@ class DeclarationsListener extends LcdPythonBaseListener {
 				}
 			}
 			symbol.setFunctionParametersInfo(fpi);
+			for (int i = 0; i < ctx.getChildCount(); i++) {
+				if (ctx.getChild(i) instanceof SuiteContext) {
+					String body = ctx.getChild(i).getText().trim(); 
+					if (body.startsWith("super().__init__")) {
+						fpi.decorators.add("@superClassConstructor");
+					}
+					break;
+				}
+			}
 		}
 
 		@Override
@@ -90,7 +102,23 @@ class DeclarationsListener extends LcdPythonBaseListener {
 			Symbol.FunctionParametersInfo fpi = symbol.getFunctionParametersInfo();
 			fpi.decorators.add(decoration);
 		}
-
+		
+		protected void inhertDeclarations( Scope classScope, Symbol classSymbol) {
+			if (classSymbol.getSuperClassInfo().superClass == null)
+				return;
+			Symbol superClass = transpiler.lookup(classScope, classSymbol.getSuperClassInfo().superClass);
+			if (superClass != null) {
+				Scope membersScope = superClass.getScope().getChild(Level.CLASS, superClass.getName());
+				List<Symbol> inheritance = transpiler.symbolTable.atScope(membersScope);
+				for (Symbol i : inheritance ) {
+					if (i.getName().equals("__init__"))
+						continue;
+					transpiler.symbolTable.inherit(i, classScope);
+				}
+				inhertDeclarations(classScope, superClass);
+			}
+		}
+ 
 		@Override
 		public void enterClassdef(LcdPythonParser.ClassdefContext ctx) {
 			Scope currentScope = scopeStack.peek();
@@ -108,6 +136,8 @@ class DeclarationsListener extends LcdPythonBaseListener {
 			}
 			symbol.setSuperClassInfo(sci);
 			this.transpiler.scopeMap.put( ctx.getPayload(), classScope );
+			
+			inhertDeclarations( classScope, symbol );
 		}
 
 		@Override

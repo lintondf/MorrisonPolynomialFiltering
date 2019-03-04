@@ -1,6 +1,8 @@
 package com.bluelightning.tools.transpiler;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TreeMap;
@@ -49,6 +51,13 @@ class SymbolTable {
 			return symbol;
 		}
 		
+		public void inherit( Symbol base, Scope scope ) {
+			Symbol i = base.inhert(scope);
+			Map<String, Symbol> aliases = table.get(i.getName());
+			aliases.put( scope.toString(), i ); //TODO collisions
+			table.put(i.getName(),  aliases);			
+		}
+		
 		public Symbol lookup( Scope scope, String name ) {
 			name = name.trim();
 //			System.err.println(scope + "::" + name + "?" );
@@ -67,5 +76,17 @@ class SymbolTable {
 			}
 //			System.err.println(name + " NOT FOUND ANYWHERE");
 			return null;
+		}
+		
+		public List<Symbol> atScope( Scope scope ) {
+			ArrayList<Symbol> out = new ArrayList<>();
+			for (Map<String, Symbol> aliases : table.values()) {
+				for (String symbolScope : aliases.keySet()) {
+					if (symbolScope.equals(scope.toString())) {
+						out.add(aliases.get(symbolScope));
+					}
+				}
+			}
+			return out;
 		}
 	}

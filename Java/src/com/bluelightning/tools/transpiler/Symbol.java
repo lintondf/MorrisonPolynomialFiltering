@@ -46,6 +46,14 @@ class Symbol {
 	protected SuperClassInfo superClassInfo = null;
 	protected FunctionParametersInfo functionParametersInfo = null;
 	
+	public Symbol inhert( Scope heir ) {
+		Symbol that = new Symbol( heir, this.name, this.type );
+		that.initialization = this.initialization;
+		that.superClassInfo = this.superClassInfo;
+		that.functionParametersInfo = this.functionParametersInfo;
+		return that;
+	}
+	
 	public String toString() {
 		String r = String.format("%s::%s : %s", scope.toString(), name, type );
 		if  (superClassInfo != null) {

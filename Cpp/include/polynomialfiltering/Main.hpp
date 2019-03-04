@@ -12,7 +12,8 @@
 
 #include <math.h>
 
-#include "PolynomialFiltering.hpp"
+#include <polynomialfiltering/PolynomialFiltering.hpp>
+#include <polynomialfiltering/Main.hpp>
 
 
 namespace PolynomialFiltering {
