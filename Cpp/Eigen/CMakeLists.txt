@@ -7,7 +7,7 @@ include_directories(include)
 add_subdirectory( test )
 
 #include_directories(boost_1_69_0)
-#link_directories(../boost_1_69_0/stage/lib) 
+#link_directories(../boost_1_69_0/stage/lib)  
 
 # include_directories(eigen) 
 
