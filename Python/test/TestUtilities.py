@@ -30,10 +30,15 @@ def stateTransitionMatrix(N : int, dt : float) -> array:
     return expm(dt*B)
 
 def generateTestData(order, N, t0, Y0, dt, bias=0.0, sigma=1.0):
+    ''' (times, truth, observations, noise)
+        times N by 1
+        truth N by order+1
+        observations N by 1
+        noise N by 1 '''
     if (order >= 0) :
         truth = zeros([N,order+1])
         noise = bias + sigma*randn(N,1)
-        observations = zeros([N])
+        observations = zeros([N,1])
         times = zeros([N,1])
         S = stateTransitionMatrix(order+1, dt)
         t = t0

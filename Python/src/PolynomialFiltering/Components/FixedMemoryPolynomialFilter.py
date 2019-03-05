@@ -8,7 +8,7 @@ from abc import abstractmethod
 
 from numpy import array, copy, ones, zeros, transpose
 from numpy import array as vector
-from numpy.linalg.linalg import solve
+from numpy.linalg.linalg import solve, lstsq
 
 from PolynomialFiltering.Main import AbstractFilter
 
@@ -60,7 +60,10 @@ class FixedMemoryFilter(AbstractFilter) :
         Tnt = transpose(Tn)
         TntTn = Tnt @ Tn;
         TntYn = Tnt @ self.yRing
-        self.Z = solve(TntTn, TntYn);
+        oldZ = solve(TntTn, TntYn);
+        print(oldZ)
+        self.Z = lstsq(TntTn, TntYn, rcond=None)[0];
+        print(self.Z)
         return self.Z;
     
     def add(self, t : float, y : float, observationId : str = '') -> None:

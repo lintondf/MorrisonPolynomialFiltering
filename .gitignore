@@ -2,9 +2,11 @@ Cpp/Boost/.vs
 Cpp/Boost/include/boost
 Cpp/Eigen/.vs
 Cpp/Eigen/include/Eigen
+Cpp/cpptest
 Java/*.log
 Java/bin
 Java/out
 Java/target
 Python/src/__pycache__
 Python/test/__pycache__
+testdata
