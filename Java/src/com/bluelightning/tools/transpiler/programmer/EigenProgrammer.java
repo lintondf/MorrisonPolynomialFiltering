@@ -68,6 +68,17 @@ public class EigenProgrammer implements IProgrammer {
 	 */
 	@Override
 	public String remapType( String type ) {
+		if (type.startsWith("Tuple[")) {
+			type = type.substring(6, type.length()-1).trim().replaceAll(" +", "");
+			String[] fields = type.split(",");
+			String tuple = "std::tuple<";
+			for (String field : fields) {
+				tuple += remapType(field);
+				tuple += ", ";
+			}
+			tuple = tuple.substring(0, tuple.length()-2) + ">";
+			return tuple;
+		}
 		String t = typeRemap.get(type);
 		if (t != null)
 			return t;

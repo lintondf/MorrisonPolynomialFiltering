@@ -36,6 +36,7 @@ class ExpressionCompilationListener extends LcdPythonBaseListener {
 			return map;
 		}
 		
+		protected final Symbol undeclaredSymbol = new Symbol( new Scope(), "$declarme$", "int");
 		
 		/**
 		 * @param transpiler
@@ -62,7 +63,7 @@ class ExpressionCompilationListener extends LcdPythonBaseListener {
 							String operator = this.transpiler.valueMap.get(ctx.getChild(0).getPayload());
 							if (Character.isAlphabetic(operator.charAt(0))) {
 								transpiler.reportError(ctx, "Undeclared symbol: " + operator);
-								return null;
+								return new TranslationSymbolNode(null, undeclaredSymbol);
 							}
 							node = new TranslationOperatorNode( parent, operator );
 						}
@@ -233,7 +234,7 @@ class ExpressionCompilationListener extends LcdPythonBaseListener {
 		@Override
 		public void enterExpr_stmt(LcdPythonParser.Expr_stmtContext ctx) {
 			String value = this.transpiler.valueMap.get(ctx.getPayload());
-			if (! value.startsWith("'''")) {
+			if ( !(value.startsWith("'''") || value.startsWith("\"\"\"")) ) {
 //				System.out.println("EXPR_STMT> [{" + value + "}] <- " + ctx.toStringTree(transpiler.parser));
 //				this.transpiler.dumpChildren( ctx, 1 );
 				expressionRoot = new TranslationSubexpressionNode(null, value);

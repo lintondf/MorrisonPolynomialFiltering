@@ -57,6 +57,24 @@ import freemarker.template.TemplateExceptionHandler;
  */
 public class Transpiler {
 	
+	public static class Target {
+		public Path  dir;
+		public String module;
+		
+		public Target( Path dir, String module ) {
+			this.dir = dir;
+			this.module = module;
+		}
+	}
+	
+	static Target[] targets = {
+		//new Target(Paths.get(""), "TranspilerTest"),
+		new Target(Paths.get("PolynomialFiltering"), "Main"),
+//		new Target(Paths.get("PolynomialFiltering/Components"), "FixedMemoryPolynomialFilter"),
+		new Target(Paths.get("PolynomialFiltering/Components"), "IRecursiveFilter"),
+//		new Target(Paths.get("PolynomialFiltering/Components"), "ExpandingMemoryPolynomialFilter"),
+	};
+	
 	protected Logger logger;
 	
 	protected StringBuffer errorReport = new StringBuffer();
@@ -436,22 +454,6 @@ public class Transpiler {
 		System.setProperty("user.dir", lwd);
 	}
 
-	public static class Target {
-		public Path  dir;
-		public String module;
-		
-		public Target( Path dir, String module ) {
-			this.dir = dir;
-			this.module = module;
-		}
-	}
-	
-	static Target[] targets = {
-		//new Target(Paths.get(""), "TranspilerTest"),
-		new Target(Paths.get("PolynomialFiltering"), "Main"),
-		new Target(Paths.get("PolynomialFiltering/Components"), "FixedMemoryPolynomialFilter"),
-	};
-	
 	/**
 	 * @param args
 	 */

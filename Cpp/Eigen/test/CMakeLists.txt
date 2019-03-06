@@ -20,6 +20,7 @@ enable_testing()
 
 set(SOURCES  ../src/polynomialfiltering/Main.cpp 
     ../src/polynomialfiltering/components/FixedMemoryPolynomialFilter.cpp
+    ../src/polynomialfiltering/components/IRecursiveFilter.cpp
 	FixedMemoryFilter_test.cpp
 	testMain.cpp)
 add_executable(FilteringEigenTest ${SOURCES})

@@ -24,7 +24,7 @@ class AbstractRecursiveFilter(IRecursiveFilter):
     factors = (2, 3.2, 4.3636, 5.5054, 6.6321, 7.7478)
     
     @classmethod            
-    def effectiveTheta(self, order, n : int) -> float:
+    def effectiveTheta(self, order, n : float) -> float:
         if (n < 1 or order < 0 or order > len(AbstractRecursiveFilter.factors)):
             return 0.0
         return 1.0 - AbstractRecursiveFilter.factors[order]/n
