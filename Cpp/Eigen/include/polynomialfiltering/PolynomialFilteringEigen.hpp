@@ -27,6 +27,10 @@ namespace PolynomialFiltering {
 		return A.colPivHouseholderQr().solve(B);
 	}
 
+	inline RealMatrix inv(RealMatrix M) {
+		return M.inverse();
+	}
+
 	inline RealMatrix transpose(RealMatrix M) {
 		return M.transpose();
 	}

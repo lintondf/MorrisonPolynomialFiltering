@@ -60,6 +60,10 @@ class ExpressionCompilationListener extends LcdPythonBaseListener {
 						node = getOperandNode( ctx, parent, ctx.getChild(0).getPayload());
 						if (node == null) {
 							String operator = this.transpiler.valueMap.get(ctx.getChild(0).getPayload());
+							if (Character.isAlphabetic(operator.charAt(0))) {
+								transpiler.reportError(ctx, "Undeclared symbol: " + operator);
+								return null;
+							}
 							node = new TranslationOperatorNode( parent, operator );
 						}
 					}

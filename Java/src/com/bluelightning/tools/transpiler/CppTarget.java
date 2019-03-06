@@ -492,6 +492,7 @@ public class CppTarget implements ILanguageTarget {
 				TranslationSubexpressionNode tsn = (TranslationSubexpressionNode) child;
 				tsn.analyze();
 				if (tsn.getName().equals("SUBEXPRESSION::Term")) {
+					//System.out.println(tsn.traverse(1));
 					String operator = ((TranslationOperatorNode) tsn.getChild(1)).getOperator();
 					String lhsType =  ((TranslationSubexpressionNode) tsn.getChild(0)).getType();
 					if (lhsType == null)

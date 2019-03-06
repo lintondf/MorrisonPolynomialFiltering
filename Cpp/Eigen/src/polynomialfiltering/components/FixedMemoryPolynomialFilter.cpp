@@ -61,6 +61,14 @@ namespace PolynomialFiltering {
                 this->n += 1;
             }
 
+            RealMatrix FixedMemoryFilter::getVRF () {
+                RealVector dt;
+                RealMatrix Tn;
+                dt = this->tRing - this->t;
+                Tn = this->_getTn(dt);
+                return inv(transpose(Tn) * Tn);
+            }
+
             RealMatrix FixedMemoryFilter::_getTn (const RealVector dt) {
                 RealMatrix Tn;
                 RealVector C;

@@ -20,9 +20,7 @@ class TestData {
 public:
 	TestData(std::string fileName) {
 		std::string filePath = "C:\\Users\\NOOK\\GITHUB\\ReynekeMorrisonFiltering\\testdata\\";
-		std::cout << filePath << std::endl;
 		filePath += fileName;
-		std::cout << filePath << std::endl;
 		int retval, numgrps;
 		retval = nc_open(filePath.c_str(), NC_NOWRITE, &ncid);
 		if (retval == 0) {

@@ -11,6 +11,7 @@ from netCDF4 import Dataset
 from TestUtilities import *
 from numpy import arange, array2string, cov, zeros, mean, std, var, diag,\
     transpose, concatenate
+from numpy.linalg import inv
 from numpy.random import randn
 from numpy.testing import assert_almost_equal
 from numpy.testing.nose_tools.utils import assert_allclose
@@ -49,7 +50,7 @@ class TestFixedMemoryFiltering(unittest.TestCase):
         v = group.createVariable(name, 'd', (nDim, mDim))
         v[:] = data;
 
-    def executePerfect(self, setup : array, data : array ) -> array:
+    def executeEstimatedState(self, setup : array, data : array ) -> array:
         order = int(setup[0]);
         window = int(setup[1]);
         M = int(setup[2]);
@@ -63,8 +64,9 @@ class TestFixedMemoryFiltering(unittest.TestCase):
             fixed.add(times[i], observations[i]);
         return fixed.getState(times[iCheck]);
                 
+                
     def testPerfect(self):
-        setup = array([0, 11, 12, 11]);
+        setup = array([None, 11, 12, 11]);
         tau = 0.1;
         N = 25;
         for order in range(2,6):
@@ -75,27 +77,115 @@ class TestFixedMemoryFiltering(unittest.TestCase):
             self.writeTestVariable(group, 'setup', setup);
             self.writeTestVariable(group, 'data', data);
             
-            expected = self.executePerfect(setup, data);
+            expected = self.executeEstimatedState(setup, data);
             
             self.writeTestVariable(group, 'expected', expected);
-            print(truth[11,:])
-            error = expected - truth[11,:];
-            print( A2S(error / truth[11,:]) )
-            assert_allclose( expected, truth[11,:], atol=0, rtol=1e-4 )
+            assert_allclose( expected, truth[11,:], atol=0, rtol=1e-3 )
 
+    def testNoisy(self):
+        setup = array([None, 11, 12, 11]);
+        tau = 0.1;
+        N = 25;
+        for order in range(2,6):
+            setup[0] = order; 
+            (times, truth, observations, noise) = generateTestData(order, N, 0.0, self.Y0[0:order+1], tau, sigma=1.0)
+            data = concatenate([times, observations], axis=1);
+            group = self.createTestGroup(self.cdf, 'testNoisy_%d' % order );
+            self.writeTestVariable(group, 'setup', setup);
+            self.writeTestVariable(group, 'data', data);
+            
+            expected = self.executeEstimatedState(setup, data);
+            
+            self.writeTestVariable(group, 'expected', expected);
+            assert_allclose( expected, truth[11,:], atol=0, rtol=1e-3 )
+
+    
     def testMidpoints(self):
-        setup = array([0, 11, 12, 11]);
         tau = 0.1;
         N = 25;
         order = 2;
-        fixed = FixedMemoryFilter(order, 11);
-        (times, truth, observations, noise) = generateTestData(fixed.order, N, 0.0, self.Y0[0:fixed.order+1], tau, sigma=0.0)
-        for i in range(0,12) :
-            for j in range(0,12):
-                fixed.add(times[i+j], observations[i+j]);
-            j = i+11;
-            print(i, j, truth[j,:], fixed.getState(times[j])-truth[j,:]);
+        window = 11;
+        M = 12; # number of points to input
+        offset = M - window;
+        for iCheck in range(offset, M) :
+            setup = array([order, window, M, iCheck]);
+            fixed = FixedMemoryFilter(order, window);
+            (times, truth, observations, noise) = generateTestData(fixed.order, N, 0.0, self.Y0[0:fixed.order+1], tau, sigma=0.0)
             
+            data = concatenate([times, observations], axis=1);
+            group = self.createTestGroup(self.cdf, 'testMidpoints_%d' % iCheck );
+            self.writeTestVariable(group, 'setup', setup);
+            self.writeTestVariable(group, 'data', data);
+            
+            expected = self.executeEstimatedState(setup, data);
+            
+            self.writeTestVariable(group, 'expected', expected);
+            assert_allclose( truth[iCheck,:], expected );
+            
+    def executeVRF(self, setup : array, data : array ) -> array:
+        order = int(setup[0]);
+        window = int(setup[1]);
+        M = int(setup[2]);
+        iCheck = int(setup[3]);
+        times = data[:,0:1];
+        data = data[:,1:];
+        observations = data[:,0:1];
+        data = data[:,1:];
+        fixed = FixedMemoryFilter(order, window);
+        for i in range(0,M) :
+            fixed.add(times[i], observations[i]);
+        return fixed.getVRF();
+                
+    def testVRF(self) :
+        tau = 0.1;
+        N = 25;
+        window = 11;
+        M = 12; # number of points to input
+        iCheck = M-1;
+        for order in range(2,6) :
+            setup = array([order, window, M, iCheck]);
+            fixed = FixedMemoryFilter(order, window);
+            (times, truth, observations, noise) = generateTestData(fixed.order, N, 0.0, self.Y0[0:fixed.order+1], tau, sigma=0.0)
+            
+            data = concatenate([times, observations], axis=1);
+            group = self.createTestGroup(self.cdf, 'testVRF%d' % order );
+            self.writeTestVariable(group, 'setup', setup);
+            self.writeTestVariable(group, 'data', data);
+            
+            expected = self.executeVRF(setup, data);
+            
+            self.writeTestVariable(group, 'expected', expected);
+        
+        
+    def xtestVRFStatistics(self):
+        '''
+         This extended numeric test validates the computed VRF matrix
+         against the actual residuals for a large sample of filter runs.
+         N=1000, K=1000, 84 seconds
+         [      0.99      0.998          1      0.998      0.997      0.998          1      0.998      0.998]
+        '''
+        tau = 0.1;
+        N = 1000;
+        order = 2;
+        window = 51;
+        M = window; # number of points for initial input
+        setup = array([order, window, M]);
+        K = 1000;
+        C = zeros([K,(order+1)**2])
+        for k in range(0,K) :
+            fixed = FixedMemoryFilter(order, window);
+            (times, truth, observations, noise) = generateTestData(fixed.order, N, 0.0, self.Y0[0:fixed.order+1], tau, sigma=1.0)
+            for i in range(0,window) :
+                fixed.add(times[i], observations[i]);
+            results = zeros([N-window, order+1]);
+            for i in range(window, N) :
+                fixed.add(times[i], observations[i]);
+                results[i-window,:] = fixed.getState(times[i]) - truth[i,:];
+            c = cov(results,rowvar=False);
+            C[k,:] = c.flatten();
+            V = fixed.getVRF();
+            
+        print( A2S(mean(C,axis=0) / V.flatten() ) );
 
 
 if __name__ == "__main__":

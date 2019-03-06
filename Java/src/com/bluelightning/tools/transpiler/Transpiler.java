@@ -354,6 +354,7 @@ public class Transpiler {
 		symbolTable.add( importScope, "copy", "array");
 		symbolTable.add( importScope, "eye", "array");
 		symbolTable.add( importScope, "ones", "array");
+		symbolTable.add( importScope, "inv", "array" );
 		symbolTable.add( importScope, "pow", "float");
 		symbolTable.add( importScope, "range", "range");
 		symbolTable.add( importScope, "shape", "dimensions");

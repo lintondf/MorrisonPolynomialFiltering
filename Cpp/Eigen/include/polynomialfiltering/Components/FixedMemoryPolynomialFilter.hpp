@@ -37,6 +37,7 @@ namespace PolynomialFiltering {
                 double getTime();
                 RealMatrix getState(const double t);
                 void add(const double t, const double y, const std::string observationId="");
+                RealMatrix getVRF();
                 RealMatrix _getTn(const RealVector dt);
         }; // class FixedMemoryFilter 
 
