@@ -18,7 +18,7 @@ public class TranslationUnaryNode extends TranslationSubexpressionNode {
 	Object rhs;
 
 	public TranslationUnaryNode(TranslationNode parent, Object lhs, Object rhs) {
-		super(parent, "<UNARY>:" + Transpiler.instance().getValue(lhs) + " " + Transpiler.instance().getValue(rhs) );
+		super(parent, "<UNARY>:" + Transpiler.instance().getValue(lhs) + " " + rhs.toString() ); //
 		this.lhs = lhs;
 		this.rhs = rhs;
 		if (rhs instanceof Symbol) {

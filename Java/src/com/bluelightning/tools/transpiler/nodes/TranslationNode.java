@@ -54,23 +54,29 @@ public class TranslationNode  {
 	}
 	
 	public String traverse( int indent ) {
+		return traverse( indent, null );
+	}
+	
+	public String traverse( int indent, TranslationNode mark ) {
 		StringBuffer sb = new StringBuffer();
 		if (this.getTop() instanceof TranslationExpressionNode) {
 			TranslationExpressionNode ten = (TranslationExpressionNode) this.getTop();
 			sb.append( ten.getParserRuleContext().getText() );
 		}
 		String spaces = String.format("%5d:%s", indent, StringUtils.repeat("  ", indent));
+		if (mark != null && this == mark)
+			spaces = String.format("%5d:%s", indent, StringUtils.repeat("--", indent));
 		sb.append(spaces);
 		sb.append( this.toString() );
 		sb.append('\n');
 		for (TranslationNode child : children) {
-			sb.append( child.traverse(indent+1) );
+			sb.append( child.traverse(indent+1, mark) );
 		}
 		return sb.toString();		
 	}
 	
 	public String toString() {
-		return String.format("[%d] %s ", children.size(), name );
+		return String.format("[%d] %5d %s ", children.size(), this.hashCode() % 10000, name );
 //		return name + " C#" + children.size() + ((parent == null) ? "?" : parent.toString());
 	}
 

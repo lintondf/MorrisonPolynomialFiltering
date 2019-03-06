@@ -128,7 +128,7 @@ public class CppTarget implements ILanguageTarget {
 	
 	@Override
 	public void startModule(Scope scope) {
-		System.out.println("CppBoost " + scope.toString() );
+		System.out.println("\nCppBoost " + scope.toString() );
 		
 		currentScope = scope;
 		hppIndent = new Indent();
@@ -462,7 +462,8 @@ public class CppTarget implements ILanguageTarget {
 			}
 		} else if (child instanceof TranslationListNode) {
 			TranslationListNode tln = (TranslationListNode) child;
-//			System.out.println( child.traverse(1));
+//			System.out.println( tln.toString() );
+			
 			
 			if (tln.getListOpen().equals("(") && tln.getChildCount() == 0) {
 				// may be ([...]) which compiles to LIST(:0, LIST[{LIST[...}
@@ -475,12 +476,14 @@ public class CppTarget implements ILanguageTarget {
 				TranslationNode sublist = tln.getFirstChild();
 				if (sublist != null && sublist instanceof TranslationListNode) {
 					child = sublist;
+					tln = (TranslationListNode) child;
 				}
 			}
 //		    1:  [2] <SUBEXPRESSION> <LIST>[  : null
 //		                                     2:    [0] <OPERATOR>: 
 //		                                     2:    [0] <CONSTANT>:INTEGER = 0
 			if (tln.getListOpen().equals("[")) {
+//				System.out.println(tln.getTop().traverse(1, tln)); ////@@
 				if ( tln.isArraySlice() ) {
 					if (! (tln.getLeftSibling() instanceof TranslationSymbolNode) ) {
 						Transpiler.instance().reportError(tln.getTop(), "Bracket list follows non-symbol");
@@ -564,8 +567,8 @@ public class CppTarget implements ILanguageTarget {
 					programmer.closeParenthesis( out );
 					return 0;
 				} else if (tln.getLeftSibling() != null) {  // non-slice access
-					System.out.println( tln.getLeftSibling().toString() );
-					System.out.println(tln.traverse(1)); ////@@
+//					System.out.println( tln.getLeftSibling().toString() );
+//					System.out.println(tln.traverse(1)); ////@@
 					programmer.openParenthesis( out );
 					for (int i = 0; i < tln.getChildCount(); i++) {
 						TranslationNode subscript = tln.getChild(i);
@@ -575,7 +578,6 @@ public class CppTarget implements ILanguageTarget {
 					}
 					programmer.closeParenthesis( out );
 					return 0;
-					
 				}
 			}
 			String open = tln.getListOpen();

@@ -14,7 +14,7 @@ namespace PolynomialFiltering {
     using namespace Eigen;
     
         AbstractFilter::AbstractFilter (const std::string name) {
-            this->setStatus(FilterStatus :: IDLE);
+            this->setStatus(FilterStatus::IDLE);
             this->name = name;
         }
 

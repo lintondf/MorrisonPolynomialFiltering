@@ -194,6 +194,9 @@ public class EigenProgrammer implements IProgrammer {
 		case "@":
 			out.append(" * ");
 			break;
+		case "::":
+			out.append(operator);				
+			break;			
 		default:
 			out.append(" ");
 			out.append(operator);

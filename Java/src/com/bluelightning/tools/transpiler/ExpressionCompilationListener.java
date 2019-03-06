@@ -218,6 +218,16 @@ class ExpressionCompilationListener extends LcdPythonBaseListener {
 		}
 		
 		@Override 
+		public void enterIf_stmt(LcdPythonParser.If_stmtContext ctx) { 
+			transpiler.dumpChildren(ctx);
+		}
+		
+		@Override 
+		public void exitIf_stmt(LcdPythonParser.If_stmtContext ctx) { 
+			//transpiler.dispatcher.closeBlock();
+		}
+		
+		@Override 
 		public void enterReturn_stmt(LcdPythonParser.Return_stmtContext ctx) {
 			expressionRoot = new TranslationExpressionNode(ctx, "RETURN_STMT");
 			translateMap = new HashMap<>();

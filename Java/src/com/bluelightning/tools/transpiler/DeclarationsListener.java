@@ -120,6 +120,7 @@ class DeclarationsListener extends LcdPythonBaseListener {
 				for (Symbol i : inheritance ) {
 					if (i.getName().equals("__init__"))
 						continue;
+					//System.out.println( i.getName() + " --> " + classScope.toString() );
 					transpiler.symbolTable.inherit(i, classScope);
 				}
 				inheritDeclarations(classScope, superClass);
@@ -167,7 +168,7 @@ class DeclarationsListener extends LcdPythonBaseListener {
 			dotted = "/" + dotted.replace(".", "/") + "/";
 			Scope packageScope = Scope.getExistingScope(dotted);
 			if (packageScope != null) {
-				//System.out.println("import from " + packageScope.toString() );
+//				System.out.println("import from " + packageScope.toString() );
 				transpiler.dispatcher.addImport(packageScope);
 				String[] imports = Transpiler.deblank(ctx.getChild(3).getText()).split(",");
 				for (String name : imports) {
@@ -176,12 +177,15 @@ class DeclarationsListener extends LcdPythonBaseListener {
 					List<Symbol> inheritance = transpiler.symbolTable.atScope(membersScope);
 					Scope inheritedScope = scopeStack.peek(); 
 //					System.out.println("import " + membersScope.toString() + " -> " + inheritedScope );
+//					System.out.println("   " + inheritance.size() + " " + symbol.isClass());
 					if (symbol.isClass()) {
 						Symbol r = transpiler.symbolTable.inherit(symbol, inheritedScope);
+						inheritedScope = inheritedScope.getChild(Level.CLASS, r.getName() );
 					}
 					for (Symbol i : inheritance ) {
 						if (i.getName().equals("__init__"))
 							continue;
+//						System.out.println("     " + i.isClass() + " " + i.getName() );
 						if (i.isClass()) {
 							Symbol r = transpiler.symbolTable.inherit(i, inheritedScope.getChild(Level.CLASS, name) );
 						} else {

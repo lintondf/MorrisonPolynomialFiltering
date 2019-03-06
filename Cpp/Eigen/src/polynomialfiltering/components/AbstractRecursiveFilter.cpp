@@ -28,9 +28,9 @@ namespace PolynomialFiltering {
                 this->dtau = 0;
                 this->t0 = 0;
                 this->t = 0;
-                this->Z = ArrayXd::Zero((this->order + 1));
+                this->Z = ArrayXd::Zero(this->order + 1);
                 this->tau = tau;
-                this->D = ArrayXd::Zero((this->order + 1));
+                this->D = ArrayXd::Zero(this->order + 1);
                 for (long d = 0; d < this->order + 1; d++) {
                     this->D(d) = pow(this->tau, d);
                 }
@@ -39,7 +39,7 @@ namespace PolynomialFiltering {
             RealVector AbstractRecursiveFilter::conformState (const RealVector state) {
                 RealVector Z;
                 long m;
-                Z = ArrayXd::Zero((this->order + 1));
+                Z = ArrayXd::Zero(this->order + 1);
                 m = std::min(this->order + 1, len(state));
                 Z.segment(0, m) = state.segment(0, m);
                 return Z;
@@ -86,8 +86,8 @@ namespace PolynomialFiltering {
                 this->Z = (Zstar + arrayTimes(gamma, e));
                 this->t = t;
                 this->n += 1;
-                this->setStatus(FilterStatus.INITIALIZING);
-                this->setStatus(FilterStatus.RUNNING);
+                this->setStatus(FilterStatus::INITIALIZING);
+                this->setStatus(FilterStatus::RUNNING);
             }
 
             long AbstractRecursiveFilter::getN () {

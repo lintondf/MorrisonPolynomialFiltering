@@ -22,9 +22,9 @@ namespace PolynomialFiltering {
                 this->t0 = 0.0;
                 this->t = 0.0;
                 this->tau = 1.0;
-                this->Z = ArrayXd::Zero((this->order + 1));
-                this->tRing = ArrayXd::Zero((memorySize));
-                this->yRing = ArrayXd::Zero((memorySize));
+                this->Z = ArrayXd::Zero(this->order + 1);
+                this->tRing = ArrayXd::Zero(memorySize);
+                this->yRing = ArrayXd::Zero(memorySize);
             }
 
             long FixedMemoryFilter::getN () {
@@ -73,8 +73,8 @@ namespace PolynomialFiltering {
                 RealMatrix Tn;
                 RealVector C;
                 double fact;
-                Tn = ArrayXXd::Zero((dt.size(), this->order + 1));
-                Tn.col(0) = ones((dt.size()));
+                Tn = ArrayXXd::Zero(dt.size(), this->order + 1);
+                Tn.col(0) = ones(dt.size());
                 C = copy(dt);
                 fact = 1.0;
                 for (long i = 1; i < this->order + 1; i++) {
