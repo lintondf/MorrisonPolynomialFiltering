@@ -18,9 +18,12 @@ include_directories(eigen
 
 enable_testing()
 
-set(SOURCES  ../src/polynomialfiltering/Main.cpp 
-    ../src/polynomialfiltering/components/FixedMemoryPolynomialFilter.cpp
-    ../src/polynomialfiltering/components/IRecursiveFilter.cpp
+FILE(GLOB MAIN_SRC ../src/polynomialfiltering/*.cpp)
+FILE(GLOB COMPONENTS_SRC ../src/polynomialfiltering/components/*.cpp)
+
+
+set(SOURCES  ${MAIN_SRC}
+	${COMPONENTS_SRC}
 	FixedMemoryFilter_test.cpp
 	testMain.cpp)
 add_executable(FilteringEigenTest ${SOURCES})

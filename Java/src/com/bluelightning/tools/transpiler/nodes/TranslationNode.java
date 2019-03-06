@@ -4,6 +4,7 @@
 package com.bluelightning.tools.transpiler.nodes;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
@@ -16,11 +17,14 @@ import org.apache.commons.lang3.StringUtils;
 public class TranslationNode  {
 	
 	protected String name;
-	protected  TranslationNode parent;
+	private String type;
+
+	protected TranslationNode parent;
 	protected List<TranslationNode> children;
 	
 	TranslationNode( TranslationNode parent, String name) {
 		this.name = name;
+		this.type = "int";
 		this.parent = parent;
 		this.children = new ArrayList<>();
 		if (parent != null) {
@@ -28,9 +32,34 @@ public class TranslationNode  {
 		}
 	}
 	
+	public String getType() {
+		return type;
+	}
+	
+	final static List<String> precedence = Arrays.asList(new String[] {"int", "float", "vector", "array"});
+	
+	public void setType(String type) {
+		int currentIndex = precedence.indexOf(this.type);
+		int typeIndex = precedence.indexOf(type);
+		if ( typeIndex >= 0 && currentIndex >= 0) {
+			if (typeIndex > currentIndex) {
+				this.type = type;
+			}
+		} else {
+			this.type = type;
+		}
+		if (parent != null) {
+			parent.setType(this.type);
+		}
+	}
+	
 	public String traverse( int indent ) {
-		String spaces = String.format("%5d:%s", indent, StringUtils.repeat("  ", indent));
 		StringBuffer sb = new StringBuffer();
+		if (this.getTop() instanceof TranslationExpressionNode) {
+			TranslationExpressionNode ten = (TranslationExpressionNode) this.getTop();
+			sb.append( ten.getParserRuleContext().getText() );
+		}
+		String spaces = String.format("%5d:%s", indent, StringUtils.repeat("  ", indent));
 		sb.append(spaces);
 		sb.append( this.toString() );
 		sb.append('\n');
@@ -51,11 +80,22 @@ public class TranslationNode  {
 		}
 		node.parent = this;
 		this.children.add(node);
+		this.setType( node.getType() );
+	}
+	
+	public void replace( TranslationNode node ) {
+		if (node.parent != null) {
+			node.parent.removeChild(node);
+		}
+		node.parent = this;
+		this.type = node.type;
+		this.children = node.children;
 	}
 	
     public void addChild(TranslationNode node ) {
     	node.parent = this;
     	children.add(node);
+    	this.setType( node.getType() );
     }
     
 	public void removeChild(TranslationNode node) {
@@ -114,9 +154,6 @@ public class TranslationNode  {
 		return parent.children.get(i+1);
 	}
 	
-	public void analyze() {		
-	}
-
 	public String getName() {
 		return name;
 	}

@@ -10,7 +10,7 @@ from numpy import array, copy, ones, zeros, transpose
 from numpy import array as vector
 from numpy.linalg.linalg import solve, lstsq, inv
 
-from PolynomialFiltering.Main import AbstractFilter
+from PolynomialFiltering.Main import AbstractFilter, FilterStatus
 
 class FixedMemoryFilter(AbstractFilter) :
     
@@ -49,7 +49,7 @@ class FixedMemoryFilter(AbstractFilter) :
     def getTime(self) -> float:
         return self.t
     
-    def getState(self, t : float) -> array:
+    def getState(self, t : float) -> vector:
         '''@dt : vector'''
         '''@Tn : array'''
         '''@Tnt : array'''

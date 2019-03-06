@@ -7,6 +7,7 @@ https://filterpy.readthedocs.io/en/latest/kalman/UnscentedKalmanFilter.html
 from abc import ABC, abstractmethod
 from enum import Enum
 from numpy import array, eye, zeros, isscalar
+from numpy import array as vector;
 
 class FilterStatus(Enum):
     '''@IDLE : enum'''
@@ -84,7 +85,7 @@ class AbstractFilter(ABC):
         raise NotImplementedError()
     
     @abstractmethod   
-    def getState(self, t : float) -> array:
+    def getState(self, t : float) -> vector:
         raise NotImplementedError()
     
 #     def getState(self) -> array:
@@ -95,16 +96,16 @@ class ManagedFilterBase(AbstractFilter):
         pass
     
     @abstractmethod   
-    def getGoodnessOfFit(self) -> array:
+    def getGoodnessOfFit(self) -> float:
         raise NotImplementedError()
     
     @abstractmethod   
-    def getBiasOfFit(self) -> array:
+    def getBiasOfFit(self) -> float:
         raise NotImplementedError()
         
     @abstractmethod   
-    def add(self, t : float, y : array, observationId : str = '') -> None:    
+    def add(self, t : float, y : vector, observationId : str = '') -> None:    
         raise NotImplementedError()
 
-    def addWithVariance(self, t : float, y : array, R : array, observationId : str = '') -> None:    
+    def addWithVariance(self, t : float, y : vector, R : array, observationId : str = '') -> None:    
         self.add(t, y, observationId);

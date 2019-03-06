@@ -35,7 +35,7 @@ namespace PolynomialFiltering {
                 long getN();
                 double getTau();
                 double getTime();
-                RealMatrix getState(const double t);
+                RealVector getState(const double t);
                 void add(const double t, const double y, const std::string observationId="");
                 RealMatrix getVRF();
                 RealMatrix _getTn(const RealVector dt);

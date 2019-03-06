@@ -22,7 +22,7 @@ public class TranslationUnaryNode extends TranslationSubexpressionNode {
 		this.lhs = lhs;
 		this.rhs = rhs;
 		if (rhs instanceof Symbol) {
-			this.type = ((Symbol) rhs).getType();
+			setType(((Symbol) rhs).getType());
 		}
 	}
 	

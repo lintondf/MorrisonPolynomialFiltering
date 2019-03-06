@@ -1,5 +1,6 @@
 package com.bluelightning.tools.transpiler;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 
@@ -19,11 +20,13 @@ class DeclarationsListener extends LcdPythonBaseListener {
 		 * 
 		 */
 		private final Transpiler transpiler;
+		protected Scope moduleScope;
 		Stack<Scope> scopeStack = new Stack<>();
 
 		public DeclarationsListener(Transpiler transpiler, Scope moduleScope) {
 			super();
 			this.transpiler = transpiler;
+			this.moduleScope = moduleScope;
 			scopeStack.push(moduleScope);
 		}
 		
@@ -103,11 +106,15 @@ class DeclarationsListener extends LcdPythonBaseListener {
 			fpi.decorators.add(decoration);
 		}
 		
-		protected void inhertDeclarations( Scope classScope, Symbol classSymbol) {
+		protected void inheritDeclarations( Scope classScope, Symbol classSymbol) {
+			//System.out.println("inheritDecl " + classScope + " | " + classSymbol );
 			if (classSymbol.getSuperClassInfo().superClass == null)
 				return;
 			Symbol superClass = transpiler.lookup(classScope, classSymbol.getSuperClassInfo().superClass);
 			if (superClass != null) {
+				while (superClass.getAncestor() != null) {
+					superClass = superClass.getAncestor();
+				}
 				Scope membersScope = superClass.getScope().getChild(Level.CLASS, superClass.getName());
 				List<Symbol> inheritance = transpiler.symbolTable.atScope(membersScope);
 				for (Symbol i : inheritance ) {
@@ -115,7 +122,7 @@ class DeclarationsListener extends LcdPythonBaseListener {
 						continue;
 					transpiler.symbolTable.inherit(i, classScope);
 				}
-				inhertDeclarations(classScope, superClass);
+				inheritDeclarations(classScope, superClass);
 			}
 		}
  
@@ -137,7 +144,7 @@ class DeclarationsListener extends LcdPythonBaseListener {
 			symbol.setSuperClassInfo(sci);
 			this.transpiler.scopeMap.put( ctx.getPayload(), classScope );
 			
-			inhertDeclarations( classScope, symbol );
+			inheritDeclarations( classScope, symbol );
 		}
 
 		@Override
@@ -155,7 +162,34 @@ class DeclarationsListener extends LcdPythonBaseListener {
 		
 		@Override 
 		public void enterImport_from(LcdPythonParser.Import_fromContext ctx) { 
-//			dumpChildren( ctx );
+//			transpiler.dumpChildren( ctx );
+			String dotted = Transpiler.deblank(ctx.getChild(1).getText());
+			dotted = "/" + dotted.replace(".", "/") + "/";
+			Scope packageScope = Scope.getExistingScope(dotted);
+			if (packageScope != null) {
+				//System.out.println("import from " + packageScope.toString() );
+				transpiler.dispatcher.addImport(packageScope);
+				String[] imports = Transpiler.deblank(ctx.getChild(3).getText()).split(",");
+				for (String name : imports) {
+					Symbol symbol = transpiler.lookup(packageScope, name);
+					Scope membersScope = symbol.getScope().getChild(Level.CLASS, name );
+					List<Symbol> inheritance = transpiler.symbolTable.atScope(membersScope);
+					Scope inheritedScope = scopeStack.peek(); 
+//					System.out.println("import " + membersScope.toString() + " -> " + inheritedScope );
+					if (symbol.isClass()) {
+						Symbol r = transpiler.symbolTable.inherit(symbol, inheritedScope);
+					}
+					for (Symbol i : inheritance ) {
+						if (i.getName().equals("__init__"))
+							continue;
+						if (i.isClass()) {
+							Symbol r = transpiler.symbolTable.inherit(i, inheritedScope.getChild(Level.CLASS, name) );
+						} else {
+							Symbol r = transpiler.symbolTable.inherit(i, inheritedScope);
+						}
+					}
+				}
+			}
 		}
 
 		// for <var> in <range> :

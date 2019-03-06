@@ -14,7 +14,6 @@
 
 #include <polynomialfiltering/PolynomialFilteringEigen.hpp>
 
-#include <polynomialfiltering/Main.hpp>
 
 
 namespace PolynomialFiltering {
@@ -38,16 +37,16 @@ namespace PolynomialFiltering {
             void setStatus(const FilterStatus status);
             virtual long getN() = 0;
             virtual double getTime() = 0;
-            virtual RealMatrix getState(const double t) = 0;
+            virtual RealVector getState(const double t) = 0;
     }; // class AbstractFilter 
 
     class ManagedFilterBase : public AbstractFilter {
         public:
             ManagedFilterBase();
-            virtual RealMatrix getGoodnessOfFit() = 0;
-            virtual RealMatrix getBiasOfFit() = 0;
-            virtual void add(const double t, const RealMatrix y, const std::string observationId="") = 0;
-            void addWithVariance(const double t, const RealMatrix y, const RealMatrix R, const std::string observationId="");
+            virtual double getGoodnessOfFit() = 0;
+            virtual double getBiasOfFit() = 0;
+            virtual void add(const double t, const RealVector y, const std::string observationId="") = 0;
+            void addWithVariance(const double t, const RealVector y, const RealMatrix R, const std::string observationId="");
     }; // class ManagedFilterBase 
 
 }; // namespace PolynomialFiltering

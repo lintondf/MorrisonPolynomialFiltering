@@ -20,6 +20,7 @@ import com.bluelightning.tools.transpiler.nodes.TranslationSubexpressionNode;
 import com.bluelightning.tools.transpiler.nodes.TranslationSymbolNode;
 import com.bluelightning.tools.transpiler.nodes.TranslationUnaryNode;
 import com.bluelightning.tools.transpiler.nodes.TranslationConstantNode.Kind;
+import com.bluelightning.tools.transpiler.nodes.TranslationExpressionNode;
 
 class ExpressionCompilationListener extends LcdPythonBaseListener {
 		
@@ -48,7 +49,7 @@ class ExpressionCompilationListener extends LcdPythonBaseListener {
 		}
 		
 		protected static final Pattern integerPattern = Pattern.compile("^(\\d+)$");
-		protected static final Pattern floatPattern = Pattern.compile("^(\\d+)\\.(\\\\d*)$");
+		protected static final Pattern floatPattern = Pattern.compile("^(\\d+)\\.(\\d*)$");
 		
 		protected TranslationNode defaultOperandOperator( ParserRuleContext ctx, String tag ) {
 			if (expressionRoot != null) {
@@ -69,10 +70,10 @@ class ExpressionCompilationListener extends LcdPythonBaseListener {
 						}
 					}
 					translateMap.put( ctx.getPayload(), node );
-					parent.analyze();
+					parent.setType( node.getType() );
 					return node;
 				} else if (ctx.getChildCount() == 2) {
-					transpiler.dumpChildren(ctx);
+					//transpiler.dumpChildren(ctx);
 					TranslationNode node = new TranslationUnaryNode( parent, 
 							ctx.getChild(0).getPayload(), ctx.getChild(1).getPayload());
 				} else {
@@ -95,12 +96,13 @@ class ExpressionCompilationListener extends LcdPythonBaseListener {
 						node = getOperandNode( ctx, parent, ctx.getChild(i+1).getPayload());
 						if (node == null) {
 							transpiler.reportError(ctx, "No operand node: " + (i+1));
+							return null;
 						}
+						parent.setType( node.getType() );
 					}
 				}
 //				parent.traverse(2); /////////////
 				translateMap.put( ctx.getPayload(), parent );
-				parent.analyze();
 				return parent;
 			}	
 			return null;
@@ -143,6 +145,18 @@ class ExpressionCompilationListener extends LcdPythonBaseListener {
 				translateMap.put( payload, tcn );
 				return tcn;
 			}
+//			String[] dotted = value.split("\\.");
+//			if (dotted.length > 1 && dotted[0].length() > 0 && dotted[1].length() > 0) {
+//				Symbol enumSymbol = transpiler.lookup(scope, dotted[0]);
+//				if (enumSymbol != null && enumSymbol.isClass()) {
+//					Symbol memberSymbol = transpiler.lookup(scope.getChild(Level.CLASS, dotted[0]), dotted[1]);
+//					if (memberSymbol != null) {
+//						node = new TranslationSymbolNode( parent, memberSymbol );
+//						translateMap.put( payload, node );
+//						return node;
+//					}
+//				}
+//			}
 			return null;
 		}
 
@@ -205,7 +219,7 @@ class ExpressionCompilationListener extends LcdPythonBaseListener {
 		
 		@Override 
 		public void enterReturn_stmt(LcdPythonParser.Return_stmtContext ctx) {
-			expressionRoot = new TranslationSubexpressionNode(null, "RETURN_STMT");
+			expressionRoot = new TranslationExpressionNode(ctx, "RETURN_STMT");
 			translateMap = new HashMap<>();
 			
 		}
@@ -213,10 +227,12 @@ class ExpressionCompilationListener extends LcdPythonBaseListener {
 		// return_stmt: 'return' (testlist)?;
 		@Override 
 		public void exitReturn_stmt(LcdPythonParser.Return_stmtContext ctx) { 
+			String line = ctx.getText();
 			transpiler.dispatcher.emitReturnStatement();
 			if (ctx.getChildCount() > 1) {
 				expressionRoot = translateMap.get( ctx.getChild(1).getPayload() );
-//				System.out.println("RETURN< " + expressionRoot.toString() );
+//				System.out.println("RETURN< " + line );
+//				System.out.println( expressionRoot.toString() );
 //				System.out.println( expressionRoot.traverse(1));
 				transpiler.dispatcher.emitSubExpression(scope, expressionRoot);
 				transpiler.dispatcher.emitCloseStatement();
@@ -237,7 +253,7 @@ class ExpressionCompilationListener extends LcdPythonBaseListener {
 			if ( !(value.startsWith("'''") || value.startsWith("\"\"\"")) ) {
 //				System.out.println("EXPR_STMT> [{" + value + "}] <- " + ctx.toStringTree(transpiler.parser));
 //				this.transpiler.dumpChildren( ctx, 1 );
-				expressionRoot = new TranslationSubexpressionNode(null, value);
+				expressionRoot = new TranslationExpressionNode(ctx, value);
 				translateMap = new HashMap<>();
 			} else if (value.startsWith("'''@")) {
 				value = value.trim().replaceAll(" +", "");
@@ -254,8 +270,7 @@ class ExpressionCompilationListener extends LcdPythonBaseListener {
 		public void exitExpr_stmt(LcdPythonParser.Expr_stmtContext ctx) {
 			if (expressionRoot != null) {
 				TranslationNode expr = defaultOperandOperator( ctx, expressionRoot.getName() );
-				expr.analyze();
-				expressionRoot = expr;
+				expressionRoot.replace( expr );
 				while (expressionRoot.getChildCount() == 1) {
 					expr = expressionRoot.getChild(0);
 					if (expr.getChildCount() == 0)
@@ -423,7 +438,8 @@ class ExpressionCompilationListener extends LcdPythonBaseListener {
 							}
 							break;
 						case ".":
-							Symbol field = transpiler.symbolTable.lookup(scope, trailer.getChild(i+1).getText());
+							String fieldName = trailer.getChild(i+1).getText();
+							Symbol field = transpiler.symbolTable.lookup(scope, fieldName);
 							if (field == null) {
 								if (parent.getLastChild() instanceof TranslationSymbolNode) {
 									TranslationSymbolNode tsn = (TranslationSymbolNode) parent.getLastChild();
@@ -434,7 +450,11 @@ class ExpressionCompilationListener extends LcdPythonBaseListener {
 									}
 								}
 							}
+							if (field == null) {
+								transpiler.reportError( ctx, "Unknown member: " + fieldName + " at " + scope );
+							}
 							new TranslationUnaryNode( parent, payload, field );
+							
 							break;
 						}
 					}
@@ -459,7 +479,7 @@ class ExpressionCompilationListener extends LcdPythonBaseListener {
 						parent = parent.getChild(0);
 					}
 					translateMap.put( ctx.getPayload(), parent );
-					parent.analyze();
+					parent.setType( node.getType() );
 					return;
 				}
 				if (node != null) { // STRING+ 
@@ -471,7 +491,7 @@ class ExpressionCompilationListener extends LcdPythonBaseListener {
 						parent = parent.getChild(0);
 					}
 					translateMap.put( ctx.getPayload(), parent );
-					parent.analyze();
+					parent.setType( node.getType() );
 					return;
 				}
 				String value = transpiler.valueMap.get(payload);
@@ -489,16 +509,15 @@ class ExpressionCompilationListener extends LcdPythonBaseListener {
 						translateMap.put( payload, node );
 					}
 					parent.adopt(node);
+					parent.setType( node.getType() );
 				}
 				translateMap.put( ctx.getPayload(), parent );
-//				System.out.println("LIST/437 " + parent.hashCode());
-//				System.out.println(parent.traverse(1));
-				parent.analyze();
 			}
 		}
 		
 		@Override
 		public void exitSubscriptlist(LcdPythonParser.SubscriptlistContext ctx) {
+//			transpiler.dumpChildren(ctx);
 			defaultOperandOperator( ctx, "subscriptlist" );
 		}
 

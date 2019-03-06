@@ -22,12 +22,12 @@ namespace PolynomialFiltering {
         class IRecursiveFilter : public AbstractFilter {
             public:
                 IRecursiveFilter();
-                virtual void start(const double t, const RealMatrix Z) = 0;
-                virtual std::tuple<RealMatrix, double, double> predict(const double t) = 0;
-                virtual void update(const double t, const RealMatrix dtau, const RealMatrix Zstar, const RealMatrix e) = 0;
+                virtual void start(const double t, const RealVector Z) = 0;
+                virtual std::tuple<RealVector, double, double> predict(const double t) = 0;
+                virtual void update(const double t, const double dtau, const RealVector Zstar, const RealVector e) = 0;
                 virtual long getN() = 0;
                 virtual double getTime() = 0;
-                virtual RealMatrix getState(const double t) = 0;
+                virtual RealVector getState(const double t) = 0;
         }; // class IRecursiveFilter 
 
     }; // namespace Components

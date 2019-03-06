@@ -10,7 +10,9 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.Stack;
@@ -39,7 +41,10 @@ public class CppTarget implements ILanguageTarget {
 	
 	Path includeDirectory;
 	Path srcDirectory;
-	
+
+	protected List<String> includeFiles = new ArrayList<>();
+
+
 	Map<String, Object> templateDataModel = new HashMap<>();
 	
 	protected String define;
@@ -150,9 +155,15 @@ public class CppTarget implements ILanguageTarget {
 		define = String.format("__%sHPP", scope.toString().replace("/", "_").toUpperCase());
 		templateDataModel.put("hppDefine", define);
 		templateDataModel.put("systemIncludes", "");
-		String localInclude = "#include <polynomialfiltering/Main.hpp>\n";
-		templateDataModel.put("localIncludes", localInclude);
+		StringBuilder localIncludes = new StringBuilder();
+		//localIncludes.append("#include <polynomialfiltering/Main.hpp>\n");
+		for (String includeFile : includeFiles) {
+			localIncludes.append(String.format("#include <%s>\n", includeFile));
+		}
+		includeFiles.clear();
+		templateDataModel.put("localIncludes", localIncludes.toString());
 		templateDataModel.put("interfaceInclude", programmer.getInclude() + "\n");
+		
 		templateDataModel.put("moduleInclude", moduleIncludeFile.toString());
 		
 		StringBuilder systemIncludes = new StringBuilder();
@@ -389,6 +400,8 @@ public class CppTarget implements ILanguageTarget {
 		if (open.equals("(")) {
 			programmer.openParenthesis( out );
 			for (int i = 0; i < child.getChildCount(); i++) {
+				if (child.getChild(i) instanceof TranslationOperatorNode)
+					continue;
 				if (i > 0) {
 					out.append(", ");
 				}
@@ -433,8 +446,9 @@ public class CppTarget implements ILanguageTarget {
 				if (symbol.getName().equals("shape")) {
 					TranslationNode which = child.getRightSibling().getFirstChild();
 					if (which instanceof TranslationConstantNode) {
+						TranslationSymbolNode tsn = (TranslationSymbolNode) child.getLeftSibling(); 
 						TranslationConstantNode tcn = (TranslationConstantNode) which;
-						symbol = programmer.getDimensionSymbol( tcn.getValue() );
+						symbol = programmer.getDimensionSymbol( tsn.getSymbol().getType(), tcn.getValue() );
 						programmer.writeSymbol( out, symbol );
 						programmer.openParenthesis( out );
 						programmer.closeParenthesis( out );
@@ -444,7 +458,7 @@ public class CppTarget implements ILanguageTarget {
 					programmer.writeSymbol( out, symbol );
 				}
 			} else {
-				Transpiler.instance().reportError("Bad unary symbol: " + unary.toString() );
+				Transpiler.instance().reportError(unary.getTop(), "Bad unary symbol: " + unary.toString() );
 			}
 		} else if (child instanceof TranslationListNode) {
 			TranslationListNode tln = (TranslationListNode) child;
@@ -466,23 +480,102 @@ public class CppTarget implements ILanguageTarget {
 //		    1:  [2] <SUBEXPRESSION> <LIST>[  : null
 //		                                     2:    [0] <OPERATOR>: 
 //		                                     2:    [0] <CONSTANT>:INTEGER = 0
-			if (tln.getListOpen().equals("[") && tln.getChildCount() > 1) {
-				if (tln.getChild(0) instanceof TranslationOperatorNode) {        //[:,...]
-					Symbol which = programmer.getRowColSymbol("1");
+			if (tln.getListOpen().equals("[")) {
+				if ( tln.isArraySlice() ) {
+					if (! (tln.getLeftSibling() instanceof TranslationSymbolNode) ) {
+						Transpiler.instance().reportError(tln.getTop(), "Bracket list follows non-symbol");
+						return 0;
+					}
+					Symbol array = ((TranslationSymbolNode) tln.getLeftSibling()).getSymbol();
+					/* [:,i] -> col(i) == block(0,i,rows(),1)
+					 *     LIST[2](OPERATOR:,SUBEXPR)
+					 * [j,:] -> row(j) == block(j,0,1,cols())
+					 *     LIST[2](SUBEXPR,OPERATOR:)
+					 * [:] -> goes away == block(0,0,rows(),cols()) / segment(0,size())
+					 *     LIST[1](OPERATOR:)
+					 * [i:m] -> block(i,0,m,1) / segment(i,m)
+					 *     LIST[1](subscript(SUBEXPR,OPERATOR:,SUBEXPR))
+					 *[i:m,j:n] -> block(i,j,m,n)
+					 *     LIST[3](SUBEXPR,SUBEXPR,subscript(SUBEXPR,OPERATOR:,SUBEXPR))
+					 */
+					Symbol slice = programmer.getSliceSymbol(array.getType());
 					programmer.writeOperator(out, ".");
-					programmer.writeSymbol( out, which );
-					programmer.openParenthesis( out );
-					emitChild(out, scope, tln.getChild(1));
+					switch (tln.getChildCount()) {
+					case 0:
+						break;
+					case 1:
+						programmer.writeSymbol( out, slice );
+						programmer.openParenthesis( out );
+						if (tln.getChild(0) instanceof TranslationOperatorNode) { 
+							// [:] -> block(0,0,rows(),cols()) / segment(0,size())
+							if (array.getType().equals("vector")) {
+								out.append("0, ");
+								out.append(array.getName());
+								out.append(".size()");  // TODO from programmer
+							} else {
+								out.append("0, 0, ");
+								out.append(array.getName());
+								out.append(".rows(), "); // TODO from programmer								
+								out.append(array.getName());
+								out.append(".cols() ");	 // TODO from programmer						
+							}
+						} else { 
+							// [i:m] -> block(i,0,m,1) / segment(i,m)
+							TranslationNode subscript = tln.getChild(0);							
+							if (array.getType().equals("vector")) {
+								emitChild(out, scope, subscript.getChild(0));
+								out.append(", ");
+								emitChild(out, scope, subscript.getChild(2));
+							} else {
+								emitChild(out, scope, subscript.getChild(0));
+								out.append(", 0, ");
+								emitChild(out, scope, subscript.getChild(2));
+								out.append(", "); 								
+								out.append("1 ");						
+							}
+						}
+						break;
+					case 2:
+						if (tln.getChild(0) instanceof TranslationOperatorNode) {        //[:,...]
+							Symbol which = programmer.getRowColSymbol("1");
+							programmer.writeSymbol( out, which );
+							programmer.openParenthesis( out );
+							emitChild(out, scope, tln.getChild(1));
+						} else if (tln.getChild(1) instanceof TranslationOperatorNode) { //[...,:]
+							Symbol which = programmer.getRowColSymbol("0");
+							programmer.writeSymbol( out, which );
+							programmer.openParenthesis( out );
+							emitChild(out, scope, tln.getChild(0));
+						}
+						break;
+					case 3: // [i:m,j:n] -> block(i,j,m,n) -> LIST[3](SUBEXPR,SUBEXPR,subscript(SUBEXPR,OPERATOR:,SUBEXPR))
+						TranslationNode subscript = tln.getChild(2);
+						programmer.writeSymbol( out, slice );
+						programmer.openParenthesis( out );
+						emitChild(out, scope, tln.getChild(0));
+						out.append(", ");
+						emitChild(out, scope, subscript.getChild(0));
+						out.append(", ");
+						emitChild(out, scope, tln.getChild(1));
+						out.append(", "); 								
+						emitChild(out, scope, subscript.getChild(2));
+						break;
+					}
 					programmer.closeParenthesis( out );
 					return 0;
-				} else if (tln.getChild(1) instanceof TranslationOperatorNode) { //[...,:]
-					Symbol which = programmer.getRowColSymbol("0");
-					programmer.writeOperator(out, ".");
-					programmer.writeSymbol( out, which );
+				} else if (tln.getLeftSibling() != null) {  // non-slice access
+					System.out.println( tln.getLeftSibling().toString() );
+					System.out.println(tln.traverse(1)); ////@@
 					programmer.openParenthesis( out );
-					emitChild(out, scope, tln.getChild(0));
+					for (int i = 0; i < tln.getChildCount(); i++) {
+						TranslationNode subscript = tln.getChild(i);
+						if (i != 0)
+							out.append(", ");
+						emitChild(out, scope, tln.getChild(i));
+					}
 					programmer.closeParenthesis( out );
 					return 0;
+					
 				}
 			}
 			String open = tln.getListOpen();
@@ -490,9 +583,7 @@ public class CppTarget implements ILanguageTarget {
 		} else {
 			if (child instanceof TranslationSubexpressionNode) {
 				TranslationSubexpressionNode tsn = (TranslationSubexpressionNode) child;
-				tsn.analyze();
 				if (tsn.getName().equals("SUBEXPRESSION::Term")) {
-					//System.out.println(tsn.traverse(1));
 					String operator = ((TranslationOperatorNode) tsn.getChild(1)).getOperator();
 					String lhsType =  ((TranslationSubexpressionNode) tsn.getChild(0)).getType();
 					if (lhsType == null)
@@ -528,6 +619,30 @@ public class CppTarget implements ILanguageTarget {
 		if (root.getChildCount() == 0) {
 			emitChild( out, scope, root);
 		} else {
+			if (root instanceof TranslationListNode) { // tuple
+				out.append("std::make_tuple");
+				emitBracketedList(out, scope, root.getFirstChild(), "(" );
+				return;
+			} else if (root instanceof TranslationSubexpressionNode) {
+				TranslationSubexpressionNode tsn = (TranslationSubexpressionNode) root;
+				if (tsn.getName().equals("SUBEXPRESSION::Term")) {
+					String operator = ((TranslationOperatorNode) tsn.getChild(1)).getOperator();
+					String lhsType =  ((TranslationSubexpressionNode) tsn.getChild(0)).getType();
+					if (lhsType == null)
+						lhsType = tsn.getType();
+					String rhsType =  ((TranslationSubexpressionNode) tsn.getChild(2)).getType();
+					if (rhsType == null)
+						rhsType = tsn.getType();
+					if (programmer.isSpecialTerm(operator, lhsType, rhsType)) {
+						Indent lhs = new Indent();
+						emitChild( lhs, scope, tsn.getChild(0));
+						Indent rhs = new Indent();
+						emitChild( rhs, scope, tsn.getChild(2));
+						programmer.writeSpecialTerm(out, operator, lhs, rhs);
+						return;
+					}
+				}
+			} 
 			traverseEmitter( out, scope, root, 0 );
 		}
 		programmer.finishExpression(out);
@@ -628,6 +743,20 @@ public class CppTarget implements ILanguageTarget {
 	public void closeBlock() {
 		cppIndent.out();
 		cppIndent.writeln( "}");
+	}
+	
+	@Override
+	public void addImport(Scope scope) {
+		StringBuilder includeFile = new StringBuilder();
+		for (int i = 0; i < scope.getLevelCount()-1; i++) {
+			String level = scope.getLevel(i).toLowerCase();
+			if (i > 0) {
+				includeFile.append(level);
+				includeFile.append('/');
+			}
+		}
+		includeFile.append( scope.getLast() + ".hpp" );
+		includeFiles.add(includeFile.toString());
 	}
 
 }

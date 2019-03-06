@@ -19,12 +19,12 @@ namespace PolynomialFiltering {
                 this->L = memorySize;
                 this->n = 0;
                 this->n0 = memorySize;
-                this->t0 =  0.0 ;
-                this->t =  0.0 ;
-                this->tau =  1.0 ;
-                this->Z = ArrayXd::Zero(this->order + 1);
-                this->tRing = ArrayXd::Zero(memorySize);
-                this->yRing = ArrayXd::Zero(memorySize);
+                this->t0 = 0.0;
+                this->t = 0.0;
+                this->tau = 1.0;
+                this->Z = ArrayXd::Zero((this->order + 1));
+                this->tRing = ArrayXd::Zero((memorySize));
+                this->yRing = ArrayXd::Zero((memorySize));
             }
 
             long FixedMemoryFilter::getN () {
@@ -39,7 +39,7 @@ namespace PolynomialFiltering {
                 return this->t;
             }
 
-            RealMatrix FixedMemoryFilter::getState (const double t) {
+            RealVector FixedMemoryFilter::getState (const double t) {
                 RealVector dt;
                 RealMatrix Tn;
                 RealMatrix Tnt;
@@ -73,10 +73,10 @@ namespace PolynomialFiltering {
                 RealMatrix Tn;
                 RealVector C;
                 double fact;
-                Tn = ArrayXXd::Zero(dt.rows(), this->order + 1);
-                Tn.col(0) = ones(dt.rows());
+                Tn = ArrayXXd::Zero((dt.size(), this->order + 1));
+                Tn.col(0) = ones((dt.size()));
                 C = copy(dt);
-                fact =  1.0 ;
+                fact = 1.0;
                 for (long i = 1; i < this->order + 1; i++) {
                     fact /= i;
                     Tn.col(i) = C * fact;

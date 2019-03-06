@@ -51,11 +51,12 @@ class SymbolTable {
 			return symbol;
 		}
 		
-		public void inherit( Symbol base, Scope scope ) {
+		public Symbol inherit( Symbol base, Scope scope ) {
 			Symbol i = base.inhert(scope);
 			Map<String, Symbol> aliases = table.get(i.getName());
 			aliases.put( scope.toString(), i ); //TODO collisions
-			table.put(i.getName(),  aliases);			
+			table.put(i.getName(),  aliases);
+			return i;
 		}
 		
 		public Symbol lookup( Scope scope, String name ) {

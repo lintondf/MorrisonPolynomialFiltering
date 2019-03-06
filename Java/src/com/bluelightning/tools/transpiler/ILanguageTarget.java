@@ -16,6 +16,8 @@ public interface ILanguageTarget {
 	
 	public int getId();
 	
+	public void addImport( Scope scope);
+	
 	public void startModule( Scope scope );
 	
 	public void finishModule();

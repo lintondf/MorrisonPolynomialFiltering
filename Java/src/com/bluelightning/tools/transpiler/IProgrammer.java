@@ -2,6 +2,7 @@ package com.bluelightning.tools.transpiler;
 
 import com.bluelightning.tools.transpiler.CppTarget.Indent;
 import com.bluelightning.tools.transpiler.nodes.TranslationConstantNode;
+import com.bluelightning.tools.transpiler.nodes.TranslationNode;
 
 public interface IProgrammer {
 	
@@ -37,8 +38,10 @@ public interface IProgrammer {
 
 	void writeConstant(Indent out, TranslationConstantNode node);
 
-	Symbol getDimensionSymbol(String value);
+	Symbol getDimensionSymbol(String type, String value);
 
 	Symbol getRowColSymbol(String value);
+
+	Symbol getSliceSymbol(String type);
 
 }

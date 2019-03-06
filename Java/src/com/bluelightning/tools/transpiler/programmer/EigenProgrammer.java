@@ -13,6 +13,7 @@ import com.bluelightning.tools.transpiler.Scope;
 import com.bluelightning.tools.transpiler.Symbol;
 import com.bluelightning.tools.transpiler.CppTarget.Indent;
 import com.bluelightning.tools.transpiler.nodes.TranslationConstantNode;
+import com.bluelightning.tools.transpiler.nodes.TranslationNode;
 
 /**
  * @author NOOK
@@ -28,11 +29,10 @@ public class EigenProgrammer implements IProgrammer {
 		typeRemap.put("array", "RealMatrix");
 		typeRemap.put("str", "std::string");	
 		
-		//Map<String, Symbol>  eye->identity_matrix<double>
-		//                   zeros->zero_matrix<double> | zero_vector<double>
 		Scope libraryScope = new Scope();
+		simpleRemaps.put("min", new Symbol(libraryScope, "std::min", "int")); //TODO generic
 		Map<String, Symbol> eigenNames = new HashMap<>();
-		eigenNames.put("array",  new Symbol(libraryScope, "identity", "array") );
+  		eigenNames.put("array",  new Symbol(libraryScope, "identity", "array") );
 		eigenNames.put("vector", new Symbol(libraryScope, "???vector_eye???", "vector") );
 		functionRewrites.put("eye", eigenNames);
 		eigenNames = new HashMap<>();
@@ -48,12 +48,16 @@ public class EigenProgrammer implements IProgrammer {
 	
 	// index by function-name yields map indexed by type yields boost name
 	protected Map<String, Map<String,Symbol>> functionRewrites = new HashMap<>();
+	protected Map<String, Symbol> simpleRemaps = new HashMap<>();
 
 	/* (non-Javadoc)
 	 * @see com.bluelightning.tools.transpiler.IProgrammer#remapFunctionName(java.lang.String, java.lang.String)
 	 */
 	@Override
 	public Symbol remapFunctionName( String functionName, String type ) {
+		Symbol simple = simpleRemaps.get(functionName);
+		if (simple != null)
+			return simple;
 		Map<String,Symbol> boostNames = functionRewrites.get(functionName);
 		if (boostNames == null)
 			return null;
@@ -270,12 +274,17 @@ public class EigenProgrammer implements IProgrammer {
 	
 	static Symbol rowDimension = new Symbol( new Scope(), "rows", "int");
 	static Symbol colDimension = new Symbol( new Scope(), "cols", "int");
+	static Symbol vectorDimension = new Symbol( new Scope(), "size", "int");
 	static Symbol rowAccess = new Symbol( new Scope(), "row", "array");
 	static Symbol colAccess = new Symbol( new Scope(), "col", "array");
+	static Symbol vectorBlock = new Symbol( new Scope(), "segment", "vector");
+	static Symbol arrayBlock = new Symbol( new Scope(), "block", "array");
 	
 
 	@Override
-	public Symbol getDimensionSymbol(String value) {
+	public Symbol getDimensionSymbol(String type, String value) {
+		if (type.equals("vector"))
+			return vectorDimension;
 		switch (value) {
 		case "0":
 			return rowDimension;
@@ -292,6 +301,17 @@ public class EigenProgrammer implements IProgrammer {
 			return rowAccess;
 		case "1":
 			return colAccess;
+		}
+		return null;
+	}
+
+	@Override
+	public Symbol getSliceSymbol(String type) {
+		switch (type) {
+		case "vector":
+			return vectorBlock;
+		case "array":
+			return arrayBlock;
 		}
 		return null;
 	}

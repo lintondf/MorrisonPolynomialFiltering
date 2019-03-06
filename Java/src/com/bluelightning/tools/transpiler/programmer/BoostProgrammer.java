@@ -10,6 +10,7 @@ import com.bluelightning.tools.transpiler.Scope;
 import com.bluelightning.tools.transpiler.Symbol;
 import com.bluelightning.tools.transpiler.CppTarget.Indent;
 import com.bluelightning.tools.transpiler.nodes.TranslationConstantNode;
+import com.bluelightning.tools.transpiler.nodes.TranslationNode;
 
 public class BoostProgrammer implements IProgrammer {
 	
@@ -197,7 +198,7 @@ public class BoostProgrammer implements IProgrammer {
 	}
 
 	@Override
-	public Symbol getDimensionSymbol(String value) {
+	public Symbol getDimensionSymbol(String type, String value) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -219,4 +220,11 @@ public class BoostProgrammer implements IProgrammer {
 		// TODO Auto-generated method stub
 		return false;
 	}
+
+	@Override
+	public Symbol getSliceSymbol(String type) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

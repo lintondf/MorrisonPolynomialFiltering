@@ -20,17 +20,25 @@ public class TranslationListNode extends TranslationSubexpressionNode {
 		return listOpen;
 	}
 	
-	@Override
-	public void analyze() {
-		if (children.size() == 0) {
-			this.type = "None";
-		} else {
-			if (getChild(0) instanceof TranslationSubexpressionNode) {
-				this.type = ((TranslationSubexpressionNode)getChild(0)).getType();
-			} else {
-				this.type = "None";
-			}
+	private boolean isChildSlice(TranslationNode child) {
+		if (child instanceof TranslationOperatorNode) {
+			if (((TranslationOperatorNode) child).getOperator().equals(":"))
+				return true;
 		}
+		for (TranslationNode grandchild : child.children) {
+			if (isChildSlice(grandchild))
+				return true;
+		}
+		return false;
 	}
 	
+	public boolean isArraySlice() {
+		if (listOpen.equals("[")) {
+			for (TranslationNode child : children) {
+				if (isChildSlice(child))
+					return true;
+			}
+		}
+		return false;
+	}
 }

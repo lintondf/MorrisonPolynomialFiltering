@@ -51,6 +51,14 @@ namespace PolynomialFiltering {
 		return a.array() / b.array();
 	}
 
+	inline long len(RealMatrix a) {
+		return (long) (a.rows() * a.cols());
+	}
+
+	inline long len(RealVector a) {
+		return (long) (a.size());
+	}
+
 }
 
 

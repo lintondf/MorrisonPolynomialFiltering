@@ -8,6 +8,7 @@ from abc import abstractmethod
 from typing import Tuple
 
 from numpy import array
+from numpy import array as vector;
 
 from PolynomialFiltering.Main import AbstractFilter
 
@@ -17,7 +18,7 @@ class IRecursiveFilter(AbstractFilter):
     
 
     @abstractmethod   
-    def start(self, t : float, Z : array) -> None:
+    def start(self, t : float, Z : vector) -> None:
         raise NotImplementedError()
         
     """ predict - predict state at time t
@@ -35,11 +36,11 @@ class IRecursiveFilter(AbstractFilter):
         delta tau
     """
     @abstractmethod   
-    def predict(self, t : float) -> Tuple[array, float, float] :
+    def predict(self, t : float) -> Tuple[vector, float, float] :
         raise NotImplementedError()
  
     @abstractmethod   
-    def update(self, t : float, dtau : array, Zstar : array, e : array) -> None:
+    def update(self, t : float, dtau : float, Zstar : vector, e : vector) -> None:
         raise NotImplementedError()
        
     @abstractmethod   
@@ -51,5 +52,5 @@ class IRecursiveFilter(AbstractFilter):
         raise NotImplementedError()
     
     @abstractmethod   
-    def getState(self, t : float) -> array:
+    def getState(self, t : float) -> vector:
         raise NotImplementedError()

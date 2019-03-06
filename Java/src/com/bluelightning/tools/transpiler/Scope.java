@@ -1,9 +1,17 @@
 package com.bluelightning.tools.transpiler;
 
+import java.util.HashMap;
 import java.util.List;
 
 
 public class Scope {
+	
+		protected static HashMap<String, Scope> scopeMap = new HashMap<>();
+		
+		public static Scope getExistingScope( String qString ) {
+			return scopeMap.get(qString);
+		}
+		
 		protected String[] qualifiers; // e.g. com.bluelightning.Filtering
 		public enum Level {
 			IMPORT, MODULE, FUNCTION, CLASS, MEMBER,
@@ -15,6 +23,7 @@ public class Scope {
 			level = Level.IMPORT;
 			this.qualifiers = new String[] {""};
 			this.qString = "/";
+			scopeMap.put(this.qString, this);
 		}
 		
 		public Scope( Scope.Level level, List<String> qualifiers) {
@@ -26,6 +35,7 @@ public class Scope {
 				sb.append('/');
 			}
 			qString = sb.toString();			
+			scopeMap.put(this.qString, this);
 		}
 		
 		public String getLast() {
@@ -67,7 +77,10 @@ public class Scope {
 				break;
 			case MEMBER:
 				return null;
-			}			
+			}	
+//			if (childName.equals(qualifiers[qualifiers.length-1])) {
+//				System.err.println("Double Qualifiers: " + this.toString() + " + " + childName );
+//			}
 			scope.qualifiers = new String[this.qualifiers.length+1];
 			StringBuffer sb = new StringBuffer();
 			for (int i = 0; i < qualifiers.length; i++) {
@@ -79,6 +92,7 @@ public class Scope {
 			sb.append('/');
 			scope.qualifiers[this.qualifiers.length] = childName;
 			scope.qString = sb.toString();			
+			scopeMap.put(scope.qString, scope);
 			return scope;
 		}
 		
@@ -110,6 +124,7 @@ public class Scope {
 				scope.qualifiers[i] = qualifiers[i];
 			}
 			scope.qString = sb.toString();			
+			scopeMap.put(scope.qString, scope);
 			return scope;
 		}
 		

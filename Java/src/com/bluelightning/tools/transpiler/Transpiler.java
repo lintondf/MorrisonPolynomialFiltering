@@ -39,6 +39,7 @@ import com.bluelightning.tools.transpiler.antlr4.LcdPythonBaseListener;
 import com.bluelightning.tools.transpiler.antlr4.LcdPythonBaseVisitor;
 import com.bluelightning.tools.transpiler.antlr4.LcdPythonLexer;
 import com.bluelightning.tools.transpiler.antlr4.LcdPythonParser;
+import com.bluelightning.tools.transpiler.nodes.TranslationExpressionNode;
 import com.bluelightning.tools.transpiler.nodes.TranslationNode;
 import com.bluelightning.tools.transpiler.nodes.TranslationUnaryNode;
 import com.bluelightning.tools.transpiler.programmer.BoostProgrammer;
@@ -70,8 +71,9 @@ public class Transpiler {
 	static Target[] targets = {
 		//new Target(Paths.get(""), "TranspilerTest"),
 		new Target(Paths.get("PolynomialFiltering"), "Main"),
-//		new Target(Paths.get("PolynomialFiltering/Components"), "FixedMemoryPolynomialFilter"),
+		new Target(Paths.get("PolynomialFiltering/Components"), "FixedMemoryPolynomialFilter"),
 		new Target(Paths.get("PolynomialFiltering/Components"), "IRecursiveFilter"),
+		new Target(Paths.get("PolynomialFiltering/Components"), "AbstractRecursiveFilter"),
 //		new Target(Paths.get("PolynomialFiltering/Components"), "ExpandingMemoryPolynomialFilter"),
 	};
 	
@@ -83,6 +85,13 @@ public class Transpiler {
 		reportError( context.start, message );
 	}
 	
+	public void reportError(TranslationNode node, String message) {
+		if (node instanceof TranslationExpressionNode) {
+			reportError( ((TranslationExpressionNode) node).getParserRuleContext(), message );
+		} else {
+			reportError( node.toString() + ": " + message );
+		}
+	}
 	public void reportError(Token token, String message ) {
 		String r = String.format("ERROR [L%5d:C%3d]: %s", token.getLine(), token.getCharPositionInLine(), message );
 		reportError(r);
@@ -281,6 +290,13 @@ public class Transpiler {
 				target.emitForStatement( symbol, expressionRoot);
 			}
 		}
+
+		@Override
+		public void addImport(Scope scope) {
+			for (ILanguageTarget target : targets) {
+				target.addImport( scope );
+			}
+		}
 		
 	}
 
@@ -371,8 +387,10 @@ public class Transpiler {
 		Scope importScope = new Scope();
 		symbolTable.add( importScope, "copy", "array");
 		symbolTable.add( importScope, "eye", "array");
-		symbolTable.add( importScope, "ones", "array");
 		symbolTable.add( importScope, "inv", "array" );
+		symbolTable.add( importScope, "len", "int" );
+		symbolTable.add( importScope, "min", "int" );  //TODO generic type
+		symbolTable.add( importScope, "ones", "array");
 		symbolTable.add( importScope, "pow", "float");
 		symbolTable.add( importScope, "range", "range");
 		symbolTable.add( importScope, "shape", "dimensions");
@@ -402,7 +420,6 @@ public class Transpiler {
 		for (String dot : dottedModule) {
 			moduleScope = moduleScope.getChild(Scope.Level.MODULE, dot );
 		}
-		dispatcher.startModule(moduleScope);
 		
 		LcdPythonLexer java8Lexer = new LcdPythonLexer(CharStreams.fromString(content));
 		CommonTokenStream tokens = new CommonTokenStream(java8Lexer);
@@ -417,6 +434,7 @@ public class Transpiler {
 		// PASS 2 - handle all imports, variable, function, and class declarations
 		DeclarationsListener declarationsListener = new DeclarationsListener(this, moduleScope);
 		walker.walk(declarationsListener, tree);
+		dispatcher.startModule(moduleScope);
 		try {
 			PrintWriter sym = new PrintWriter("out/symbols.txt");
 			sym.println("\n\n-------------------------------------");
@@ -437,7 +455,7 @@ public class Transpiler {
 			System.err.println("\n\n!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n");
 			System.err.println(errorReport.toString());
 		} else {
-			System.out.println("\n\nNO ERRORS");
+			System.out.println("\nNO ERRORS\n\n");
 		}
 		
 	}
@@ -473,6 +491,11 @@ public class Transpiler {
 			dottedModule.add(target.module);
 			transpiler.compile( where, dottedModule);
 		}
+		System.out.printf("Compiled %d targets\n", targets.length);
+	}
+
+	public static String deblank(String text) {
+		return text.trim().replaceAll(" +", "");
 	}
 
 

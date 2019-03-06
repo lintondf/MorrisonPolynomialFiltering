@@ -46,12 +46,14 @@ public class Symbol {
 	protected boolean isForVariable;
 	protected SuperClassInfo superClassInfo = null;
 	protected FunctionParametersInfo functionParametersInfo = null;
+	protected Symbol ancestor = null;
 	
 	public Symbol inhert( Scope heir ) {
 		Symbol that = new Symbol( heir, this.name, this.type );
 		that.initialization = this.initialization;
 		that.superClassInfo = this.superClassInfo;
 		that.functionParametersInfo = this.functionParametersInfo;
+		that.ancestor = this;
 		return that;
 	}
 	
@@ -123,5 +125,13 @@ public class Symbol {
 
 	public void setForVariable(boolean isForVariable) {
 		this.isForVariable = isForVariable;
+	}
+
+	public Symbol getAncestor() {
+		return ancestor;
+	}
+
+	public boolean isClass() {
+		return type.equals("<CLASS>") || type.equals("<ENUM>");
 	}
 }

@@ -18,7 +18,7 @@ public class TranslationSymbolNode extends TranslationSubexpressionNode {
 		this.symbol = symbol;
 		if (symbol == null)
 			throw new NullPointerException();
-		this.type = symbol.getType();
+		setType(symbol.getType());
 	}
 
 	public Symbol getSymbol() {
