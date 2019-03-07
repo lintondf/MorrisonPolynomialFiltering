@@ -32,15 +32,19 @@ public interface ILanguageTarget {
 	
 	public void emitSymbolDeclaration( Symbol symbol );
 	
+	public void emitElseStatement();
+	
 	public void emitExpressionStatement( Scope scope, TranslationNode root );
 	
-	public void emitSubExpression( Scope scope, TranslationNode root );
-	
-	public void emitReturnStatement();
-	
-	public void emitCloseStatement();
+	public void emitIfStatement(TranslationNode expressionRoot);
 
 	public void emitForStatement(Symbol symbol, TranslationNode expressionRoot);
 	
+	public void emitReturnStatement();
+	
+	public void emitSubExpression( Scope scope, TranslationNode root );
+	
+	public void finishStatement();
+
 	public void closeBlock();
 }

@@ -16,6 +16,8 @@ namespace PolynomialFiltering {
         
             FixedMemoryFilter::FixedMemoryFilter (const long order, const long memorySize) : AbstractFilter() {
                 this->order = order;
+                if {
+                }
                 this->L = memorySize;
                 this->n = 0;
                 this->n0 = memorySize;

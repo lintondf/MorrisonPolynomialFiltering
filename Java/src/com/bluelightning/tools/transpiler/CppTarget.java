@@ -722,8 +722,18 @@ public class CppTarget implements ILanguageTarget {
 	}
 
 	@Override
-	public void emitCloseStatement() {
+	public void finishStatement() {
 		cppIndent.append(";\n");
+	}
+
+	@Override
+	public void emitIfStatement(TranslationNode expressionRoot) {
+		cppIndent.write("if {\n");
+		cppIndent.in();
+	}
+
+	@Override
+	public void emitElseStatement() {
 	}
 
 	@Override

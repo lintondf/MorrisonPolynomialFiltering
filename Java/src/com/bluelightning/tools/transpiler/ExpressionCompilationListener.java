@@ -205,7 +205,7 @@ class ExpressionCompilationListener extends LcdPythonBaseListener {
 
 			ExpressionCompilationListener subListener = new ExpressionCompilationListener(transpiler);
 			subListener.expressionRoot = new TranslationSubexpressionNode(null, "FOR_STMT");
-			subListener.translateMap = this.translateMap;
+			subListener.translateMap = newTranslateMap();
 			subListener.scope = symbol.getScope();
 			transpiler.walker.walk(subListener, ctx.getChild(3));
 			transpiler.dispatcher.emitForStatement(symbol, subListener.translateMap.get(ctx.getChild(3).getPayload()));
@@ -220,11 +220,23 @@ class ExpressionCompilationListener extends LcdPythonBaseListener {
 		@Override 
 		public void enterIf_stmt(LcdPythonParser.If_stmtContext ctx) { 
 			transpiler.dumpChildren(ctx);
+			System.out.println( ctx.getChild(1).getText());
+			System.out.println( ctx.getChild(1).getChild(0).getChild(0).getText());
+//			ExpressionCompilationListener subListener = new ExpressionCompilationListener(transpiler);
+//			subListener.expressionRoot = new TranslationSubexpressionNode(null, "IF_STMT");
+//			subListener.translateMap = this.translateMap;
+//			subListener.scope = scope;
+//			transpiler.walker.walk(subListener, ctx.getChild(1));
+//			TranslationNode condition = subListener.translateMap.get(ctx.getChild(1).getPayload());
+//			System.out.println( condition.traverse(1));
+			transpiler.dispatcher.emitIfStatement(null);
+//			subListener.expressionRoot = null;
+			
 		}
 		
 		@Override 
 		public void exitIf_stmt(LcdPythonParser.If_stmtContext ctx) { 
-			//transpiler.dispatcher.closeBlock();
+			transpiler.dispatcher.closeBlock();
 		}
 		
 		@Override 
@@ -245,7 +257,7 @@ class ExpressionCompilationListener extends LcdPythonBaseListener {
 //				System.out.println( expressionRoot.toString() );
 //				System.out.println( expressionRoot.traverse(1));
 				transpiler.dispatcher.emitSubExpression(scope, expressionRoot);
-				transpiler.dispatcher.emitCloseStatement();
+				transpiler.dispatcher.finishStatement();
 			}
 			expressionRoot = null;
 		}

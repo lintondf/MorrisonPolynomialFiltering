@@ -128,6 +128,11 @@ public class Transpiler {
 		}
 	}
 	
+	public static String deblank(String text) {
+		return text.trim().replaceAll(" +", "");
+	}
+
+
 	protected Map<Object, String> valueMap = new HashMap<>();
 	
 	public String getValue( Object payload ) {
@@ -271,9 +276,9 @@ public class Transpiler {
 		}
 
 		@Override
-		public void emitCloseStatement() {
+		public void finishStatement() {
 			for (ILanguageTarget target : targets) {
-				target.emitCloseStatement();
+				target.finishStatement();
 			}
 		}
 
@@ -295,6 +300,20 @@ public class Transpiler {
 		public void addImport(Scope scope) {
 			for (ILanguageTarget target : targets) {
 				target.addImport( scope );
+			}
+		}
+
+		@Override
+		public void emitIfStatement(TranslationNode expressionRoot) {
+			for (ILanguageTarget target : targets) {
+				target.emitIfStatement( expressionRoot );
+			}
+		}
+
+		@Override
+		public void emitElseStatement() {
+			for (ILanguageTarget target : targets) {
+				target.emitElseStatement();
 			}
 		}
 		
@@ -472,10 +491,14 @@ public class Transpiler {
 		System.setProperty("user.dir", lwd);
 	}
 
+	public static void main(String[] args) {
+		compileGrammar( "data", "LcdPython.g4",
+		      "src/com/bluelightning/tools/transpiler/antlr4/" );		
+	}
 	/**
 	 * @param args
 	 */
-	public static void main(String[] args) {
+	public static void xmain(String[] args) {
 		Transpiler transpiler = new Transpiler();
 		
 		Path base = Paths.get("../Python/src");
@@ -493,10 +516,5 @@ public class Transpiler {
 		}
 		System.out.printf("Compiled %d targets\n", targets.length);
 	}
-
-	public static String deblank(String text) {
-		return text.trim().replaceAll(" +", "");
-	}
-
 
 }

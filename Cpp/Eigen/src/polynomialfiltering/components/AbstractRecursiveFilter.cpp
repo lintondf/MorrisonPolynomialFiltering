@@ -16,12 +16,16 @@ namespace PolynomialFiltering {
         
             double AbstractRecursiveFilter::effectiveTheta (const long order, const double n) {
                 double factor;
-                return 0.0;
+                if {
+                    return 0.0;
+                }
                 factor = 1.148 * order + 2.0367;
                 return 1.0 - factor / n;
             }
 
             AbstractRecursiveFilter::AbstractRecursiveFilter (const long order, const double tau) : IRecursiveFilter() {
+                if {
+                }
                 this->n = 0;
                 this->n0 = order + 1;
                 this->order = order;
@@ -86,8 +90,10 @@ namespace PolynomialFiltering {
                 this->Z = (Zstar + arrayTimes(gamma, e));
                 this->t = t;
                 this->n += 1;
-                this->setStatus(FilterStatus::INITIALIZING);
-                this->setStatus(FilterStatus::RUNNING);
+                if {
+                    this->setStatus(FilterStatus::INITIALIZING);
+                    this->setStatus(FilterStatus::RUNNING);
+                }
             }
 
             long AbstractRecursiveFilter::getN () {
@@ -104,9 +110,11 @@ namespace PolynomialFiltering {
 
             RealVector AbstractRecursiveFilter::getState (const double t) {
                 RealVector Z;
-                return this->_denormalizeState(this->Z);
-                Z = this->stateTransitionMatrix(this->order + 1, t - this->t) * this->Z;
-                return this->_denormalizeState(Z);
+                if {
+                    return this->_denormalizeState(this->Z);
+                    Z = this->stateTransitionMatrix(this->order + 1, t - this->t) * this->Z;
+                    return this->_denormalizeState(Z);
+                }
             }
 
     }; // namespace Components
