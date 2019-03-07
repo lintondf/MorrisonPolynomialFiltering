@@ -42,6 +42,8 @@ public interface ILanguageTarget {
 
 	public void emitForStatement(Symbol symbol, TranslationNode expressionRoot);
 	
+	public void emitNewExpression( Scope scope, String className, TranslationNode root );
+	
 	public void emitRaiseStatement(String exception);
 	
 	public void emitReturnStatement();

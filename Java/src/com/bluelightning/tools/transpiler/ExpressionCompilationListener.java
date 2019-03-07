@@ -278,12 +278,21 @@ class ExpressionCompilationListener extends LcdPythonBaseListener {
 			if (ctx.getChildCount() > 1) {
 				expressionRoot = translateMap.get( ctx.getChild(1).getPayload() );
 //				System.out.println("RETURN< " + line );
-//				System.out.println( expressionRoot.toString() );
 //				System.out.println( expressionRoot.traverse(1));
+				if (expressionRoot.getFirstChild() instanceof TranslationSymbolNode) {
+					// handle special case of returning new object
+					TranslationSymbolNode tsn = (TranslationSymbolNode) expressionRoot.getFirstChild();
+					if (tsn.getSymbol().isClass() && !tsn.getSymbol().isEnum()) {
+						transpiler.dispatcher.emitNewExpression(scope, tsn.getSymbol().getName(), expressionRoot);
+						transpiler.dispatcher.finishStatement();
+						expressionRoot = null;
+						return;
+					}
+				}
 				transpiler.dispatcher.emitSubExpression(scope, expressionRoot);
 				transpiler.dispatcher.finishStatement();
+				expressionRoot = null;
 			}
-			expressionRoot = null;
 		}
 		
 		

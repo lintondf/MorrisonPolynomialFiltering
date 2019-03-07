@@ -330,6 +330,13 @@ public class Transpiler {
 				target.emitElifStatement( null, expressionRoot );
 			}
 		}
+
+		@Override
+		public void emitNewExpression(Scope scope, String className, TranslationNode root) {
+			for (ILanguageTarget target : targets) {
+				target.emitNewExpression( scope, className, root );
+			}
+		}
 		
 	}
 

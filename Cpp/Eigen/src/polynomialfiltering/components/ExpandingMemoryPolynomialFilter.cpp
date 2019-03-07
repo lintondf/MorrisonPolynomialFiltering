@@ -14,18 +14,18 @@ namespace PolynomialFiltering {
     namespace Components {
         using namespace Eigen;
         
-            EMPBase::EMPBase (const long order, const double tau) : AbstractRecursiveFilter() {
+            EMPBase::EMPBase (const long order, const double tau) : AbstractRecursiveFilter(order,tau) {
             }
 
-            double EMPBase::gammaParameter (const double t, const RealMatrix dtau) {
+            double EMPBase::gammaParameter (const double t, const double dtau) {
                 return this->_normalizeTime(t);
             }
 
-            EMP0::EMP0 (const double tau) : EMPBase() {
+            EMP0::EMP0 (const double tau) : EMPBase(0,tau) {
             }
 
-            RealMatrix EMP0::gamma (const RealMatrix n) {
-                return array(1 / (1 + n));
+            RealVector EMP0::gamma (const double n) {
+                return Map<RowVectorXd>( new double[1] {1 / (1 + n)}, 1);
             }
 
             double EMP0::nSwitch (const double theta) {
@@ -36,21 +36,21 @@ namespace PolynomialFiltering {
                 long n;
                 RealMatrix V;
                 n = this->n;
-                if (n < this->order) {
-                    return zeros(0);
-                }
                 V = ArrayXXd::Zero(this->order + 1, this->order + 1);
+                if (n < this->order) {
+                    return V;
+                }
                 V(0, 0) = 1 / (1 + n);
                 return V;
             }
 
-            EMP1::EMP1 (const double tau) : EMPBase() {
+            EMP1::EMP1 (const double tau) : EMPBase(1,tau) {
             }
 
-            RealMatrix EMP1::gamma (const RealMatrix n) {
+            RealVector EMP1::gamma (const double n) {
                 double denom;
-                denom = 1.0 / (arrayTimes((n + 2), (n + 1)));
-                return denom * array(2 * (2 * n + 1), 6);
+                denom = 1.0 / ((n + 2) * (n + 1));
+                return denom * Map<RowVectorXd>( new double[2] {2 * (2 * n + 1), 6}, 2);
             }
 
             double EMP1::nSwitch (const double theta) {
@@ -62,11 +62,11 @@ namespace PolynomialFiltering {
                 double u;
                 RealMatrix V;
                 n = this->n;
+                V = ArrayXXd::Zero(this->order + 1, this->order + 1);
                 if (n < this->order) {
-                    return zeros(0);
+                    return V;
                 }
                 u = this->tau;
-                V = ArrayXXd::Zero(this->order + 1, this->order + 1);
                 V(0, 0) = (2 + 4 * n) / (2 + 3 * n + ((n) * (n)));
                 V(0, 1) = 6 / ((2 + 3 * n + ((n) * (n))) * u);
                 V(1, 0) = V(0, 1);
@@ -74,15 +74,15 @@ namespace PolynomialFiltering {
                 return V;
             }
 
-            EMP2::EMP2 (const double tau) : EMPBase() {
+            EMP2::EMP2 (const double tau) : EMPBase(2,tau) {
             }
 
-            RealMatrix EMP2::gamma (const RealMatrix n) {
-                long n2;
+            RealVector EMP2::gamma (const double n) {
+                double n2;
                 double denom;
-                n2 = arrayTimes(n, n);
-                denom = 1.0 / (arrayTimes((n + 3), (n + 2)));
-                return denom * array(3 * (3 * n2 + 3 * n + 2), 18 * (2 * n + 1), (2 * 1) * 30);
+                n2 = n * n;
+                denom = 1.0 / ((n + 3) * (n + 2) * (n + 1));
+                return denom * Map<RowVectorXd>( new double[3] {3 * (3 * n2 + 3 * n + 2), 18 * (2 * n + 1), (2 * 1) * 30}, 3);
             }
 
             double EMP2::nSwitch (const double theta) {
@@ -94,11 +94,11 @@ namespace PolynomialFiltering {
                 double u;
                 RealMatrix V;
                 n = this->n;
+                V = ArrayXXd::Zero(this->order + 1, this->order + 1);
                 if (n < this->order) {
-                    return zeros(0);
+                    return V;
                 }
                 u = this->tau;
-                V = ArrayXXd::Zero(this->order + 1, this->order + 1);
                 V(0, 0) = (6 + 9 * n * (1 + n)) / ((1 + n) * (2 + n) * (3 + n));
                 V(0, 1) = (18 + 36 * n) / ((6 + 11 * n + 6 * ((n) * (n)) + ((n) * (n) * (n))) * u);
                 V(1, 0) = V(0, 1);
@@ -111,17 +111,17 @@ namespace PolynomialFiltering {
                 return V;
             }
 
-            EMP3::EMP3 (const double tau) : EMPBase() {
+            EMP3::EMP3 (const double tau) : EMPBase(3,tau) {
             }
 
-            RealMatrix EMP3::gamma (const RealMatrix n) {
-                long n2;
-                long n3;
+            RealVector EMP3::gamma (const double n) {
+                double n2;
+                double n3;
                 double denom;
-                n2 = arrayTimes(n, n);
+                n2 = n * n;
                 n3 = n2 * n;
-                denom = 1.0 / (arrayTimes((n + 4), (n + 3)));
-                return denom * array(8 * (2 * n3 + 3 * n2 + 7 * n + 3), 20 * (6 * n2 + 6 * n + 5), (2 * 1) * 120 * (2 * n + 1), (3 * 2 * 1) * 140);
+                denom = 1.0 / ((n + 4) * (n + 3) * (n + 2) * (n + 1));
+                return denom * Map<RowVectorXd>( new double[4] {8 * (2 * n3 + 3 * n2 + 7 * n + 3), 20 * (6 * n2 + 6 * n + 5), (2 * 1) * 120 * (2 * n + 1), (3 * 2 * 1) * 140}, 4);
             }
 
             double EMP3::nSwitch (const double theta) {
@@ -133,11 +133,11 @@ namespace PolynomialFiltering {
                 double u;
                 RealMatrix V;
                 n = this->n;
+                V = ArrayXXd::Zero(this->order + 1, this->order + 1);
                 if (n < this->order) {
-                    return zeros(0);
+                    return V;
                 }
                 u = this->tau;
-                V = ArrayXXd::Zero(this->order + 1, this->order + 1);
                 V(0, 0) = (8 * (1 + 2 * n) * (3 + n + ((n) * (n)))) / ((1 + n) * (2 + n) * (3 + n) * (4 + n));
                 V(0, 1) = (20 * (5 + 6 * n * (1 + n))) / ((1 + n) * (2 + n) * (3 + n) * (4 + n) * u);
                 V(1, 0) = V(0, 1);
@@ -157,19 +157,19 @@ namespace PolynomialFiltering {
                 return V;
             }
 
-            EMP4::EMP4 (const double tau) : EMPBase() {
+            EMP4::EMP4 (const double tau) : EMPBase(4,tau) {
             }
 
-            RealMatrix EMP4::gamma (const RealMatrix n) {
-                long n2;
-                long n3;
-                long n4;
+            RealVector EMP4::gamma (const double n) {
+                double n2;
+                double n3;
+                double n4;
                 double denom;
-                n2 = arrayTimes(n, n);
+                n2 = n * n;
                 n3 = n2 * n;
                 n4 = n2 * n2;
-                denom = 1.0 / (arrayTimes((n + 5), (n + 4)));
-                return denom * array(5 * (5 * n4 + 10 * n3 + 55 * n2 + 50 * n + 24), 25 * (12 * n3 + 18 * n2 + 46 * n + 20), (2 * 1) * 1050 * (n2 + n + 1), (3 * 2 * 1) * 700 * (2 * n + 1), (4 * 3 * 2 * 1) * 630);
+                denom = 1.0 / ((n + 5) * (n + 4) * (n + 3) * (n + 2) * (n + 1));
+                return denom * Map<RowVectorXd>( new double[5] {5 * (5 * n4 + 10 * n3 + 55 * n2 + 50 * n + 24), 25 * (12 * n3 + 18 * n2 + 46 * n + 20), (2 * 1) * 1050 * (n2 + n + 1), (3 * 2 * 1) * 700 * (2 * n + 1), (4 * 3 * 2 * 1) * 630}, 5);
             }
 
             double EMP4::nSwitch (const double theta) {
@@ -181,11 +181,11 @@ namespace PolynomialFiltering {
                 double u;
                 RealMatrix V;
                 n = this->n;
+                V = ArrayXXd::Zero(this->order + 1, this->order + 1);
                 if (n < this->order) {
-                    return zeros(0);
+                    return V;
                 }
                 u = this->tau;
-                V = ArrayXXd::Zero(this->order + 1, this->order + 1);
                 V(0, 0) = (5 * (24 + 5 * n * (1 + n) * (10 + n + ((n) * (n))))) / ((1 + n) * (2 + n) * (3 + n) * (4 + n) * (5 + n));
                 V(0, 1) = (50 * (1 + 2 * n) * (10 + 3 * n * (1 + n))) / ((1 + n) * (2 + n) * (3 + n) * (4 + n) * (5 + n) * u);
                 V(1, 0) = V(0, 1);
@@ -214,19 +214,19 @@ namespace PolynomialFiltering {
                 return V;
             }
 
-            EMP5::EMP5 (const double tau) : EMPBase() {
+            EMP5::EMP5 (const double tau) : EMPBase(5,tau) {
             }
 
-            RealMatrix EMP5::gamma (const RealMatrix n) {
-                long n2;
-                long n3;
-                long n4;
+            RealVector EMP5::gamma (const double n) {
+                double n2;
+                double n3;
+                double n4;
                 double denom;
-                n2 = arrayTimes(n, n);
+                n2 = n * n;
                 n3 = n2 * n;
                 n4 = n2 * n2;
-                denom = 1.0 / (arrayTimes((n + 6), (n + 5)));
-                return denom * array(6 * (2 * n + 1) * (3 * n4 + 6 * n3 + 77 * n2 + 74 * n + 120), 126 * (5 * n4 + 10 * n3 + 55 * n2 + 50 * n + 28), (2 * 1) * 420 * (2 * n + 1) * (4 * n2 + 4 * n + 15), (3 * 2 * 1) * 1260 * (6 * n2 + 6 * n + 7), (4 * 3 * 2 * 1) * 3780 * (2 * n + 1), (5 * 4 * 3 * 2 * 1) * 2772);
+                denom = 1.0 / ((n + 6) * (n + 5) * (n + 4) * (n + 3) * (n + 2) * (n + 1));
+                return denom * Map<RowVectorXd>( new double[6] {6 * (2 * n + 1) * (3 * n4 + 6 * n3 + 77 * n2 + 74 * n + 120), 126 * (5 * n4 + 10 * n3 + 55 * n2 + 50 * n + 28), (2 * 1) * 420 * (2 * n + 1) * (4 * n2 + 4 * n + 15), (3 * 2 * 1) * 1260 * (6 * n2 + 6 * n + 7), (4 * 3 * 2 * 1) * 3780 * (2 * n + 1), (5 * 4 * 3 * 2 * 1) * 2772}, 6);
             }
 
             double EMP5::nSwitch (const double theta) {
@@ -238,11 +238,11 @@ namespace PolynomialFiltering {
                 double u;
                 RealMatrix V;
                 n = this->n;
+                V = ArrayXXd::Zero(this->order + 1, this->order + 1);
                 if (n < this->order) {
-                    return zeros(0);
+                    return V;
                 }
                 u = this->tau;
-                V = ArrayXXd::Zero(this->order + 1, this->order + 1);
                 V(0, 0) = (6 * (1 + 2 * n) * (120 + n * (1 + n) * (74 + 3 * n * (1 + n)))) / ((1 + n) * (2 + n) * (3 + n) * (4 + n) * (5 + n) * (6 + n));
                 V(0, 1) = (126 * (28 + 5 * n * (1 + n) * (10 + n + ((n) * (n))))) / ((1 + n) * (2 + n) * (3 + n) * (4 + n) * (5 + n) * (6 + n) * u);
                 V(1, 0) = V(0, 1);
@@ -282,19 +282,19 @@ namespace PolynomialFiltering {
                 return V;
             }
 
-        EMPBase null::makeEMP (const long order, const double tau) {
+        std::shared_ptr<EMPBase> makeEMP (const long order, const double tau) {
             if (order == 0) {
-                return EMP0(tau);
+                return std::shared_ptr<EMP0>(new EMP0(tau));
             } else if (order == 1) {
-                return EMP1(tau);
+                return std::shared_ptr<EMP1>(new EMP1(tau));
             } else if (order == 2) {
-                return EMP2(tau);
+                return std::shared_ptr<EMP2>(new EMP2(tau));
             } else if (order == 3) {
-                return EMP3(tau);
+                return std::shared_ptr<EMP3>(new EMP3(tau));
             } else if (order == 4) {
-                return EMP4(tau);
+                return std::shared_ptr<EMP4>(new EMP4(tau));
             } else {
-                return EMP5(tau);
+                return std::shared_ptr<EMP5>(new EMP5(tau));
             }
         }
 

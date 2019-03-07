@@ -178,7 +178,7 @@ class DeclarationsListener extends LcdPythonBaseListener {
 					Scope inheritedScope = scopeStack.peek(); 
 //					System.out.println("import " + membersScope.toString() + " -> " + inheritedScope );
 //					System.out.println("   " + inheritance.size() + " " + symbol.isClass());
-					if (symbol.isClass()) {
+					if (symbol.isClass() || symbol.isEnum()) {
 						Symbol r = transpiler.symbolTable.inherit(symbol, inheritedScope);
 						inheritedScope = inheritedScope.getChild(Level.CLASS, r.getName() );
 					}
@@ -186,7 +186,7 @@ class DeclarationsListener extends LcdPythonBaseListener {
 						if (i.getName().equals("__init__"))
 							continue;
 //						System.out.println("     " + i.isClass() + " " + i.getName() );
-						if (i.isClass()) {
+						if (i.isClass() || i.isEnum()) {
 							Symbol r = transpiler.symbolTable.inherit(i, inheritedScope.getChild(Level.CLASS, name) );
 						} else {
 							Symbol r = transpiler.symbolTable.inherit(i, inheritedScope);

@@ -8,13 +8,14 @@ from typing import Tuple
 from abc import abstractmethod
 
 from numpy import array, diag, zeros
+from numpy import array as vector
 from PolynomialFiltering.Components.AbstractRecursiveFilter import AbstractRecursiveFilter, IRecursiveFilter
 
 class EMPBase(AbstractRecursiveFilter):
-    def __init__(self, order : int, tau : float) -> None :
+    def __init__(self, order : int, tau : float) :
         super().__init__(order, tau)
         
-    def gammaParameter(self, t : float, dtau : array) -> float:
+    def gammaParameter(self, t : float, dtau : float) -> float:
         return self._normalizeTime(t)
     
     @abstractmethod
@@ -30,7 +31,7 @@ class EMP0(EMPBase) :
     def __init__(self, tau : float) :
         super().__init__( 0, tau)
         
-    def gamma(self, n : array) -> array:
+    def gamma(self, n : float) -> vector:
         return array([1/(1+n)])
     
     def nSwitch(self, theta : float) -> float:
@@ -40,9 +41,9 @@ class EMP0(EMPBase) :
         '''@n : int'''
         '''@V : array'''
         n = self.n
-        if (n < self.order) :
-            return zeros([0]);
         V = zeros([self.order+1, self.order+1]);
+        if (n < self.order) :
+            return V;
         #{$EMP0CVRF}
         V[0,0] = 1/(1+n);
         return V;
@@ -52,7 +53,7 @@ class EMP1(EMPBase) :
     def __init__(self, tau : float) :
         super().__init__( 1, tau )
         
-    def gamma(self, n : array) -> array: #
+    def gamma(self, n : float) -> vector: #
         '''@denom : float'''
         denom = 1.0/((n+2)*(n+1))
         return denom*array([2*(2*n+1), 
@@ -66,10 +67,10 @@ class EMP1(EMPBase) :
         '''@u : float'''
         '''@V : array'''
         n = self.n
-        if (n < self.order) :
-            return zeros([0]);
-        u = self.tau;
         V = zeros([self.order+1, self.order+1]);
+        if (n < self.order) :
+            return V;
+        u = self.tau;
         #{$EMP1CVRF}
         V[0,0] = (2+4*n)/(2+3*n+((n)*(n)));
         V[0,1] = 6/((2+3*n+((n)*(n)))*u);
@@ -81,8 +82,8 @@ class EMP2(EMPBase) :
     def __init__(self, tau : float) :
         super().__init__( 2, tau )
         
-    def gamma(self, n : array) -> array: #
-        '''@n2 : int'''
+    def gamma(self, n : float) -> vector: #
+        '''@n2 : float'''
         '''@denom : float'''
         n2 = n*n 
         denom = 1.0/((n+3)*(n+2)*(n+1))
@@ -98,10 +99,10 @@ class EMP2(EMPBase) :
         '''@u : float'''
         '''@V : array'''
         n = self.n
-        if (n < self.order) :
-            return zeros([0]);
-        u = self.tau;
         V = zeros([self.order+1, self.order+1]);
+        if (n < self.order) :
+            return V;
+        u = self.tau;
         #{$EMP2CVRF}
         V[0,0] = (6+9*n*(1+n))/((1+n)*(2+n)*(3+n));
         V[0,1] = (18+36*n)/((6+11*n+6*((n)*(n))+((n)*(n)*(n)))*u);
@@ -118,9 +119,9 @@ class EMP3(EMPBase) :
     def __init__(self, tau : float) :
         super().__init__( 3, tau )
         
-    def gamma(self, n : array) -> array: #
-        '''@n2 : int'''
-        '''@n3 : int'''
+    def gamma(self, n : float) -> vector: #
+        '''@n2 : float'''
+        '''@n3 : float'''
         '''@denom : float'''
         n2 = n*n 
         n3 = n2*n 
@@ -138,10 +139,10 @@ class EMP3(EMPBase) :
         '''@u : float'''
         '''@V : array'''
         n = self.n
-        if (n < self.order) :
-            return zeros([0]);
-        u = self.tau;
         V = zeros([self.order+1, self.order+1]);
+        if (n < self.order) :
+            return V;
+        u = self.tau;
         #{$EMP3CVRF}
         V[0,0] = (8*(1+2*n)*(3+n+((n)*(n))))/((1+n)*(2+n)*(3+n)*(4+n));
         V[0,1] = (20*(5+6*n*(1+n)))/((1+n)*(2+n)*(3+n)*(4+n)*u);
@@ -165,10 +166,10 @@ class EMP4(EMPBase) :
     def __init__(self, tau : float) :
         super().__init__( 4, tau )
         
-    def gamma(self, n : array) -> array: # 
-        '''@n2 : int'''
-        '''@n3 : int'''
-        '''@n4 : int'''
+    def gamma(self, n : float) -> vector: # 
+        '''@n2 : float'''
+        '''@n3 : float'''
+        '''@n4 : float'''
         '''@denom : float'''
         n2 = n*n 
         n3 = n2*n 
@@ -188,10 +189,10 @@ class EMP4(EMPBase) :
         '''@u : float'''
         '''@V : array'''
         n = self.n
-        if (n < self.order) :
-            return zeros([0]);
-        u = self.tau;
         V = zeros([self.order+1, self.order+1]);
+        if (n < self.order) :
+            return V;
+        u = self.tau;
         #{$EMP4CVRF}
         V[0,0] = (5*(24+5*n*(1+n)*(10+n+((n)*(n)))))/((1+n)*(2+n)*(3+n)*(4+n)*(5+n));
         V[0,1] = (50*(1+2*n)*(10+3*n*(1+n)))/((1+n)*(2+n)*(3+n)*(4+n)*(5+n)*u);
@@ -224,10 +225,10 @@ class EMP5(EMPBase) :
     def __init__(self, tau : float) :
         super().__init__( 5, tau )
         
-    def gamma(self, n : array) -> array:
-        '''@n2 : int'''
-        '''@n3 : int'''
-        '''@n4 : int'''
+    def gamma(self, n : float) -> vector:
+        '''@n2 : float'''
+        '''@n3 : float'''
+        '''@n4 : float'''
         '''@denom : float'''
         n2 = n*n 
         n3 = n2*n 
@@ -248,10 +249,10 @@ class EMP5(EMPBase) :
         '''@u : float'''
         '''@V : array'''
         n = self.n
-        if (n < self.order) :
-            return zeros([0]);
-        u = self.tau;
         V = zeros([self.order+1, self.order+1]);
+        if (n < self.order) :
+            return V;
+        u = self.tau;
         #{$EMP5CVRF}
         V[0,0] = (6*(1+2*n)*(120+n*(1+n)*(74+3*n*(1+n))))/((1+n)*(2+n)*(3+n)*(4+n)*(5+n)*(6+n));
         V[0,1] = (126*(28+5*n*(1+n)*(10+n+((n)*(n)))))/((1+n)*(2+n)*(3+n)*(4+n)*(5+n)*(6+n)*u);

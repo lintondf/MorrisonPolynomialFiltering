@@ -22,7 +22,7 @@ namespace PolynomialFiltering {
         class EMPBase : public AbstractRecursiveFilter {
             public:
                 EMPBase(const long order, const double tau);
-                double gammaParameter(const double t, const RealMatrix dtau);
+                double gammaParameter(const double t, const double dtau);
                 virtual double nSwitch(const double theta) = 0;
                 virtual RealMatrix VRF() = 0;
         }; // class EMPBase 
@@ -30,7 +30,7 @@ namespace PolynomialFiltering {
         class EMP0 : public EMPBase {
             public:
                 EMP0(const double tau);
-                RealMatrix gamma(const RealMatrix n);
+                RealVector gamma(const double n);
                 double nSwitch(const double theta);
                 RealMatrix VRF();
         }; // class EMP0 
@@ -38,7 +38,7 @@ namespace PolynomialFiltering {
         class EMP1 : public EMPBase {
             public:
                 EMP1(const double tau);
-                RealMatrix gamma(const RealMatrix n);
+                RealVector gamma(const double n);
                 double nSwitch(const double theta);
                 RealMatrix VRF();
         }; // class EMP1 
@@ -46,7 +46,7 @@ namespace PolynomialFiltering {
         class EMP2 : public EMPBase {
             public:
                 EMP2(const double tau);
-                RealMatrix gamma(const RealMatrix n);
+                RealVector gamma(const double n);
                 double nSwitch(const double theta);
                 RealMatrix VRF();
         }; // class EMP2 
@@ -54,7 +54,7 @@ namespace PolynomialFiltering {
         class EMP3 : public EMPBase {
             public:
                 EMP3(const double tau);
-                RealMatrix gamma(const RealMatrix n);
+                RealVector gamma(const double n);
                 double nSwitch(const double theta);
                 RealMatrix VRF();
         }; // class EMP3 
@@ -62,7 +62,7 @@ namespace PolynomialFiltering {
         class EMP4 : public EMPBase {
             public:
                 EMP4(const double tau);
-                RealMatrix gamma(const RealMatrix n);
+                RealVector gamma(const double n);
                 double nSwitch(const double theta);
                 RealMatrix VRF();
         }; // class EMP4 
@@ -70,12 +70,12 @@ namespace PolynomialFiltering {
         class EMP5 : public EMPBase {
             public:
                 EMP5(const double tau);
-                RealMatrix gamma(const RealMatrix n);
+                RealVector gamma(const double n);
                 double nSwitch(const double theta);
                 RealMatrix VRF();
         }; // class EMP5 
 
-        EMPBase makeEMP(const long order, const double tau);
+        std::shared_ptr<EMPBase> makeEMP(const long order, const double tau);
     }; // namespace Components
 }; // namespace PolynomialFiltering
 

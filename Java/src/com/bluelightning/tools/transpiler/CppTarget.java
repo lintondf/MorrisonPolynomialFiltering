@@ -245,11 +245,13 @@ public class CppTarget implements ILanguageTarget {
 		}
 		Symbol.FunctionParametersInfo fpi = symbol.getFunctionParametersInfo();
 		if (symbol != null && fpi != null) {
-//			if (currentClass == null) { // non-class function
-//				Transpiler.instance().reportError("TODO non-class function" + scope.toString() );
-//			} else { // class member
 				String name = symbol.getName();
-				String type = programmer.remapType(symbol.getType()) + " ";
+				String remappedType = programmer.remapType(symbol.getType()); 
+				Symbol outputClass = Transpiler.instance().lookup(scope, remappedType);
+				if (outputClass != null && outputClass.isClass() && !outputClass.isEnum()) { //if returning a class wrap in smart pointer
+					remappedType = String.format("std::shared_ptr<%s>", outputClass.getName() );
+				}
+				String type = remappedType + " ";
 				if (name.equals("__init__")) {
 					name = currentClass;
 					type = "";
@@ -266,11 +268,12 @@ public class CppTarget implements ILanguageTarget {
 						body.append(", ");
 					}
 					header.append("const ");
-					header.append(programmer.remapType(parameter.getType()));
+					remappedType = programmer.remapType(parameter.getType());
+					header.append(remappedType);
 					header.append(" ");
 					header.append( parameter.getName() );
 					body.append("const ");
-					body.append(programmer.remapType(parameter.getType()));
+					body.append(remappedType);
 					body.append(" ");
 					body.append( parameter.getName() );
 					if (parameter.getInitialization() != null) {
@@ -295,16 +298,27 @@ public class CppTarget implements ILanguageTarget {
 				}
 				hppIndent.append(";\n");
 				if (! fpi.decorators.contains("@abstractmethod")) {
-					decl = String.format("%s%s::%s (%s)", type, currentClass, name, body.out.toString() );
-					if (fpi.decorators.contains("@superClassConstructor")) {
-						String className = symbol.getScope().getLast();
-						Scope superScope = symbol.getScope().getParent();
-						Symbol c = Transpiler.instance().lookup(superScope, className);
-						decl += " : " + c.getSuperClassInfo().superClass + "()";
+					if (currentClass == null) {
+						decl = String.format("%s%s (%s)", type, name, body.out.toString() );						
+					} else {
+						decl = String.format("%s%s::%s (%s)", type, currentClass, name, body.out.toString() );
+						if (fpi.decorators.contains("@superClassConstructor")) {
+							String className = symbol.getScope().getLast();
+							Scope superScope = symbol.getScope().getParent();
+							Symbol c = Transpiler.instance().lookup(superScope, className);
+							String scInitializers = "";
+							String superTag = "super().__init__(";
+							if (symbol.getType().startsWith(superTag)) {
+								scInitializers = symbol.getType().substring(superTag.length());
+								scInitializers = scInitializers.substring(0, scInitializers.length()-1);
+							}
+							decl += " : " + c.getSuperClassInfo().superClass + "(";
+							decl += scInitializers;
+							decl += ")";
+						}
 					}
 					cppIndent.writeln( decl + " {");
 				}
-//			}  // class member function
 		}
 		hppIndent.in();
 		cppIndent.in();
@@ -393,7 +407,7 @@ public class CppTarget implements ILanguageTarget {
 				}
 			}
 		}
-		return null;
+		return child.getTop().getType();
 	}
 	
 	protected void emitBracketedList(Indent out, Scope scope, TranslationNode child, String open) {
@@ -430,6 +444,22 @@ public class CppTarget implements ILanguageTarget {
 				Symbol rename = programmer.remapFunctionName( symbol.getName(), type );
 				if (rename != null) {
 					symbol = rename;
+				}
+				if (symbol.getName().equals("array")) {
+					//array(...) -> Map<RowVectorXd>(new double[#] { ... }, #);
+					System.out.println( child.getTop().traverse(1, child ) );
+					Indent gather = new Indent();
+					while (child.getChildCount() == 0) {
+						child = child.getRightSibling();
+					}
+					traverseEmitter( gather, scope, child, 0 );
+//					emitSubExpression(gather, scope, child);
+					String values = gather.out.toString();
+					values = values.substring(1, values.length()-1 );
+					int commas = values.length() - values.replace(",", "").length();
+					out.append(String.format("Map<RowVectorXd>( new double[%d] {%s}, %d)", commas+1, values, commas+1));
+					
+					return 2;
 				}
 			}
 			programmer.writeSymbol( out, symbol );
@@ -660,6 +690,13 @@ public class CppTarget implements ILanguageTarget {
 		emitSubExpression( cppIndent, scope, root);
 	}
 	
+	@Override
+	public void emitNewExpression(Scope scope, String className, TranslationNode root) {
+		cppIndent.append( String.format("std::shared_ptr<%s>(new ", className));
+		emitSubExpression( cppIndent, scope, root);
+		cppIndent.append(")");
+	}
+
 	@Override
 	public void emitExpressionStatement(Scope scope, TranslationNode root) {
 		Indent out = cppIndent;

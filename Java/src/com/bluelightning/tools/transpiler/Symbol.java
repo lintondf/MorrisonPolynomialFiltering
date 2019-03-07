@@ -134,4 +134,8 @@ public class Symbol {
 	public boolean isClass() {
 		return type.equals("<CLASS>") || type.equals("<ENUM>");
 	}
+	
+	public boolean isEnum() {
+		return type.equals("<ENUM>");
+	}
 }

@@ -60,6 +60,10 @@ namespace PolynomialFiltering {
 		return (long) (a.size());
 	}
 
+	inline RealVector test() {
+		return Map<RowVectorXd>(new double[3] { 1, 2, 3 }, 3);
+	}
+
 
 	class ValueError : public std::exception {
 		std::string message; 
