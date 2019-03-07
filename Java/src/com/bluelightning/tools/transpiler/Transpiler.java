@@ -74,7 +74,7 @@ public class Transpiler {
 		new Target(Paths.get("PolynomialFiltering/Components"), "FixedMemoryPolynomialFilter"),
 		new Target(Paths.get("PolynomialFiltering/Components"), "IRecursiveFilter"),
 		new Target(Paths.get("PolynomialFiltering/Components"), "AbstractRecursiveFilter"),
-//		new Target(Paths.get("PolynomialFiltering/Components"), "ExpandingMemoryPolynomialFilter"),
+		new Target(Paths.get("PolynomialFiltering/Components"), "ExpandingMemoryPolynomialFilter"),
 	};
 	
 	protected Logger logger;
@@ -323,6 +323,13 @@ public class Transpiler {
 				target.emitRaiseStatement(exception);
 			}
 		}
+
+		@Override
+		public void emitElifStatement(Scope scope, TranslationNode expressionRoot) {
+			for (ILanguageTarget target : targets) {
+				target.emitElifStatement( null, expressionRoot );
+			}
+		}
 		
 	}
 
@@ -381,7 +388,7 @@ public class Transpiler {
 	
 
 	protected String content;
-	protected LcdPythonParser parser;
+	public LcdPythonParser parser;
 	
 	protected Configuration cfg;
 	
@@ -411,6 +418,7 @@ public class Transpiler {
 				cfg, Paths.get("../Cpp/Eigen/") ) );
 
 		Scope importScope = new Scope();
+		symbolTable.add( importScope, "array", "array");
 		symbolTable.add( importScope, "copy", "array");
 		symbolTable.add( importScope, "eye", "array");
 		symbolTable.add( importScope, "inv", "array" );

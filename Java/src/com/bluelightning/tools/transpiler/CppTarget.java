@@ -245,9 +245,9 @@ public class CppTarget implements ILanguageTarget {
 		}
 		Symbol.FunctionParametersInfo fpi = symbol.getFunctionParametersInfo();
 		if (symbol != null && fpi != null) {
-			if (currentClass == null) { // non-class function
-				Transpiler.instance().reportError("TODO non-class function");
-			} else { // class member
+//			if (currentClass == null) { // non-class function
+//				Transpiler.instance().reportError("TODO non-class function" + scope.toString() );
+//			} else { // class member
 				String name = symbol.getName();
 				String type = programmer.remapType(symbol.getType()) + " ";
 				if (name.equals("__init__")) {
@@ -304,7 +304,7 @@ public class CppTarget implements ILanguageTarget {
 					}
 					cppIndent.writeln( decl + " {");
 				}
-			}
+//			}  // class member function
 		}
 		hppIndent.in();
 		cppIndent.in();
@@ -441,8 +441,9 @@ public class CppTarget implements ILanguageTarget {
 		} else if (child instanceof TranslationUnaryNode) {
 			TranslationUnaryNode unary = (TranslationUnaryNode) child;
 			Symbol symbol = unary.getRhsSymbol();
+			TranslationNode node = unary.getRhsNode();
 			if (symbol != null) {
-				programmer.writeOperator( out, unary.getLhs() );
+				programmer.writeOperator( out, unary.getLhsValue() );
 				if (symbol.getName().equals("shape")) {
 					TranslationNode which = child.getRightSibling().getFirstChild();
 					if (which instanceof TranslationConstantNode) {
@@ -457,8 +458,11 @@ public class CppTarget implements ILanguageTarget {
 				} else {
 					programmer.writeSymbol( out, symbol );
 				}
+			} else if (node != null) {
+				programmer.writeOperator( out, unary.getLhsValue() );
+				emitChild( out, scope, unary.getRhsNode() );
 			} else {
-				Transpiler.instance().reportError(unary.getTop(), "Bad unary symbol: " + unary.toString() );
+				Transpiler.instance().reportError(unary.getTop(), "Bad unary node: " + unary.toString() );
 			}
 		} else if (child instanceof TranslationListNode) {
 			TranslationListNode tln = (TranslationListNode) child;
@@ -734,6 +738,15 @@ public class CppTarget implements ILanguageTarget {
 	@Override
 	public void emitIfStatement(Scope scope, TranslationNode expressionRoot) {
 		cppIndent.write("if (");
+		emitSubExpression( scope, expressionRoot.getFirstChild() );
+		cppIndent.append(") {\n");
+		cppIndent.in();
+	}
+
+	@Override
+	public void emitElifStatement(Scope scope, TranslationNode expressionRoot) {
+		cppIndent.out();
+		cppIndent.write("} else if (");
 		emitSubExpression( scope, expressionRoot.getFirstChild() );
 		cppIndent.append(") {\n");
 		cppIndent.in();

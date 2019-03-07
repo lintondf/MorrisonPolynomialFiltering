@@ -73,9 +73,12 @@ class ExpressionCompilationListener extends LcdPythonBaseListener {
 					parent.setType( node.getType() );
 					return node;
 				} else if (ctx.getChildCount() == 2) {
-					//transpiler.dumpChildren(ctx);
+//					transpiler.dumpChildren(ctx);
+//					String lhValue = (Transpiler.instance().getValue(ctx.getChild(0).getPayload()));
+//					String rhValue = (Transpiler.instance().getValue(ctx.getChild(1).getPayload()));
 					TranslationNode node = new TranslationUnaryNode( parent, 
-							ctx.getChild(0).getPayload(), ctx.getChild(1).getPayload());
+							(CommonToken) ctx.getChild(0).getPayload(), 
+							translateMap.get(ctx.getChild(1).getPayload()));
 				} else {
 					TranslationNode node = getOperandNode( ctx, parent, ctx.getChild(0).getPayload());
 					if (node == null) {
@@ -89,7 +92,8 @@ class ExpressionCompilationListener extends LcdPythonBaseListener {
 						if (operator.startsWith(".")) {
 //							transpiler.dumpChildren((RuleNode) ctx.getChild(i) );
 							Symbol symbol = transpiler.symbolTable.lookup(scope, operator.substring(1));
-							node = new TranslationUnaryNode( parent, ctx.getChild(i).getChild(0).getPayload(), symbol );
+							node = new TranslationUnaryNode( parent, 
+									(CommonToken) ctx.getChild(i).getChild(0).getPayload(), symbol );
 						} else {
 							node = new TranslationOperatorNode( parent, operator );
 						}
@@ -230,7 +234,7 @@ class ExpressionCompilationListener extends LcdPythonBaseListener {
 			transpiler.walker.walk(subListener, ctx.getChild(1));
 			TranslationNode condition = subListener.translateMap.get(ctx.getChild(1).getPayload());
 //			System.out.println( condition.traverse(1));
-			transpiler.dispatcher.emitIfStatement(null, condition);
+			transpiler.dispatcher.emitIfStatement(scope, condition);
 			subListener.expressionRoot = null;
 			
 		}
@@ -238,6 +242,18 @@ class ExpressionCompilationListener extends LcdPythonBaseListener {
 		@Override 
 		public void exitIf_stmt(LcdPythonParser.If_stmtContext ctx) { 
 			transpiler.dispatcher.closeBlock();
+		}
+		
+		@Override public void enterElif_stmt(LcdPythonParser.Elif_stmtContext ctx) { 
+			ExpressionCompilationListener subListener = new ExpressionCompilationListener(transpiler);
+			subListener.expressionRoot = new TranslationExpressionNode(ctx, "IF_STMT");
+			subListener.translateMap = newTranslateMap();
+			subListener.scope = scope;
+			transpiler.walker.walk(subListener, ctx.getChild(1));
+			TranslationNode condition = subListener.translateMap.get(ctx.getChild(1).getPayload());
+//			System.out.println( condition.traverse(1));
+			transpiler.dispatcher.emitElifStatement( scope, condition );
+			subListener.expressionRoot = null;
 		}
 		
 		@Override 
@@ -487,7 +503,7 @@ class ExpressionCompilationListener extends LcdPythonBaseListener {
 							if (field == null) {
 								transpiler.reportError( ctx, "Unknown member: " + fieldName + " at " + scope );
 							}
-							new TranslationUnaryNode( parent, payload, field );
+							new TranslationUnaryNode( parent, (CommonToken) payload, field );
 							
 							break;
 						}

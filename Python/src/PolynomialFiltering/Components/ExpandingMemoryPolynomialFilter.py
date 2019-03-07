@@ -37,9 +37,11 @@ class EMP0(EMPBase) :
         return 2.0/(1.0-theta)
     
     def VRF(self) -> array:
+        '''@n : int'''
+        '''@V : array'''
         n = self.n
         if (n < self.order) :
-            return None;
+            return zeros([0]);
         V = zeros([self.order+1, self.order+1]);
         #{$EMP0CVRF}
         V[0,0] = 1/(1+n);
@@ -51,6 +53,7 @@ class EMP1(EMPBase) :
         super().__init__( 1, tau )
         
     def gamma(self, n : array) -> array: #
+        '''@denom : float'''
         denom = 1.0/((n+2)*(n+1))
         return denom*array([2*(2*n+1), 
                             6])
@@ -59,9 +62,12 @@ class EMP1(EMPBase) :
         return 3.2/(1.0-theta)
     
     def VRF(self) -> array:
+        '''@n : int'''
+        '''@u : float'''
+        '''@V : array'''
         n = self.n
         if (n < self.order) :
-            return None;
+            return zeros([0]);
         u = self.tau;
         V = zeros([self.order+1, self.order+1]);
         #{$EMP1CVRF}
@@ -76,6 +82,8 @@ class EMP2(EMPBase) :
         super().__init__( 2, tau )
         
     def gamma(self, n : array) -> array: #
+        '''@n2 : int'''
+        '''@denom : float'''
         n2 = n*n 
         denom = 1.0/((n+3)*(n+2)*(n+1))
         return denom*array([3*(3*n2+3*n+2), 
@@ -86,9 +94,12 @@ class EMP2(EMPBase) :
         return 4.3636/(1.0-theta)
     
     def VRF(self) -> array:
+        '''@n : int'''
+        '''@u : float'''
+        '''@V : array'''
         n = self.n
         if (n < self.order) :
-            return None;
+            return zeros([0]);
         u = self.tau;
         V = zeros([self.order+1, self.order+1]);
         #{$EMP2CVRF}
@@ -108,6 +119,9 @@ class EMP3(EMPBase) :
         super().__init__( 3, tau )
         
     def gamma(self, n : array) -> array: #
+        '''@n2 : int'''
+        '''@n3 : int'''
+        '''@denom : float'''
         n2 = n*n 
         n3 = n2*n 
         denom = 1.0/((n+4)*(n+3)*(n+2)*(n+1))
@@ -120,9 +134,12 @@ class EMP3(EMPBase) :
         return 5.50546/(1.0-theta)
     
     def VRF(self) -> array:
+        '''@n : int'''
+        '''@u : float'''
+        '''@V : array'''
         n = self.n
         if (n < self.order) :
-            return None;
+            return zeros([0]);
         u = self.tau;
         V = zeros([self.order+1, self.order+1]);
         #{$EMP3CVRF}
@@ -149,6 +166,10 @@ class EMP4(EMPBase) :
         super().__init__( 4, tau )
         
     def gamma(self, n : array) -> array: # 
+        '''@n2 : int'''
+        '''@n3 : int'''
+        '''@n4 : int'''
+        '''@denom : float'''
         n2 = n*n 
         n3 = n2*n 
         n4 = n2*n2
@@ -163,9 +184,12 @@ class EMP4(EMPBase) :
         return 6.6321/(1.0-theta)
     
     def VRF(self) -> array:
+        '''@n : int'''
+        '''@u : float'''
+        '''@V : array'''
         n = self.n
         if (n < self.order) :
-            return None;
+            return zeros([0]);
         u = self.tau;
         V = zeros([self.order+1, self.order+1]);
         #{$EMP4CVRF}
@@ -201,6 +225,10 @@ class EMP5(EMPBase) :
         super().__init__( 5, tau )
         
     def gamma(self, n : array) -> array:
+        '''@n2 : int'''
+        '''@n3 : int'''
+        '''@n4 : int'''
+        '''@denom : float'''
         n2 = n*n 
         n3 = n2*n 
         n4 = n2*n2
@@ -216,9 +244,12 @@ class EMP5(EMPBase) :
         return 7.7478/(1.0-theta)
     
     def VRF(self) -> array:
+        '''@n : int'''
+        '''@u : float'''
+        '''@V : array'''
         n = self.n
         if (n < self.order) :
-            return None;
+            return zeros([0]);
         u = self.tau;
         V = zeros([self.order+1, self.order+1]);
         #{$EMP5CVRF}
@@ -260,17 +291,16 @@ class EMP5(EMPBase) :
         V[5,5] = 10059033600/((-4+n)*(-3+n)*(-2+n)*(-1+n)*n*(1+n)*(2+n)*(3+n)*(4+n)*(5+n)*(6+n)*((u)*(u)*(u)*(u)*(u)*(u)*(u)*(u)*(u)*(u)));
         return V;
 
-def makeEMP(order, tau) :
-    emps = [EMP0, EMP1, EMP2, EMP3, EMP4, EMP5];
-    return emps[order](tau);
-        
-
-if __name__ == '__main__':
-    for o in range(0,6) :
-        emp = makeEMP(o, 0.1);
-        for n in range(o, 10) :
-            emp.n = n;
-            print(o, n, diag(emp.VRF())[0])
-        
-
-        
+def makeEMP(order : int, tau : float) -> EMPBase:
+    if (order == 0) :
+        return EMP0(tau);
+    elif (order == 1) :
+        return EMP1(tau);
+    elif (order == 2) :
+        return EMP2(tau);
+    elif (order == 3) :
+        return EMP3(tau);
+    elif (order == 4) :
+        return EMP4(tau);
+    else : # (order == 5) :
+        return EMP5(tau);

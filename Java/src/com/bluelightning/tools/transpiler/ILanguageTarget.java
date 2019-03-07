@@ -32,6 +32,8 @@ public interface ILanguageTarget {
 	
 	public void emitSymbolDeclaration( Symbol symbol );
 	
+	public void emitElifStatement(Scope scope, TranslationNode expressionRoot);
+
 	public void emitElseStatement();
 	
 	public void emitExpressionStatement( Scope scope, TranslationNode root );
