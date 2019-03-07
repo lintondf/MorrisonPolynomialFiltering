@@ -41,7 +41,7 @@ class AbstractRecursiveFilter(IRecursiveFilter):
     def __init__(self, order : int, tau : float ) -> None :
         super().__init__(self)
         if (order < 0 or order > 5) :
-            raise ValueError("Polynomial orders < 0 or > 5 are not supported; order %d" % order)
+            raise ValueError("Polynomial orders < 0 or > 5 are not supported")
         self.n = 0
         self.n0 = order+1
         self.order = order
@@ -148,8 +148,8 @@ class AbstractRecursiveFilter(IRecursiveFilter):
             
     @abstractmethod   
     def gammaParameter(self, t : float, dtau : float) -> float:
-        raise NotImplementedError()
+        pass
             
     @abstractmethod   
     def gamma(self, nOrT : float) -> vector:
-        raise NotImplementedError()
+        pass

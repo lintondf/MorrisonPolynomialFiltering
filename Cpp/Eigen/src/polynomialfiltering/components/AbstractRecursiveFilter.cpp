@@ -16,7 +16,7 @@ namespace PolynomialFiltering {
         
             double AbstractRecursiveFilter::effectiveTheta (const long order, const double n) {
                 double factor;
-                if {
+                if (n < 1) {
                     return 0.0;
                 }
                 factor = 1.148 * order + 2.0367;
@@ -24,7 +24,8 @@ namespace PolynomialFiltering {
             }
 
             AbstractRecursiveFilter::AbstractRecursiveFilter (const long order, const double tau) : IRecursiveFilter() {
-                if {
+                if (order < 0 || order > 5) {
+                    throw ValueError("Polynomial orders < 0 or > 5 are not supported");
                 }
                 this->n = 0;
                 this->n0 = order + 1;
@@ -90,8 +91,9 @@ namespace PolynomialFiltering {
                 this->Z = (Zstar + arrayTimes(gamma, e));
                 this->t = t;
                 this->n += 1;
-                if {
+                if (this->n < this->n0) {
                     this->setStatus(FilterStatus::INITIALIZING);
+                } else {
                     this->setStatus(FilterStatus::RUNNING);
                 }
             }
@@ -110,8 +112,9 @@ namespace PolynomialFiltering {
 
             RealVector AbstractRecursiveFilter::getState (const double t) {
                 RealVector Z;
-                if {
+                if (t == this->t) {
                     return this->_denormalizeState(this->Z);
+                } else {
                     Z = this->stateTransitionMatrix(this->order + 1, t - this->t) * this->Z;
                     return this->_denormalizeState(Z);
                 }

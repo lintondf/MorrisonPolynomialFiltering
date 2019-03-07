@@ -78,15 +78,15 @@ class AbstractFilter(ABC):
         
     @abstractmethod   
     def getN(self) -> int:
-        raise NotImplementedError()
+        pass
         
     @abstractmethod   
     def getTime(self) -> float:
-        raise NotImplementedError()
+        pass
     
     @abstractmethod   
     def getState(self, t : float) -> vector:
-        raise NotImplementedError()
+        pass
     
 #     def getState(self) -> array:
 #         return self.getState( self.getTime() );
@@ -97,15 +97,15 @@ class ManagedFilterBase(AbstractFilter):
     
     @abstractmethod   
     def getGoodnessOfFit(self) -> float:
-        raise NotImplementedError()
+        pass
     
     @abstractmethod   
     def getBiasOfFit(self) -> float:
-        raise NotImplementedError()
+        pass
         
     @abstractmethod   
     def add(self, t : float, y : vector, observationId : str = '') -> None:    
-        raise NotImplementedError()
+        pass
 
     def addWithVariance(self, t : float, y : vector, R : array, observationId : str = '') -> None:    
         self.add(t, y, observationId);

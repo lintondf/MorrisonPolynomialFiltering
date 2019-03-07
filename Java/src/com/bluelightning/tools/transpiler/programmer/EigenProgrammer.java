@@ -196,7 +196,13 @@ public class EigenProgrammer implements IProgrammer {
 			break;
 		case "::":
 			out.append(operator);				
-			break;			
+			break;
+		case "or":
+			out.append(" || ");
+			break;
+		case "and":
+			out.append(" && ");
+			break;
 		default:
 			out.append(" ");
 			out.append(operator);

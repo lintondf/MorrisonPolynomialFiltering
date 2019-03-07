@@ -508,6 +508,30 @@ public class LcdPythonBaseListener implements LcdPythonListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterElse_stmt(LcdPythonParser.Else_stmtContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitElse_stmt(LcdPythonParser.Else_stmtContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterElif_stmt(LcdPythonParser.Elif_stmtContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitElif_stmt(LcdPythonParser.Elif_stmtContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterIf_stmt(LcdPythonParser.If_stmtContext ctx) { }
 	/**
 	 * {@inheritDoc}

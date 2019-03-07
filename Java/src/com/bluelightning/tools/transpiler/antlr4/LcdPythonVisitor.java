@@ -257,6 +257,18 @@ public interface LcdPythonVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitAsync_stmt(LcdPythonParser.Async_stmtContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link LcdPythonParser#else_stmt}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitElse_stmt(LcdPythonParser.Else_stmtContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link LcdPythonParser#elif_stmt}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitElif_stmt(LcdPythonParser.Elif_stmtContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link LcdPythonParser#if_stmt}.
 	 * @param ctx the parse tree
 	 * @return the visitor result

@@ -219,18 +219,19 @@ class ExpressionCompilationListener extends LcdPythonBaseListener {
 		
 		@Override 
 		public void enterIf_stmt(LcdPythonParser.If_stmtContext ctx) { 
-			transpiler.dumpChildren(ctx);
-			System.out.println( ctx.getChild(1).getText());
-			System.out.println( ctx.getChild(1).getChild(0).getChild(0).getText());
-//			ExpressionCompilationListener subListener = new ExpressionCompilationListener(transpiler);
-//			subListener.expressionRoot = new TranslationSubexpressionNode(null, "IF_STMT");
-//			subListener.translateMap = this.translateMap;
-//			subListener.scope = scope;
-//			transpiler.walker.walk(subListener, ctx.getChild(1));
-//			TranslationNode condition = subListener.translateMap.get(ctx.getChild(1).getPayload());
+//			transpiler.dumpChildren(ctx);
+//			System.out.println( ctx.getChild(1).getText());
+//			System.out.println( ctx.getChild(1).getChild(0).getChild(0).getText());
+			
+			ExpressionCompilationListener subListener = new ExpressionCompilationListener(transpiler);
+			subListener.expressionRoot = new TranslationExpressionNode(ctx, "IF_STMT");
+			subListener.translateMap = newTranslateMap();
+			subListener.scope = scope;
+			transpiler.walker.walk(subListener, ctx.getChild(1));
+			TranslationNode condition = subListener.translateMap.get(ctx.getChild(1).getPayload());
 //			System.out.println( condition.traverse(1));
-			transpiler.dispatcher.emitIfStatement(null);
-//			subListener.expressionRoot = null;
+			transpiler.dispatcher.emitIfStatement(null, condition);
+			subListener.expressionRoot = null;
 			
 		}
 		
@@ -238,6 +239,13 @@ class ExpressionCompilationListener extends LcdPythonBaseListener {
 		public void exitIf_stmt(LcdPythonParser.If_stmtContext ctx) { 
 			transpiler.dispatcher.closeBlock();
 		}
+		
+		@Override 
+		public void enterElse_stmt(LcdPythonParser.Else_stmtContext ctx) { 
+//			transpiler.dumpChildren(ctx);
+			transpiler.dispatcher.emitElseStatement();
+		}
+		
 		
 		@Override 
 		public void enterReturn_stmt(LcdPythonParser.Return_stmtContext ctx) {
@@ -266,7 +274,11 @@ class ExpressionCompilationListener extends LcdPythonBaseListener {
 		//raise_stmt: 'raise' (test ('from' test)?)?;
 		@Override 
 		public void exitRaise_stmt(LcdPythonParser.Raise_stmtContext ctx) {
-			// ignored
+//			transpiler.dumpChildren(ctx);
+			String line = ctx.getChild(1).getText();
+//			System.out.println(line);
+			transpiler.dispatcher.emitRaiseStatement(line);
+			transpiler.dispatcher.finishStatement();
 		}
 		
 		@Override

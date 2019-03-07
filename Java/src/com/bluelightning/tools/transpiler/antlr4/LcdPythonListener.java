@@ -418,6 +418,26 @@ public interface LcdPythonListener extends ParseTreeListener {
 	 */
 	void exitAsync_stmt(LcdPythonParser.Async_stmtContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link LcdPythonParser#else_stmt}.
+	 * @param ctx the parse tree
+	 */
+	void enterElse_stmt(LcdPythonParser.Else_stmtContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link LcdPythonParser#else_stmt}.
+	 * @param ctx the parse tree
+	 */
+	void exitElse_stmt(LcdPythonParser.Else_stmtContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link LcdPythonParser#elif_stmt}.
+	 * @param ctx the parse tree
+	 */
+	void enterElif_stmt(LcdPythonParser.Elif_stmtContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link LcdPythonParser#elif_stmt}.
+	 * @param ctx the parse tree
+	 */
+	void exitElif_stmt(LcdPythonParser.Elif_stmtContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link LcdPythonParser#if_stmt}.
 	 * @param ctx the parse tree
 	 */

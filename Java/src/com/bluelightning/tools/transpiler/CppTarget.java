@@ -716,6 +716,11 @@ public class CppTarget implements ILanguageTarget {
 	}
 
 	@Override
+	public void emitRaiseStatement(String exception) {
+		cppIndent.write("throw " + exception );
+	}
+
+	@Override
 	public void emitReturnStatement() {
 		cppIndent.write("return ");
 //		System.out.println("return<"+cppIndent.out.toString() +">");
@@ -727,13 +732,18 @@ public class CppTarget implements ILanguageTarget {
 	}
 
 	@Override
-	public void emitIfStatement(TranslationNode expressionRoot) {
-		cppIndent.write("if {\n");
+	public void emitIfStatement(Scope scope, TranslationNode expressionRoot) {
+		cppIndent.write("if (");
+		emitSubExpression( scope, expressionRoot.getFirstChild() );
+		cppIndent.append(") {\n");
 		cppIndent.in();
 	}
 
 	@Override
 	public void emitElseStatement() {
+		cppIndent.out();
+		cppIndent.write("} else {\n");
+		cppIndent.in();
 	}
 
 	@Override

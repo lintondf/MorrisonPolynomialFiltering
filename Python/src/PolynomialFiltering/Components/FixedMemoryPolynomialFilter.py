@@ -29,7 +29,7 @@ class FixedMemoryFilter(AbstractFilter) :
         super().__init__();  # TODO name
         self.order = order;
         if (order < 0 or order > 5) :
-            raise ValueError("Polynomial orders < 1 or > 5 are not supported; order %d" % order)
+            raise ValueError("Polynomial orders < 1 or > 5 are not supported")
         self.L = memorySize;
         self.n = 0
         self.n0 = memorySize;

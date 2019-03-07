@@ -19,11 +19,11 @@ class EMPBase(AbstractRecursiveFilter):
     
     @abstractmethod
     def nSwitch(self, theta : float) -> float:
-        raise NotImplementedError()
+        pass
     
     @abstractmethod
     def VRF(self) -> array:
-        raise NotImplementedError()
+        pass
         
 
 class EMP0(EMPBase) :

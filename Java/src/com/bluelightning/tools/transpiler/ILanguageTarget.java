@@ -36,9 +36,11 @@ public interface ILanguageTarget {
 	
 	public void emitExpressionStatement( Scope scope, TranslationNode root );
 	
-	public void emitIfStatement(TranslationNode expressionRoot);
+	public void emitIfStatement(Scope scope, TranslationNode expressionRoot);
 
 	public void emitForStatement(Symbol symbol, TranslationNode expressionRoot);
+	
+	public void emitRaiseStatement(String exception);
 	
 	public void emitReturnStatement();
 	

@@ -304,9 +304,9 @@ public class Transpiler {
 		}
 
 		@Override
-		public void emitIfStatement(TranslationNode expressionRoot) {
+		public void emitIfStatement(Scope scope, TranslationNode expressionRoot) {
 			for (ILanguageTarget target : targets) {
-				target.emitIfStatement( expressionRoot );
+				target.emitIfStatement( null, expressionRoot );
 			}
 		}
 
@@ -314,6 +314,13 @@ public class Transpiler {
 		public void emitElseStatement() {
 			for (ILanguageTarget target : targets) {
 				target.emitElseStatement();
+			}
+		}
+
+		@Override
+		public void emitRaiseStatement(String exception) {
+			for (ILanguageTarget target : targets) {
+				target.emitRaiseStatement(exception);
 			}
 		}
 		
@@ -491,14 +498,14 @@ public class Transpiler {
 		System.setProperty("user.dir", lwd);
 	}
 
-	public static void main(String[] args) {
+	public static void xmain(String[] args) {
 		compileGrammar( "data", "LcdPython.g4",
 		      "src/com/bluelightning/tools/transpiler/antlr4/" );		
 	}
 	/**
 	 * @param args
 	 */
-	public static void xmain(String[] args) {
+	public static void main(String[] args) {
 		Transpiler transpiler = new Transpiler();
 		
 		Path base = Paths.get("../Python/src");

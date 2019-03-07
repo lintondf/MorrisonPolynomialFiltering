@@ -2,6 +2,7 @@
 #define __POLYNOMIAL_FILTERING_HPP
 
 #include <iostream>
+#include <exception>
 #include <Eigen/Dense>
 
 using namespace Eigen;
@@ -59,6 +60,18 @@ namespace PolynomialFiltering {
 		return (long) (a.size());
 	}
 
+
+	class ValueError : public std::exception {
+		std::string message; 
+	public:
+		ValueError(std::string message) {
+			this->message = message;
+		}
+
+		virtual const char* what() const throw() {
+			return message.c_str();
+		}
+	};
 }
 
 

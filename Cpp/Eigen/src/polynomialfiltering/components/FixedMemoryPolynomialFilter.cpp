@@ -16,7 +16,8 @@ namespace PolynomialFiltering {
         
             FixedMemoryFilter::FixedMemoryFilter (const long order, const long memorySize) : AbstractFilter() {
                 this->order = order;
-                if {
+                if (order < 0 || order > 5) {
+                    throw ValueError("Polynomial orders < 1 or > 5 are not supported");
                 }
                 this->L = memorySize;
                 this->n = 0;

@@ -19,7 +19,7 @@ class IRecursiveFilter(AbstractFilter):
 
     @abstractmethod   
     def start(self, t : float, Z : vector) -> None:
-        raise NotImplementedError()
+        pass
         
     """ predict - predict state at time t
         
@@ -37,20 +37,20 @@ class IRecursiveFilter(AbstractFilter):
     """
     @abstractmethod   
     def predict(self, t : float) -> Tuple[vector, float, float] :
-        raise NotImplementedError()
+        pass
  
     @abstractmethod   
     def update(self, t : float, dtau : float, Zstar : vector, e : vector) -> None:
-        raise NotImplementedError()
+        pass
        
     @abstractmethod   
     def getN(self)->int:
-        raise NotImplementedError()
+        pass
     
     @abstractmethod   
     def getTime(self) -> float:
-        raise NotImplementedError()
+        pass
     
     @abstractmethod   
     def getState(self, t : float) -> vector:
-        raise NotImplementedError()
+        pass

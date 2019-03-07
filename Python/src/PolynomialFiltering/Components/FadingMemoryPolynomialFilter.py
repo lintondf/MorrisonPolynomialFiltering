@@ -22,7 +22,7 @@ class FMPBase(AbstractRecursiveFilter) :
         
     @abstractmethod
     def VRF(self) -> array:
-        raise NotImplementedError()
+        pass
         
             
 class FMP0(FMPBase):    
