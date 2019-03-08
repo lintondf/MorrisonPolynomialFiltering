@@ -40,7 +40,7 @@ class IRecursiveFilter(AbstractFilter):
         pass
  
     @abstractmethod   
-    def update(self, t : float, dtau : float, Zstar : vector, e : vector) -> None:
+    def update(self, t : float, dtau : float, Zstar : vector, e : float) -> None:
         pass
        
     @abstractmethod   

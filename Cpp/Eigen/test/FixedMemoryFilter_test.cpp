@@ -2,18 +2,16 @@
 
 #include <iostream>
 #include <vector>
-
 #include <cmath>
-
 #include <netcdf.h>
-#include <Eigen/Dense>
 
 #include <doctest.h>
-#include <TestData.hpp>
 
 #include <polynomialfiltering/PolynomialFilteringEigen.hpp>
 #include <polynomialfiltering/Main.hpp>
 #include <polynomialfiltering/components/FixedMemoryPolynomialFilter.hpp>
+
+#include <TestData.hpp>
 
 using namespace Eigen;
 using namespace PolynomialFiltering;

@@ -2,18 +2,16 @@
 
 #include <iostream>
 #include <vector>
-
 #include <cmath>
-
 #include <netcdf.h>
-#include <Eigen/Dense>
 
 #include <doctest.h>
-#include <TestData.hpp>
 
 #include <polynomialfiltering/PolynomialFilteringEigen.hpp>
 #include <polynomialfiltering/Main.hpp>
 #include <polynomialfiltering/components/AbstractRecursiveFilter.hpp>
+
+#include <TestData.hpp>
 
 using namespace Eigen;
 using namespace PolynomialFiltering;
@@ -55,12 +53,39 @@ public:
 		return actual;
 	}
 
+	RealMatrix testUpdating(RealMatrix setup, RealMatrix data) {
+		double t0 = setup(2);
+
+		start(t0, data.row(0));
+
+		std::tuple<RealVector, double, double> tuple = predict(setup(3));
+		RealVector Zstar = std::get<0>(tuple);
+		double dt = std::get<1>(tuple);
+		double dtau = std::get<2>(tuple);
+		CHECK_EQ(dt, (setup(3) - setup(2)));
+		CHECK_EQ(dtau, (setup(3) - setup(2))/setup(1));
+		CHECK(data.row(1).isApprox(this->_denormalizeState(Zstar)));
+
+		update(setup(3), dtau, Zstar, 0);
+
+		RealMatrix actual = MatrixXd::Zero(this->order + 1, 2);
+		actual.col(0) = getState(setup(3));
+
+		tuple = predict(setup(4));
+		Zstar = std::get<0>(tuple);
+		dt = std::get<1>(tuple);
+		dtau = std::get<2>(tuple);
+		update(setup(4), dtau, Zstar, 1);
+		actual.col(1) = getState(setup(4));
+		return actual;
+	}
+
 protected:
 	double _gammaParameter(const double t, const double dtau) {
 		return 0;
 	}
 	RealVector _gamma(const double nOrT) {
-		return Vector3d(1, 2, 3);
+		return VectorXd::Ones(this->order+1);
 	}
 };
 
@@ -101,6 +126,20 @@ TEST_CASE_FIXTURE(TestClass, "Abstract Recursive Filter Test") {
 
 			std::shared_ptr< AbstractRecursiveFilterMock > mock(new AbstractRecursiveFilterMock((long)setup(0), setup(1)));
 			RealMatrix actual = mock->testStateManagement(setup, data);
+
+			CHECK(expected.isApprox(actual));
+		}
+	}
+
+	SUBCASE("Test Updating") {
+		std::vector<std::string> matches = testData->getMatchingGroups("testUpdating");
+		for (int i = 0; i < matches.size(); i++) {
+			RealMatrix setup = testData->getGroupVariable(matches.at(i), "setup");
+			RealMatrix data = testData->getGroupVariable(matches.at(i), "data");
+			RealMatrix expected = testData->getGroupVariable(matches.at(i), "expected");
+
+			std::shared_ptr< AbstractRecursiveFilterMock > mock(new AbstractRecursiveFilterMock((long)setup(0), setup(1)));
+			RealMatrix actual = mock->testUpdating(setup, data);
 
 			CHECK(expected.isApprox(actual));
 		}

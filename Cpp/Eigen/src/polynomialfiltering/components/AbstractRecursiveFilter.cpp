@@ -83,12 +83,17 @@ namespace PolynomialFiltering {
                 return std::make_tuple(Zstar, dt, dtau);
             }
 
-            void AbstractRecursiveFilter::update (const double t, const double dtau, const RealVector Zstar, const RealVector e) {
+            void AbstractRecursiveFilter::update (const double t, const double dtau, const RealVector Zstar, const double e) {
                 double p;
                 RealVector gamma;
                 p = this->_gammaParameter(t, dtau);
                 gamma = this->_gamma(p);
-                this->Z = (Zstar + arrayTimes(gamma, e));
+
+				std::cout << this->Z << std::endl;
+				std::cout << Zstar << std::endl;
+				std::cout << gamma*e << std::endl;
+
+                this->Z = (Zstar + gamma * e);
                 this->t = t;
                 this->n += 1;
                 if (this->n < this->n0) {

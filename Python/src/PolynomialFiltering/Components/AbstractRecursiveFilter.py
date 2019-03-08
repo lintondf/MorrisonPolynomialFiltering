@@ -84,6 +84,18 @@ class AbstractRecursiveFilter(IRecursiveFilter):
         return Z / self.D
     
     def predict(self, t : float) -> Tuple[vector, float, float] :
+        """
+        Predict the filter state (Z*) at time t
+        
+        Args:
+            t - target time
+            
+        Returns:
+            A three tuple holding: (predicted-NORMALIZED-state, delta-time, delta-tau)
+            
+        Examples:
+            (Zstar, dt, dtau) = self.predict(t)
+        """
         '''@ dt : float'''
         '''@ dtau : float'''
         '''@ Zstar : vector'''
@@ -93,7 +105,24 @@ class AbstractRecursiveFilter(IRecursiveFilter):
         Zstar = self.stateTransitionMatrix(self.order+1, dtau) @ self.Z
         return (Zstar, dt, dtau)
     
-    def update(self, t : float, dtau : float, Zstar : vector, e : vector) -> None:
+    def update(self, t : float, dtau : float, Zstar : vector, e : float) -> None:
+        """
+        Update the filter state from using the prediction error e
+        
+        Args:
+            t - update time
+            dtau - delta-tau (delta-time in nominal time step units)
+            Zstar - predicted NORMALIZED state at update time
+            e - prediction error (observation - predicted state)
+            
+        Returns:
+            None
+            
+        Examples:
+            (Zstar, dt, dtau) = self.predict(t)
+            e = observation[0] - Zstar[0]
+            self.update(t, dtau, Zstar, e )
+        """
         '''@ p : float'''
         '''@ gamma : vector'''
         p = self._gammaParameter(t, dtau)

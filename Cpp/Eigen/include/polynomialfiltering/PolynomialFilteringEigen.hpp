@@ -3,13 +3,48 @@
 
 #include <iostream>
 #include <exception>
+#include <tuple>
+
+namespace PolynomialFiltering {
+	class PolynomialFilteringException : public std::exception {
+	protected:
+		std::string message;
+	public:
+		PolynomialFilteringException() :
+			message("Polynomial Filtering Exception: ") {}
+
+
+		virtual const char* what() const throw() {
+			return message.c_str();
+		}
+	};
+
+	class ValueError : public PolynomialFilteringException {
+	public:
+		ValueError(std::string message) {
+			this->message += message;
+		}
+
+	};
+
+	class EigenException : public PolynomialFilteringException {
+	public:
+		EigenException(std::string where) {
+			this->message += "Fatai Eigen Exception; " + where;
+		}
+	};
+
+}
+
+#define eigen_assert(X) do { if(!(X)) throw ::PolynomialFiltering::EigenException(#X); } while(false);
+
 #include <Eigen/Dense>
 
 using namespace Eigen;
-
 namespace PolynomialFiltering {
 	typedef VectorXd RealVector;
 	typedef MatrixXd RealMatrix;
+
 
 	// wrapper to match Python eye syntax for square matrices
 	inline RealMatrix copy(RealMatrix m) {
@@ -22,6 +57,10 @@ namespace PolynomialFiltering {
 
 	inline RealMatrix ones(Index N, Index M = 1) {
 		return MatrixXd::Constant(N, M, 1.0);
+	}
+
+	inline RealMatrix zeros(Index N, Index M = 1) {
+		return MatrixXd::Constant(N, M, 0.0);
 	}
 
 	inline RealMatrix solve(RealMatrix A, RealMatrix B) {
@@ -64,18 +103,6 @@ namespace PolynomialFiltering {
 		return Map<RowVectorXd>(new double[3] { 1, 2, 3 }, 3);
 	}
 
-
-	class ValueError : public std::exception {
-		std::string message; 
-	public:
-		ValueError(std::string message) {
-			this->message = message;
-		}
-
-		virtual const char* what() const throw() {
-			return message.c_str();
-		}
-	};
 }
 
 

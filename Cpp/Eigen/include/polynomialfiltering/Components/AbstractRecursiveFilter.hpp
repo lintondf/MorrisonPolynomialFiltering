@@ -26,7 +26,7 @@ namespace PolynomialFiltering {
                 AbstractRecursiveFilter(const long order, const double tau);
                 void start(const double t, const RealVector Z);
                 std::tuple<RealVector, double, double> predict(const double t);
-                void update(const double t, const double dtau, const RealVector Zstar, const RealVector e);
+                void update(const double t, const double dtau, const RealVector Zstar, const double e);
                 long getN();
                 double getTau();
                 double getTime();

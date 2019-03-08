@@ -9,7 +9,8 @@ from PolynomialFiltering.Components.ExpandingMemoryPolynomialFilter import *
 
 from netCDF4 import Dataset
 from TestUtilities import *
-from numpy import arange, array2string, cov, log, var, zeros, trace, mean, std, concatenate, transpose
+from numpy import arange, array2string, cov, log, var, zeros, trace, mean, std, concatenate, transpose,\
+    polyder
 from numpy.linalg import inv
 from numpy.random import randn
 from numpy.testing import assert_almost_equal
@@ -19,6 +20,16 @@ from numpy.testing.nose_tools.utils import assert_allclose
 from numpy.linalg.linalg import norm
 from numpy.ma.core import isarray
 
+
+class AbstractRecursiveFilterMock(AbstractRecursiveFilter):
+    def __init__(self, order : int, tau : float) :
+        super().__init__(order, tau)
+
+    def _gammaParameter(self, t : float, dtau : float) -> float:
+        return 0.0;
+            
+    def _gamma(self, nOrT : float) -> vector:
+        return ones(self.order+1);
 
 class Test(unittest.TestCase):
 
@@ -91,12 +102,30 @@ class Test(unittest.TestCase):
             writeTestVariable(group, 'expected', expected);
         
     def testStateManagement(self) :
-        ''' tests these methods:
+        """
+        Test the state management methods 
+        
+        tests these methods:
                 start()
                 getTime()
                 getState()  at current filter time
                 getState()  at an extrapolated time
-        '''
+                
+        setup: [
+            order - filter order
+            tau - nominal filter time step
+            t0 - initialization time
+            t1 - extrapolation time
+             }
+        data:  (2,order+1) [
+            row0 - initialization state vector
+            row1 - expected extrapolation state vector (not used by transpiled tests)
+            ]
+        expected: (order+1,2) [
+            col0 - post initialization state vector
+            col1 - extrapolated state vector
+            ]
+        """
         for order in range(0,5+1) :
             tau = 0.1;
             t0 = 10.0;
@@ -127,14 +156,66 @@ class Test(unittest.TestCase):
             
     
     def testUpdating(self) :
-        ''' tests these methods:
+        """
+        Test the state update methods 
+        
+        tests these methods:
             predict()
             update()
-        '''
+        
+        setup: [
+            order - filter order
+            tau - nominal filter time step
+            t0 - initialization time
+            t1 - zero error update time
+            t2 - unit error update time
+             }
+        data:  (2,order+1) [
+            row0 - initialization state vector
+            row1 - expected zero error state vector (not used by transpiled tests)
+            ]
+        expected: (order+1,2) [
+            col0 - expected zero error updated state vector
+            col1 - expected unit error updated state vector
+            ]
+        """
         for order in range(0,5+1) :
             tau = 0.1;
-            setup = array([order, tau])
-        
+            t0 = 100.0;
+            t1 = 100.5;
+            t2 = 100.75;
+            setup = array([order, tau, t0, t1, t2])
+            data = zeros([2, order+1]);
+            for i in range(0,order+1) :
+                data[0,order - i] = (1.0/tau)**i;
+            F = stateTransitionMatrix(order+1, t1-t0);
+            data[1,:] = (F @ data[0,:])
+            group = createTestGroup(self.cdf, 'testUpdating_%d' % order );
+            writeTestVariable(group, 'setup', setup);
+            writeTestVariable(group, 'data', data);
+            
+            f = AbstractRecursiveFilterMock(int(setup[0]), setup[1])
+            f.start(setup[2], data[0,:]);
+            
+            (Zstar, dt, dtau) = f.predict(setup[3]);
+            assert(dt == (setup[3] - setup[2]));
+            assert(dtau == (setup[3] - setup[2])/setup[1]);
+            assert_allclose(f._denormalizeState(Zstar), data[1,:], atol=1e-14);
+            
+            f.update( setup[3], dtau, Zstar, 0 );
+            expected = zeros([order+1,2]);
+            expected[:,0] = f.getState(setup[3]);
+            
+            (Zstar, dt, dtau) = f.predict(setup[4]);
+            f.update( setup[4], dtau, Zstar, 1 );
+            expected[:,1] = f.getState(setup[4]);
+            
+            p = f._gammaParameter(setup[4], dtau)
+            gamma = f._gamma(p)
+            
+            z = Zstar + 1 * gamma;
+            assert_allclose(f.Z, z, atol=1e-14 );
+            writeTestVariable(group, 'expected', expected);
 
 if __name__ == "__main__":
     #import sys;sys.argv = ['', 'Test.testEffectiveTheta']
