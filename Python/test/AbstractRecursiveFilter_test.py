@@ -173,6 +173,7 @@ class Test(unittest.TestCase):
         data:  (2,order+1) [
             row0 - initialization state vector
             row1 - expected zero error state vector (not used by transpiled tests)
+            row2 - expected unit error state vector (not used by transpiled tests)
             ]
         expected: (order+1,2) [
             col0 - expected zero error updated state vector
@@ -185,11 +186,13 @@ class Test(unittest.TestCase):
             t1 = 100.5;
             t2 = 100.75;
             setup = array([order, tau, t0, t1, t2])
-            data = zeros([2, order+1]);
+            data = zeros([3, order+1]);
             for i in range(0,order+1) :
                 data[0,order - i] = (1.0/tau)**i;
             F = stateTransitionMatrix(order+1, t1-t0);
             data[1,:] = (F @ data[0,:])
+            F = stateTransitionMatrix(order+1, t2-t1);
+            data[2,:] = (F @ data[1,:])
             group = createTestGroup(self.cdf, 'testUpdating_%d' % order );
             writeTestVariable(group, 'setup', setup);
             writeTestVariable(group, 'data', data);
@@ -197,23 +200,18 @@ class Test(unittest.TestCase):
             f = AbstractRecursiveFilterMock(int(setup[0]), setup[1])
             f.start(setup[2], data[0,:]);
             
-            (Zstar, dt, dtau) = f.predict(setup[3]);
-            assert(dt == (setup[3] - setup[2]));
-            assert(dtau == (setup[3] - setup[2])/setup[1]);
+            Zstar = f.predict(setup[3]);
             assert_allclose(f._denormalizeState(Zstar), data[1,:], atol=1e-14);
             
-            f.update( setup[3], dtau, Zstar, 0 );
+            f.update( setup[3], Zstar, 0 );
             expected = zeros([order+1,2]);
             expected[:,0] = f.getState(setup[3]);
             
-            (Zstar, dt, dtau) = f.predict(setup[4]);
-            f.update( setup[4], dtau, Zstar, 1 );
+            Zstar = f.predict(setup[4]);
+            f.update( setup[4], Zstar, 1 );
             expected[:,1] = f.getState(setup[4]);
             
-            p = f._gammaParameter(setup[4], dtau)
-            gamma = f._gamma(p)
-            
-            z = Zstar + 1 * gamma;
+            z = 1 + f._normalizeState(data[2,:]);
             assert_allclose(f.Z, z, atol=1e-14 );
             writeTestVariable(group, 'expected', expected);
 

@@ -83,7 +83,7 @@ class AbstractRecursiveFilter(IRecursiveFilter):
     def _denormalizeState(self, Z : vector) -> vector:
         return Z / self.D
     
-    def predict(self, t : float) -> Tuple[vector, float, float] :
+    def predict(self, t : float) -> vector :
         """
         Predict the filter state (Z*) at time t
         
@@ -94,24 +94,23 @@ class AbstractRecursiveFilter(IRecursiveFilter):
             A three tuple holding: (predicted-NORMALIZED-state, delta-time, delta-tau)
             
         Examples:
-            (Zstar, dt, dtau) = self.predict(t)
+            Zstar = self.predict(t)
         """
-        '''@ dt : float'''
-        '''@ dtau : float'''
         '''@ Zstar : vector'''
         
+        '''@ dt : float'''
+        '''@ dtau : float'''
         dt = t - self.t
         dtau = self._normalizeDeltaTime(dt)
         Zstar = self.stateTransitionMatrix(self.order+1, dtau) @ self.Z
-        return (Zstar, dt, dtau)
+        return Zstar;
     
-    def update(self, t : float, dtau : float, Zstar : vector, e : float) -> None:
+    def update(self, t : float, Zstar : vector, e : float) -> None:
         """
         Update the filter state from using the prediction error e
         
         Args:
             t - update time
-            dtau - delta-tau (delta-time in nominal time step units)
             Zstar - predicted NORMALIZED state at update time
             e - prediction error (observation - predicted state)
             
@@ -119,12 +118,16 @@ class AbstractRecursiveFilter(IRecursiveFilter):
             None
             
         Examples:
-            (Zstar, dt, dtau) = self.predict(t)
+            Zstar = self.predict(t)
             e = observation[0] - Zstar[0]
-            self.update(t, dtau, Zstar, e )
+            self.update(t, Zstar, e )
         """
+        '''@ dt : float'''
+        '''@ dtau : float'''
         '''@ p : float'''
         '''@ gamma : vector'''
+        dt = t - self.t
+        dtau = self._normalizeDeltaTime(dt)
         p = self._gammaParameter(t, dtau)
         gamma = self._gamma(p)
         self.Z = (Zstar + gamma * e)

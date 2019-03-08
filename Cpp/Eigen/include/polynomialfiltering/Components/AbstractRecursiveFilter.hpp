@@ -25,8 +25,8 @@ namespace PolynomialFiltering {
                 static double effectiveTheta(const long order, const double n);
                 AbstractRecursiveFilter(const long order, const double tau);
                 void start(const double t, const RealVector Z);
-                std::tuple<RealVector, double, double> predict(const double t);
-                void update(const double t, const double dtau, const RealVector Zstar, const double e);
+                RealVector predict(const double t);
+                void update(const double t, const RealVector Zstar, const double e);
                 long getN();
                 double getTau();
                 double getTime();

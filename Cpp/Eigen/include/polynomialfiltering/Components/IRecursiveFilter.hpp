@@ -23,8 +23,8 @@ namespace PolynomialFiltering {
             public:
                 IRecursiveFilter();
                 virtual void start(const double t, const RealVector Z) = 0;
-                virtual std::tuple<RealVector, double, double> predict(const double t) = 0;
-                virtual void update(const double t, const double dtau, const RealVector Zstar, const double e) = 0;
+                virtual RealVector predict(const double t) = 0;
+                virtual void update(const double t, const RealVector Zstar, const double e) = 0;
                 virtual long getN() = 0;
                 virtual double getTime() = 0;
                 virtual RealVector getState(const double t) = 0;

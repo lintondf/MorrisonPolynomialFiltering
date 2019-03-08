@@ -58,24 +58,16 @@ public:
 
 		start(t0, data.row(0));
 
-		std::tuple<RealVector, double, double> tuple = predict(setup(3));
-		RealVector Zstar = std::get<0>(tuple);
-		double dt = std::get<1>(tuple);
-		double dtau = std::get<2>(tuple);
-		CHECK_EQ(dt, (setup(3) - setup(2)));
-		CHECK_EQ(dtau, (setup(3) - setup(2))/setup(1));
-		CHECK(data.row(1).isApprox(this->_denormalizeState(Zstar)));
+		RealVector Zstar = predict(setup(3));
+		CHECK(data.row(1).transpose().isApprox(this->_denormalizeState(Zstar)));
 
-		update(setup(3), dtau, Zstar, 0);
+		update(setup(3), Zstar, 0);
 
 		RealMatrix actual = MatrixXd::Zero(this->order + 1, 2);
 		actual.col(0) = getState(setup(3));
 
-		tuple = predict(setup(4));
-		Zstar = std::get<0>(tuple);
-		dt = std::get<1>(tuple);
-		dtau = std::get<2>(tuple);
-		update(setup(4), dtau, Zstar, 1);
+		Zstar = predict(setup(4));
+		update(setup(4), Zstar, 1);
 		actual.col(1) = getState(setup(4));
 		return actual;
 	}

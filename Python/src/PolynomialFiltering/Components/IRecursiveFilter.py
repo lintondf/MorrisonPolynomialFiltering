@@ -36,11 +36,11 @@ class IRecursiveFilter(AbstractFilter):
         delta tau
     """
     @abstractmethod   
-    def predict(self, t : float) -> Tuple[vector, float, float] :
+    def predict(self, t : float) -> vector :
         pass
  
     @abstractmethod   
-    def update(self, t : float, dtau : float, Zstar : vector, e : float) -> None:
+    def update(self, t : float, Zstar : vector, e : float) -> None:
         pass
        
     @abstractmethod   
