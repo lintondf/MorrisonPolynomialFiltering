@@ -5,6 +5,7 @@ Created on Feb 15, 2019
 '''
 
 import time
+from netCDF4 import Dataset
 from math import sin, cos
 import numpy as np
 from numpy import array, array2string, diag, eye, ones, zeros
@@ -13,6 +14,22 @@ from scipy.linalg.matfuncs import expm
 from scipy.stats import chi2
 from scipy.stats._continuous_distns import norm
 from PolynomialFiltering.Main import AbstractFilter
+
+def createTestGroup(cdf : Dataset, name : str ) -> Dataset:
+    return cdf.createGroup(name);
+
+def writeTestVariable(group : Dataset, name : str, data : array) -> None:
+    dims = data.shape;
+    if (len(dims) == 1) :
+        dims = (dims[0], 1);
+    nDim = '%s_N' % name;
+    mDim = '%s_M' % name;
+    group.createDimension(nDim, dims[0]);
+    group.createDimension(mDim, dims[1]);
+    v = group.createVariable(name, 'd', (nDim, mDim))
+    v[:] = data;
+
+
 
 # def stateTransitionMatrix(N : int, dt : float) -> array:
 #     '''

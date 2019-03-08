@@ -23,7 +23,7 @@ namespace PolynomialFiltering {
                 return 1.0 - factor / n;
             }
 
-            AbstractRecursiveFilter::AbstractRecursiveFilter (const long order, const double tau) : IRecursiveFilter() {
+            AbstractRecursiveFilter::AbstractRecursiveFilter (const long order, const double tau) {
                 if (order < 0 || order > 5) {
                     throw ValueError("Polynomial orders < 0 or > 5 are not supported");
                 }
@@ -41,7 +41,7 @@ namespace PolynomialFiltering {
                 }
             }
 
-            RealVector AbstractRecursiveFilter::conformState (const RealVector state) {
+            RealVector AbstractRecursiveFilter::_conformState (const RealVector state) {
                 RealVector Z;
                 long m;
                 Z = ArrayXd::Zero(this->order + 1);
@@ -54,7 +54,7 @@ namespace PolynomialFiltering {
                 this->n = 0;
                 this->t0 = t;
                 this->t = t;
-                this->Z = this->_normalizeState(this->conformState(Z));
+                this->Z = this->_normalizeState(this->_conformState(Z));
             }
 
             double AbstractRecursiveFilter::_normalizeTime (const double t) {
@@ -65,12 +65,12 @@ namespace PolynomialFiltering {
                 return dt / this->tau;
             }
 
-            RealVector AbstractRecursiveFilter::_denormalizeState (const RealVector Z) {
-                return arrayDivide(Z, this->D);
-            }
-
             RealVector AbstractRecursiveFilter::_normalizeState (const RealVector Z) {
                 return arrayTimes(Z, this->D);
+            }
+
+            RealVector AbstractRecursiveFilter::_denormalizeState (const RealVector Z) {
+                return arrayDivide(Z, this->D);
             }
 
             std::tuple<RealVector, double, double> AbstractRecursiveFilter::predict (const double t) {
@@ -115,7 +115,9 @@ namespace PolynomialFiltering {
                 if (t == this->t) {
                     return this->_denormalizeState(this->Z);
                 } else {
-                    Z = this->stateTransitionMatrix(this->order + 1, t - this->t) * this->Z;
+                    RealMatrix F;
+                    F = this->stateTransitionMatrix(this->order + 1, this->_normalizeDeltaTime(t - this->t));
+                    Z = F * this->Z;
                     return this->_denormalizeState(Z);
                 }
             }

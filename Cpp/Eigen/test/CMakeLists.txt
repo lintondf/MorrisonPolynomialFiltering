@@ -25,6 +25,7 @@ FILE(GLOB COMPONENTS_SRC ../src/polynomialfiltering/components/*.cpp)
 set(SOURCES  ${MAIN_SRC}
 	${COMPONENTS_SRC}
 	FixedMemoryFilter_test.cpp
+	AbstractRecursiveFilter_test.cpp
 	testMain.cpp)
 add_executable(FilteringEigenTest ${SOURCES})
 target_link_libraries( FilteringEigenTest ${NETCDF_LIBRARIES_C} ) 

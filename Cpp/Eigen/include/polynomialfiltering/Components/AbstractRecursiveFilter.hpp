@@ -33,12 +33,12 @@ namespace PolynomialFiltering {
                 RealVector D;
                 static double effectiveTheta(const long order, const double n);
                 AbstractRecursiveFilter(const long order, const double tau);
-                RealVector conformState(const RealVector state);
+                RealVector _conformState(const RealVector state);
                 void start(const double t, const RealVector Z);
                 double _normalizeTime(const double t);
                 double _normalizeDeltaTime(const double dt);
-                RealVector _denormalizeState(const RealVector Z);
                 RealVector _normalizeState(const RealVector Z);
+                RealVector _denormalizeState(const RealVector Z);
                 std::tuple<RealVector, double, double> predict(const double t);
                 void update(const double t, const double dtau, const RealVector Zstar, const RealVector e);
                 long getN();
