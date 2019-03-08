@@ -91,10 +91,16 @@ class Test(unittest.TestCase):
             writeTestVariable(group, 'expected', expected);
         
     def testStateManagement(self) :
+        ''' tests these methods:
+                start()
+                getTime()
+                getState()  at current filter time
+                getState()  at an extrapolated time
+        '''
         for order in range(0,5+1) :
             tau = 0.1;
             t0 = 10.0;
-            t1 = 20.0;
+            t1 = 11.0;
             setup = array([order, tau, t0, t1])
             data = zeros([2, order+1]);
             for i in range(0,order+1) :
@@ -121,6 +127,10 @@ class Test(unittest.TestCase):
             
     
     def testUpdating(self) :
+        ''' tests these methods:
+            predict()
+            update()
+        '''
         for order in range(0,5+1) :
             tau = 0.1;
             setup = array([order, tau])

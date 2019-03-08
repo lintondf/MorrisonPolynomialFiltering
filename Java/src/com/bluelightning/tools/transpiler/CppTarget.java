@@ -1,6 +1,6 @@
 /**
  * TODO docstrings
- * TODO do not declare for loop variables
+ * TODO remove _ from private methods (decl and use)
  */
 package com.bluelightning.tools.transpiler;
 
@@ -93,6 +93,7 @@ public class CppTarget implements ILanguageTarget {
 	Path     cppPath;
 	
 	protected Indent hppIndent = new Indent();
+	protected Indent hppPrivate = new Indent();
 	protected Indent cppIndent = new Indent();
 	
 	
@@ -132,6 +133,7 @@ public class CppTarget implements ILanguageTarget {
 		
 		currentScope = scope;
 		hppIndent = new Indent();
+		hppPrivate = new Indent();
 		cppIndent = new Indent();
 		String moduleName = scope.getLast();
 		hppPath = includeDirectory;
@@ -194,6 +196,7 @@ public class CppTarget implements ILanguageTarget {
 
 	@Override
 	public void startClass(Scope scope) {
+		hppPrivate = new Indent();
 		currentScope = scope;
 		currentClass = scope.getLast();
 		// hpp
@@ -223,6 +226,16 @@ public class CppTarget implements ILanguageTarget {
 	@Override
 	public void finishClass(Scope scope) {
 		currentScope = scope;
+		if (hppPrivate.out.length() > 0) {
+			
+			hppIndent.out();
+			hppIndent.writeln("protected:");
+			hppIndent.in();
+			String[] declarations = hppPrivate.out.toString().split("\n");
+			for (String decl : declarations) {
+				hppIndent.writeln(decl);
+			}
+		}
 		// hpp
 		if (! inEnum) {
 			hppIndent.out();
@@ -233,6 +246,8 @@ public class CppTarget implements ILanguageTarget {
 		hppIndent.writeln( String.format("}; // class %s \n", currentClass));
 		currentClass = null;
 	}
+	
+	protected void writeMethodDeclaration( Indent head) {} 
 
 	@Override
 	public void startMethod(Scope scope) {
@@ -257,7 +272,6 @@ public class CppTarget implements ILanguageTarget {
 					type = "";
 				}
 //				System.out.println(">>> " + currentClass + "::" + currentFunction + fpi.toString());
-				hppIndent.write( "" );
 				Indent header = new Indent();
 				Indent body = new Indent();
 				for (Symbol parameter : fpi.parameters ) {
@@ -283,20 +297,28 @@ public class CppTarget implements ILanguageTarget {
 						programmer.writeConstant(header, tcn);
 					}
 				}
+				
+				Indent where = hppIndent;
+				if (symbol.isPrivate()) {
+					where = hppPrivate;
+					System.out.printf("private %s %s %s\n", symbol.getName(), name, ""+symbol.isPrivate() );
+				}
+				where.write( "" );
 				String decl = String.format("%s%s(%s)", type, name, header.out.toString() ); 
 				if (fpi.decorators.contains("@classmethod")) {
-					hppIndent.append("static " + decl);
+					where.append("static " + decl);
 				} else if (fpi.decorators.contains("@abstractmethod")) {
-					hppIndent.append("virtual " + decl);
+					where.append("virtual " + decl);
 				} else {
-					hppIndent.append(decl);
+					where.append(decl);
 				}
 				
 				if (fpi.decorators.contains("@abstractmethod")) {
-					hppIndent.append(" = 0");
+					where.append(" = 0");
 					isAbstract = true;
 				}
-				hppIndent.append(";\n");
+				where.append(";\n");
+				
 				if (! fpi.decorators.contains("@abstractmethod")) {
 					if (currentClass == null) {
 						decl = String.format("%s%s (%s)", type, name, body.out.toString() );						
@@ -447,7 +469,7 @@ public class CppTarget implements ILanguageTarget {
 				}
 				if (symbol.getName().equals("array")) {
 					//array(...) -> Map<RowVectorXd>(new double[#] { ... }, #);
-					System.out.println( child.getTop().traverse(1, child ) );
+					//System.out.println( child.getTop().traverse(1, child ) );
 					Indent gather = new Indent();
 					while (child.getChildCount() == 0) {
 						child = child.getRightSibling();
@@ -734,7 +756,8 @@ public class CppTarget implements ILanguageTarget {
 			cppIndent.writeln( declaration + ";");
 			break;
 		case CLASS:
-			hppIndent.writeln( declaration + ";");
+			//hppIndent.writeln( declaration + ";");
+			hppPrivate.writeln( declaration + ";");
 			if (symbol.isStatic()) {
 				cppIndent.writeln( String.format("%s %s::%s;", 
 						cppType, currentScope.getLast(), symbol.getName()) );

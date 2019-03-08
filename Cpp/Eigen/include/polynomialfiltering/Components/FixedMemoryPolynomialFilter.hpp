@@ -21,6 +21,14 @@ namespace PolynomialFiltering {
     namespace Components {
         class FixedMemoryFilter : public AbstractFilter {
             public:
+                FixedMemoryFilter(const long order, const long memorySize=51);
+                long getN();
+                double getTau();
+                double getTime();
+                RealVector getState(const double t);
+                void add(const double t, const double y, const std::string observationId="");
+                RealMatrix getVRF();
+            protected:
                 long order;
                 long L;
                 long n;
@@ -31,13 +39,6 @@ namespace PolynomialFiltering {
                 RealVector Z;
                 RealVector tRing;
                 RealVector yRing;
-                FixedMemoryFilter(const long order, const long memorySize=51);
-                long getN();
-                double getTau();
-                double getTime();
-                RealVector getState(const double t);
-                void add(const double t, const double y, const std::string observationId="");
-                RealMatrix getVRF();
                 RealMatrix _getTn(const RealVector dt);
         }; // class FixedMemoryFilter 
 

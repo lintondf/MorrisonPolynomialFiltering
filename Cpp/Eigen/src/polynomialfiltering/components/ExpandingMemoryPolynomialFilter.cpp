@@ -17,14 +17,14 @@ namespace PolynomialFiltering {
             EMPBase::EMPBase (const long order, const double tau) : AbstractRecursiveFilter(order,tau) {
             }
 
-            double EMPBase::gammaParameter (const double t, const double dtau) {
+            double EMPBase::_gammaParameter (const double t, const double dtau) {
                 return this->_normalizeTime(t);
             }
 
             EMP0::EMP0 (const double tau) : EMPBase(0,tau) {
             }
 
-            RealVector EMP0::gamma (const double n) {
+            RealVector EMP0::_gamma (const double n) {
                 return Map<RowVectorXd>( new double[1] {1 / (1 + n)}, 1);
             }
 
@@ -47,7 +47,7 @@ namespace PolynomialFiltering {
             EMP1::EMP1 (const double tau) : EMPBase(1,tau) {
             }
 
-            RealVector EMP1::gamma (const double n) {
+            RealVector EMP1::_gamma (const double n) {
                 double denom;
                 denom = 1.0 / ((n + 2) * (n + 1));
                 return denom * Map<RowVectorXd>( new double[2] {2 * (2 * n + 1), 6}, 2);
@@ -77,7 +77,7 @@ namespace PolynomialFiltering {
             EMP2::EMP2 (const double tau) : EMPBase(2,tau) {
             }
 
-            RealVector EMP2::gamma (const double n) {
+            RealVector EMP2::_gamma (const double n) {
                 double n2;
                 double denom;
                 n2 = n * n;
@@ -114,7 +114,7 @@ namespace PolynomialFiltering {
             EMP3::EMP3 (const double tau) : EMPBase(3,tau) {
             }
 
-            RealVector EMP3::gamma (const double n) {
+            RealVector EMP3::_gamma (const double n) {
                 double n2;
                 double n3;
                 double denom;
@@ -160,7 +160,7 @@ namespace PolynomialFiltering {
             EMP4::EMP4 (const double tau) : EMPBase(4,tau) {
             }
 
-            RealVector EMP4::gamma (const double n) {
+            RealVector EMP4::_gamma (const double n) {
                 double n2;
                 double n3;
                 double n4;
@@ -217,7 +217,7 @@ namespace PolynomialFiltering {
             EMP5::EMP5 (const double tau) : EMPBase(5,tau) {
             }
 
-            RealVector EMP5::gamma (const double n) {
+            RealVector EMP5::_gamma (const double n) {
                 double n2;
                 double n3;
                 double n4;

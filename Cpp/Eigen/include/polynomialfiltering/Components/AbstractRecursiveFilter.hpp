@@ -22,6 +22,16 @@ namespace PolynomialFiltering {
     namespace Components {
         class AbstractRecursiveFilter : public IRecursiveFilter {
             public:
+                static double effectiveTheta(const long order, const double n);
+                AbstractRecursiveFilter(const long order, const double tau);
+                void start(const double t, const RealVector Z);
+                std::tuple<RealVector, double, double> predict(const double t);
+                void update(const double t, const double dtau, const RealVector Zstar, const RealVector e);
+                long getN();
+                double getTau();
+                double getTime();
+                RealVector getState(const double t);
+            protected:
                 long order;
                 long n;
                 long n0;
@@ -31,22 +41,13 @@ namespace PolynomialFiltering {
                 double t;
                 RealVector Z;
                 RealVector D;
-                static double effectiveTheta(const long order, const double n);
-                AbstractRecursiveFilter(const long order, const double tau);
                 RealVector _conformState(const RealVector state);
-                void start(const double t, const RealVector Z);
                 double _normalizeTime(const double t);
                 double _normalizeDeltaTime(const double dt);
                 RealVector _normalizeState(const RealVector Z);
                 RealVector _denormalizeState(const RealVector Z);
-                std::tuple<RealVector, double, double> predict(const double t);
-                void update(const double t, const double dtau, const RealVector Zstar, const RealVector e);
-                long getN();
-                double getTau();
-                double getTime();
-                RealVector getState(const double t);
-                virtual double gammaParameter(const double t, const double dtau) = 0;
-                virtual RealVector gamma(const double nOrT) = 0;
+                virtual double _gammaParameter(const double t, const double dtau) = 0;
+                virtual RealVector _gamma(const double nOrT) = 0;
         }; // class AbstractRecursiveFilter 
 
     }; // namespace Components

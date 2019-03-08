@@ -22,57 +22,64 @@ namespace PolynomialFiltering {
         class EMPBase : public AbstractRecursiveFilter {
             public:
                 EMPBase(const long order, const double tau);
-                double gammaParameter(const double t, const double dtau);
                 virtual double nSwitch(const double theta) = 0;
                 virtual RealMatrix VRF() = 0;
+            protected:
+                double _gammaParameter(const double t, const double dtau);
         }; // class EMPBase 
 
         class EMP0 : public EMPBase {
             public:
                 EMP0(const double tau);
-                RealVector gamma(const double n);
                 double nSwitch(const double theta);
                 RealMatrix VRF();
+            protected:
+                RealVector _gamma(const double n);
         }; // class EMP0 
 
         class EMP1 : public EMPBase {
             public:
                 EMP1(const double tau);
-                RealVector gamma(const double n);
                 double nSwitch(const double theta);
                 RealMatrix VRF();
+            protected:
+                RealVector _gamma(const double n);
         }; // class EMP1 
 
         class EMP2 : public EMPBase {
             public:
                 EMP2(const double tau);
-                RealVector gamma(const double n);
                 double nSwitch(const double theta);
                 RealMatrix VRF();
+            protected:
+                RealVector _gamma(const double n);
         }; // class EMP2 
 
         class EMP3 : public EMPBase {
             public:
                 EMP3(const double tau);
-                RealVector gamma(const double n);
                 double nSwitch(const double theta);
                 RealMatrix VRF();
+            protected:
+                RealVector _gamma(const double n);
         }; // class EMP3 
 
         class EMP4 : public EMPBase {
             public:
                 EMP4(const double tau);
-                RealVector gamma(const double n);
                 double nSwitch(const double theta);
                 RealMatrix VRF();
+            protected:
+                RealVector _gamma(const double n);
         }; // class EMP4 
 
         class EMP5 : public EMPBase {
             public:
                 EMP5(const double tau);
-                RealVector gamma(const double n);
                 double nSwitch(const double theta);
                 RealMatrix VRF();
+            protected:
+                RealVector _gamma(const double n);
         }; // class EMP5 
 
         std::shared_ptr<EMPBase> makeEMP(const long order, const double tau);

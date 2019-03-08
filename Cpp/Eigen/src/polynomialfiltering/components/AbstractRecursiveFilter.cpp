@@ -86,8 +86,8 @@ namespace PolynomialFiltering {
             void AbstractRecursiveFilter::update (const double t, const double dtau, const RealVector Zstar, const RealVector e) {
                 double p;
                 RealVector gamma;
-                p = this->gammaParameter(t, dtau);
-                gamma = this->gamma(p);
+                p = this->_gammaParameter(t, dtau);
+                gamma = this->_gamma(p);
                 this->Z = (Zstar + arrayTimes(gamma, e));
                 this->t = t;
                 this->n += 1;

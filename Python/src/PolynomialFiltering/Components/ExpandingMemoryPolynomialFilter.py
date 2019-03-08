@@ -15,7 +15,7 @@ class EMPBase(AbstractRecursiveFilter):
     def __init__(self, order : int, tau : float) :
         super().__init__(order, tau)
         
-    def gammaParameter(self, t : float, dtau : float) -> float:
+    def _gammaParameter(self, t : float, dtau : float) -> float:
         return self._normalizeTime(t)
     
     @abstractmethod
@@ -31,7 +31,7 @@ class EMP0(EMPBase) :
     def __init__(self, tau : float) :
         super().__init__( 0, tau)
         
-    def gamma(self, n : float) -> vector:
+    def _gamma(self, n : float) -> vector:
         return array([1/(1+n)])
     
     def nSwitch(self, theta : float) -> float:
@@ -53,7 +53,7 @@ class EMP1(EMPBase) :
     def __init__(self, tau : float) :
         super().__init__( 1, tau )
         
-    def gamma(self, n : float) -> vector: #
+    def _gamma(self, n : float) -> vector: #
         '''@denom : float'''
         denom = 1.0/((n+2)*(n+1))
         return denom*array([2*(2*n+1), 
@@ -82,7 +82,7 @@ class EMP2(EMPBase) :
     def __init__(self, tau : float) :
         super().__init__( 2, tau )
         
-    def gamma(self, n : float) -> vector: #
+    def _gamma(self, n : float) -> vector: #
         '''@n2 : float'''
         '''@denom : float'''
         n2 = n*n 
@@ -119,7 +119,7 @@ class EMP3(EMPBase) :
     def __init__(self, tau : float) :
         super().__init__( 3, tau )
         
-    def gamma(self, n : float) -> vector: #
+    def _gamma(self, n : float) -> vector: #
         '''@n2 : float'''
         '''@n3 : float'''
         '''@denom : float'''
@@ -166,7 +166,7 @@ class EMP4(EMPBase) :
     def __init__(self, tau : float) :
         super().__init__( 4, tau )
         
-    def gamma(self, n : float) -> vector: # 
+    def _gamma(self, n : float) -> vector: # 
         '''@n2 : float'''
         '''@n3 : float'''
         '''@n4 : float'''
@@ -225,7 +225,7 @@ class EMP5(EMPBase) :
     def __init__(self, tau : float) :
         super().__init__( 5, tau )
         
-    def gamma(self, n : float) -> vector:
+    def _gamma(self, n : float) -> vector:
         '''@n2 : float'''
         '''@n3 : float'''
         '''@n4 : float'''

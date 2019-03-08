@@ -49,19 +49,17 @@ public:
 		CHECK_EQ(getTime(), t0);
 
 		RealMatrix actual = MatrixXd::Zero(this->order + 1,2);
-		std::cout << actual << std::endl;
-		std::cout << getState(t0) << std::endl;
 
 		actual.col(0) = getState(t0);
 		actual.col(1) = getState(setup(3));
 		return actual;
 	}
 
-private:
-	double gammaParameter(const double t, const double dtau) {
+protected:
+	double _gammaParameter(const double t, const double dtau) {
 		return 0;
 	}
-	RealVector gamma(const double nOrT) {
+	RealVector _gamma(const double nOrT) {
 		return Vector3d(1, 2, 3);
 	}
 };

@@ -96,8 +96,8 @@ class AbstractRecursiveFilter(IRecursiveFilter):
     def update(self, t : float, dtau : float, Zstar : vector, e : vector) -> None:
         '''@ p : float'''
         '''@ gamma : vector'''
-        p = self.gammaParameter(t, dtau)
-        gamma = self.gamma(p)
+        p = self._gammaParameter(t, dtau)
+        gamma = self._gamma(p)
         self.Z = (Zstar + gamma * e)
         self.t = t
         self.n += 1;
@@ -126,9 +126,9 @@ class AbstractRecursiveFilter(IRecursiveFilter):
             return self._denormalizeState(Z)
 
     @abstractmethod   
-    def gammaParameter(self, t : float, dtau : float) -> float:
+    def _gammaParameter(self, t : float, dtau : float) -> float:
         pass
             
     @abstractmethod   
-    def gamma(self, nOrT : float) -> vector:
+    def _gamma(self, nOrT : float) -> vector:
         pass

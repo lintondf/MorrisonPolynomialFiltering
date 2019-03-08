@@ -138,4 +138,10 @@ public class Symbol {
 	public boolean isEnum() {
 		return type.equals("<ENUM>");
 	}
+
+	public boolean isPrivate() {
+		if (name.startsWith("__init__"))
+			return false;
+		return name.startsWith("_");
+	}
 }
