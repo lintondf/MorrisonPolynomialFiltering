@@ -3,7 +3,15 @@
  */
 package com.bluelightning.tools.transpiler;
 
+import java.util.Set;
+import java.util.TreeSet;
+
+import com.bluelightning.tools.transpiler.nodes.TranslationListNode;
 import com.bluelightning.tools.transpiler.nodes.TranslationNode;
+import com.bluelightning.tools.transpiler.nodes.TranslationOperatorNode;
+import com.bluelightning.tools.transpiler.nodes.TranslationSubexpressionNode;
+import com.bluelightning.tools.transpiler.nodes.TranslationSymbolNode;
+import com.bluelightning.tools.transpiler.nodes.TranslationUnaryNode;
 
 /**
  * @author NOOK
@@ -11,23 +19,74 @@ import com.bluelightning.tools.transpiler.nodes.TranslationNode;
  */
 public abstract class AbstractLanguageTarget implements ILanguageTarget {
 
-	/* (non-Javadoc)
-	 * @see com.bluelightning.tools.transpiler.ILanguageTarget#setId(int)
-	 */
+	protected int id;
+	protected Set<String> ignoredSuperClasses = new TreeSet<>();
+	
+	
+	
+	public AbstractLanguageTarget() {
+		ignoredSuperClasses.add("ABC");
+				
+	}
+
+	protected boolean isList(TranslationNode root) {
+		return (root instanceof TranslationListNode);
+	}
+
+	protected boolean isOperator(TranslationNode root, String op) {
+		if (root instanceof TranslationOperatorNode) {
+			return ((TranslationOperatorNode) root).getOperator().equals(op);
+		}
+		return false;
+	}
+
+	protected boolean isSymbol(TranslationNode root) {
+		return (root instanceof TranslationSymbolNode);
+	}
+	
+	protected String getAssignmentTargetType( TranslationNode child ) {
+		if (child.getTop() instanceof TranslationSubexpressionNode) {
+			TranslationSubexpressionNode top = (TranslationSubexpressionNode) child.getTop();
+			if (top.getChildCount() > 2) {
+				if (top.getChild(1) instanceof TranslationOperatorNode) {
+					if (((TranslationOperatorNode)top.getChild(1)).getOperator().equals("=")) {
+						TranslationNode lhs = top.getChild(0);
+						while (lhs.getChildCount() > 0 &&
+							   lhs instanceof TranslationSubexpressionNode) {
+							lhs = lhs.getChild(0);
+						}
+						// TODO self.name
+						if (lhs instanceof TranslationSymbolNode) {
+							Symbol s = ((TranslationSymbolNode) lhs).getSymbol();
+							if (s.getName().equals("self")) {
+								TranslationNode u = lhs.getRightSibling();
+								if (u instanceof TranslationUnaryNode) {
+									return ((TranslationUnaryNode) u).getType();
+								} else {
+									return s.getType();
+								}
+							} else {
+								return s.getType();
+							}
+						}
+					}
+				}
+			}
+		}
+		return child.getTop().getType();
+	}
+	
+	
 	@Override
 	public void setId(int id) {
-		// TODO Auto-generated method stub
-
+		this.id = id;
 	}
 
-	/* (non-Javadoc)
-	 * @see com.bluelightning.tools.transpiler.ILanguageTarget#getId()
-	 */
 	@Override
 	public int getId() {
-		// TODO Auto-generated method stub
-		return 0;
+		return id;
 	}
+
 
 	/* (non-Javadoc)
 	 * @see com.bluelightning.tools.transpiler.ILanguageTarget#addImport(com.bluelightning.tools.transpiler.Scope)

@@ -1,8 +1,6 @@
 /**
  * TODO docstrings
  * TODO remove _ from private methods (decl and use)
- * TODO IProgrammer only for matrix package items
- * TODO AbstractTarget for language independent processing
  * TODO Error if function output type not provided
  * TODO non member functions
  */
@@ -37,8 +35,6 @@ import freemarker.template.TemplateException;
 
 public class CppTarget extends AbstractLanguageTarget {
 	
-	protected int id;
-	
 	protected Configuration cfg;  // FreeMarker configuration
 	
 	Path includeDirectory;
@@ -61,22 +57,16 @@ public class CppTarget extends AbstractLanguageTarget {
 	protected Indent hppPrivate = new Indent();
 	protected Indent cppIndent = new Indent();
 	
-	
-	
 	protected Scope currentScope = null;
 	
-	Set<String> ignoredSuperClasses = new TreeSet<>();
-	
-	
 	public CppTarget( IProgrammer programmer, Configuration cfg, Path baseDirectory ) {
+		super();
 		Path includeDirectory = baseDirectory.resolve("include");
 		Path srcDirectory = baseDirectory.resolve("src");
 		this.cfg = cfg;
 		this.includeDirectory = includeDirectory;	
 		this.srcDirectory = srcDirectory;
 		this.programmer = programmer;
-		
-		ignoredSuperClasses.add("ABC");
 		
 		try {
 			
@@ -91,53 +81,6 @@ public class CppTarget extends AbstractLanguageTarget {
 	protected IProgrammer programmer = null;
 	
 	Stack<String> namespaceStack = new Stack<String>();
-	
-	protected boolean isList(TranslationNode root) {
-		return (root instanceof TranslationListNode);
-	}
-
-	protected boolean isOperator(TranslationNode root, String op) {
-		if (root instanceof TranslationOperatorNode) {
-			return ((TranslationOperatorNode) root).getOperator().equals(op);
-		}
-		return false;
-	}
-
-	protected boolean isSymbol(TranslationNode root) {
-		return (root instanceof TranslationSymbolNode);
-	}
-	
-	protected String getAssignmentTargetType( TranslationNode child ) {
-		if (child.getTop() instanceof TranslationSubexpressionNode) {
-			TranslationSubexpressionNode top = (TranslationSubexpressionNode) child.getTop();
-			if (top.getChildCount() > 2) {
-				if (top.getChild(1) instanceof TranslationOperatorNode) {
-					if (((TranslationOperatorNode)top.getChild(1)).getOperator().equals("=")) {
-						TranslationNode lhs = top.getChild(0);
-						while (lhs.getChildCount() > 0 &&
-							   lhs instanceof TranslationSubexpressionNode) {
-							lhs = lhs.getChild(0);
-						}
-						// TODO self.name
-						if (lhs instanceof TranslationSymbolNode) {
-							Symbol s = ((TranslationSymbolNode) lhs).getSymbol();
-							if (s.getName().equals("self")) {
-								TranslationNode u = lhs.getRightSibling();
-								if (u instanceof TranslationUnaryNode) {
-									return ((TranslationUnaryNode) u).getType();
-								} else {
-									return s.getType();
-								}
-							} else {
-								return s.getType();
-							}
-						}
-					}
-				}
-			}
-		}
-		return child.getTop().getType();
-	}
 	
 	protected void emitBracketedList(Indent out, Scope scope, TranslationNode child, String open) {
 		if (open.equals("(")) {
@@ -746,16 +689,6 @@ public class CppTarget extends AbstractLanguageTarget {
 			cppIndent.writeln( declaration + ";");
 			break;
 		}
-	}
-
-	@Override
-	public void setId(int id) {
-		this.id = id;
-	}
-
-	@Override
-	public int getId() {
-		return id;
 	}
 
 	@Override
