@@ -32,9 +32,9 @@ class Test(unittest.TestCase):
         (times, truth, observations, noise) = generateTestData(order, N, 0.0, self.Y0[0:order+1], tau, sigma=0.0)
         filter.start(0.0, self.Y0[0:order+1])
         for i in range(1,N) :
-            (Zstar, dt, dtau) = filter.predict(times[i][0])
+            Zstar = filter.predict(times[i][0])
             e = observations[i] - Zstar[0]
-            filter.update(times[i][0], dtau, Zstar, e)
+            filter.update(times[i][0], Zstar, e)
             Yf = filter.getState(times[i][0])
             assert_almost_equal( Yf, truth[i,0:order+1] )
             
@@ -43,9 +43,9 @@ class Test(unittest.TestCase):
         filter.start(0.0, self.Y0[0:order+1])
         E = zeros([N,order+1]);
         for i in range(1,N) :
-            (Zstar, dt, dtau) = filter.predict(times[i][0])
+            Zstar = filter.predict(times[i][0])
             e = observations[i] - Zstar[0]
-            filter.update(times[i][0], dtau, Zstar, e)
+            filter.update(times[i][0], Zstar, e)
             Yf = filter.getState(times[i][0])
 #             assert_almost_equal( Yf, truth[i,0:order+1] )
             E[i,:] = Yf - truth[i,:]
@@ -67,9 +67,9 @@ class Test(unittest.TestCase):
             filter.start(0.0, self.Y0[0:order+1])
             E = zeros([N,order+1]);
             for i in range(0,N) :
-                (Zstar, dt, dtau) = filter.predict(times[i][0])
+                Zstar = filter.predict(times[i][0])
                 e = observations[i] - Zstar[0]
-                filter.update(times[i][0], dtau, Zstar, e)
+                filter.update(times[i][0], Zstar, e)
                 Yf = filter.getState(times[i][0])
                 r = ("FMP%d: %5d %10.6g %10.6g %s %s" % \
                      (order, i, times[i][0], truth[i,0], A2S(Yf), A2S((Yf-truth[i,:])/dV)))

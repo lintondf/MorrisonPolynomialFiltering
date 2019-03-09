@@ -3,6 +3,8 @@
  */
 package com.bluelightning.tools.transpiler.nodes;
 
+import org.antlr.v4.runtime.ParserRuleContext;
+
 /**
  * @author NOOK
  *
@@ -14,8 +16,8 @@ public class TranslationConstantNode extends TranslationSubexpressionNode {
 	public enum Kind { INTEGER, FLOAT, STRING };
 	Kind   kind;
 	
-	public TranslationConstantNode(TranslationNode parent, String value, Kind kind) {
-		super(parent, "<CONSTANT>:" + kind.toString() + " = " + value);
+	public TranslationConstantNode(ParserRuleContext ctx, TranslationNode parent, String value, Kind kind) {
+		super(ctx, parent, "<CONSTANT>:" + kind.toString() + " = " + value);
 		this.value = value;
 		this.kind = kind;
 		switch (kind) {

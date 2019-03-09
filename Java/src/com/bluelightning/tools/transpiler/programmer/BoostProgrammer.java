@@ -6,9 +6,9 @@ import java.util.Stack;
 
 import com.bluelightning.tools.transpiler.CppTarget;
 import com.bluelightning.tools.transpiler.IProgrammer;
+import com.bluelightning.tools.transpiler.Indent;
 import com.bluelightning.tools.transpiler.Scope;
 import com.bluelightning.tools.transpiler.Symbol;
-import com.bluelightning.tools.transpiler.CppTarget.Indent;
 import com.bluelightning.tools.transpiler.nodes.TranslationConstantNode;
 import com.bluelightning.tools.transpiler.nodes.TranslationNode;
 
@@ -225,6 +225,12 @@ public class BoostProgrammer implements IProgrammer {
 	public Symbol getSliceSymbol(String type) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public void forceFloatConstants(boolean tf) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

@@ -126,6 +126,18 @@ namespace PolynomialFiltering {
                 }
             }
 
+            RealMatrix AbstractRecursiveFilter::getCovariance (const double t, const double R) {
+                RealVector V;
+                if (t == (this->t + this->tau)) {
+                    return this->_VRF();
+                } else {
+                    RealMatrix F;
+                    F = this->stateTransitionMatrix(this->order + 1, this->_normalizeDeltaTime(t - (this->t + this->tau)));
+                    V = transpose(F) * this->_VRF();
+                    return V;
+                }
+            }
+
     }; // namespace Components
 }; // namespace PolynomialFiltering
 

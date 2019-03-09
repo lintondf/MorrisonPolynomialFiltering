@@ -3,6 +3,8 @@
  */
 package com.bluelightning.tools.transpiler.nodes;
 
+import org.antlr.v4.runtime.ParserRuleContext;
+
 import com.bluelightning.tools.transpiler.Symbol;
 
 /**
@@ -13,8 +15,8 @@ public class TranslationSymbolNode extends TranslationSubexpressionNode {
 
 	Symbol symbol;
 	
-	public TranslationSymbolNode(TranslationNode parent, Symbol symbol) {
-		super(parent, "<SYMBOL>" + symbol);
+	public TranslationSymbolNode(ParserRuleContext ctx, TranslationNode parent, Symbol symbol) {
+		super(ctx, parent, "<SYMBOL>" + symbol);
 		this.symbol = symbol;
 		if (symbol == null)
 			throw new NullPointerException();

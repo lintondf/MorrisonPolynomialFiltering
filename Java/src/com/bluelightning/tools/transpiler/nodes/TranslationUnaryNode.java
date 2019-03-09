@@ -6,6 +6,7 @@ package com.bluelightning.tools.transpiler.nodes;
 import java.util.TreeSet;
 
 import org.antlr.v4.runtime.CommonToken;
+import org.antlr.v4.runtime.ParserRuleContext;
 
 import com.bluelightning.tools.transpiler.Symbol;
 import com.bluelightning.tools.transpiler.Transpiler;
@@ -22,15 +23,16 @@ public class TranslationUnaryNode extends TranslationSubexpressionNode {
 	CommonToken lhs;
 	Object rhs;
 
-	public TranslationUnaryNode(TranslationNode parent, CommonToken lhs, Symbol rhs) {
-		super(parent, "<UNARY>:" + Transpiler.instance().getValue(lhs) + " " + rhs.toString() );
+	public TranslationUnaryNode(ParserRuleContext ctx, TranslationNode parent, CommonToken lhs, Symbol rhs) {
+		super(ctx, parent, "<UNARY>:" + Transpiler.instance().getValue(lhs) + " " + rhs );
 		this.lhs = lhs;
 		this.rhs = rhs;
-		setType(((Symbol) rhs).getType());
+		if (rhs != null)
+			setType(((Symbol) rhs).getType());
 	}
 	
-	public TranslationUnaryNode(TranslationNode parent, CommonToken lhs, TranslationNode rhs) {
-		super(parent, "<UNARY>:" + Transpiler.instance().getValue(lhs) + " " + rhs.toString() );
+	public TranslationUnaryNode(ParserRuleContext ctx, TranslationNode parent, CommonToken lhs, TranslationNode rhs) {
+		super(ctx,parent, "<UNARY>:" + Transpiler.instance().getValue(lhs) + " " + rhs.toString() );
 		this.lhs = lhs;
 		this.rhs = rhs;
 		setType(((TranslationNode) rhs).getType());

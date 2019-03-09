@@ -7,7 +7,7 @@ Created on Feb 13, 2019
 from abc import abstractmethod
 from typing import Tuple
 
-from numpy import array, diag, ones, zeros, isscalar
+from numpy import array, diag, ones, zeros, isscalar, transpose
 from numpy import array as vector;
 
 from PolynomialFiltering.Components.IRecursiveFilter import IRecursiveFilter
@@ -157,10 +157,25 @@ class AbstractRecursiveFilter(IRecursiveFilter):
             Z = F @ self.Z
             return self._denormalizeState(Z)
 
+    def getCovariance(self, t : float, R : float = 1.0) -> array:
+        '''@ V : vector'''
+        if (t == (self.t + self.tau)) :
+            return self._VRF();
+        else :
+            '''@F : array'''
+            # the VRF equations used are for 1-step predictors
+            F = self.stateTransitionMatrix(self.order+1, self._normalizeDeltaTime(t-(self.t+self.tau))); # (self.t+self.tau)-t
+            V = transpose(F) @ self._VRF() @ F;
+            return V;
+
     @abstractmethod   
     def _gammaParameter(self, t : float, dtau : float) -> float:
         pass
             
     @abstractmethod   
     def _gamma(self, nOrT : float) -> vector:
+        pass
+
+    @abstractmethod
+    def _VRF(self) -> array:
         pass

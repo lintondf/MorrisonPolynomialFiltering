@@ -55,7 +55,7 @@ class ExpressionCompilationListener extends LcdPythonBaseListener {
 			if (expressionRoot != null) {
 //				System.out.println( tag + " (" + ctx.getChildCount() + ")");
 //				transpiler.dumpChildren(ctx);
-				TranslationNode parent = new TranslationSubexpressionNode(null, tag);
+				TranslationNode parent = new TranslationSubexpressionNode(ctx, null, tag);
 				if (ctx.getChildCount() == 1) {
 					TranslationNode node = translateMap.get(ctx.getChild(0).getPayload());
 					if (node == null) {
@@ -64,9 +64,9 @@ class ExpressionCompilationListener extends LcdPythonBaseListener {
 							String operator = this.transpiler.valueMap.get(ctx.getChild(0).getPayload());
 							if (Character.isAlphabetic(operator.charAt(0))) {
 								transpiler.reportError(ctx, "Undeclared symbol: " + operator);
-								return new TranslationSymbolNode(null, undeclaredSymbol);
+								return new TranslationSymbolNode(ctx, null, undeclaredSymbol);
 							}
-							node = new TranslationOperatorNode( parent, operator );
+							node = new TranslationOperatorNode(ctx,  parent, operator );
 						}
 					}
 					translateMap.put( ctx.getPayload(), node );
@@ -76,7 +76,7 @@ class ExpressionCompilationListener extends LcdPythonBaseListener {
 //					transpiler.dumpChildren(ctx);
 //					String lhValue = (Transpiler.instance().getValue(ctx.getChild(0).getPayload()));
 //					String rhValue = (Transpiler.instance().getValue(ctx.getChild(1).getPayload()));
-					TranslationNode node = new TranslationUnaryNode( parent, 
+					TranslationNode node = new TranslationUnaryNode( ctx, parent, 
 							(CommonToken) ctx.getChild(0).getPayload(), 
 							translateMap.get(ctx.getChild(1).getPayload()));
 				} else {
@@ -92,10 +92,10 @@ class ExpressionCompilationListener extends LcdPythonBaseListener {
 						if (operator.startsWith(".")) {
 //							transpiler.dumpChildren((RuleNode) ctx.getChild(i) );
 							Symbol symbol = transpiler.symbolTable.lookup(scope, operator.substring(1));
-							node = new TranslationUnaryNode( parent, 
+							node = new TranslationUnaryNode( ctx, parent, 
 									(CommonToken) ctx.getChild(i).getChild(0).getPayload(), symbol );
 						} else {
-							node = new TranslationOperatorNode( parent, operator );
+							node = new TranslationOperatorNode( ctx, parent, operator );
 						}
 						node = getOperandNode( ctx, parent, ctx.getChild(i+1).getPayload());
 						if (node == null) {
@@ -115,17 +115,17 @@ class ExpressionCompilationListener extends LcdPythonBaseListener {
 		public static TranslationConstantNode getConstantNode(TranslationNode parent, Object payload, String value) {
 			TranslationConstantNode node;
 			if (value.startsWith("'") || value.startsWith("\"")) {
-				node = new TranslationConstantNode( parent, value, Kind.STRING );
+				node = new TranslationConstantNode(null,  parent, value, Kind.STRING );
 				return node;
 			}
 			Matcher matcher = integerPattern.matcher(value);
 			if (matcher.matches()) {
-				node = new TranslationConstantNode( parent, value, Kind.INTEGER );
+				node = new TranslationConstantNode(null,  parent, value, Kind.INTEGER );
 				return node;				
 			}
 			matcher = floatPattern.matcher(value);
 			if (matcher.matches()) {
-				node = new TranslationConstantNode( parent, value, Kind.FLOAT );
+				node = new TranslationConstantNode(null,  parent, value, Kind.FLOAT );
 				return node;				
 			}
 			return null;
@@ -140,7 +140,7 @@ class ExpressionCompilationListener extends LcdPythonBaseListener {
 			}
 			Symbol symbol = this.transpiler.symbolTable.lookup( scope, value );
 			if (symbol != null) {
-				node = new TranslationSymbolNode( parent, symbol );
+				node = new TranslationSymbolNode(context, parent, symbol );
 				translateMap.put( payload, node );
 				return node;
 			}
@@ -208,7 +208,7 @@ class ExpressionCompilationListener extends LcdPythonBaseListener {
 			}
 
 			ExpressionCompilationListener subListener = new ExpressionCompilationListener(transpiler);
-			subListener.expressionRoot = new TranslationSubexpressionNode(null, "FOR_STMT");
+			subListener.expressionRoot = new TranslationSubexpressionNode(ctx, null, "FOR_STMT");
 			subListener.translateMap = newTranslateMap();
 			subListener.scope = symbol.getScope();
 			transpiler.walker.walk(subListener, ctx.getChild(3));
@@ -449,7 +449,7 @@ class ExpressionCompilationListener extends LcdPythonBaseListener {
 
 		@Override
 		public void exitPower(LcdPythonParser.PowerContext ctx) {
-			defaultOperandOperator( ctx, "power" );
+			defaultOperandOperator( ctx, "Power" );
 		}
 
 //atom_expr: (AWAIT)? atom trailer*;
@@ -461,14 +461,14 @@ class ExpressionCompilationListener extends LcdPythonBaseListener {
 			if (ctx.getChildCount() == 1) {
 				defaultOperandOperator( ctx, "atom_expr" );
 			} else {
-				TranslationNode parent = new TranslationSubexpressionNode(null, "atom_expr");
+				TranslationNode parent = new TranslationSubexpressionNode(ctx, null, "atom_expr");
 				String text = ctx.getChild(0).getText();
 				Symbol symbol = transpiler.symbolTable.lookup(scope, text );
 				if (symbol == null) {
 					transpiler.reportError("atmo_expr::Unknown symbol: " + ctx.getChild(0).getText() + " " + scope);
 					return;
 				}
-				new TranslationSymbolNode( parent, symbol );
+				new TranslationSymbolNode(ctx,  parent, symbol );
 				for (int iTrailer = 1; iTrailer < ctx.getChildCount(); iTrailer++) {
 					ParseTree trailer = ctx.getChild(iTrailer);
 					for (int i = 0; i < trailer.getChildCount(); i++) {
@@ -480,7 +480,7 @@ class ExpressionCompilationListener extends LcdPythonBaseListener {
 //							System.out.println("Compiling LIST " + trailer.getChild(i).getText() );
 							//transpiler.dumpChildren(ctx, 1);
 							if (trailer.getChildCount() > 2) {
-								TranslationListNode tln = new TranslationListNode( parent, unary );
+								TranslationListNode tln = new TranslationListNode(ctx, parent, unary );
 								ParseTree list = trailer.getChild(1);
 //								System.out.println(list.toStringTree(transpiler.parser));
 								for (int iList = 0; iList < list.getChildCount(); iList += 2) {
@@ -512,7 +512,7 @@ class ExpressionCompilationListener extends LcdPythonBaseListener {
 							if (field == null) {
 								transpiler.reportError( ctx, "Unknown member: " + fieldName + " at " + scope );
 							}
-							new TranslationUnaryNode( parent, (CommonToken) payload, field );
+							new TranslationUnaryNode(ctx,  parent, (CommonToken) payload, field );
 							
 							break;
 						}
@@ -530,7 +530,7 @@ class ExpressionCompilationListener extends LcdPythonBaseListener {
 		public void exitAtom(LcdPythonParser.AtomContext ctx) {
 //			transpiler.dumpChildren(ctx);
 			if (expressionRoot != null) {
-				TranslationNode parent = new TranslationSubexpressionNode(null, "atom");
+				TranslationNode parent = new TranslationSubexpressionNode(ctx, null, "atom");
 				Object payload = ctx.getChild(0).getPayload();
 				TranslationNode node = getOperandNode( ctx, parent, payload);
 				if (node != null && ctx.getChildCount() == 1) {  // NAME | NUMBER |  '...' | 'None' | 'True' | 'False'
@@ -558,7 +558,7 @@ class ExpressionCompilationListener extends LcdPythonBaseListener {
 					//transpiler.reportError(ctx, "Unexpected ATOM token: " + value );
 					return;
 				}
-				parent = new TranslationListNode( null, value);
+				parent = new TranslationListNode(ctx,  null, value);
 //				System.out.println(ctx.toStringTree(transpiler.parser));				
 				for (int i = 1; i < ctx.getChildCount()-1; i++) {
 					payload = ctx.getChild(i).getPayload();

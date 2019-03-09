@@ -31,6 +31,7 @@ namespace PolynomialFiltering {
                 double getTau();
                 double getTime();
                 RealVector getState(const double t);
+                RealMatrix getCovariance(const double t, const double R=1.0);
             protected:
                 long order;
                 long n;
@@ -48,6 +49,7 @@ namespace PolynomialFiltering {
                 RealVector _denormalizeState(const RealVector Z);
                 virtual double _gammaParameter(const double t, const double dtau) = 0;
                 virtual RealVector _gamma(const double nOrT) = 0;
+                virtual RealMatrix _VRF() = 0;
         }; // class AbstractRecursiveFilter 
 
     }; // namespace Components

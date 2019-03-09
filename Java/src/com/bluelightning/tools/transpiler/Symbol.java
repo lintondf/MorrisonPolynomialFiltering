@@ -108,7 +108,7 @@ public class Symbol {
 	}
 
 	public boolean isStatic() {
-		return false;
+		return false; //getScope().getLevel() == Scope.Level.CLASS;
 	}
 
 	public void setInitialization(String initialization) {

@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.antlr.v4.runtime.ParserRuleContext;
 import org.apache.commons.lang3.StringUtils;
 
 
@@ -18,11 +19,16 @@ public class TranslationNode  {
 	
 	protected String name;
 	private String type;
+	private ParserRuleContext ctx;
+	
 
 	protected TranslationNode parent;
 	protected List<TranslationNode> children;
 	
-	TranslationNode( TranslationNode parent, String name) {
+	TranslationNode(ParserRuleContext ctx,  TranslationNode parent, String name) {
+		this.ctx = ctx;
+		if (ctx == null && parent != null)
+			this.ctx = parent.ctx;
 		this.name = name;
 		this.type = "int";
 		this.parent = parent;
@@ -30,6 +36,10 @@ public class TranslationNode  {
 		if (parent != null) {
 			parent.children.add(this);
 		}
+	}
+	
+	public ParserRuleContext getParserRuleContext() {
+		return ctx;
 	}
 	
 	public String getType() {
@@ -76,9 +86,13 @@ public class TranslationNode  {
 	}
 	
 	public String toString() {
-		return String.format("[%d] %5d %s ", children.size(), this.hashCode() % 10000, name );
-//		return name + " C#" + children.size() + ((parent == null) ? "?" : parent.toString());
+		String where = "";
+		if (ctx != null ) {
+			where = String.format("L%5d C%3d: ", ctx.start.getLine(), ctx.start.getCharPositionInLine(), children.size() );
+		}
+		return String.format("%s[%5d] %s", where , this.getChildCount(), name );
 	}
+
 
 	public void adopt(TranslationNode node) {
 		if (node.parent != null) {

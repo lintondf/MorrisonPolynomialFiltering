@@ -3,6 +3,8 @@
  */
 package com.bluelightning.tools.transpiler.nodes;
 
+import org.antlr.v4.runtime.ParserRuleContext;
+
 /**
  * @author NOOK
  *
@@ -11,8 +13,8 @@ public class TranslationListNode extends TranslationSubexpressionNode {
 	
 	protected String listOpen;
 
-	public TranslationListNode(TranslationNode parent, String name) {
-		super(parent, "<LIST>"+name);
+	public TranslationListNode(ParserRuleContext ctx, TranslationNode parent, String name) {
+		super(ctx, parent, "<LIST>"+name);
 		this.listOpen = name;
 	}
 

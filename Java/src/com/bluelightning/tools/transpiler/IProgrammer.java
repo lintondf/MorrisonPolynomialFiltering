@@ -1,6 +1,5 @@
 package com.bluelightning.tools.transpiler;
 
-import com.bluelightning.tools.transpiler.CppTarget.Indent;
 import com.bluelightning.tools.transpiler.nodes.TranslationConstantNode;
 import com.bluelightning.tools.transpiler.nodes.TranslationNode;
 
@@ -37,6 +36,8 @@ public interface IProgrammer {
 	void closeBracket(Indent out);
 
 	void writeConstant(Indent out, TranslationConstantNode node);
+	
+	void forceFloatConstants(boolean tf);
 
 	Symbol getDimensionSymbol(String type, String value);
 

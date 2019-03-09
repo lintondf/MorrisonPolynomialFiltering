@@ -8,7 +8,7 @@ import time
 from netCDF4 import Dataset
 from math import sin, cos
 import numpy as np
-from numpy import array, array2string, diag, eye, ones, zeros
+from numpy import array, array2string, diag, eye, ones, zeros, sqrt
 from numpy.random import randn
 from scipy.linalg.matfuncs import expm
 from scipy.stats import chi2
@@ -137,18 +137,23 @@ def box_m(n_1,C0,n_2,C1):
     print('df2 = {}'.format(df2))
     print('-------------------')
     print('F = {}'.format(F))
-     
+    
+def scaleVRF( V : array, u : float, theta : float ) -> array:
+    t = 1-theta;
+    S = zeros(V.shape);
+    S[0,0] = t;
+    for i in range(1,S.shape[0]) :
+        S[i,0] = S[i-1,0] * t / u;
+    for i in range(0,S.shape[0]) :
+        for j in range(1,S.shape[1]) :
+            S[i,j] = S[i,j-1] * t / u;
+    return S * V;
+        
 if __name__ == '__main__':
     pass
-#     print( norm.cdf(1., loc=0.997, scale=0.0285) - 0.5 )
-#     print( norm.cdf(0.876, loc=0.997, scale=0.0285) - 0.5 )
-#     print( norm.cdf(1.06, loc=0.997, scale=0.0285) - 0.5 )
+    V = array([[2.0625,1.6875,0.5],[1.6875,    1.75,    0.5625],[0.5,    0.5625,    0.1875]]);
+
+    print(V)
+    v = scaleVRF(V, 1e-3, 0.99564)
+    print(1.5*sqrt(diag(v)))
     
-#     box_m(5000, np.cov(randn(2,5000)), 400000, np.eye(2,2))
-#     Y0 = array([1e4, 1e3, 1e2, 1e1, 1e0, 1e-1]);
-#     N = 10;
-#     order = 1
-#     tau = 0.1;
-#     (times, truth, observations, noise) = generateTestData(order, N, 0.0, Y0[0:order+1], tau, sigma=0.0)
-#     for i in range(0,N) :
-#         print(times[i], truth[i,:])

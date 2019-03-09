@@ -86,12 +86,9 @@ public class Transpiler {
 	}
 	
 	public void reportError(TranslationNode node, String message) {
-		if (node instanceof TranslationExpressionNode) {
-			reportError( ((TranslationExpressionNode) node).getParserRuleContext(), message );
-		} else {
-			reportError( node.toString() + ": " + message );
-		}
+		reportError( node.getParserRuleContext(), message );
 	}
+	
 	public void reportError(Token token, String message ) {
 		String r = String.format("ERROR [L%5d:C%3d]: %s", token.getLine(), token.getCharPositionInLine(), message );
 		reportError(r);

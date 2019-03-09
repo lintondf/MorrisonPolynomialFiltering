@@ -79,6 +79,10 @@ protected:
 	RealVector _gamma(const double nOrT) {
 		return VectorXd::Ones(this->order+1);
 	}
+
+	RealMatrix _VRF() {
+		return MatrixXd::Ones(this->order + 1, this->order + 1);
+	}
 };
 
 class TestClass {

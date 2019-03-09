@@ -1,6 +1,10 @@
 /**
  * TODO docstrings
  * TODO remove _ from private methods (decl and use)
+ * TODO IProgrammer only for matrix package items
+ * TODO AbstractTarget for language independent processing
+ * TODO Error if function output type not provided
+ * TODO non member functions
  */
 package com.bluelightning.tools.transpiler;
 
@@ -18,8 +22,6 @@ import java.util.Set;
 import java.util.Stack;
 import java.util.TreeSet;
 
-import org.apache.commons.lang3.StringUtils;
-
 import com.bluelightning.tools.transpiler.nodes.TranslationConstantNode;
 import com.bluelightning.tools.transpiler.nodes.TranslationListNode;
 import com.bluelightning.tools.transpiler.nodes.TranslationNode;
@@ -33,7 +35,7 @@ import freemarker.template.Template;
 import freemarker.template.TemplateException;
 
 
-public class CppTarget implements ILanguageTarget {
+public class CppTarget extends AbstractLanguageTarget {
 	
 	protected int id;
 	
@@ -48,43 +50,6 @@ public class CppTarget implements ILanguageTarget {
 	Map<String, Object> templateDataModel = new HashMap<>();
 	
 	protected String define;
-	
-	public static class Indent {
-		int level = 0;
-		public StringBuilder out = new StringBuilder();;
-		
-		public Indent() {
-			level = 0;
-			this.out = out;
-		}
-		
-		public void in() {
-			level += 1;
-		}
-
-		public void out() {
-			level -= 1;
-		}
-		
-		public String toString() {
-			return StringUtils.repeat("  ", 2*level);
-		}
-		
-		public void append( String text ) {
-			out.append(text);
-		}
-		
-		public void write( String text ) {
-			out.append(toString());
-			out.append(text);
-		}
-
-		public void writeln( String text ) {
-			out.append(toString());
-			out.append(text);
-			out.append('\n');
-		}
-	}
 	
 	Template hpp;
 	Template cpp;
@@ -127,6 +92,78 @@ public class CppTarget implements ILanguageTarget {
 	
 	Stack<String> namespaceStack = new Stack<String>();
 	
+	protected boolean isList(TranslationNode root) {
+		return (root instanceof TranslationListNode);
+	}
+
+	protected boolean isOperator(TranslationNode root, String op) {
+		if (root instanceof TranslationOperatorNode) {
+			return ((TranslationOperatorNode) root).getOperator().equals(op);
+		}
+		return false;
+	}
+
+	protected boolean isSymbol(TranslationNode root) {
+		return (root instanceof TranslationSymbolNode);
+	}
+	
+	protected String getAssignmentTargetType( TranslationNode child ) {
+		if (child.getTop() instanceof TranslationSubexpressionNode) {
+			TranslationSubexpressionNode top = (TranslationSubexpressionNode) child.getTop();
+			if (top.getChildCount() > 2) {
+				if (top.getChild(1) instanceof TranslationOperatorNode) {
+					if (((TranslationOperatorNode)top.getChild(1)).getOperator().equals("=")) {
+						TranslationNode lhs = top.getChild(0);
+						while (lhs.getChildCount() > 0 &&
+							   lhs instanceof TranslationSubexpressionNode) {
+							lhs = lhs.getChild(0);
+						}
+						// TODO self.name
+						if (lhs instanceof TranslationSymbolNode) {
+							Symbol s = ((TranslationSymbolNode) lhs).getSymbol();
+							if (s.getName().equals("self")) {
+								TranslationNode u = lhs.getRightSibling();
+								if (u instanceof TranslationUnaryNode) {
+									return ((TranslationUnaryNode) u).getType();
+								} else {
+									return s.getType();
+								}
+							} else {
+								return s.getType();
+							}
+						}
+					}
+				}
+			}
+		}
+		return child.getTop().getType();
+	}
+	
+	protected void emitBracketedList(Indent out, Scope scope, TranslationNode child, String open) {
+		if (open.equals("(")) {
+			programmer.openParenthesis( out );
+			for (int i = 0; i < child.getChildCount(); i++) {
+				if (child.getChild(i) instanceof TranslationOperatorNode)
+					continue;
+				if (i > 0) {
+					out.append(", "); //->programmer
+				}
+				i += emitChild( out, scope, child.getChild(i));
+			}
+			programmer.closeParenthesis( out );
+		} else {
+			programmer.openBracket( out );
+			for (int i = 0; i < child.getChildCount(); i++) {
+				if (i > 0) {
+					out.append(", "); //->programmer
+				}
+				i += emitChild( out, scope, child.getChild(i));
+			}
+			programmer.closeBracket( out );
+		}
+	}
+
+
 	@Override
 	public void startModule(Scope scope) {
 		System.out.println("\nCppBoost " + scope.toString() );
@@ -264,7 +301,7 @@ public class CppTarget implements ILanguageTarget {
 				String remappedType = programmer.remapType(symbol.getType()); 
 				Symbol outputClass = Transpiler.instance().lookup(scope, remappedType);
 				if (outputClass != null && outputClass.isClass() && !outputClass.isEnum()) { //if returning a class wrap in smart pointer
-					remappedType = String.format("std::shared_ptr<%s>", outputClass.getName() );
+					remappedType = String.format("std::shared_ptr<%s>", outputClass.getName() ); //->programmer
 				}
 				String type = remappedType + " ";
 				if (name.equals("__init__")) {
@@ -301,7 +338,7 @@ public class CppTarget implements ILanguageTarget {
 				Indent where = hppIndent;
 				if (symbol.isPrivate()) {
 					where = hppPrivate;
-					System.out.printf("private %s %s %s\n", symbol.getName(), name, ""+symbol.isPrivate() );
+//					/System.out.printf("private %s %s %s\n", symbol.getName(), name, ""+symbol.isPrivate() );
 				}
 				where.write( "" );
 				String decl = String.format("%s%s(%s)", type, name, header.out.toString() ); 
@@ -385,78 +422,6 @@ public class CppTarget implements ILanguageTarget {
 		}
 	}
 	
-	protected boolean isList(TranslationNode root) {
-		return (root instanceof TranslationListNode);
-	}
-
-	protected boolean isOperator(TranslationNode root, String op) {
-		if (root instanceof TranslationOperatorNode) {
-			return ((TranslationOperatorNode) root).getOperator().equals(op);
-		}
-		return false;
-	}
-
-	protected boolean isSymbol(TranslationNode root) {
-		return (root instanceof TranslationSymbolNode);
-	}
-	
-	protected String getAssignmentTargetType( TranslationNode child ) {
-		if (child.getTop() instanceof TranslationSubexpressionNode) {
-			TranslationSubexpressionNode top = (TranslationSubexpressionNode) child.getTop();
-			if (top.getChildCount() > 2) {
-				if (top.getChild(1) instanceof TranslationOperatorNode) {
-					if (((TranslationOperatorNode)top.getChild(1)).getOperator().equals("=")) {
-						TranslationNode lhs = top.getChild(0);
-						while (lhs.getChildCount() > 0 &&
-							   lhs instanceof TranslationSubexpressionNode) {
-							lhs = lhs.getChild(0);
-						}
-						// TODO self.name
-						if (lhs instanceof TranslationSymbolNode) {
-							Symbol s = ((TranslationSymbolNode) lhs).getSymbol();
-							if (s.getName().equals("self")) {
-								TranslationNode u = lhs.getRightSibling();
-								if (u instanceof TranslationUnaryNode) {
-									return ((TranslationUnaryNode) u).getType();
-								} else {
-									return s.getType();
-								}
-							} else {
-								return s.getType();
-							}
-						}
-					}
-				}
-			}
-		}
-		return child.getTop().getType();
-	}
-	
-	protected void emitBracketedList(Indent out, Scope scope, TranslationNode child, String open) {
-		if (open.equals("(")) {
-			programmer.openParenthesis( out );
-			for (int i = 0; i < child.getChildCount(); i++) {
-				if (child.getChild(i) instanceof TranslationOperatorNode)
-					continue;
-				if (i > 0) {
-					out.append(", ");
-				}
-				i += emitChild( out, scope, child.getChild(i));
-			}
-			programmer.closeParenthesis( out );
-		} else {
-			programmer.openBracket( out );
-			for (int i = 0; i < child.getChildCount(); i++) {
-				if (i > 0) {
-					out.append(", ");
-				}
-				i += emitChild( out, scope, child.getChild(i));
-			}
-			programmer.closeBracket( out );
-		}
-	}
-
-
 	
 	protected int emitChild(Indent out, Scope scope, TranslationNode child) {
 		if (child instanceof TranslationSymbolNode) {
@@ -467,6 +432,7 @@ public class CppTarget implements ILanguageTarget {
 				if (rename != null) {
 					symbol = rename;
 				}
+				// special handling for array initialization
 				if (symbol.getName().equals("array")) {
 					//array(...) -> Map<RowVectorXd>(new double[#] { ... }, #);
 					//System.out.println( child.getTop().traverse(1, child ) );
@@ -474,13 +440,15 @@ public class CppTarget implements ILanguageTarget {
 					while (child.getChildCount() == 0) {
 						child = child.getRightSibling();
 					}
+					programmer.forceFloatConstants(true);
 					traverseEmitter( gather, scope, child, 0 );
-//					emitSubExpression(gather, scope, child);
-					String values = gather.out.toString();
+					programmer.forceFloatConstants(false);
+					
+					String values = gather.out.toString(); //.replace("(","{").replace(")","}");
+
 					values = values.substring(1, values.length()-1 );
 					int commas = values.length() - values.replace(",", "").length();
-					out.append(String.format("Map<RowVectorXd>( new double[%d] {%s}, %d)", commas+1, values, commas+1));
-					
+					out.append(String.format("Map<RowVectorXd>( new double[%d] {%s}, %d)", commas+1, values, commas+1)); //->programmer
 					return 2;
 				}
 			}
@@ -497,6 +465,10 @@ public class CppTarget implements ILanguageTarget {
 			if (symbol != null) {
 				programmer.writeOperator( out, unary.getLhsValue() );
 				if (symbol.getName().equals("shape")) {
+					if (child.getRightSibling() == null) {
+						Transpiler.instance().logger.error("No right sibling on 'shape'");
+						return 1;
+					}
 					TranslationNode which = child.getRightSibling().getFirstChild();
 					if (which instanceof TranslationConstantNode) {
 						TranslationSymbolNode tsn = (TranslationSymbolNode) child.getLeftSibling(); 
@@ -509,6 +481,11 @@ public class CppTarget implements ILanguageTarget {
 					}
 				} else {
 					programmer.writeSymbol( out, symbol );
+					if (unary.getChildCount() == 0 && unary.getRightSibling() == null && 
+							symbol.getFunctionParametersInfo() != null) {
+						programmer.openParenthesis( out );
+						programmer.closeParenthesis( out );						
+					}
 				}
 			} else if (node != null) {
 				programmer.writeOperator( out, unary.getLhsValue() );
@@ -518,9 +495,6 @@ public class CppTarget implements ILanguageTarget {
 			}
 		} else if (child instanceof TranslationListNode) {
 			TranslationListNode tln = (TranslationListNode) child;
-//			System.out.println( tln.toString() );
-			
-			
 			if (tln.getListOpen().equals("(") && tln.getChildCount() == 0) {
 				// may be ([...]) which compiles to LIST(:0, LIST[{LIST[...}
 				TranslationNode next = tln.getRightSibling();
@@ -535,9 +509,6 @@ public class CppTarget implements ILanguageTarget {
 					tln = (TranslationListNode) child;
 				}
 			}
-//		    1:  [2] <SUBEXPRESSION> <LIST>[  : null
-//		                                     2:    [0] <OPERATOR>: 
-//		                                     2:    [0] <CONSTANT>:INTEGER = 0
 			if (tln.getListOpen().equals("[")) {
 //				System.out.println(tln.getTop().traverse(1, tln)); ////@@
 				if ( tln.isArraySlice() ) {
@@ -546,7 +517,8 @@ public class CppTarget implements ILanguageTarget {
 						return 0;
 					}
 					Symbol array = ((TranslationSymbolNode) tln.getLeftSibling()).getSymbol();
-					/* [:,i] -> col(i) == block(0,i,rows(),1)
+					/* FOR C++/Eigen
+					 * [:,i] -> col(i) == block(0,i,rows(),1)
 					 *     LIST[2](OPERATOR:,SUBEXPR)
 					 * [j,:] -> row(j) == block(j,0,1,cols())
 					 *     LIST[2](SUBEXPR,OPERATOR:)
@@ -565,7 +537,7 @@ public class CppTarget implements ILanguageTarget {
 					case 1:
 						programmer.writeSymbol( out, slice );
 						programmer.openParenthesis( out );
-						if (tln.getChild(0) instanceof TranslationOperatorNode) { 
+						if (tln.getChild(0) instanceof TranslationOperatorNode) {  //->programmer
 							// [:] -> block(0,0,rows(),cols()) / segment(0,size())
 							if (array.getType().equals("vector")) {
 								out.append("0, ");
@@ -578,7 +550,7 @@ public class CppTarget implements ILanguageTarget {
 								out.append(array.getName());
 								out.append(".cols() ");	 // TODO from programmer						
 							}
-						} else { 
+						} else {  //->programmer
 							// [i:m] -> block(i,0,m,1) / segment(i,m)
 							TranslationNode subscript = tln.getChild(0);							
 							if (array.getType().equals("vector")) {
@@ -612,11 +584,11 @@ public class CppTarget implements ILanguageTarget {
 						programmer.writeSymbol( out, slice );
 						programmer.openParenthesis( out );
 						emitChild(out, scope, tln.getChild(0));
-						out.append(", ");
+						out.append(", "); //->programmer
 						emitChild(out, scope, subscript.getChild(0));
-						out.append(", ");
+						out.append(", "); //->programmer
 						emitChild(out, scope, tln.getChild(1));
-						out.append(", "); 								
+						out.append(", "); 	 //->programmer							
 						emitChild(out, scope, subscript.getChild(2));
 						break;
 					}
@@ -629,7 +601,7 @@ public class CppTarget implements ILanguageTarget {
 					for (int i = 0; i < tln.getChildCount(); i++) {
 						TranslationNode subscript = tln.getChild(i);
 						if (i != 0)
-							out.append(", ");
+							out.append(", "); //->programmer
 						emitChild(out, scope, tln.getChild(i));
 					}
 					programmer.closeParenthesis( out );
@@ -641,7 +613,8 @@ public class CppTarget implements ILanguageTarget {
 		} else {
 			if (child instanceof TranslationSubexpressionNode) {
 				TranslationSubexpressionNode tsn = (TranslationSubexpressionNode) child;
-				if (tsn.getName().equals("SUBEXPRESSION::Term")) {
+				if (tsn.getName().equals("SUBEXPRESSION::Term") ||
+					tsn.getName().equals("SUBEXPRESSION::Power")) {
 					String operator = ((TranslationOperatorNode) tsn.getChild(1)).getOperator();
 					String lhsType =  ((TranslationSubexpressionNode) tsn.getChild(0)).getType();
 					if (lhsType == null)
@@ -678,12 +651,13 @@ public class CppTarget implements ILanguageTarget {
 			emitChild( out, scope, root);
 		} else {
 			if (root instanceof TranslationListNode) { // tuple
-				out.append("std::make_tuple");
+				out.append("std::make_tuple"); //->programmer OR SCRAP
 				emitBracketedList(out, scope, root.getFirstChild(), "(" );
 				return;
 			} else if (root instanceof TranslationSubexpressionNode) {
 				TranslationSubexpressionNode tsn = (TranslationSubexpressionNode) root;
-				if (tsn.getName().equals("SUBEXPRESSION::Term")) {
+				if (tsn.getName().equals("SUBEXPRESSION::Term") ||
+					tsn.getName().equals("SUBEXPRESSION::Power")) {
 					String operator = ((TranslationOperatorNode) tsn.getChild(1)).getOperator();
 					String lhsType =  ((TranslationSubexpressionNode) tsn.getChild(0)).getType();
 					if (lhsType == null)
@@ -714,9 +688,9 @@ public class CppTarget implements ILanguageTarget {
 	
 	@Override
 	public void emitNewExpression(Scope scope, String className, TranslationNode root) {
-		cppIndent.append( String.format("std::shared_ptr<%s>(new ", className));
+		cppIndent.append( String.format("std::shared_ptr<%s>(new ", className)); //->programmer
 		emitSubExpression( cppIndent, scope, root);
-		cppIndent.append(")");
+		cppIndent.append(")"); //->programmer
 	}
 
 	@Override
@@ -730,9 +704,9 @@ public class CppTarget implements ILanguageTarget {
 		}
 		emitSubExpression( out, scope, root );
 		if (inEnum) {
-			out.append(",");			
+			out.append(",");	 //->programmer		
 		} else {
-			out.append(";");
+			out.append(";");    //->programmer
 		}
 		out.append("\n");
 	}
@@ -748,6 +722,11 @@ public class CppTarget implements ILanguageTarget {
 		if (cppType.equals("enum"))
 			return;
 		String declaration = String.format("%s %s", cppType, symbol.getName() );
+//		if (symbol.getName().equals("C")) {
+//			System.out.println(symbol);
+//			System.out.println(symbol.getScope().getLevel());
+//			System.out.println(currentScope.getLevel() + " " + symbol.isStatic());
+//		}
 		switch (currentScope.getLevel()) {
 		case MODULE: 
 			cppIndent.writeln( declaration + ";");

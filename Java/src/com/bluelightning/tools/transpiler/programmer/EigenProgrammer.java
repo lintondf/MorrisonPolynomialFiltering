@@ -9,9 +9,9 @@ import java.util.Stack;
 
 import com.bluelightning.tools.transpiler.CppTarget;
 import com.bluelightning.tools.transpiler.IProgrammer;
+import com.bluelightning.tools.transpiler.Indent;
 import com.bluelightning.tools.transpiler.Scope;
 import com.bluelightning.tools.transpiler.Symbol;
-import com.bluelightning.tools.transpiler.CppTarget.Indent;
 import com.bluelightning.tools.transpiler.nodes.TranslationConstantNode;
 import com.bluelightning.tools.transpiler.nodes.TranslationNode;
 
@@ -32,12 +32,12 @@ public class EigenProgrammer implements IProgrammer {
 		Scope libraryScope = new Scope();
 		simpleRemaps.put("min", new Symbol(libraryScope, "std::min", "int")); //TODO generic
 		Map<String, Symbol> eigenNames = new HashMap<>();
-  		eigenNames.put("array",  new Symbol(libraryScope, "identity", "array") );
-		eigenNames.put("vector", new Symbol(libraryScope, "???vector_eye???", "vector") );
+  		eigenNames.put("array",  new Symbol(libraryScope, "identity", "array") ); //Eigen
+		eigenNames.put("vector", new Symbol(libraryScope, "???vector_eye???", "vector") ); //Eigen
 		functionRewrites.put("eye", eigenNames);
 		eigenNames = new HashMap<>();
-		eigenNames.put("array",  new Symbol(libraryScope, "ArrayXXd::Zero", "array"));
-		eigenNames.put("vector", new Symbol(libraryScope, "ArrayXd::Zero", "vector"));
+		eigenNames.put("array",  new Symbol(libraryScope, "ArrayXXd::Zero", "array")); //Eigen
+		eigenNames.put("vector", new Symbol(libraryScope, "ArrayXd::Zero", "vector")); //Eigen
 		functionRewrites.put("zeros", eigenNames);
 	}
 	
@@ -46,14 +46,14 @@ public class EigenProgrammer implements IProgrammer {
 	Stack<String> parens = new Stack<>();
 	Map<String, String> typeRemap = new HashMap<>();
 	
-	// index by function-name yields map indexed by type yields boost name
+	// index by function-name yields map indexed by type yields Eigen name
 	protected Map<String, Map<String,Symbol>> functionRewrites = new HashMap<>();
 	protected Map<String, Symbol> simpleRemaps = new HashMap<>();
 
 	/* (non-Javadoc)
 	 * @see com.bluelightning.tools.transpiler.IProgrammer#remapFunctionName(java.lang.String, java.lang.String)
 	 */
-	@Override
+	@Override //General
 	public Symbol remapFunctionName( String functionName, String type ) {
 		Symbol simple = simpleRemaps.get(functionName);
 		if (simple != null)
@@ -70,7 +70,7 @@ public class EigenProgrammer implements IProgrammer {
 	/* (non-Javadoc)
 	 * @see com.bluelightning.tools.transpiler.IProgrammer#remapType(java.lang.String)
 	 */
-	@Override
+	@Override //General
 	public String remapType( String type ) {
 		if (type.startsWith("Tuple[")) {
 			type = type.substring(6, type.length()-1).trim().replaceAll(" +", "");
@@ -92,14 +92,14 @@ public class EigenProgrammer implements IProgrammer {
 	/* (non-Javadoc)
 	 * @see com.bluelightning.tools.transpiler.IProgrammer#startExpression(com.bluelightning.tools.transpiler.CppBoostTarget.Indent)
 	 */
-	@Override
+	@Override //General
 	public void startExpression( Indent out ) {
 	}
 	
 	/* (non-Javadoc)
 	 * @see com.bluelightning.tools.transpiler.IProgrammer#writeAssignmentTarget(com.bluelightning.tools.transpiler.CppBoostTarget.Indent, com.bluelightning.tools.transpiler.Symbol)
 	 */
-	@Override
+	@Override //General
 	public void writeAssignmentTarget( Indent out, Symbol symbol) {
 		out.append(symbol.getName());
 		out.append(" = ");
@@ -108,7 +108,7 @@ public class EigenProgrammer implements IProgrammer {
 	/* (non-Javadoc)
 	 * @see com.bluelightning.tools.transpiler.IProgrammer#finishExpression(com.bluelightning.tools.transpiler.CppBoostTarget.Indent)
 	 */
-	@Override
+	@Override //General
 	public void finishExpression( Indent out ) {
 		while (! parens.isEmpty() ) {
 			out.append( parens.pop() );
@@ -118,7 +118,7 @@ public class EigenProgrammer implements IProgrammer {
 	/* (non-Javadoc)
 	 * @see com.bluelightning.tools.transpiler.IProgrammer#writeSymbol(com.bluelightning.tools.transpiler.CppBoostTarget.Indent, com.bluelightning.tools.transpiler.Symbol)
 	 */
-	@Override
+	@Override //General
 	public void writeSymbol(Indent out, Symbol symbol) {
 		if (symbol.getName().equals("self")) {
 			out.append("(*this)");  
@@ -128,18 +128,20 @@ public class EigenProgrammer implements IProgrammer {
 		}
 	}
 
-	@Override
+	@Override //General
 	public boolean isSpecialTerm(String operator, String lhsType, String rhsType) {
-//		System.out.printf("isSpecial (%s) (%s) (%s)\n", operator, lhsType, rhsType);
+		//System.out.printf("isSpecial (%s) (%s) (%s)\n", operator, lhsType, rhsType);
 		if (lhsType.equals("array") || lhsType.equals("vector")) {
 			if (rhsType.equals("array") || rhsType.equals("vector")) {
 				return true;
 			}
 		}
+		if (operator.equals("**"))
+			return true;
 		return false;
 	}
 
-	@Override
+	@Override //Eigen?
 	public void writeSpecialTerm(Indent out, String operator, Indent lhs, Indent rhs) {
 		switch (operator) {
 		case "*":
@@ -163,6 +165,13 @@ public class EigenProgrammer implements IProgrammer {
 			out.append(rhs.out.toString());
 			out.append(")");
 			break;
+		case "**":
+			out.append("pow(");
+			out.append(lhs.out.toString());
+			out.append(", ");
+			out.append(rhs.out.toString());
+			out.append(")");
+			break;
 		case "@":
 			out.append(lhs.out.toString());
 			out.append(" * ");
@@ -181,7 +190,7 @@ public class EigenProgrammer implements IProgrammer {
 	/* (non-Javadoc)
 	 * @see com.bluelightning.tools.transpiler.IProgrammer#writeOperator(com.bluelightning.tools.transpiler.CppBoostTarget.Indent, java.lang.String)
 	 */
-	@Override
+	@Override //General
 	public void writeOperator(Indent out, String operator) {
 		switch (operator) {
 		case ".":
@@ -214,7 +223,7 @@ public class EigenProgrammer implements IProgrammer {
 	/* (non-Javadoc)
 	 * @see com.bluelightning.tools.transpiler.IProgrammer#openParenthesis(com.bluelightning.tools.transpiler.CppBoostTarget.Indent)
 	 */
-	@Override
+	@Override //General
 	public void openParenthesis(Indent out) {
 		out.append("(");
 	}
@@ -222,7 +231,7 @@ public class EigenProgrammer implements IProgrammer {
 	/* (non-Javadoc)
 	 * @see com.bluelightning.tools.transpiler.IProgrammer#closeParenthesis(com.bluelightning.tools.transpiler.CppBoostTarget.Indent)
 	 */
-	@Override
+	@Override //General
 	public void closeParenthesis(Indent out) {
 		out.append(")");
 	}
@@ -230,15 +239,15 @@ public class EigenProgrammer implements IProgrammer {
 	/* (non-Javadoc)
 	 * @see com.bluelightning.tools.transpiler.IProgrammer#openBracket(com.bluelightning.tools.transpiler.CppBoostTarget.Indent)
 	 */
-	@Override
+	@Override //General
 	public void openBracket(Indent out) {
-		out.append("(");  // boost uses () for array references
+		out.append("(");  // C++ libraries uses () for array references
 	} 
 
 	/* (non-Javadoc)
 	 * @see com.bluelightning.tools.transpiler.IProgrammer#closeBracket(com.bluelightning.tools.transpiler.CppBoostTarget.Indent)
 	 */
-	@Override
+	@Override //General
 	public void closeBracket(Indent out) {
 		out.append(")");
 	}
@@ -246,11 +255,14 @@ public class EigenProgrammer implements IProgrammer {
 	/* (non-Javadoc)
 	 * @see com.bluelightning.tools.transpiler.IProgrammer#writeConstant(com.bluelightning.tools.transpiler.CppBoostTarget.Indent, com.bluelightning.tools.transpiler.TranslationConstantNode)
 	 */
-	@Override
+	@Override //General
 	public void writeConstant(Indent out, TranslationConstantNode node ) {
 		switch (node.getKind()) {
 		case INTEGER:
 			out.append(node.getValue());
+			if (forceFloats) {
+				out.append(".");
+			}
 			break;
 		case FLOAT:
 			out.append(node.getValue());
@@ -268,12 +280,12 @@ public class EigenProgrammer implements IProgrammer {
 		}
 	}
 
-	@Override
+	@Override //Eigen
 	public String getInclude() {
 		return "#include <polynomialfiltering/PolynomialFilteringEigen.hpp>";
 	}
 
-	@Override
+	@Override //Eigen
 	public String[] getUsings() {
 		String[] usingNamespaces = {
 				"using namespace Eigen;",	
@@ -281,6 +293,7 @@ public class EigenProgrammer implements IProgrammer {
 		return usingNamespaces;
 	}
 	
+	 //Eigen
 	static Symbol rowDimension = new Symbol( new Scope(), "rows", "int");
 	static Symbol colDimension = new Symbol( new Scope(), "cols", "int");
 	static Symbol vectorDimension = new Symbol( new Scope(), "size", "int");
@@ -290,7 +303,7 @@ public class EigenProgrammer implements IProgrammer {
 	static Symbol arrayBlock = new Symbol( new Scope(), "block", "array");
 	
 
-	@Override
+	@Override //Eigen
 	public Symbol getDimensionSymbol(String type, String value) {
 		if (type.equals("vector"))
 			return vectorDimension;
@@ -303,7 +316,7 @@ public class EigenProgrammer implements IProgrammer {
 		return null;
 	}
 
-	@Override
+	@Override //Eigen
 	public Symbol getRowColSymbol(String value) {
 		switch (value) {
 		case "0":
@@ -314,7 +327,7 @@ public class EigenProgrammer implements IProgrammer {
 		return null;
 	}
 
-	@Override
+	@Override //Eigen
 	public Symbol getSliceSymbol(String type) {
 		switch (type) {
 		case "vector":
@@ -323,6 +336,12 @@ public class EigenProgrammer implements IProgrammer {
 			return arrayBlock;
 		}
 		return null;
+	}
+
+	private boolean forceFloats = false;
+	@Override
+	public void forceFloatConstants(boolean tf) {
+		forceFloats = tf;
 	}
 
 }
