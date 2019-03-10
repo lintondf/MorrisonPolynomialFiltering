@@ -22,9 +22,12 @@ from math import sin
 from runstats import Statistics
 from gevent.libev.corecext import stat
 
+import matplotlib.pyplot as plt
+import matplotlib.dates as mdates
+
 class Test(unittest.TestCase):
 
-    Y0 = array([1e4, 1e3, 1e2, 1e1, 1e0, 1e-1]);
+    Y0 = array([1e4, 1e-2, 1e-4, 1e-6, 1e-8, 1e-10]);
 
     def setUp(self):
         pass
@@ -43,8 +46,8 @@ class Test(unittest.TestCase):
             Yf = filter.getState(times[i][0])
             assert_allclose( Yf, truth[i,0:order+1], atol=0, rtol=1e-6 )
             
-    def empDriver(self, filter : EMPBase, N : int ):
-        (times, truth, observations, noise) = generateTestData(filter.order, N, 0.0, self.Y0[0:filter.order+1], filter.tau, sigma=1.0)
+    def empDriver(self, filter : EMPBase, N : int, dataOrder : int ):
+        (times, truth, observations, noise) = generateTestData(dataOrder, N, 0.0, self.Y0[0:filter.order+1], filter.tau, sigma=1.0)
         
         data = zeros([N, 2]);
         data[:,0] = times[:,0];
@@ -60,28 +63,14 @@ class Test(unittest.TestCase):
             e = data[i,1] - Zstar[0]
             filter.update(data[i,0], Zstar, e)
             actual[i,:] = filter.getState(data[i,0])
-            V = filter.getCovariance(data[i,0]);
+            V = filter.getCovariance(1);
             if (V[0,0] != 0) :
-                diagV[i,:] = sqrt(diag(V));       
-
-        if (False) :
-            #V = filter.getCovariance(data[N-1,0]);
-            t = data[N-1,0]
-            print(diag(filter._VRF()))
-            print(t, filter.t, filter.tau, filter._normalizeDeltaTime((filter.t+filter.tau)-t))
-            if (t == (filter.t + filter.tau)) :
-                return filter._VRF();
-            else :
-                '''@F : array'''
-                # the VRF equations used are for 1-step predictors
-                F = filter.stateTransitionMatrix(filter.order+1, filter._normalizeDeltaTime((filter.t+filter.tau)-t)); # 
-                print(A2S(F))
-                V = F.T @ filter._VRF() @ F;
-            print(diag(V))
+                diagV[i,:] = (diag(V));       
         return (actual, truth, diagV, V);
     
+    
     def empResidualsDriver(self, filter : EMPBase, N : int):
-        (actual, truth, diagV, V) = self.empDriver(filter, N)
+        (actual, truth, diagV, V) = self.empDriver(filter, N, filter.order)
         r = actual - truth;
         r = r[5:,:] / diagV[5:,:];
         return concatenate([mean(r,axis=0), std(r,axis=0)], axis=0);
@@ -92,29 +81,66 @@ class Test(unittest.TestCase):
 
     def xtest_EMP0(self):
         emp = EMP0(0.1)
-        self.empDriver(emp, N=101 )
+        self.empDriver(emp, N=101, dataOrder=emp.order )
             
     def xtest_EMP1(self):
         emp = EMP1(0.1)
-        self.empDriver(emp, N=101 )
+        self.empDriver(emp, N=101, dataOrder=emp.order )
         
     def xtest_EMP2(self):
         emp = EMP2(0.5)
-        self.empDriver(emp, N=101 )
+        self.empDriver(emp, N=101, dataOrder=emp.order )
  
     def xtest_EMP3(self):
         emp = EMP3(1.5)
-        self.empDriver(emp, N=101 )
+        self.empDriver(emp, N=101, dataOrder=emp.order )
 
     def xtest_EMP4(self):
         emp = EMP4(1.5)
-        self.empDriver(emp, N=101 )
+        self.empDriver(emp, N=101, dataOrder=emp.order )
  
+    def test_EMP5(self):
+        N = 150;
+        emp = EMP5(1e2)
+        dataOrder = 2;
+        (times, truth, observations, noise) = generateTestData(dataOrder, N, 0.0, self.Y0[0:emp.order+1], emp.tau, sigma=10)
+        
+        data = zeros([N, 2]);
+        data[:,0] = times[:,0];
+        data[:,1] = observations[:,0];
+        
+        actual = zeros([N, emp.order+1]);
+        emp.start(0.0, array([0,0,0,0,0,0]))
+        for i in range(0,N) :
+            Zstar = emp.predict(data[i,0])
+            e = data[i,1] - Zstar[0]
+            emp.update(data[i,0], Zstar, e)
+            actual[i,:] = emp.getState(data[i,0])
+
+        f0 = plt.figure(figsize=(10, 6))
+        ax = plt.subplot(1, 1, 1)
+        ax.plot(times, truth[:,0], 'r-', times, observations, 'b.', times, actual[:,0], 'k-')
+        f1 = plt.figure(figsize=(10, 6))
+        A = (f1.add_subplot(2, 2, 1), f1.add_subplot(2, 2, 2), f1.add_subplot(2, 2, 3), f1.add_subplot(2, 2, 4));
+        for i in range(0,4) :
+            A[i].plot(times[15:], truth[15:,1+i], 'r-', times[15:], actual[15:,1+i], 'k-')
+        plt.show()
+        
     def xtest_EMP5(self):
-        emp = EMP5(1.5)
-        self.empDriver(emp, N=1001 )
+        K = 40;
+        for tau in [1e-3, 1e-2, 1e-1, 1, 1e1, 1e2] :
+            print('tau', tau)
+            emp = EMP5(tau)
+            (actual, truth, diagV, V) = self.empDriver(emp, N=1001, dataOrder=emp.order )
+            residuals = actual[K:,:] - truth[K:,0:emp.order+1];
+            print( 'mean', A2S( mean(residuals, axis=0) ) )
+#             print('actual covariance diag')
+#             C = cov(residuals, rowvar=False);
+#             print( A2S( diag(C) ) )
+#             print('predicted covariance diag')
+#             print( A2S( diag(V) ) )
  
-    def test_EMPVRF(self):
+    def xtest_EMPVRF(self):
         for tau in [1e-3] : #[1e-3, 1e-2, 1e-1, 1, 1e1, 1e2] :
             M = 10000;  # number of runs
             N = 50;    # number of observations
@@ -122,7 +148,7 @@ class Test(unittest.TestCase):
                 residuals = zeros([0, (order+1)]) # final sample residuals for all runs
                 for i in range(0,M) :
                     emp = makeEMP(order, tau)
-                    (actual, truth, diagV, V) = self.empDriver(emp, N=N );
+                    (actual, truth, diagV, V) = self.empDriver(emp, N=N, dataOrder=filter.order );
                     r = actual - truth;
                     residuals = concatenate([residuals, r[N-1:N,:]], axis=0 );
             print('residuals %d' % order, residuals.shape, tau);

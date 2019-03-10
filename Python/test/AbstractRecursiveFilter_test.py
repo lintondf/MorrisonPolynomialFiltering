@@ -30,6 +30,9 @@ class AbstractRecursiveFilterMock(AbstractRecursiveFilter):
             
     def _gamma(self, nOrT : float) -> vector:
         return ones(self.order+1);
+    
+    def _VRF(self):
+        return zeros([self.order+1, self.order+1])
 
 class Test(unittest.TestCase):
 
@@ -100,6 +103,23 @@ class Test(unittest.TestCase):
             actual = concatenate([actual, D], axis=0);
             assert_allclose( actual, expected, atol=1e-14 )
             writeTestVariable(group, 'expected', expected);
+        
+#     def testPrediction(self):
+#         for order in range(5,5+1) :
+#             for tau in [1e-1] :
+#                 for i in range(0,5+1) :
+#                     print(order, tau)
+#                     f = AbstractRecursiveFilterMock(order, tau);
+#                     X = zeros([5+1])
+#                     X[0] = 1
+#                     X[i] = 1
+#                     print(A2S(X))
+#                     f.start(0, X)
+#                     print(A2S(f.Z))
+#                     Zs = f.predict(tau);
+#                     print(A2S(Zs))
+#                     Xs = f._denormalizeState(Zs)
+#                     print(A2S(Xs))
         
     def testStateManagement(self) :
         """

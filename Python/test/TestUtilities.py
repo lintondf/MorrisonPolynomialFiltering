@@ -5,10 +5,12 @@ Created on Feb 15, 2019
 '''
 
 import time
+from typing import Tuple;
 from netCDF4 import Dataset
 from math import sin, cos
 import numpy as np
 from numpy import array, array2string, diag, eye, ones, zeros, sqrt
+from numpy import array as vector
 from numpy.random import randn
 from scipy.linalg.matfuncs import expm
 from scipy.stats import chi2
@@ -62,7 +64,7 @@ def generateTestData(order, N, t0, Y0, dt, bias=0.0, sigma=1.0):
         Y = Y0
         for i in range(0,N) :
             times[i] = t
-            truth[i,:] = Y[:]
+            truth[i,0:len(Y)] = Y[:]
             observations[i] = Y[0] + noise[i]
             Y = S @ Y
             t = t+dt
@@ -91,6 +93,54 @@ def isChi2Valid( varSample, varPopulation, N, p=0.05 ) :
 def A2S( A : array, format="%10.3g" ) -> str:
     return array2string(A, formatter={'float_kind':lambda y: format % y}, max_line_width=256)
 
+def correlationToCovariance( R : array, d : vector ) -> array:
+    D = diag( d );
+    return D @ R @ D;
+
+def covarianceToCorrelation( C : array ) -> Tuple[array, vector]:
+    d = sqrt(diag(C));
+    D = diag( 1. / d )
+    return (D @ C @ D, d); 
+
+def nearPSD(A,epsilon=0):
+    n = A.shape[0]
+    eigval, eigvec = np.linalg.eig(A)
+    val = np.matrix(np.maximum(eigval,epsilon))
+    vec = np.matrix(eigvec)
+    T = 1/(np.multiply(vec,vec) * val.T)
+    T = np.matrix(np.sqrt(np.diag(np.array(T).reshape((n)) )))
+    B = T * vec * np.diag(np.array(np.sqrt(val)).reshape((n)))
+    out = B*B.T
+    return(out)
+
+def _getAplus(A):
+    eigval, eigvec = np.linalg.eig(A)
+    Q = np.matrix(eigvec)
+    xdiag = np.matrix(np.diag(np.maximum(eigval, 0)))
+    return Q*xdiag*Q.T
+
+def _getPs(A, W=None):
+    W05 = np.matrix(W**.5)
+    return  W05.I * _getAplus(W05 * A * W05) * W05.I
+
+def _getPu(A, W=None):
+    Aret = np.array(A.copy())
+    Aret[W > 0] = np.array(W)[W > 0]
+    return np.matrix(Aret)
+
+def nearPD(A, nit=10):
+    n = A.shape[0]
+    W = np.identity(n) 
+# W is the matrix used for the norm (assumed to be Identity matrix here)
+# the algorithm should work for any diagonal W
+    deltaS = 0
+    Yk = A.copy()
+    for k in range(nit):
+        Rk = Yk - deltaS
+        Xk = _getPs(Rk, W=W)
+        deltaS = Xk - Rk
+        Yk = _getPu(Xk, W=W)
+    return Yk
 def box_m(n_1,C0,n_2,C1):
 
     global Xp
@@ -138,7 +188,7 @@ def box_m(n_1,C0,n_2,C1):
     print('-------------------')
     print('F = {}'.format(F))
     
-def scaleVRF( V : array, u : float, theta : float ) -> array:
+def scaleVRFFMP( V : array, u : float, theta : float ) -> array:
     t = 1-theta;
     S = zeros(V.shape);
     S[0,0] = t;
@@ -149,11 +199,20 @@ def scaleVRF( V : array, u : float, theta : float ) -> array:
             S[i,j] = S[i,j-1] * t / u;
     return S * V;
         
+def scaleVRFEMP( V : array, t : float, n : float ) -> array:
+    '''@S : array'''
+    '''@i : int'''
+    '''@j : int'''
+    S = zeros([V.shape[0], V.shape[1]]);
+    S[0,0] = 1.0/n;
+    for i in range(1,S.shape[0]) :
+        S[i,0] = S[i-1,0] / (t*n);
+    for i in range(0,S.shape[0]) :
+        for j in range(1,S.shape[1]) :
+            S[i,j] = S[i,j-1] / (t*n);
+    return S * V;
+        
 if __name__ == '__main__':
     pass
-    V = array([[2.0625,1.6875,0.5],[1.6875,    1.75,    0.5625],[0.5,    0.5625,    0.1875]]);
-
-    print(V)
-    v = scaleVRF(V, 1e-3, 0.99564)
-    print(1.5*sqrt(diag(v)))
+        
     

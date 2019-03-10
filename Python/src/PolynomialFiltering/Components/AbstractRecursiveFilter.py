@@ -7,13 +7,13 @@ Created on Feb 13, 2019
 from abc import abstractmethod
 from typing import Tuple
 
-from numpy import array, diag, ones, zeros, isscalar, transpose
+from numpy import array, diag, eye, ones, zeros, isscalar, transpose, array_equal
 from numpy import array as vector;
 
 from PolynomialFiltering.Components.IRecursiveFilter import IRecursiveFilter
 from PolynomialFiltering.Main import AbstractFilter, FilterStatus
 
-
+from TestUtilities import nearPD, A2S
     
 class AbstractRecursiveFilter(IRecursiveFilter):
     '''
@@ -157,16 +157,34 @@ class AbstractRecursiveFilter(IRecursiveFilter):
             Z = F @ self.Z
             return self._denormalizeState(Z)
 
-    def getCovariance(self, t : float, R : float = 1.0) -> array:
+    def getCovariance(self, R : float = 1.0) -> array:
         '''@ V : vector'''
-        if (t == (self.t + self.tau)) :
-            return self._VRF();
-        else :
-            '''@F : array'''
-            # the VRF equations used are for 1-step predictors
-            F = self.stateTransitionMatrix(self.order+1, self._normalizeDeltaTime(t-(self.t+self.tau))); # (self.t+self.tau)-t
-            V = transpose(F) @ self._VRF() @ F;
+        V = self._VRF();
+        if (V[0,0] == 0) :
             return V;
+        return V * R;
+#         if (not array_equal(V.T, V)) :
+#             raise LinAlgError("Matrix is not symmetric")
+#         if (t == (self.t + self.tau)) :
+#             return V;
+#         else :
+#             '''@F : array'''
+#             # the VRF equations used are for 1-step predictors
+#             F = self.stateTransitionMatrix(self.order+1, self._normalizeDeltaTime(t-(self.t+self.tau))); # (self.t+self.tau)-t
+#             V = transpose(F) @ V @ F;
+#             try :
+#                 cholesky(V)
+#             except LinAlgError:
+#                 print('V0=')
+#                 print(A2S(self._VRF()))
+#                 print('F=')
+#                 print(A2S(F))
+#                 print('V=')
+#                 print(A2S(V))
+#                 print('V*=')
+#                 print(A2S(nearPD(V)))
+#                 exit(0)
+#             return V;
 
     @abstractmethod   
     def _gammaParameter(self, t : float, dtau : float) -> float:
