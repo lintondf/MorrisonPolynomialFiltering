@@ -25,7 +25,7 @@ class FixedMemoryFilter(AbstractFilter) :
     '''@tRing :vector'''
     '''@yRing :vector'''
     
-    def __init__(self, order : int, memorySize : int =51 ) -> None:
+    def __init__(self, order : int, memorySize : int = 51 ) -> None:
         super().__init__();  # TODO name
         self.order = order;
         if (order < 0 or order > 5) :
@@ -69,7 +69,7 @@ class FixedMemoryFilter(AbstractFilter) :
         self.yRing[ self.n % self.L ] = y;
         self.n += 1;    
     
-    def getVRF(self) -> array:
+    def getCovariance(self) -> array:
         '''@dt : vector'''
         '''@Tn : array'''
         dt = self.tRing - self.t;

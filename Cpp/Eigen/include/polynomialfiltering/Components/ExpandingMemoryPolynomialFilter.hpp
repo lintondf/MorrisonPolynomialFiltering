@@ -25,7 +25,6 @@ namespace PolynomialFiltering {
                 virtual double nSwitch(const double theta) = 0;
             protected:
                 double _gammaParameter(const double t, const double dtau);
-                static RealMatrix _scaleVRF(const RealMatrix V, const double t, const double n);
                 virtual RealMatrix _VRF() = 0;
         }; // class EMPBase 
 

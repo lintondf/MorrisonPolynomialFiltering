@@ -40,8 +40,8 @@ class AbstractFilter(ABC):
     @classmethod            
     def stateTransitionMatrix(self, N : int, dt : float) -> array:
         '''
-        Return a Pade' expanded status transition matrix of order m [RMKdR(7)]
-            P(d)_i,j = (d^(j-i))/(j-i)! where 0 <= i <= j <= m elsewhere zero
+        Return a Pade' expanded status transition matrix of order N [RMKdR(7)]
+            P(d)_i,j = (d^(j-i))/(j-i)! where 0 <= i <= j <= N elsewhere zero
         
         :param N: return matrix is (N,N)
         :param dt: time step
@@ -88,8 +88,6 @@ class AbstractFilter(ABC):
     def getState(self, t : float) -> vector:
         pass
     
-#     def getState(self) -> array:
-#         return self.getState( self.getTime() );
 
 class ManagedFilterBase(AbstractFilter):
     def __init__(self):

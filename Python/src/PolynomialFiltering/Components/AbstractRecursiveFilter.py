@@ -100,9 +100,12 @@ class AbstractRecursiveFilter(IRecursiveFilter):
         
         '''@ dt : float'''
         '''@ dtau : float'''
+        '''@ F : array'''
         dt = t - self.t
         dtau = self._normalizeDeltaTime(dt)
-        Zstar = self.stateTransitionMatrix(self.order+1, dtau) @ self.Z
+        F = self.stateTransitionMatrix(self.order+1, dtau)
+        Zstar = F @ self.Z;
+#         Zstar = self.stateTransitionMatrix(self.order+1, dtau) @ self.Z
         return Zstar;
     
     def update(self, t : float, Zstar : vector, e : float) -> None:
@@ -157,34 +160,19 @@ class AbstractRecursiveFilter(IRecursiveFilter):
             Z = F @ self.Z
             return self._denormalizeState(Z)
 
-    def getCovariance(self, R : float = 1.0) -> array:
+    def getCovariance(self, t : float, R : float = 1.0) -> array:
         '''@ V : vector'''
         V = self._VRF();
         if (V[0,0] == 0) :
             return V;
-        return V * R;
-#         if (not array_equal(V.T, V)) :
-#             raise LinAlgError("Matrix is not symmetric")
-#         if (t == (self.t + self.tau)) :
-#             return V;
-#         else :
-#             '''@F : array'''
-#             # the VRF equations used are for 1-step predictors
-#             F = self.stateTransitionMatrix(self.order+1, self._normalizeDeltaTime(t-(self.t+self.tau))); # (self.t+self.tau)-t
-#             V = transpose(F) @ V @ F;
-#             try :
-#                 cholesky(V)
-#             except LinAlgError:
-#                 print('V0=')
-#                 print(A2S(self._VRF()))
-#                 print('F=')
-#                 print(A2S(F))
-#                 print('V=')
-#                 print(A2S(V))
-#                 print('V*=')
-#                 print(A2S(nearPD(V)))
-#                 exit(0)
-#             return V;
+        if (t == (self.t + self.tau)) :
+            return V * R;
+        else :
+            '''@F : array'''
+            # the VRF equations used are for 1-step predictors
+            F = self.stateTransitionMatrix(self.order+1, self._normalizeDeltaTime(t-(self.t+self.tau))); # (self.t+self.tau)-t
+            V = transpose(F) @ V @ F;
+            return V * R;
 
     @abstractmethod   
     def _gammaParameter(self, t : float, dtau : float) -> float:

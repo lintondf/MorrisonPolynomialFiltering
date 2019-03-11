@@ -61,10 +61,13 @@ def generateTestData(order, N, t0, Y0, dt, bias=0.0, sigma=1.0):
         times = zeros([N,1])
         S = stateTransitionMatrix(order+1, dt)
         t = t0
-        Y = Y0
+        Y = zeros([order+1]);
+        m = min( order+1, len(Y0) )
+        Y[0:m] = Y0[0:m];
         for i in range(0,N) :
             times[i] = t
-            truth[i,0:len(Y)] = Y[:]
+            m = min( truth.shape[1], len(Y) )
+            truth[i,0:m] = Y[0:m]
             observations[i] = Y[0] + noise[i]
             Y = S @ Y
             t = t+dt

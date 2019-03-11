@@ -24,7 +24,7 @@ namespace PolynomialFiltering {
             }
 
             AbstractRecursiveFilter::AbstractRecursiveFilter (const long order, const double tau) {
-                if (order < 0 || order > 5) {
+				if (order < 0 || order > 5) {
                     throw ValueError("Polynomial orders < 0 or > 5 are not supported");
                 }
                 this->n = 0;
@@ -77,9 +77,11 @@ namespace PolynomialFiltering {
                 RealVector Zstar;
                 double dt;
                 double dtau;
+                RealMatrix F;
                 dt = t - this->t;
                 dtau = this->_normalizeDeltaTime(dt);
-                Zstar = this->stateTransitionMatrix(this->order + 1, dtau) * this->Z;
+                F = this->stateTransitionMatrix(this->order + 1, dtau);
+                Zstar = F * this->Z;
                 return Zstar;
             }
 
@@ -126,13 +128,20 @@ namespace PolynomialFiltering {
                 }
             }
 
-            RealMatrix AbstractRecursiveFilter::getCovariance (const double R) {
+            RealMatrix AbstractRecursiveFilter::getCovariance (const double t, const double R) {
                 RealVector V;
                 V = this->_VRF();
                 if (V(0, 0) == 0) {
                     return V;
                 }
-                return V * R;
+                if (t == (this->t + this->tau)) {
+                    return V * R;
+                } else {
+                    RealMatrix F;
+                    F = this->stateTransitionMatrix(this->order + 1, this->_normalizeDeltaTime(t - (this->t + this->tau)));
+                    V = transpose(F) * V;
+                    return V * R;
+                }
             }
 
     }; // namespace Components

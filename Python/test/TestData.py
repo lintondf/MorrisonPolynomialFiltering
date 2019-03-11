@@ -6,7 +6,7 @@ Created on Feb 1, 2019
 import csv
 
 from numpy import zeros, array, concatenate, arange, ones, diag, sqrt, transpose,\
-    allclose
+    allclose, mean, std
 from numpy import array as vector;
 from numpy.linalg import cholesky, LinAlgError
 from scipy.interpolate import PchipInterpolator
@@ -170,5 +170,19 @@ if __name__ == '__main__':
 #     C = array([[36, 630, 6720, 45360, 181440, 332640],[630, 14700, 176400, 1270080, 5292000, 9979200],[6720, 176400, 2257920, 16934400, 72576000, 139708800],[45360, 1270080, 16934400, 130636800, 571536000, 1117670400],[181440, 5292000, 72576000, 571536000, 2540160000, 5029516800],[332640, 9979200, 139708800, 1117670400, 5029516800, 10059033600]]);
 #     K = baseCovarianceToCorrelation(C);
     
-    VRF2(2)
+#     VRF2(2)
+
+#     C = array([[36, 630, 6720, 45360, 181440, 332640],[630, 14700, 176400, 1270080, 5292000, 9979200],[6720, 176400, 2257920, 16934400, 72576000, 139708800],[45360, 1270080, 16934400, 130636800, 571536000, 1117670400],[181440, 5292000, 72576000, 571536000, 2540160000, 5029516800],[332640, 9979200, 139708800, 1117670400, 5029516800, 10059033600]]);
+#     print(A2S( scaleVRFEMP( C, 1e-3, 15000-500)) )
+#     
+#     A = array([10])
+#     print(cholesky(A))
+    k = -0.5 # /sqrt(3.0)
+    n = 1.0
+    w0 = k/(n+k)
+    wi = 1.0/(2*(n+k))
+    s = sqrt(n+k)
+    
+    A = wi * array([-s, +s])
+    print((A @ A.T))
         

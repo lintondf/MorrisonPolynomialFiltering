@@ -27,7 +27,7 @@ namespace PolynomialFiltering {
                 double getTime();
                 RealVector getState(const double t);
                 void add(const double t, const double y, const std::string observationId="");
-                RealMatrix getVRF();
+                RealMatrix getCovariance();
             protected:
                 long order;
                 long L;

@@ -15,25 +15,10 @@ namespace PolynomialFiltering {
         using namespace Eigen;
         
             EMPBase::EMPBase (const long order, const double tau) : AbstractRecursiveFilter(order,tau) {
-            }
+			}
 
             double EMPBase::_gammaParameter (const double t, const double dtau) {
                 return this->_normalizeTime(t);
-            }
-
-            RealMatrix EMPBase::_scaleVRF (const RealMatrix V, const double t, const double n) {
-                RealMatrix S;
-                S = ArrayXXd::Zero(V.rows(), V.cols());
-                S(0, 0) = 1.0 / n;
-                for (long i = 1; i < S.rows(); i++) {
-                    S(i, 0) = S(i - 1, 0) / (t * n);
-                }
-                for (long i = 0; i < S.rows(); i++) {
-                    for (long j = 1; j < S.cols(); j++) {
-                        S(i, j) = S(i, j - 1) / (t * n);
-                    }
-                }
-                return arrayTimes(S, V);
             }
 
             EMP0::EMP0 (const double tau) : EMPBase(0,tau) {
@@ -71,18 +56,20 @@ namespace PolynomialFiltering {
             RealMatrix EMP1::_VRF () {
                 long n;
                 double u;
-                RealMatrix V;
+                RealMatrix D;
+                RealMatrix K;
+                RealVector d;
                 n = this->n;
                 if (n < this->order) {
                     return ArrayXXd::Zero(this->order + 1, this->order + 1);
                 }
                 u = this->tau;
-                RealMatrix C;
-                C = Map<RowVectorXd>( new double[4] {(4., 6.), (6., 12.)}, 4);
-                V = this->_scaleVRF(C, u, n);
-                V(0, 0) = 2 * (2 * n + 3) / ((n + 1) * n);
-                V(1, 1) = 12 / (pow(u, 2) * (n + 2) * (n + 1) * n);
-                return V;
+                K = Map<RowVectorXd>( new double[4] {(1., 0.866025403784), (0.866025403784, 1.)}, 4);
+                d = ArrayXd::Zero(this->order + 1);
+                d(0) = 2 * (2 * n + 3) / ((n + 1) * n);
+                d(1) = 12 / (pow(u, 2) * (n + 2) * (n + 1) * n);
+                D = diag(sqrt(d));
+                return D * K;
             }
 
             EMP2::EMP2 (const double tau) : EMPBase(2,tau) {
@@ -103,19 +90,21 @@ namespace PolynomialFiltering {
             RealMatrix EMP2::_VRF () {
                 long n;
                 double u;
-                RealMatrix V;
+                RealMatrix D;
+                RealMatrix K;
+                RealVector d;
                 n = this->n;
                 if (n < this->order) {
                     return ArrayXXd::Zero(this->order + 1, this->order + 1);
                 }
                 u = this->tau;
-                RealMatrix C;
-                C = Map<RowVectorXd>( new double[9] {(9., 36., 60.), (36., 192., 360.), (60., 360., 720.)}, 9);
-                V = this->_scaleVRF(C, u, n);
-                V(0, 0) = 3 * (3 * pow(n, 2) + 9 * n + 8) / ((n + 1) * n * (n - 1));
-                V(1, 1) = 12 * (16 * pow(n, 2) + 62 * n + 57) / (pow(u, 2) * (n + 3) * (n + 2) * (n + 1) * n * (n - 1));
-                V(2, 2) = 720 / (pow(u, 4) * (n + 3) * (n + 2) * (n + 1) * n * (n - 1));
-                return V;
+                K = Map<RowVectorXd>( new double[9] {(1., 0.866025403784, 0.7453559925), (0.866025403784, 1., 0.968245836552), (0.7453559925, 0.968245836552, 1.)}, 9);
+                d = ArrayXd::Zero(this->order + 1);
+                d(0) = 3 * (3 * pow(n, 2) + 9 * n + 8) / ((n + 1) * n * (n - 1));
+                d(1) = 12 * (16 * pow(n, 2) + 62 * n + 57) / (pow(u, 2) * (n + 3) * (n + 2) * (n + 1) * n * (n - 1));
+                d(2) = 720 / (pow(u, 4) * (n + 3) * (n + 2) * (n + 1) * n * (n - 1));
+                D = diag(sqrt(d));
+                return D * K;
             }
 
             EMP3::EMP3 (const double tau) : EMPBase(3,tau) {
@@ -138,20 +127,23 @@ namespace PolynomialFiltering {
             RealMatrix EMP3::_VRF () {
                 long n;
                 double u;
-                RealMatrix V;
+                RealMatrix D;
+                RealMatrix K;
+                RealVector d;
                 n = this->n;
                 if (n < this->order) {
                     return ArrayXXd::Zero(this->order + 1, this->order + 1);
                 }
                 u = this->tau;
-                RealMatrix C;
-                C = Map<RowVectorXd>( new double[16] {(16., 120., 480., 840.), (120., 1200., 5400., 10080.), (480., 5400., 25920., 50400.), (840., 10080., 50400., 100800.)}, 16);
-                V = this->_scaleVRF(C, u, n);
-                V(0, 0) = 4 * (4 * pow(n, 3) + 18 * pow(n, 2) + 38 * n + 30) / ((n + 1) * n * (n - 1) * (n - 2));
-                V(1, 1) = 200 * (6 * pow(n, 4) + 51 * pow(n, 3) + 159 * pow(n, 2) + 219 * n + 116) / (pow(u, 2) * (n + 4) * (n + 3) * (n + 2) * (n + 1) * n * (n - 1) * (n - 2));
-                V(2, 2) = 80 * (324 * pow(n, 2) + 1278 * n + 1188) / (pow(u, 4) * (n + 4) * (n + 3) * (n + 2) * (n + 1) * n * (n - 1) * (n - 2));
-                V(3, 3) = 100800 / (pow(u, 6) * (n + 4) * (n + 3) * (n + 2) * (n + 1) * n * (n - 1) * (n - 2));
-                return V;
+                K = Map<RowVectorXd>( new double[16] {(1., 0.866025403784, 0.7453559925, 0.661437827766), (0.866025403784, 1., 0.968245836552, 0.916515138991), (0.7453559925, 0.968245836552, 1., 0.986013297183), (0.661437827766, 0.916515138991, 0.986013297183, 1.)}, 16);
+                d = ArrayXd::Zero(this->order + 1);
+                d(0) = 4 * (4 * pow(n, 3) + 18 * pow(n, 2) + 38 * n + 30) / ((n + 1) * n * (n - 1) * (n - 2));
+                d(1) = 200 * (6 * pow(n, 4) + 51 * pow(n, 3) + 159 * pow(n, 2) + 219 * n + 116) / (pow(u, 2) * (n + 4) * (n + 3) * (n + 2) * (n + 1) * n * (n - 1) * (n - 2));
+                d(2) = 80 * (324 * pow(n, 2) + 1278 * n + 1188) / (pow(u, 4) * (n + 4) * (n + 3) * (n + 2) * (n + 1) * n * (n - 1) * (n - 2));
+                d(3) = 100800 / (pow(u, 6) * (n + 4) * (n + 3) * (n + 2) * (n + 1) * n * (n - 1) * (n - 2));
+                D = diag(sqrt(d));
+                D = D * K;
+                return D;
             }
 
             EMP4::EMP4 (const double tau) : EMPBase(4,tau) {
@@ -176,21 +168,23 @@ namespace PolynomialFiltering {
             RealMatrix EMP4::_VRF () {
                 long n;
                 double u;
-                RealMatrix V;
+                RealMatrix D;
+                RealMatrix K;
+                RealVector d;
                 n = this->n;
                 if (n < this->order) {
                     return ArrayXXd::Zero(this->order + 1, this->order + 1);
                 }
                 u = this->tau;
-                RealMatrix C;
-                C = Map<RowVectorXd>( new double[25] {(25., 300., 2100., 8400., 15120.), (300., 4800., 37800., 161280., 302400.), (2100., 37800., 317520., 1411200., 2721600.), (8400., 161280., 1411200., 6451200., 12700800.), (15120., 302400., 2721600., 12700800., 25401600.)}, 25);
-                V = this->_scaleVRF(C, u, n);
-                V(0, 0) = 5 * (5 * pow(n, 4) + 30 * pow(n, 3) + 115 * pow(n, 2) + 210 * n + 144) / ((n + 1) * n * (n - 1) * (n - 2) * (n - 3));
-                V(1, 1) = 100 * (48 * pow(n, 6) + 666 * pow(n, 5) + 3843 * pow(n, 4) + 11982 * pow(n, 3) + 21727 * pow(n, 2) + 21938 * n + 9516) / (pow(u, 2) * (n + 5) * (n + 4) * (n + 3) * (n + 2) * (n + 1) * n * (n - 1) * (n - 2) * (n - 3));
-                V(2, 2) = 720 * (441 * pow(n, 4) + 3724 * pow(n, 3) + 11711 * pow(n, 2) + 21938 * n + 9516) / (pow(u, 4) * (n + 5) * (n + 4) * (n + 3) * (n + 2) * (n + 1) * n * (n - 1) * (n - 2) * (n - 3));
-                V(3, 3) = 100800 * (64 * pow(n, 2) + 254 * n + 237) / (pow(u, 6) * (n + 5) * (n + 4) * (n + 3) * (n + 2) * (n + 1) * n * (n - 1) * (n - 2) * (n - 3));
-                V(4, 4) = 25401600 / (pow(u, 8) * (n + 5) * (n + 4) * (n + 3) * (n + 2) * (n + 1) * n * (n - 1) * (n - 2) * (n - 3));
-                return V;
+                K = Map<RowVectorXd>( new double[25] {(1., 0.866025403784, 0.7453559925, 0.661437827766, 0.6), (0.866025403784, 1., 0.968245836552, 0.916515138991, 0.866025403784), (0.7453559925, 0.968245836552, 1., 0.986013297183, 0.9583148475), (0.661437827766, 0.916515138991, 0.986013297183, 1., 0.992156741649), (0.6, 0.866025403784, 0.9583148475, 0.992156741649, 1.)}, 25);
+                d = ArrayXd::Zero(this->order + 1);
+                d(0) = 5 * (5 * pow(n, 4) + 30 * pow(n, 3) + 115 * pow(n, 2) + 210 * n + 144) / ((n + 1) * n * (n - 1) * (n - 2) * (n - 3));
+                d(1) = 100 * (48 * pow(n, 6) + 666 * pow(n, 5) + 3843 * pow(n, 4) + 11982 * pow(n, 3) + 21727 * pow(n, 2) + 21938 * n + 9516) / (pow(u, 2) * (n + 5) * (n + 4) * (n + 3) * (n + 2) * (n + 1) * n * (n - 1) * (n - 2) * (n - 3));
+                d(2) = 720 * (441 * pow(n, 4) + 3724 * pow(n, 3) + 11711 * pow(n, 2) + 21938 * n + 9516) / (pow(u, 4) * (n + 5) * (n + 4) * (n + 3) * (n + 2) * (n + 1) * n * (n - 1) * (n - 2) * (n - 3));
+                d(3) = 100800 * (64 * pow(n, 2) + 254 * n + 237) / (pow(u, 6) * (n + 5) * (n + 4) * (n + 3) * (n + 2) * (n + 1) * n * (n - 1) * (n - 2) * (n - 3));
+                d(4) = 25401600 / (pow(u, 8) * (n + 5) * (n + 4) * (n + 3) * (n + 2) * (n + 1) * n * (n - 1) * (n - 2) * (n - 3));
+                D = diag(sqrt(d));
+                return D * K;
             }
 
             EMP5::EMP5 (const double tau) : EMPBase(5,tau) {
@@ -215,22 +209,24 @@ namespace PolynomialFiltering {
             RealMatrix EMP5::_VRF () {
                 long n;
                 double u;
-                RealMatrix V;
+                RealMatrix D;
+                RealMatrix K;
+                RealVector d;
                 n = this->n;
                 if (n < this->order) {
                     return ArrayXXd::Zero(this->order + 1, this->order + 1);
                 }
                 u = this->tau;
-                RealMatrix C;
-                C = Map<RowVectorXd>( new double[36] {(36., 630., 6720., 45360., 181440., 332640.), (630., 14700., 176400., 1270080., 5292000., 9979200.), (6720., 176400., 2257920., 16934400., 72576000., 139708800.), (45360., 1270080., 16934400., 130636800., 571536000., 1117670400.), (181440., 5292000., 72576000., 571536000., 2540160000., 5029516800.), (332640., 9979200., 139708800., 1117670400., 5029516800., 10059033600.)}, 36);
-                V = this->_scaleVRF(C, u, n);
-                V(0, 0) = 6 * (2 * n + 3) * (3 * pow(n, 4) + 18 * pow(n, 3) + 113 * pow(n, 2) + 258 * n + 280) / ((n + 1) * n * (n - 1) * (n - 2) * (n - 3) * (n - 4));
-                V(1, 1) = 588 * (25 * pow(n, 8) + 500 * pow(n, 7) + 4450 * pow(n, 6) + 23300 * pow(n, 5) + 79585 * pow(n, 4) + 181760 * pow(n, 3) + 267180 * pow(n, 2) + 226920 * n + 84528) / (pow(u, 2) * (n + 6) * (n + 5) * (n + 4) * (n + 3) * (n + 2) * (n + 1) * n * (n - 1) * (n - 2) * (n - 3) * (n - 4));
-                V(2, 2) = 70560 * (2 * n + 3) * (16 * pow(n, 5) + 192 * pow(n, 4) + 952 * pow(n, 3) + 2472 * pow(n, 2) + 3501 * n + 2230) / (pow(u, 4) * (n + 6) * (n + 5) * (n + 4) * (n + 3) * (n + 2) * (n + 1) * n * (n - 1) * (n - 2) * (n - 3) * (n - 4));
-                V(3, 3) = 2721600 * (48 * pow(n, 4) + 402 * pow(n, 3) + 1274 * pow(n, 2) + 1828 * n + 1047) / (pow(u, 6) * (n + 6) * (n + 5) * (n + 4) * (n + 3) * (n + 2) * (n + 1) * n * (n - 1) * (n - 2) * (n - 3) * (n - 4));
-                V(4, 4) = 50803200 * (2 * n + 3) * (25 * n + 62) / (pow(u, 8) * (n + 6) * (n + 5) * (n + 4) * (n + 3) * (n + 2) * (n + 1) * n * (n - 1) * (n - 2) * (n - 3) * (n - 4));
-                V(5, 5) = 10059033600 / (pow(u, 10) * (n + 6) * (n + 5) * (n + 4) * (n + 3) * (n + 2) * (n + 1) * n * (n - 1) * (n - 2) * (n - 3) * (n - 4));
-                return V;
+                K = Map<RowVectorXd>( new double[36] {(1., 0.866025403784, 0.7453559925, 0.661437827766, 0.6, 0.552770798393), (0.866025403784, 1., 0.968245836552, 0.916515138991, 0.866025403784, 0.820651806648), (0.7453559925, 0.968245836552, 1., 0.986013297183, 0.9583148475, 0.927024810887), (0.661437827766, 0.916515138991, 0.986013297183, 1., 0.992156741649, 0.974996043044), (0.6, 0.866025403784, 0.9583148475, 0.992156741649, 1., 0.994987437107), (0.552770798393, 0.820651806648, 0.927024810887, 0.974996043044, 0.994987437107, 1.)}, 36);
+                d = ArrayXd::Zero(this->order + 1);
+                d(0) = 6 * (2 * n + 3) * (3 * pow(n, 4) + 18 * pow(n, 3) + 113 * pow(n, 2) + 258 * n + 280) / ((n + 1) * n * (n - 1) * (n - 2) * (n - 3) * (n - 4));
+                d(1) = 588 * (25 * pow(n, 8) + 500 * pow(n, 7) + 4450 * pow(n, 6) + 23300 * pow(n, 5) + 79585 * pow(n, 4) + 181760 * pow(n, 3) + 267180 * pow(n, 2) + 226920 * n + 84528) / (pow(u, 2) * (n + 6) * (n + 5) * (n + 4) * (n + 3) * (n + 2) * (n + 1) * n * (n - 1) * (n - 2) * (n - 3) * (n - 4));
+                d(2) = 70560 * (2 * n + 3) * (16 * pow(n, 5) + 192 * pow(n, 4) + 952 * pow(n, 3) + 2472 * pow(n, 2) + 3501 * n + 2230) / (pow(u, 4) * (n + 6) * (n + 5) * (n + 4) * (n + 3) * (n + 2) * (n + 1) * n * (n - 1) * (n - 2) * (n - 3) * (n - 4));
+                d(3) = 2721600 * (48 * pow(n, 4) + 402 * pow(n, 3) + 1274 * pow(n, 2) + 1828 * n + 1047) / (pow(u, 6) * (n + 6) * (n + 5) * (n + 4) * (n + 3) * (n + 2) * (n + 1) * n * (n - 1) * (n - 2) * (n - 3) * (n - 4));
+                d(4) = 50803200 * (2 * n + 3) * (25 * n + 62) / (pow(u, 8) * (n + 6) * (n + 5) * (n + 4) * (n + 3) * (n + 2) * (n + 1) * n * (n - 1) * (n - 2) * (n - 3) * (n - 4));
+                d(5) = 10059033600 / (pow(u, 10) * (n + 6) * (n + 5) * (n + 4) * (n + 3) * (n + 2) * (n + 1) * n * (n - 1) * (n - 2) * (n - 3) * (n - 4));
+                D = diag(sqrt(d));
+                return D * K;
             }
 
         std::shared_ptr<EMPBase> makeEMP (const long order, const double tau) {

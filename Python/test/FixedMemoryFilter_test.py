@@ -135,7 +135,7 @@ class TestFixedMemoryFiltering(unittest.TestCase):
         fixed = FixedMemoryFilter(order, window);
         for i in range(0,M) :
             fixed.add(times[i], observations[i]);
-        return fixed.getVRF();
+        return fixed.getCovariance();
                 
     def testVRF(self) :
         tau = 0.1;
@@ -162,8 +162,8 @@ class TestFixedMemoryFiltering(unittest.TestCase):
         '''
          This extended numeric test validates the computed VRF matrix
          against the actual residuals for a large sample of filter runs.
-         N=1000, K=1000, 84 seconds
-         [      0.99      0.998          1      0.998      0.997      0.998          1      0.998      0.998]
+         N=1000, K=5000, 492.609 seconds
+        [     0.998          1          1          1          1          1          1          1          1]        
         '''
         tau = 0.1;
         N = 1000;
@@ -171,7 +171,7 @@ class TestFixedMemoryFiltering(unittest.TestCase):
         window = 51;
         M = window; # number of points for initial input
         setup = array([order, window, M]);
-        K = 1000;
+        K = 5000;
         C = zeros([K,(order+1)**2])
         for k in range(0,K) :
             fixed = FixedMemoryFilter(order, window);
@@ -184,9 +184,12 @@ class TestFixedMemoryFiltering(unittest.TestCase):
                 results[i-window,:] = fixed.getState(times[i]) - truth[i,:];
             c = cov(results,rowvar=False);
             C[k,:] = c.flatten();
-            V = fixed.getVRF();
+            V = fixed.getCovariance();
             
-        print( A2S(mean(C,axis=0) / V.flatten() ) );
+        E = mean(C,axis=0) / V.flatten()
+        print( A2S( E ) );
+        assert_allclose( E, ones([(order+1)**2]), atol=1e-2 )
+        
 
 
 if __name__ == "__main__":

@@ -18,6 +18,12 @@ using namespace PolynomialFiltering;
 
 class TestData {
 public:
+
+	static std::shared_ptr <TestData> make(std::string filename) {
+		return std::shared_ptr<TestData>(new TestData(filename));
+	}
+
+
 	TestData(std::string fileName) {
 		std::string filePath = "C:\\Users\\NOOK\\GITHUB\\ReynekeMorrisonFiltering\\testdata\\";
 		filePath += fileName;

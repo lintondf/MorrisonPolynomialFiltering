@@ -424,6 +424,7 @@ public class Transpiler {
 		Scope importScope = new Scope();
 		symbolTable.add( importScope, "array", "array");
 		symbolTable.add( importScope, "copy", "array");
+		symbolTable.add( importScope, "diag", "array");
 		symbolTable.add( importScope, "eye", "array");
 		symbolTable.add( importScope, "inv", "array" );
 		symbolTable.add( importScope, "len", "int" );
@@ -432,6 +433,7 @@ public class Transpiler {
 		symbolTable.add( importScope, "pow", "float");
 		symbolTable.add( importScope, "range", "range");
 		symbolTable.add( importScope, "shape", "dimensions");
+		symbolTable.add( importScope, "sqrt", "array");
 		symbolTable.add( importScope, "solve", "array");
 		symbolTable.add( importScope, "super", "super" );
 		symbolTable.add( importScope, "transpose", "array");

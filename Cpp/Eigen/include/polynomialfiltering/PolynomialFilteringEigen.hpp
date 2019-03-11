@@ -59,12 +59,28 @@ namespace PolynomialFiltering {
 		return MatrixXd::Constant(N, M, 1.0);
 	}
 
+	inline RealVector diag(RealMatrix m) {
+		return m.diagonal();
+	}
+
+	inline RealMatrix diag(RealVector v) {
+		return v.asDiagonal();
+	}
+
+	inline RealMatrix sqrt(RealMatrix m) {
+		return m.array().sqrt();
+	}
+
+	inline RealVector sqrt(RealVector v) {
+		return v.array().sqrt();
+	}
+
 	inline RealMatrix zeros(Index N, Index M = 1) {
 		return MatrixXd::Constant(N, M, 0.0);
 	}
 
 	inline RealMatrix solve(RealMatrix A, RealMatrix B) {
-		return A.colPivHouseholderQr().solve(B);
+		return A.ldlt().solve(B); //  A.colPivHouseholderQr().solve(B);
 	}
 
 	inline RealMatrix inv(RealMatrix M) {

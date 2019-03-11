@@ -64,7 +64,7 @@ namespace PolynomialFiltering {
                 this->n += 1;
             }
 
-            RealMatrix FixedMemoryFilter::getVRF () {
+            RealMatrix FixedMemoryFilter::getCovariance () {
                 RealVector dt;
                 RealMatrix Tn;
                 dt = this->tRing - this->t;

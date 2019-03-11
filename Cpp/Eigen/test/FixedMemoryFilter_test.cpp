@@ -13,27 +13,14 @@
 
 #include <TestData.hpp>
 
+
 using namespace Eigen;
 using namespace PolynomialFiltering;
 
 static std::string filename = "FixedMemoryFiltering.nc";
 
-class TestDataFixture {
-private:
-	static TestData* testData;
 
-public:
-	TestDataFixture() {
-		testData = new TestData(filename);
-	}
 
-protected:
-	TestData* getTestData() {
-		return testData;
-	}
-};
-
-TestData* TestDataFixture::testData = NULL;
 
 RealMatrix executeEstimatedState(RealMatrix setup, RealMatrix data) {
 	int order = (int)setup(0);
@@ -64,15 +51,15 @@ RealMatrix executeVRF(RealMatrix setup, RealMatrix data) {
 	for (int i = 0; i < M; i++) {
 		fixed.add(times(i), observations(i));
 	}
-	return fixed.getVRF();
+	return fixed.getCovariance();
 }
 
 
 
 
-TEST_CASE_FIXTURE(TestDataFixture, "Fixed Memory Polynomial Filter Test") {
+TEST_CASE( "Fixed Memory Polynomial Filter Test") {
 	SUBCASE("Perfect Data Endpoint Test") {
-		TestData* testData = getTestData();
+		std::shared_ptr <TestData> testData = TestData::make(filename);
 		std::vector<std::string> matches = testData->getMatchingGroups("testPerfect");
 		for (int i = 0; i < matches.size(); i++) {
 			RealMatrix setup = testData->getGroupVariable(matches.at(i), "setup");
@@ -81,15 +68,15 @@ TEST_CASE_FIXTURE(TestDataFixture, "Fixed Memory Polynomial Filter Test") {
 
 			RealMatrix actual = executeEstimatedState(setup, data);
 
-			CHECK(expected.isApprox(expected));
+			CHECK(actual.isApprox(expected, 1e-5));
 		}
 	}
 }
 
 
-TEST_CASE_FIXTURE(TestDataFixture, "Fixed Memory Polynomial Filter Test") {
+TEST_CASE( "Fixed Memory Polynomial Filter Test") {
 	SUBCASE("Noisy Data Endpoint Test") {
-		TestData* testData = getTestData();
+		std::shared_ptr <TestData> testData = TestData::make(filename);
 		std::vector<std::string> matches = testData->getMatchingGroups("testNoisy");
 		for (int i = 0; i < matches.size(); i++) {
 			RealMatrix setup = testData->getGroupVariable(matches.at(i), "setup");
@@ -98,14 +85,14 @@ TEST_CASE_FIXTURE(TestDataFixture, "Fixed Memory Polynomial Filter Test") {
 
 			RealMatrix actual = executeEstimatedState(setup, data);
 
-			CHECK(expected.isApprox(expected));
+			CHECK(actual.isApprox(expected, 1e-5));
 		}
 	}
 }
 
-TEST_CASE_FIXTURE(TestDataFixture, "Fixed Memory Polynomial Filter Test") {
-	TestData* testData = getTestData();
+TEST_CASE( "Fixed Memory Polynomial Filter Test") {
 	SUBCASE("Perfect Data Midpoint Test") {
+		std::shared_ptr <TestData> testData = TestData::make(filename);
 		std::vector<std::string> matches = testData->getMatchingGroups("testMidpoint");
 		for (int i = 0; i < matches.size(); i++) {
 			RealMatrix setup = testData->getGroupVariable(matches.at(i), "setup");
@@ -114,17 +101,15 @@ TEST_CASE_FIXTURE(TestDataFixture, "Fixed Memory Polynomial Filter Test") {
 
 			RealMatrix actual = executeEstimatedState(setup, data);
 
-			CHECK(expected.isApprox(expected));
+			CHECK(actual.isApprox(expected, 1e-5));
 		}
 	}
-
-	delete testData;
 }
 
 
-TEST_CASE_FIXTURE(TestDataFixture, "Fixed Memory Polynomial Filter Test") {
-	TestData* testData = getTestData();
+TEST_CASE( "Fixed Memory Polynomial Filter Test") {
 	SUBCASE("Variance Reduction Factor Matrix") {
+		std::shared_ptr <TestData> testData = TestData::make(filename);
 		std::vector<std::string> matches = testData->getMatchingGroups("testVRF");
 		for (int i = 0; i < matches.size(); i++) {
 			RealMatrix setup = testData->getGroupVariable(matches.at(i), "setup");
@@ -133,7 +118,7 @@ TEST_CASE_FIXTURE(TestDataFixture, "Fixed Memory Polynomial Filter Test") {
 
 			RealMatrix actual = executeVRF(setup, data);
 
-			CHECK(expected.isApprox(expected));
+			CHECK(actual.isApprox(expected, 1e-5));
 		}
 	}
 }
