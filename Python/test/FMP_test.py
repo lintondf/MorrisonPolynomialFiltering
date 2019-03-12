@@ -21,6 +21,16 @@ class Test(unittest.TestCase):
     Y0 = array([1e4, 1e3, 1e2, 1e1, 1e0, 1e-1]);
 
 
+    cdf = None;
+
+    @classmethod
+    def setUpClass(cls):
+        cls.cdf = Dataset("../../testdata/FadingMemoryFiltering.nc", "w", format="NETCDF4");
+
+    @classmethod
+    def tearDownClass(cls):
+        cls.cdf.close()
+        
     def setUp(self):
         pass
 
@@ -57,7 +67,7 @@ class Test(unittest.TestCase):
         K = zeros([nK,(order+1)**2])
         F = stateTransitionMatrix(order+1, -tau)
 #         V = F @ filter.VRF() @ transpose(F);
-        V = filter.VRF();
+        V = filter._VRF();
         print('V', A2S(V.flatten()))
         dV = np.sqrt(diag(V))
 #         print(A2S(V))
@@ -115,7 +125,7 @@ Ran 1 test in 32.635s
   
     def test_FMP2(self):
         fmp = FMP2(0.95, 0.1)
-        print('V=',A2S(fmp.VRF().flatten()))
+        print('V=',A2S(fmp._VRF().flatten()))
         self.fmpPerfect(fmp.order, fmp, tau=fmp.getTau(), N=50)
 #         self.fmpNoisy(fmp.order, fmp, tau=fmp.getTau(), N=10000)
         self.fmpDriver(fmp.order, fmp, tau=fmp.getTau(), N=10000, nK=100)
