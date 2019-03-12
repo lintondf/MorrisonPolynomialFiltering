@@ -56,7 +56,7 @@ def scaleVRFEMP( V : array, t : float, n : float ) -> array:
 
 def baseCovarianceToCorrelation( C : array) -> array:
     (K,__) = covarianceToCorrelation(C);
-    decl = 'C = array([';
+    decl = 'K = array([';
     for i in range(0,K.shape[0]) :
         if (i != 0) :
             decl += ', ';
@@ -69,6 +69,40 @@ def baseCovarianceToCorrelation( C : array) -> array:
     decl += ']);'
     print(decl)
     return K;
+
+def FMPVRFCorrelations():
+    V1 = array([[1.25,    0.5],[0.5,    0.25]]);
+    V2 = array([[2.0625,1.6875,0.5],
+                [1.6875,    1.75,    0.5625],
+                [0.5,    0.5625,    0.1875]]);
+    V3 = array([[2.90625,    3.625,    2.15625,    0.5],\
+               [3.625,    5.78125,    3.75,    0.90625],\
+               [2.15625,    3.75,    2.53125,    0.625],\
+               [0.5,    0.90625,    0.625,    0.15625]]);
+    
+    V4 = array([[3.7695313,   6.3476563,   5.6835938,   2.6367188,   0.5],\
+               [6.3476563,   13.75,   13.476563,   6.53125,   1.2695313],\
+               [5.6835938,   13.476563,   13.78125,   6.8359375,   1.3476563],\
+               [2.6367188,   6.53125,   6.8359375,   3.4375,   0.68359375],\
+               [0.5,   1.2695313,   1.3476563,   0.68359375,   0.13671875]]);
+    V5 = array([[4.6464844,   9.8789063,   11.832031,   8.2382813,   3.1230469,   0.5],\
+               [9.8789063,   27.138672,   35.683594,   26.003906,   10.117188,   1.6464844],\
+               [11.832031,   35.683594,   49.054687,   36.640625,   14.472656,   2.3789063],\
+               [8.2382813,   26.003906,   36.640625,   27.773438,   11.074219,   1.8320313],\
+               [3.1230469,   10.117188,   14.472656,   11.074219,   4.4433594,   0.73828125],\
+               [0.5,   1.6464844,   2.3789063,   1.8320313,   0.73828125,   0.12304688]]);
+    K = baseCovarianceToCorrelation(V5);
+#     print(A2S(K))
+    K = baseCovarianceToCorrelation(V4);
+#     print(A2S(K))
+    K = baseCovarianceToCorrelation(V3);
+#     print(A2S(K))
+    K = baseCovarianceToCorrelation(V2);
+#     print(A2S(K))
+    K = baseCovarianceToCorrelation(V1);
+#     print(A2S(K))
+'''
+'''
 
 def VRF2(order : int):
     u = 0.1;
@@ -148,6 +182,7 @@ def scaleDiagEMP( order : int, u : float, n : float) -> vector:
         
 if __name__ == '__main__':
     pass
+    FMPVRFCorrelations();
 #     order = 2;
 #     u = 1;
 #     n = 10;
@@ -177,12 +212,12 @@ if __name__ == '__main__':
 #     
 #     A = array([10])
 #     print(cholesky(A))
-    k = -0.5 # /sqrt(3.0)
-    n = 1.0
-    w0 = k/(n+k)
-    wi = 1.0/(2*(n+k))
-    s = sqrt(n+k)
-    
-    A = wi * array([-s, +s])
-    print((A @ A.T))
+#     k = -0.5 # /sqrt(3.0)
+#     n = 1.0
+#     w0 = k/(n+k)
+#     wi = 1.0/(2*(n+k))
+#     s = sqrt(n+k)
+#     
+#     A = wi * array([-s, +s])
+#     print((A @ A.T))
         

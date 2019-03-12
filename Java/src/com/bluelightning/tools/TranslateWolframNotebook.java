@@ -949,8 +949,10 @@ public class TranslateWolframNotebook {
 			StringBuffer sb = new StringBuffer();
 			sb.append( String.format("%s\n", nameOrder) );
 			for (CVRFElement element : elements ) {
-				sb.append(element.toString());
-				sb.append('\n');
+				if (element.i == element.j) {
+					sb.append(element.toString());
+					sb.append('\n');
+				}
 			}
 			return sb.toString();
 		}
@@ -1044,14 +1046,14 @@ public class TranslateWolframNotebook {
 	}
 	
 	protected static void writeTemplates(Chunk[] chunks, String[] paths) {
-		for (int i = 0; i < chunks.length; i++) {
-			String output = chunks[i].toString().replace("{@$","{$");
-			try {
-				Files.write(Paths.get(paths[i]), output.getBytes());
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
+//		for (int i = 0; i < chunks.length; i++) {
+//			String output = chunks[i].toString().replace("{@$","{$");
+//			try {
+//				Files.write(Paths.get(paths[i]), output.getBytes());
+//			} catch (IOException e) {
+//				e.printStackTrace();
+//			}
+//		}
 	}
 	
 	public static void main(String[] args) {

@@ -144,6 +144,7 @@ def nearPD(A, nit=10):
         deltaS = Xk - Rk
         Yk = _getPu(Xk, W=W)
     return Yk
+
 def box_m(n_1,C0,n_2,C1):
 
     global Xp
@@ -215,6 +216,7 @@ def scaleVRFEMP( V : array, t : float, n : float ) -> array:
             S[i,j] = S[i,j-1] / (t*n);
     return S * V;
         
+            
 if __name__ == '__main__':
     pass
         

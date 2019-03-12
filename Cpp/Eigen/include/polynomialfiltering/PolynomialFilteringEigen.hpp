@@ -42,9 +42,9 @@ namespace PolynomialFiltering {
 
 using namespace Eigen;
 namespace PolynomialFiltering {
+
 	typedef VectorXd RealVector;
 	typedef MatrixXd RealMatrix;
-
 
 	// wrapper to match Python eye syntax for square matrices
 	inline RealMatrix copy(RealMatrix m) {

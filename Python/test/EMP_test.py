@@ -164,10 +164,6 @@ class Test(unittest.TestCase):
             
     def empDriver(self, filter : EMPBase, times, truth, observations):
         N = len(times)
-#         data = zeros([N, 2]);
-#         data[:,0] = times[:];
-#         data[:,1] = observations[:];
-        
         actual = zeros([N, filter.order+1]);
         diagV = zeros([N, filter.order+1]);
         actual[0,:] = truth[0,:];
@@ -222,8 +218,6 @@ class Test(unittest.TestCase):
             (actual, diagV, V) = self.empDriver(emp, data[:,0], data[:,2:], data[:,1] )
 
             writeTestVariable(group, 'expected', actual);
-            
-#             print(A2S( actual ))
             assert_allclose( actual, truth, atol=1e-8, rtol=0 );
             
     def test_EMP(self):
