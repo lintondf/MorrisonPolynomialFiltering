@@ -15,7 +15,7 @@ namespace PolynomialFiltering {
         using namespace Eigen;
         
             EMPBase::EMPBase (const long order, const double tau) : AbstractRecursiveFilter(order,tau) {
-			}
+            }
 
             double EMPBase::_gammaParameter (const double t, const double dtau) {
                 return this->_normalizeTime(t);

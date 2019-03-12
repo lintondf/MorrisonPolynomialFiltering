@@ -311,8 +311,14 @@ public class CppTarget extends AbstractLanguageTarget {
 							String scInitializers = "";
 							String superTag = "super().__init__(";
 							if (symbol.getType().startsWith(superTag)) {
+								System.out.println("@@@" + symbol.getType());
 								scInitializers = symbol.getType().substring(superTag.length());
-								scInitializers = scInitializers.substring(0, scInitializers.length()-1);
+								int iClose = scInitializers.indexOf(')');
+								if (iClose < 0) {
+									Transpiler.instance().reportError("Bad function declaration: " + symbol.toString() );
+									iClose = scInitializers.length();
+								}
+								scInitializers = scInitializers.substring(0, iClose);
 							}
 							decl += " : " + c.getSuperClassInfo().superClass + "(";
 							decl += scInitializers;

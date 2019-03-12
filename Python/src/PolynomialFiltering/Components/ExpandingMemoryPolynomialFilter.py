@@ -14,7 +14,7 @@ from PolynomialFiltering.Components.AbstractRecursiveFilter import AbstractRecur
 
 class EMPBase(AbstractRecursiveFilter):
     def __init__(self, order : int, tau : float) :
-        super().__init__(order, tau)
+        super().__init__(order, tau);
         
     def _gammaParameter(self, t : float, dtau : float) -> float:
         return self._normalizeTime(t)

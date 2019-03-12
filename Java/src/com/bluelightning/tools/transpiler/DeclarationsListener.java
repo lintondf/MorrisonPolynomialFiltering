@@ -13,6 +13,7 @@ import com.bluelightning.tools.transpiler.Scope.Level;
 import com.bluelightning.tools.transpiler.antlr4.LcdPythonBaseListener;
 import com.bluelightning.tools.transpiler.antlr4.LcdPythonParser;
 import com.bluelightning.tools.transpiler.antlr4.LcdPythonParser.SuiteContext;
+import com.bluelightning.tools.transpiler.antlr4.LcdPythonParser.TestContext;
 
 class DeclarationsListener extends LcdPythonBaseListener {
 
@@ -56,8 +57,9 @@ class DeclarationsListener extends LcdPythonBaseListener {
 				this.transpiler.reportError(ctx.start, "Invalid function scope");
 			}
 			scopeStack.push( functionScope );
-			Symbol symbol = transpiler.symbolTable.add(currentScope, name, getChildText(ctx, 4));
+			String functionType = getChildText(ctx, 4);
 			Symbol.FunctionParametersInfo fpi = new Symbol.FunctionParametersInfo();
+			Symbol symbol = transpiler.symbolTable.add(currentScope, name, functionType);
 			transpiler.scopeMap.put( ctx.getPayload(), functionScope );
 			ParseTree parameterDeclaration = ctx.getChild(2);
 			if (parameterDeclaration.getChildCount() > 2) {

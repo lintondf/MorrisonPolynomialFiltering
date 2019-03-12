@@ -75,6 +75,7 @@ public class Transpiler {
 		new Target(Paths.get("PolynomialFiltering/Components"), "IRecursiveFilter"),
 		new Target(Paths.get("PolynomialFiltering/Components"), "AbstractRecursiveFilter"),
 		new Target(Paths.get("PolynomialFiltering/Components"), "ExpandingMemoryPolynomialFilter"),
+		new Target(Paths.get("PolynomialFiltering/Components"), "FadingMemoryPolynomialFilter"),
 	};
 	
 	protected Logger logger;
@@ -422,6 +423,7 @@ public class Transpiler {
 				cfg, Paths.get("../Cpp/Eigen/") ) );
 
 		Scope importScope = new Scope();
+		symbolTable.add( importScope, "abs", "array");
 		symbolTable.add( importScope, "array", "array");
 		symbolTable.add( importScope, "copy", "array");
 		symbolTable.add( importScope, "diag", "array");

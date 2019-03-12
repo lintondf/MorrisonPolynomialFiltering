@@ -8,22 +8,31 @@ from typing import Tuple
 from abc import abstractmethod
 
 from numpy import array, zeros
+from numpy import array as vector
 from PolynomialFiltering.Components.AbstractRecursiveFilter import AbstractRecursiveFilter
 
 
 class FMPBase(AbstractRecursiveFilter) :
-    def __init__(self, order : int, theta : float, tau : float) -> None:
-        super().__init__(order, tau)
-        self.theta = theta
-        self.n0 = 1
+
+    '''@n0 : int'''
+    '''@theta : float'''
+
+    def __init__(self, order : int, theta : float, tau : float) :
+        super().__init__(order, tau);
+        self.theta = theta;
+        self.n0 = 1;
     
-    def gammaParameter(self, t : float, dtau : array) -> array:
+    def _gammaParameter(self, t : float, dtau : float) -> float:
         return pow(self.theta, abs(dtau))
 
     @classmethod
     def _scaleVRF( self, V : array, u : float, theta : float ) -> array:
+        '''@t : float'''
+        '''@S : array'''
+        '''@i : int'''
+        '''@j : int'''
         t = 1-theta;
-        S = zeros(V.shape);
+        S = zeros([V.shape[0], V.shape[1]]);
         S[0,0] = t;
         for i in range(1,S.shape[0]) :
             S[i,0] = S[i-1,0] * t / u;
@@ -38,13 +47,15 @@ class FMPBase(AbstractRecursiveFilter) :
         
             
 class FMP0(FMPBase):    
-    def __init__(self, theta : float, tau : float) -> None:
+    def __init__(self, theta : float, tau : float):
         super().__init__(0, theta, tau)
 
-    def gamma(self, t : float) -> None:
+    def _gamma(self, t : float) -> vector:
         return array([1-t])
 
     def _VRF(self) -> array:
+        '''@t : float'''
+        '''@V : array'''
         t = self.theta
         V = zeros([self.order+1, self.order+1]);
         #{$FMP0CVRF}
@@ -52,16 +63,21 @@ class FMP0(FMPBase):
         return V;
 
 class FMP1(FMPBase):    
-    def __init__(self, theta : float, tau : float) -> None:
+    def __init__(self, theta : float, tau : float) :
         super().__init__(1, theta, tau)
 
-    def gamma(self, t : float) -> None:
+    def _gamma(self, t : float) -> vector:
+        '''@t2 : float'''
+        '''@mt2 : float'''
         t2 = t*t 
         mt2 = (1-t)*(1-t)
         return array([1-t2, 
                       mt2])
 
     def _VRF(self) -> array:
+        '''@t : float'''
+        '''@u : float'''
+        '''@V : array'''
         t = 1 - self.theta
         u = self.tau;
         """VRF approximating constants from Morrison 2013, Supplemental Materials, Problem 13.3"""
@@ -69,10 +85,14 @@ class FMP1(FMPBase):
         return self._scaleVRF(V, u, t);
         
 class FMP2(FMPBase):    
-    def __init__(self, theta : float, tau : float) -> None:
+    def __init__(self, theta : float, tau : float) :
         super().__init__(2, theta, tau)
 
-    def gamma(self, t : float) -> None:
+    def _gamma(self, t : float) -> vector:
+        '''@t2 : float'''
+        '''@t3 : float'''
+        '''@mt2 : float'''
+        '''@mt3 : float'''
         t2 = t*t
         t3 = t2*t
         mt2 = (1-t)*(1-t)
@@ -82,6 +102,9 @@ class FMP2(FMPBase):
                       (2*1)*1.0/2.0*mt3])
 
     def _VRF(self) -> array:
+        '''@t : float'''
+        '''@u : float'''
+        '''@V : array'''
         t = 1 - self.theta
         u = self.tau;
         """VRF approximating constants from Morrison 2013, Supplemental Materials, Problem 13.3"""
@@ -89,10 +112,16 @@ class FMP2(FMPBase):
         return self._scaleVRF(V, u, t);
 
 class FMP3(FMPBase):    
-    def __init__(self, theta : float, tau : float) -> None:
+    def __init__(self, theta : float, tau : float):
         super().__init__(3, theta, tau)
 
-    def gamma(self, t : float) -> None:
+    def _gamma(self, t : float) -> vector:
+        '''@t2 : float'''
+        '''@t3 : float'''
+        '''@t4 : float'''
+        '''@mt2 : float'''
+        '''@mt3 : float'''
+        '''@mt4 : float'''
         t2 = t*t 
         t3 = t2*t
         t4 = t3*t
@@ -105,6 +134,9 @@ class FMP3(FMPBase):
                       (3*2*1)*1.0/6.0*mt4])
 
     def _VRF(self) -> array:
+        '''@t : float'''
+        '''@u : float'''
+        '''@V : array'''
         t = 1 - self.theta
         u = self.tau;
         """VRF approximating constants from Morrison 2013, Supplemental Materials, Problem 13.3"""
@@ -115,10 +147,16 @@ class FMP3(FMPBase):
         return self._scaleVRF(V, u, t);
 
 class FMP4(FMPBase):    
-    def __init__(self, theta : float, tau : float) -> None:
+    def __init__(self, theta : float, tau : float):
         super().__init__(4, theta, tau)
 
-    def gamma(self, t : float) -> None:
+    def _gamma(self, t : float) -> vector:
+        '''@t2 : float'''
+        '''@t3 : float'''
+        '''@t5 : float'''
+        '''@mt2 : float'''
+        '''@mt3 : float'''
+        '''@mt4 : float'''
         t2 = t*t 
         t3 = t2*t
         t5 = t2*t3
@@ -132,6 +170,9 @@ class FMP4(FMPBase):
                       (4*3*2*1)*1.0/24.0*mt4])
 
     def _VRF(self) -> array:
+        '''@t : float'''
+        '''@u : float'''
+        '''@V : array'''
         t = 1 - self.theta
         u = self.tau;
         """VRF approximating constants from Morrison 2013, Supplemental Materials, Problem 13.3"""
@@ -143,10 +184,19 @@ class FMP4(FMPBase):
         return self._scaleVRF(V, u, t);
 
 class FMP5(FMPBase):    
-    def __init__(self, theta : float, tau : float) -> None:
+    def __init__(self, theta : float, tau : float):
         super().__init__(5, theta, tau)
 
-    def gamma(self, t : float) -> None:
+    def _gamma(self, t : float) -> vector:
+        '''@t2 : float'''
+        '''@t3 : float'''
+        '''@t4 : float'''
+        '''@t6 : float'''
+        '''@mt2 : float'''
+        '''@mt3 : float'''
+        '''@mt4 : float'''
+        '''@mt5 : float'''
+        '''@mt6 : float'''
         t2 = t*t 
         t3 = t2*t
         t4 = t3*t
@@ -163,10 +213,13 @@ class FMP5(FMPBase):
                       (4*3*2*1)*1.0/8.0*mt5*(1+t),
                       (5*4*3*2*1)*1.0/120.0*mt6 ])
         
-    def nSwitch(self):
-        return 7.7478/(1.0-self.theta)
+#     def nSwitch(self) -> float:
+#         return 7.7478/(1.0-self.theta)
  
     def _VRF(self) -> array:
+        '''@t : float'''
+        '''@u : float'''
+        '''@V : array'''
         t = 1 - self.theta
         u = self.tau;
         """VRF approximating constants from Morrison 2013, Supplemental Materials, Problem 13.3"""
@@ -180,8 +233,16 @@ class FMP5(FMPBase):
         return self._scaleVRF(V, u, t);
 
     
-def makeFMP(order, theta : float, tau : float ) -> FMPBase :
-    Fmps = [FMP0, FMP1, FMP2, FMP3, FMP4, FMP5];
-    return Fmps[order](theta, tau);
-        
-        
+def makeFMP(order : int, theta : float, tau : float) -> FMPBase:
+    if (order == 0) :
+        return FMP0(theta, tau);
+    elif (order == 1) :
+        return FMP1(theta, tau);
+    elif (order == 2) :
+        return FMP2(theta, tau);
+    elif (order == 3) :
+        return FMP3(theta, tau);
+    elif (order == 4) :
+        return FMP4(theta, tau);
+    else : # (order == 5) :
+        return FMP5(theta, tau);

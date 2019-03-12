@@ -8,6 +8,7 @@ import org.antlr.v4.runtime.CommonToken;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.RuleNode;
+import org.apache.commons.lang3.StringUtils;
 
 import com.bluelightning.tools.transpiler.Scope.Level;
 import com.bluelightning.tools.transpiler.antlr4.LcdPythonBaseListener;
@@ -180,9 +181,15 @@ class ExpressionCompilationListener extends LcdPythonBaseListener {
 		
 		@Override
 		public void enterFuncdef(LcdPythonParser.FuncdefContext ctx) {
+			transpiler.dumpChildren(ctx);			
 			scope = this.transpiler.scopeMap.get(ctx.getPayload());
 //			System.out.println("function > " + scope);
 			transpiler.dispatcher.startMethod(scope);
+		}
+		
+		@Override 
+		public void enterSuite(LcdPythonParser.SuiteContext ctx) { 
+			//transpiler.dumpChildren(ctx);						
 		}
 		
 		@Override
@@ -194,6 +201,7 @@ class ExpressionCompilationListener extends LcdPythonBaseListener {
 		
 		@Override 
 		public void enterFor_stmt(LcdPythonParser.For_stmtContext ctx) { 
+			transpiler.logger.info(StringUtils.left(ctx.getText(), 80));
 //			transpiler.dumpChildren(ctx);
 //			defaultOperandOperator( ctx, "for_stmt" );
 			String iName = transpiler.getValue( ctx.getChild(1));
@@ -223,6 +231,7 @@ class ExpressionCompilationListener extends LcdPythonBaseListener {
 		
 		@Override 
 		public void enterIf_stmt(LcdPythonParser.If_stmtContext ctx) { 
+			transpiler.logger.info(StringUtils.left(ctx.getText(), 80));
 //			transpiler.dumpChildren(ctx);
 //			System.out.println( ctx.getChild(1).getText());
 //			System.out.println( ctx.getChild(1).getChild(0).getChild(0).getText());
@@ -245,6 +254,7 @@ class ExpressionCompilationListener extends LcdPythonBaseListener {
 		}
 		
 		@Override public void enterElif_stmt(LcdPythonParser.Elif_stmtContext ctx) { 
+			transpiler.logger.info(StringUtils.left(ctx.getText(), 80));
 			ExpressionCompilationListener subListener = new ExpressionCompilationListener(transpiler);
 			subListener.expressionRoot = new TranslationExpressionNode(ctx, "IF_STMT");
 			subListener.translateMap = newTranslateMap();
@@ -258,6 +268,7 @@ class ExpressionCompilationListener extends LcdPythonBaseListener {
 		
 		@Override 
 		public void enterElse_stmt(LcdPythonParser.Else_stmtContext ctx) { 
+			transpiler.logger.info(StringUtils.left(ctx.getText(), 80));
 //			transpiler.dumpChildren(ctx);
 			transpiler.dispatcher.emitElseStatement();
 		}
@@ -265,6 +276,7 @@ class ExpressionCompilationListener extends LcdPythonBaseListener {
 		
 		@Override 
 		public void enterReturn_stmt(LcdPythonParser.Return_stmtContext ctx) {
+			transpiler.logger.info(StringUtils.left(ctx.getText(), 80));
 			expressionRoot = new TranslationExpressionNode(ctx, "RETURN_STMT");
 			translateMap = new HashMap<>();
 			
@@ -273,6 +285,7 @@ class ExpressionCompilationListener extends LcdPythonBaseListener {
 		// return_stmt: 'return' (testlist)?;
 		@Override 
 		public void exitReturn_stmt(LcdPythonParser.Return_stmtContext ctx) { 
+			transpiler.logger.info(StringUtils.left(ctx.getText(), 80));
 			String line = ctx.getText();
 			transpiler.dispatcher.emitReturnStatement();
 			if (ctx.getChildCount() > 1) {
@@ -299,6 +312,7 @@ class ExpressionCompilationListener extends LcdPythonBaseListener {
 		//raise_stmt: 'raise' (test ('from' test)?)?;
 		@Override 
 		public void exitRaise_stmt(LcdPythonParser.Raise_stmtContext ctx) {
+			transpiler.logger.info(StringUtils.left(ctx.getText(), 80));
 //			transpiler.dumpChildren(ctx);
 			String line = ctx.getChild(1).getText();
 //			System.out.println(line);
@@ -308,6 +322,7 @@ class ExpressionCompilationListener extends LcdPythonBaseListener {
 		
 		@Override
 		public void enterExpr_stmt(LcdPythonParser.Expr_stmtContext ctx) {
+			transpiler.logger.info(StringUtils.left(ctx.getText(), 80));
 			String value = this.transpiler.valueMap.get(ctx.getPayload());
 			if ( !(value.startsWith("'''") || value.startsWith("\"\"\"")) ) {
 //				System.out.println("EXPR_STMT> [{" + value + "}] <- " + ctx.toStringTree(transpiler.parser));
@@ -327,6 +342,7 @@ class ExpressionCompilationListener extends LcdPythonBaseListener {
 
 		@Override
 		public void exitExpr_stmt(LcdPythonParser.Expr_stmtContext ctx) {
+			transpiler.logger.info(StringUtils.left(ctx.getText(), 80));
 			if (expressionRoot != null) {
 				TranslationNode expr = defaultOperandOperator( ctx, expressionRoot.getName() );
 				expressionRoot.replace( expr );
@@ -339,7 +355,7 @@ class ExpressionCompilationListener extends LcdPythonBaseListener {
 //				System.out.println("EXPR_STMT< " + expr.toString() );
 //				System.out.println( expr.traverse(1));
 				if (ctx.getText().trim().startsWith("super().__init__")) {
-					// ignored
+					System.out.println(ctx.getText());
 				} else if ( ! transpiler.valueMap.get(ctx.getPayload()).startsWith("'''@")) {
 //					System.out.println( expr.traverse(1));
 					transpiler.dispatcher.emitExpressionStatement(scope, expressionRoot);
