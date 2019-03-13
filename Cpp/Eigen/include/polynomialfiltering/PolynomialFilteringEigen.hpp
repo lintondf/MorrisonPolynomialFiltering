@@ -47,7 +47,7 @@ namespace PolynomialFiltering {
 	typedef MatrixXd RealMatrix;
 
 	// wrapper to match Python eye syntax for square matrices
-	inline RealMatrix copy(RealMatrix m) {
+	inline RealMatrix copy(const RealMatrix& m) {
 		return m;
 	}
 
@@ -59,19 +59,19 @@ namespace PolynomialFiltering {
 		return MatrixXd::Constant(N, M, 1.0);
 	}
 
-	inline RealVector diag(RealMatrix m) {
+	inline RealVector diag(const RealMatrix& m) {
 		return m.diagonal();
 	}
 
-	inline RealMatrix diag(RealVector v) {
+	inline RealMatrix diag(const RealVector& v) {
 		return v.asDiagonal();
 	}
 
-	inline RealMatrix sqrt(RealMatrix m) {
+	inline RealMatrix sqrt(const RealMatrix& m) {
 		return m.array().sqrt();
 	}
 
-	inline RealVector sqrt(RealVector v) {
+	inline RealVector sqrt(const RealVector& v) {
 		return v.array().sqrt();
 	}
 
@@ -79,39 +79,39 @@ namespace PolynomialFiltering {
 		return MatrixXd::Constant(N, M, 0.0);
 	}
 
-	inline RealMatrix solve(RealMatrix A, RealMatrix B) {
+	inline RealMatrix solve(const RealMatrix& A, const RealMatrix& B) {
 		return A.ldlt().solve(B); //  A.colPivHouseholderQr().solve(B);
 	}
 
-	inline RealMatrix inv(RealMatrix M) {
+	inline RealMatrix inv(const RealMatrix& M) {
 		return M.inverse();
 	}
 
-	inline RealMatrix transpose(RealMatrix M) {
+	inline RealMatrix transpose(const RealMatrix& M) {
 		return M.transpose();
 	}
 
-	inline RealMatrix operator+(RealMatrix m, double x) {
+	inline RealMatrix operator+(const RealMatrix& m, double x) {
 		return m.array() + x;
 	}
 
-	inline RealMatrix operator-(RealMatrix m, double x) {
+	inline RealMatrix operator-(const RealMatrix& m, double x) {
 		return m.array() - x;
 	}
 
-	inline RealMatrix arrayTimes(RealMatrix a, RealMatrix b) {
+	inline RealMatrix arrayTimes(const RealMatrix& a, const RealMatrix& b) {
 		return a.array() * b.array();
 	}
 
-	inline RealMatrix arrayDivide(RealMatrix a, RealMatrix b) {
+	inline RealMatrix arrayDivide(const RealMatrix& a, const RealMatrix& b) {
 		return a.array() / b.array();
 	}
 
-	inline long len(RealMatrix a) {
+	inline long len(const RealMatrix& a) {
 		return (long) (a.rows() * a.cols());
 	}
 
-	inline long len(RealVector a) {
+	inline long len(const RealVector& a) {
 		return (long) (a.size());
 	}
 

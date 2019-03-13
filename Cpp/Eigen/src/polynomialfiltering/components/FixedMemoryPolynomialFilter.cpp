@@ -72,7 +72,7 @@ namespace PolynomialFiltering {
                 return inv(transpose(Tn) * Tn);
             }
 
-            RealMatrix FixedMemoryFilter::_getTn (const RealVector dt) {
+            RealMatrix FixedMemoryFilter::_getTn (const RealVector& dt) {
                 RealMatrix Tn;
                 RealVector C;
                 double fact;

@@ -46,8 +46,8 @@ namespace PolynomialFiltering {
             ManagedFilterBase();
             virtual double getGoodnessOfFit() = 0;
             virtual double getBiasOfFit() = 0;
-            virtual void add(const double t, const RealVector y, const std::string observationId="") = 0;
-            void addWithVariance(const double t, const RealVector y, const RealMatrix R, const std::string observationId="");
+            virtual void add(const double t, const RealVector& y, const std::string observationId="") = 0;
+            void addWithVariance(const double t, const RealVector& y, const RealMatrix& R, const std::string observationId="");
     }; // class ManagedFilterBase 
 
 }; // namespace PolynomialFiltering

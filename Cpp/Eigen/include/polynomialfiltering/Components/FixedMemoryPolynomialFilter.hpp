@@ -39,7 +39,7 @@ namespace PolynomialFiltering {
                 RealVector Z;
                 RealVector tRing;
                 RealVector yRing;
-                RealMatrix _getTn(const RealVector dt);
+                RealMatrix _getTn(const RealVector& dt);
         }; // class FixedMemoryFilter 
 
     }; // namespace Components

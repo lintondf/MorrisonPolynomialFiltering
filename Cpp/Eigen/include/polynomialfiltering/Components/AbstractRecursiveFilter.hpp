@@ -24,9 +24,9 @@ namespace PolynomialFiltering {
             public:
                 static double effectiveTheta(const long order, const double n);
                 AbstractRecursiveFilter(const long order, const double tau);
-                void start(const double t, const RealVector Z);
+                void start(const double t, const RealVector& Z);
                 RealVector predict(const double t);
-                void update(const double t, const RealVector Zstar, const double e);
+                void update(const double t, const RealVector& Zstar, const double e);
                 long getN();
                 double getTau();
                 double getTime();
@@ -42,11 +42,11 @@ namespace PolynomialFiltering {
                 double t;
                 RealVector Z;
                 RealVector D;
-                RealVector _conformState(const RealVector state);
+                RealVector _conformState(const RealVector& state);
                 double _normalizeTime(const double t);
                 double _normalizeDeltaTime(const double dt);
-                RealVector _normalizeState(const RealVector Z);
-                RealVector _denormalizeState(const RealVector Z);
+                RealVector _normalizeState(const RealVector& Z);
+                RealVector _denormalizeState(const RealVector& Z);
                 virtual double _gammaParameter(const double t, const double dtau) = 0;
                 virtual RealVector _gamma(const double nOrT) = 0;
                 virtual RealMatrix _VRF() = 0;

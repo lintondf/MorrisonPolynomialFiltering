@@ -181,7 +181,7 @@ class ExpressionCompilationListener extends LcdPythonBaseListener {
 		
 		@Override
 		public void enterFuncdef(LcdPythonParser.FuncdefContext ctx) {
-			transpiler.dumpChildren(ctx);			
+			//transpiler.dumpChildren(ctx);			
 			scope = this.transpiler.scopeMap.get(ctx.getPayload());
 //			System.out.println("function > " + scope);
 			transpiler.dispatcher.startMethod(scope);
@@ -355,7 +355,7 @@ class ExpressionCompilationListener extends LcdPythonBaseListener {
 //				System.out.println("EXPR_STMT< " + expr.toString() );
 //				System.out.println( expr.traverse(1));
 				if (ctx.getText().trim().startsWith("super().__init__")) {
-					System.out.println(ctx.getText());
+					// ignore
 				} else if ( ! transpiler.valueMap.get(ctx.getPayload()).startsWith("'''@")) {
 //					System.out.println( expr.traverse(1));
 					transpiler.dispatcher.emitExpressionStatement(scope, expressionRoot);

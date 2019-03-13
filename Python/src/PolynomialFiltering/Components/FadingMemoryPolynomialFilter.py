@@ -61,7 +61,9 @@ class FMP1(FMPBase):
     def _VRF(self) -> array:
         '''@t : float'''
         '''@u : float'''
-        '''@V : array'''
+        '''@K : array'''
+        '''@d : vector'''
+        '''@D : array'''
         t = self.theta
         u = self.tau;
         """VRF correlations from approximating constants from Morrison 2013, Supplemental Materials, Problem 13.3"""
@@ -92,7 +94,9 @@ class FMP2(FMPBase):
     def _VRF(self) -> array:
         '''@t : float'''
         '''@u : float'''
-        '''@V : array'''
+        '''@K : array'''
+        '''@d : vector'''
+        '''@D : array'''
         t = self.theta
         u = self.tau;
         """VRF approximating constants from Morrison 2013, Supplemental Materials, Problem 13.3"""
@@ -129,7 +133,9 @@ class FMP3(FMPBase):
     def _VRF(self) -> array:
         '''@t : float'''
         '''@u : float'''
-        '''@V : array'''
+        '''@K : array'''
+        '''@d : vector'''
+        '''@D : array'''
         t = self.theta
         u = self.tau;
         """VRF approximating constants from Morrison 2013, Supplemental Materials, Problem 13.3"""
@@ -153,6 +159,7 @@ class FMP4(FMPBase):
         '''@mt2 : float'''
         '''@mt3 : float'''
         '''@mt4 : float'''
+        '''@mt5 : float'''
         t2 = t*t 
         t3 = t2*t
         t5 = t2*t3
@@ -169,7 +176,9 @@ class FMP4(FMPBase):
     def _VRF(self) -> array:
         '''@t : float'''
         '''@u : float'''
-        '''@V : array'''
+        '''@K : array'''
+        '''@d : vector'''
+        '''@D : array'''
         t = self.theta
         u = self.tau;
         """VRF approximating constants from Morrison 2013, Supplemental Materials, Problem 13.3"""
@@ -219,7 +228,9 @@ class FMP5(FMPBase):
     def _VRF(self) -> array:
         '''@t : float'''
         '''@u : float'''
-        '''@V : array'''
+        '''@K : array'''
+        '''@d : vector'''
+        '''@D : array'''
         t = self.theta
         u = self.tau;
         """VRF approximating constants from Morrison 2013, Supplemental Materials, Problem 13.3"""
@@ -248,5 +259,3 @@ def makeFMP(order : int, theta : float, tau : float) -> FMPBase:
         return FMP4(theta, tau);
     else : # (order == 5) :
         return FMP5(theta, tau);
-
-    

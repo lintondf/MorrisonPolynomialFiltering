@@ -263,6 +263,7 @@ public class CppTarget extends AbstractLanguageTarget {
 					}
 					header.append("const ");
 					remappedType = programmer.remapType(parameter.getType());
+					remappedType = programmer.remapParameter(remappedType);
 					header.append(remappedType);
 					header.append(" ");
 					header.append( parameter.getName() );
@@ -311,7 +312,6 @@ public class CppTarget extends AbstractLanguageTarget {
 							String scInitializers = "";
 							String superTag = "super().__init__(";
 							if (symbol.getType().startsWith(superTag)) {
-								System.out.println("@@@" + symbol.getType());
 								scInitializers = symbol.getType().substring(superTag.length());
 								int iClose = scInitializers.indexOf(')');
 								if (iClose < 0) {

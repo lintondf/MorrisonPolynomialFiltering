@@ -27,6 +27,10 @@ public abstract class AbstractProgrammer implements IProgrammer {
 		typeRemap.put("array", "RealMatrix");
 		typeRemap.put("str", "std::string");	
 		
+		// try to avoid copies of matrix/vector parameters
+		parameterRemap.put("RealVector", "RealVector&");
+		parameterRemap.put("RealMatrix", "RealMatrix&");
+		
 		simpleRemaps.put("min", new Symbol(libraryScope, "std::min", "int")); //TODO generic
 			Map<String, Symbol> libraryNames = new HashMap<>();
 			libraryNames.put("array",  new Symbol(libraryScope, "identity", "array") ); 
@@ -37,6 +41,7 @@ public abstract class AbstractProgrammer implements IProgrammer {
 
 	Scope libraryScope = new Scope();
 	Map<String, String> typeRemap = new HashMap<>();
+	Map<String, String> parameterRemap = new HashMap<>();
 	
 	// index by function-name yields map indexed by type yields library name
 	protected Map<String, Map<String,Symbol>> functionRewrites = new HashMap<>();
@@ -292,6 +297,14 @@ public abstract class AbstractProgrammer implements IProgrammer {
 	public Symbol getSliceSymbol(String type) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public String remapParameter(String remappedType) {
+		if (parameterRemap.containsKey(remappedType)) {
+			remappedType = parameterRemap.get(remappedType);
+		}
+		return remappedType;
 	}
 
 }

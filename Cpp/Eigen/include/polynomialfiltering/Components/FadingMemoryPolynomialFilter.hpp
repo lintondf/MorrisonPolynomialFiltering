@@ -26,7 +26,6 @@ namespace PolynomialFiltering {
                 long n0;
                 double theta;
                 double _gammaParameter(const double t, const double dtau);
-                static RealMatrix _scaleVRF(const RealMatrix V, const double u, const double theta);
                 virtual RealMatrix _VRF() = 0;
         }; // class FMPBase 
 

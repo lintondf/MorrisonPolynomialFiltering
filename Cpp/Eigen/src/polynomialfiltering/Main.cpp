@@ -55,7 +55,7 @@ namespace PolynomialFiltering {
         ManagedFilterBase::ManagedFilterBase () {
         }
 
-        void ManagedFilterBase::addWithVariance (const double t, const RealVector y, const RealMatrix R, const std::string observationId) {
+        void ManagedFilterBase::addWithVariance (const double t, const RealVector& y, const RealMatrix& R, const std::string observationId) {
             this->add(t, y, observationId);
         }
 

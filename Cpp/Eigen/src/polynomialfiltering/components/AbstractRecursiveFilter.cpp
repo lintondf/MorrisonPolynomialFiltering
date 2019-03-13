@@ -41,7 +41,7 @@ namespace PolynomialFiltering {
                 }
             }
 
-            RealVector AbstractRecursiveFilter::_conformState (const RealVector state) {
+            RealVector AbstractRecursiveFilter::_conformState (const RealVector& state) {
                 RealVector Z;
                 long m;
                 Z = ArrayXd::Zero(this->order + 1);
@@ -50,7 +50,7 @@ namespace PolynomialFiltering {
                 return Z;
             }
 
-            void AbstractRecursiveFilter::start (const double t, const RealVector Z) {
+            void AbstractRecursiveFilter::start (const double t, const RealVector& Z) {
                 this->n = 0;
                 this->t0 = t;
                 this->t = t;
@@ -65,11 +65,11 @@ namespace PolynomialFiltering {
                 return dt / this->tau;
             }
 
-            RealVector AbstractRecursiveFilter::_normalizeState (const RealVector Z) {
+            RealVector AbstractRecursiveFilter::_normalizeState (const RealVector& Z) {
                 return arrayTimes(Z, this->D);
             }
 
-            RealVector AbstractRecursiveFilter::_denormalizeState (const RealVector Z) {
+            RealVector AbstractRecursiveFilter::_denormalizeState (const RealVector& Z) {
                 return arrayDivide(Z, this->D);
             }
 
@@ -85,7 +85,7 @@ namespace PolynomialFiltering {
                 return Zstar;
             }
 
-            void AbstractRecursiveFilter::update (const double t, const RealVector Zstar, const double e) {
+            void AbstractRecursiveFilter::update (const double t, const RealVector& Zstar, const double e) {
                 double dt;
                 double dtau;
                 double p;

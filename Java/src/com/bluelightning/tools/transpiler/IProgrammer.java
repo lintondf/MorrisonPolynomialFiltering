@@ -45,4 +45,6 @@ public interface IProgrammer {
 
 	Symbol getSliceSymbol(String type);
 
+	String remapParameter(String remappedType);
+
 }
