@@ -11,7 +11,7 @@
       "installRoot": "${env.USERPROFILE}\\CMakeBuilds\\${workspaceHash}\\install\\${name}",
       "cmakeCommandArgs": "",
       "buildCommandArgs": "-v",
-      "ctestCommandArgs": ""
+      "ctestCommandArgs": "-d"
     }
   ]
 }

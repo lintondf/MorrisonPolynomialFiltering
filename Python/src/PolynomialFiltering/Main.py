@@ -89,21 +89,3 @@ class AbstractFilter(ABC):
         pass
     
 
-class ManagedFilterBase(AbstractFilter):
-    def __init__(self):
-        pass
-    
-    @abstractmethod   
-    def getGoodnessOfFit(self) -> float:
-        pass
-    
-    @abstractmethod   
-    def getBiasOfFit(self) -> float:
-        pass
-        
-    @abstractmethod   
-    def add(self, t : float, y : vector, observationId : str = '') -> None:    
-        pass
-
-    def addWithVariance(self, t : float, y : vector, R : array, observationId : str = '') -> None:    
-        self.add(t, y, observationId);
