@@ -9,7 +9,7 @@ from PolynomialFiltering.Components.FadingMemoryPolynomialFilter import *
 
 from TestUtilities import *
 from numpy import arange, array2string, cov, zeros, mean, std, var, diag,\
-    transpose, concatenate
+    transpose, concatenate, isscalar
 from numpy.random import randn
 from numpy.testing import assert_almost_equal
 from numpy.testing.nose_tools.utils import assert_allclose
@@ -109,9 +109,10 @@ class Test(unittest.TestCase):
                 assert_allclose( actual, truth, atol=1e-8, rtol=0 );
     
     def testFMP(self):
+        M = 1000;
         iCase = 0;
-        for order in range(1,5+1): 
-            results = zeros([1, (order+1)]);
+        for order in range(0,5+1): 
+            results = zeros([M, (order+1)]);
             N = 1000;
             tau = 1.0;
             R = 1;
@@ -138,8 +139,14 @@ class Test(unittest.TestCase):
             V = F @ V @ transpose(F);
             dRV = diag(R*V)
             P = cov(residuals,rowvar=False);
-            dP = diag(P)
-            print(A2S(concatenate([P/(R*V)], axis=1)))
+            if (len(P.shape) == 0) :
+                dP = array([P]);
+            else :
+                dP = diag(P)
+            E = P/(R*V)
+            print(order, max(E.flatten()), min(E.flatten())) 
+            print(A2S(E))
+            assert_allclose( P/(R*V), ones(P.shape), rtol=0, atol=0.25 )
 #             results[iCase,:] = concatenate([dP/dRV]);
 #             print(A2S(results[iCase,:]))
 #         m = mean(results, axis=0)
