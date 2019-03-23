@@ -9,6 +9,8 @@ from scipy.stats._continuous_distns import chi2
 '''
 pip install numpy_ringbuffer
 pip install runstats
+pip install statistics
+pip install netcdf4
 '''
 import os
 import sys

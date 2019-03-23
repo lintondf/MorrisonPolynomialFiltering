@@ -1,6 +1,7 @@
-cmake_minimum_required(VERSION 3.12)
+cmake_minimum_required(VERSION 3.10)
 
 project(FilteringTests)    
+set(CMAKE_CXX_STANDARD 11)
 
 find_path (NETCDF_INCLUDES_C netcdf.h HINTS NETCDF_DIR NETCDF_DIR)
 message(" inc =  ${NETCDF_INCLUDES_C}  ")

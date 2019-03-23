@@ -241,10 +241,10 @@ public class CppTarget extends AbstractLanguageTarget {
 		Symbol.FunctionParametersInfo fpi = symbol.getFunctionParametersInfo();
 		if (symbol != null && fpi != null) {
 				String name = symbol.getName();
-				String remappedType = programmer.remapType(symbol.getType()); 
+				String remappedType = programmer.remapType(symbol); 
 				Symbol outputClass = Transpiler.instance().lookup(scope, remappedType);
 				if (outputClass != null && outputClass.isClass() && !outputClass.isEnum()) { //if returning a class wrap in smart pointer
-					remappedType = String.format("std::shared_ptr<%s>", outputClass.getName() ); //->programmer
+					remappedType = String.format("shared_ptr<%s>", outputClass.getName() ); //->programmer
 				}
 				String type = remappedType + " ";
 				if (name.equals("__init__")) {
@@ -262,7 +262,7 @@ public class CppTarget extends AbstractLanguageTarget {
 						body.append(", ");
 					}
 					header.append("const ");
-					remappedType = programmer.remapType(parameter.getType());
+					remappedType = programmer.remapType(parameter);
 					remappedType = programmer.remapParameter(remappedType);
 					header.append(remappedType);
 					header.append(" ");
@@ -664,7 +664,7 @@ public class CppTarget extends AbstractLanguageTarget {
 	public void emitSymbolDeclaration(Symbol symbol) {
 		if ( symbol.isForVariable() )
 			return;
-		String cppType = programmer.remapType(symbol.getType());
+		String cppType = programmer.remapType(symbol);
 		if (cppType == null) {
 			cppType = symbol.getType();
 		}
@@ -743,7 +743,7 @@ public class CppTarget extends AbstractLanguageTarget {
 		TranslationSymbolNode tsn = (TranslationSymbolNode) atomExpr.getChild(0); // range
 		TranslationListNode tln = (TranslationListNode) atomExpr.getChild(1);
 		cppIndent.write( String.format("for (%s %s = ", 
-				programmer.remapType( symbol.getType() ), 
+				programmer.remapType( symbol ), 
 				symbol.getName()));
 		emitSubExpression( symbol.getScope(), tln.getChild(0) );
 		cppIndent.append( String.format("; %s < ", symbol.getName()));

@@ -4,6 +4,12 @@ Created on Feb 13, 2019
 @author: NOOK
 https://filterpy.readthedocs.io/en/latest/kalman/UnscentedKalmanFilter.html
 '''
+''' TODO requirements.txt
+pip install numpy_ringbuffer
+pip install runstats
+pip install statistics
+pip install netcdf4
+'''
 from abc import ABC, abstractmethod
 from enum import Enum
 from numpy import array, eye, zeros, isscalar

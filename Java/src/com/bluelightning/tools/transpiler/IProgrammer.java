@@ -11,7 +11,7 @@ public interface IProgrammer {
 
 	Symbol remapFunctionName(String functionName, String type);
 
-	String remapType(String type);
+	String remapType(Symbol symbol);
 
 	void startExpression(Indent out);
 

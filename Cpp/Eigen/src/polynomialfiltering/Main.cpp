@@ -52,12 +52,5 @@ namespace PolynomialFiltering {
             this->status = status;
         }
 
-        ManagedFilterBase::ManagedFilterBase () {
-        }
-
-        void ManagedFilterBase::addWithVariance (const double t, const RealVector& y, const RealMatrix& R, const std::string observationId) {
-            this->add(t, y, observationId);
-        }
-
 }; // namespace PolynomialFiltering
 

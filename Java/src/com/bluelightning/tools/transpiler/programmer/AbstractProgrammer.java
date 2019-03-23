@@ -74,13 +74,17 @@ public abstract class AbstractProgrammer implements IProgrammer {
 	 * @see com.bluelightning.tools.transpiler.IProgrammer#remapType(java.lang.String)
 	 */
 	@Override //General
-	public String remapType( String type ) {
+	public String remapType( Symbol symbol ) {
+		String type = symbol.getType();
 		if (type.startsWith("Tuple[")) {
 			type = type.substring(6, type.length()-1).trim().replaceAll(" +", "");
 			String[] fields = type.split(",");
 			String tuple = "std::tuple<";
 			for (String field : fields) {
-				tuple += remapType(field);
+				String t = typeRemap.get(field);
+				if (t != null)
+					field = t;
+				tuple += field;
 				tuple += ", ";
 			}
 			tuple = tuple.substring(0, tuple.length()-2) + ">";

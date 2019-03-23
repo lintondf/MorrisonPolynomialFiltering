@@ -45,6 +45,7 @@ namespace PolynomialFiltering {
 
 	typedef VectorXd RealVector;
 	typedef MatrixXd RealMatrix;
+	using std::shared_ptr;
 
 	// wrapper to match Python eye syntax for square matrices
 	inline RealMatrix copy(const RealMatrix& m) {

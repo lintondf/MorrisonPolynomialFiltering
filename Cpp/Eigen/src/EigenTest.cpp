@@ -11,44 +11,29 @@ using namespace Eigen;
 typedef VectorXd RealVector;
 typedef MatrixXd RealMatrix;
 
-
-class PVector : public VectorXd {
-public:
-	PVector() : VectorXd() {
-	}
-
-	PVector(VectorXd v) : VectorXd(v) {
-
-	}
-
-	explicit operator VectorXd() const {
-		(VectorXd)this;
-	}
- };
-
-class PMatrix : public MatrixXd {
-public:
-	PMatrix() : MatrixXd() {
-	}
-
-	PMatrix(MatrixXd v) : MatrixXd(v) {
-
-	}
-};
-
-void t1(const PVector& m) {
-	std::cout << "Vector " << m << std::endl;
+void t1(const Matrix3d m) {
+	std::cout << m << std::endl;
 }
 
-void t1(const PMatrix& m) {
-	std::cout << "Matrix " << m << std::endl;
-}
-
-void t2(const PVector& m) {
-	std::cout << "Vector param " << m << std::endl;
+void t2(const Vector3d v) {
+	std::cout << "V " << v << std::endl;
 }
 
 int main() {
+	Matrix<double, 4, 4> mx;
+	Matrix3d m = Matrix3d::Constant(2.0);
+	t1(m);
+	MatrixXd m1 = MatrixXd::Ones(3, 3);
+	t1(m1);
+	VectorXd v = VectorXd::Zero(3);
+	t2(v);
+	t2(m.col(1));
+	t2(m1.col(2));
+	t2(m.row(0));
+	MatrixXd m2 = MatrixXd::Ones(10, 5);
+	t2(m2.row(6).head(3));
+	//(6, 2, 4.0);
+	/*
 	int N = 3;
 	PMatrix m = MatrixXd::Identity(N, N);
 	t1(m);
@@ -59,7 +44,7 @@ int main() {
 	PVector vv(VectorXd::Constant(1.0));
 	std::cout << m * v << std::endl;
 	return 1;
-
+	*/
 	/*
 	RealMatrix  m;
 	m = ArrayXXd::Zero(3, 5); // 

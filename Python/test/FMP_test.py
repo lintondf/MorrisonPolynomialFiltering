@@ -1,7 +1,7 @@
 '''
 Created on Feb 15, 2019
 
-@author: NOOK
+@author: NOOK 
 '''
 import unittest
 
@@ -10,18 +10,20 @@ from PolynomialFiltering.Components.FadingMemoryPolynomialFilter import *
 from TestUtilities import *
 from numpy import arange, array2string, cov, zeros, mean, std, var, diag,\
     transpose, concatenate, isscalar
+from numpy.linalg import eig
 from numpy.random import randn
 from numpy.testing import assert_almost_equal
-from numpy.testing.nose_tools.utils import assert_allclose
+from numpy.testing import assert_allclose
 from math import sqrt, sin
 from runstats import Statistics
 from scipy.stats._continuous_distns import chi2
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
+#from CovarianceIntersection import *
 
 class Test(unittest.TestCase):
 
-    Y0 = array([1e4, -5e3, +1e2, -5e1, +1e1, -5e0]);
+    Y0 = array([1, -5, 5, 5, -6, -1]); #1e4, -5e3, +1e2, -5e1, 1e1, -5e0]);
 
 
     cdf = None;
@@ -111,42 +113,79 @@ class Test(unittest.TestCase):
     def testFMP(self):
         M = 1000;
         iCase = 0;
-        for order in range(0,5+1): 
-            results = zeros([M, (order+1)]);
-            N = 1000;
-            tau = 1.0;
-            R = 1;
-            theta = 0.9;
-            setup = array([order, theta, tau, N, R])
-            iCase += 1;
-            group = createTestGroup(self.cdf, 'testFMPRandom_%d' % (iCase) );
-            fmp = makeFMP(order, theta, tau);
-            (times, truth, observations, noise) = \
-                generateTestData(fmp.order, N, 0.0, self.Y0[0:fmp.order+1], fmp.tau, sigma=sqrt(R))
-    #         print(A2S(truth))
-            data = concatenate([times, observations, truth], axis=1);
-            
-            writeTestVariable(group, 'setup', setup);
-            writeTestVariable(group, 'data', data);
-            
-            (actual, V) = self.fmpDriver(fmp, data[:,0], data[:,2:], data[:,1] )
-            
-            writeTestVariable(group, 'expected', actual);
-            
-            residuals = actual - truth;
-#             print(A2S( mean(residuals,axis=0)))
-            F = fmp.stateTransitionMatrix(order+1, -1)
-            V = F @ V @ transpose(F);
-            dRV = diag(R*V)
-            P = cov(residuals,rowvar=False);
-            if (len(P.shape) == 0) :
-                dP = array([P]);
-            else :
-                dP = diag(P)
-            E = P/(R*V)
-            print(order, max(E.flatten()), min(E.flatten())) 
-            print(A2S(E))
-            assert_allclose( P/(R*V), ones(P.shape), rtol=0, atol=0.25 )
+        for order in range(1,1+1): 
+#             results = zeros([M, (order+1)]);
+            N = 100;
+#             for N in [5000, 10000, 50000, 100000, 500000] :
+#                 tau = 1e3/float(N*(order+1)**2);
+            for tau in [5/N] : # [1e-6, 1e-5, 1e-4, 1e-3, 1e-2, 1e-1] :
+                R = 1;
+                theta = 0.9;
+                setup = array([order, theta, tau, N, R])
+                iCase += 1;
+    #             print(order, theta, tau)
+                group = createTestGroup(self.cdf, 'testFMPRandom_%d' % (iCase) );
+                fmp = makeFMP(order, theta, tau);
+                (times, truth, observations, noise) = \
+                    generateTestData(fmp.order, N, -1.0, self.Y0[0:fmp.order+1], fmp.tau, sigma=sqrt(R))
+                data = concatenate([times, observations, truth], axis=1);
+                
+                writeTestVariable(group, 'setup', setup);
+                writeTestVariable(group, 'data', data);
+                
+                (actual, V) = self.fmpDriver(fmp, data[:,0], data[:,2:], data[:,1] )
+                print('final = ', A2S(actual[-1,:]))
+                print('final errors = ', A2S(actual[-1,:]-truth[-1,:]))
+                print('V = ', A2S(diag(R*V)))
+                
+                writeTestVariable(group, 'expected', actual);
+                
+                residuals = actual - truth;
+    #             print(A2S( mean(residuals,axis=0)))
+#                 F = fmp.stateTransitionMatrix(order+1, -1)
+#                 V = F @ V @ transpose(F);
+                dRV = diag(R*V)
+                uR = zeros([order+1, 1])
+                P = cov(residuals,rowvar=False);
+                uP= mean(residuals, axis=0);
+                print('uP = ', A2S(uP))
+                print('P = ', A2S(diag(P)))
+                if (len(P.shape) == 0) :
+                    dP = array([P]);
+                else :
+                    dP = diag(P)
+                uP.shape = uR.shape;
+                print(order, theta, N, tau, \
+                       'H', hellingerDistance(uR, R*V, uP, P))
+#             E = P/(R*V)
+#             (cE, dE) = covarianceToCorrelation(E)
+#             print('dE', A2S(dE))
+#             print('cE', A2S(cE))
+#             w, v = eig(E)
+#             print('wE', A2S(w))
+#             print('vE', A2S(v))
+#             print(order, max(E.flatten()), min(E.flatten())) 
+#             print('P',A2S(P))
+#             print('R', A2S(R*V))
+#             Q = covarianceIntersection( P, R*V );
+#             print('iPiR',A2S(Q))
+#              
+#             (cP, dP) = covarianceToCorrelation(P);
+# #             print(A2S(cP))
+# #             print(A2S(dP))
+#             w, v = eig(cP);
+#             print('wP', A2S(w))
+#             print('vP', A2S(v))
+#             (cR, dR) = covarianceToCorrelation(R*V);
+# #             print(A2S(cR))
+# #             print(A2S(dR))
+#             w, v = eig(cR);
+#             print('wR', A2S(w))
+#             print('vR', A2S(v))
+#             cQ = covarianceIntersection(cP, cR)
+#             (cQ, _) = covarianceToCorrelation(cQ)
+#             print('A2S(cQ))
+#             assert_allclose( P/(R*V), ones(P.shape), rtol=0, atol=0.25 )
 #             results[iCase,:] = concatenate([dP/dRV]);
 #             print(A2S(results[iCase,:]))
 #         m = mean(results, axis=0)
@@ -182,7 +221,7 @@ Ran 2 tests in 3745.461s
 #         print(A2S(Q))
 #         print(observations.shape, noise.shape, truth[:,0].shape, Q.shape)
         
-        if (False) :
+        if (True) :
             M = 0;
             f0 = plt.figure(figsize=(10, 6))
             ax = plt.subplot(1, 1, 1)

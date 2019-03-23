@@ -47,6 +47,7 @@ public class Symbol {
 	protected SuperClassInfo superClassInfo = null;
 	protected FunctionParametersInfo functionParametersInfo = null;
 	protected Symbol ancestor = null;
+	protected Integer[] dimensions;
 	
 	public Symbol inhert( Scope heir ) {
 		Symbol that = new Symbol( heir, this.name, this.type );
@@ -143,5 +144,13 @@ public class Symbol {
 		if (name.startsWith("__init__"))
 			return false;
 		return name.startsWith("_");
+	}
+
+	public void setDimensions(Integer[] dims) {
+		this.dimensions = dims;
+	}
+	
+	public Integer[] getDimensions() {
+		return this.dimensions;
 	}
 }
