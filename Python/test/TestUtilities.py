@@ -7,10 +7,11 @@ Created on Feb 15, 2019
 import time
 from typing import Tuple;
 from netCDF4 import Dataset
-from math import sin, cos
+from math import sin, cos, exp
 import numpy as np
-from numpy import array, array2string, diag, eye, ones, zeros, sqrt
+from numpy import array, array2string, diag, eye, ones, transpose, zeros, sqrt
 from numpy import array as vector
+from numpy.linalg.linalg import det, inv
 from numpy.random import randn
 from scipy.linalg.matfuncs import expm
 from scipy.stats import chi2
@@ -30,8 +31,25 @@ def writeTestVariable(group : Dataset, name : str, data : array) -> None:
     group.createDimension(mDim, dims[1]);
     v = group.createVariable(name, 'd', (nDim, mDim))
     v[:] = data;
+    
+def hellingerDistance( u1, P1, u2, P2 ):
+    P12 = 0.5 * (P1 + P2)
+#     print(det(P1), det(P2), det(P12))
+    a = det(P1)**0.25 * det(P2)**0.25 / det(P12)**0.5;
+    b = -(1/8)* transpose(u1-u2) @ inv(P12) @ (u1-u2)
+    return sqrt(1 - a * exp(b));
 
-
+def covarianceIntersection( P1, P2 ):
+    I1 = inv(P1)
+    I2 = inv(P2)
+    dI1 = det(I1)
+    dI2 = det(I2)
+    dI12 = det(I1+I2)
+    w1 = (dI12 - dI2 + dI1) / (2*dI12);
+    w2 = 1 - w1;
+    P = inv( w1 * I1 + w2 * I2);
+    print('w1 = ', w1)
+    return P
 
 # def stateTransitionMatrix(N : int, dt : float) -> array:
 #     '''

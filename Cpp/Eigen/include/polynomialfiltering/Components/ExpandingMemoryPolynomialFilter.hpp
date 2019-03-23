@@ -82,7 +82,7 @@ namespace PolynomialFiltering {
                 RealMatrix _VRF();
         }; // class EMP5 
 
-        std::shared_ptr<EMPBase> makeEMP(const long order, const double tau);
+        shared_ptr<EMPBase> makeEMP(const long order, const double tau);
     }; // namespace Components
 }; // namespace PolynomialFiltering
 

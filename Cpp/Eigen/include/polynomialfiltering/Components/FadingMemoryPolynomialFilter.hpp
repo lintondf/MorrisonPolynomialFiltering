@@ -77,7 +77,7 @@ namespace PolynomialFiltering {
                 RealMatrix _VRF();
         }; // class FMP5 
 
-        std::shared_ptr<FMPBase> makeFMP(const long order, const double theta, const double tau);
+        shared_ptr<FMPBase> makeFMP(const long order, const double theta, const double tau);
     }; // namespace Components
 }; // namespace PolynomialFiltering
 

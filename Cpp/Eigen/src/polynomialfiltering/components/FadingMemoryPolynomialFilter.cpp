@@ -220,7 +220,7 @@ namespace PolynomialFiltering {
                 return D * K;
             }
 
-        std::shared_ptr<FMPBase> makeFMP (const long order, const double theta, const double tau) {
+        shared_ptr<FMPBase> makeFMP (const long order, const double theta, const double tau) {
             if (order == 0) {
                 return std::shared_ptr<FMP0>(new FMP0(theta, tau));
             } else if (order == 1) {

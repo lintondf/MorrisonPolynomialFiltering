@@ -229,7 +229,7 @@ namespace PolynomialFiltering {
                 return D * K;
             }
 
-        std::shared_ptr<EMPBase> makeEMP (const long order, const double tau) {
+        shared_ptr<EMPBase> makeEMP (const long order, const double tau) {
             if (order == 0) {
                 return std::shared_ptr<EMP0>(new EMP0(tau));
             } else if (order == 1) {

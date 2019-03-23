@@ -35,12 +35,38 @@ class DeclarationsListener extends LcdPythonBaseListener {
 			return this.transpiler.valueMap.get(ctx.getChild(iChild).getPayload());
 		}
 
-		protected Symbol declareSymbol( Token token, String declaration ) {
+		protected void addSymbolDimensions( Symbol symbol, String[] fields) {
+			switch (fields[1]) {
+			case "vector":
+				if (fields.length == 3) {
+					Integer[] dims = new Integer[]{ Integer.parseInt(fields[2]) };
+					symbol.setDimensions(dims);
+				} else {
+					transpiler.reportError("Only one dimension allowed on vector: " + fields[0]);
+				}
+				break;
+			case "array":
+				if (fields.length == 4) {
+					Integer[] dims = new Integer[]{ Integer.parseInt(fields[2]), Integer.parseInt(fields[3]) };
+					symbol.setDimensions(dims);
+				} else {
+					transpiler.reportError("Two dimensions required on matrix: " + fields[0]);
+				}
+				break;
+			default:
+				transpiler.reportError("Dimensions only allowed on vector and array: " + fields[0]);
+			}
+		}
+ 		protected Symbol declareSymbol( Token token, String declaration ) {
 			declaration = declaration.trim().replaceAll(" +", " ");
 			String[] fields = declaration.split(":");
-			if (fields.length == 2) {
+			if (fields.length >= 2) {
 				Scope currentScope = scopeStack.peek();
-				return transpiler.symbolTable.add(currentScope, fields[0], fields[1]);
+				Symbol symbol = transpiler.symbolTable.add(currentScope, fields[0], fields[1]);
+				if (fields.length > 2) {
+					addSymbolDimensions( symbol, fields );
+				}
+				return symbol;
 			} else {
 				this.transpiler.reportError(token, "Ill-formed declaration: " + declaration );
 			}

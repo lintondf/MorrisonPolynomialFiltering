@@ -133,7 +133,10 @@ class AbstractRecursiveFilter(IRecursiveFilter):
         dtau = self._normalizeDeltaTime(dt)
         p = self._gammaParameter(t, dtau)
         gamma = self._gamma(p)
+        print(t,dt,dtau,p,gamma)
+        print(Zstar)
         self.Z = (Zstar + gamma * e)
+        print(self.Z)
         self.t = t
         self.n += 1;
         if (self.n < self.n0) :
