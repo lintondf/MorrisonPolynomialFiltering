@@ -87,7 +87,7 @@ class Test(unittest.TestCase):
             actual[i,:] = filter.getState(times[i])
         return (actual, residuals);
     
-    def xtest_FMPPerfect(self):
+    def test_FMPPerfect(self):
         iCase = 0;
         N = 10;
         tau = 1.0;
@@ -140,7 +140,7 @@ class Test(unittest.TestCase):
                 setup = array([order, theta, tau, N, R])
                 iCase += 1;
                 print(order, theta, tau)
-                group = createTestGroup(self.cdf, 'testFMPRandom_%d' % (iCase) );
+                group = createTestGroup(self.cdf, 'FMPFullSuite_%d' % (iCase) );
                 fmp = makeFMP(order, theta, tau);
                 if (verbose) :
                     print( A2S( diag(fmp._VRF())))

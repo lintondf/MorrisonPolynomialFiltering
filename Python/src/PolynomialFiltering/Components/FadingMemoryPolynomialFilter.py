@@ -287,4 +287,3 @@ def thetaFromVrf( order : int, tau : float, vrf : float) -> float:
     else : # (order == 5) :
         x = (vrf * 14400./252.)**(1./11.); 
         return -1. + 2./(1.0+tau**(10./11.)*x) 
-    

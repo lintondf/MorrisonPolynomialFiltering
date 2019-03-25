@@ -78,6 +78,7 @@ namespace PolynomialFiltering {
         }; // class FMP5 
 
         shared_ptr<FMPBase> makeFMP(const long order, const double theta, const double tau);
+        double thetaFromVrf(const long order, const double tau, const double vrf);
     }; // namespace Components
 }; // namespace PolynomialFiltering
 

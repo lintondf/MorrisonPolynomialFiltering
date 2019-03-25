@@ -10,6 +10,8 @@
 
 #include "polynomialfiltering/Main.hpp"
 
+#pragma float_control(push)
+#pragma float_control(precise, off)
 namespace PolynomialFiltering {
     using namespace Eigen;
     
@@ -54,3 +56,4 @@ namespace PolynomialFiltering {
 
 }; // namespace PolynomialFiltering
 
+#pragma float_control(pop)

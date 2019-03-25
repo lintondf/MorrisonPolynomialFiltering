@@ -10,6 +10,8 @@
 
 #include "polynomialfiltering/components/AbstractRecursiveFilter.hpp"
 
+#pragma float_control(push)
+#pragma float_control(precise, off)
 namespace PolynomialFiltering {
     namespace Components {
         using namespace Eigen;
@@ -147,3 +149,4 @@ namespace PolynomialFiltering {
     }; // namespace Components
 }; // namespace PolynomialFiltering
 
+#pragma float_control(pop)

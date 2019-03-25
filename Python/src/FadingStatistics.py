@@ -6,17 +6,49 @@ Created on Feb 12, 2019
 
 import numpy as np
 from math import sqrt
-from numpy import mean, var, sum
+from numpy import mean, var, sum, zeros
 from numpy_ringbuffer import RingBuffer
 
 import ThinkDSP
 
+class MidpointSmoother :
+    '''@W : array'''
+    def __init__(self, N : int = 11):
+        self.i = 0;
+        self.n = 0;
+        self.N = N;
+        self.samples = zeros([N]);
+        self.W = zeros([N]);
+
+    def _setWeights(self, n : int, N : int):
+        self.W = zeros([N]);
+        for k in range(-n, 1+n) :
+            self.W[k+n] = 3.0*((3.0*N**2-7.0)-20.0*k**2)/(4.0*N*(N**2-4.0))
+        
+    def update(self, x : float ) :
+        self.samples[self.i] = x;
+        self.i = (self.i + 1) % self.N;
+        self.n += 1;
+        if (self.n < self.N and self.n >= 3) :
+            self._setWeights(self.n/2, self.n)
+            return True;
+        return self.n >= 3;
+    
+    def getResidual(self) -> float:
+        if (self.n < 3) :
+            return 0.0;
+        offset = (self.i + 1) % self.N;
+        p = 0.0
+        for i in range(0,self.N) :
+            p += self.W[i] * self.samples[(offset+i) % self.N];
+        return self.samples[(offset+1+self.N/2) % self.N] - p;
+    
+     
 class RingStatistics:
     def __init__(self, samples=51):
         self.residuals = RingBuffer(capacity=samples, dtype=np.double)
         self.fmean = None;
         self.fvariance = None;
-        self.fserialCorrelation = None;
         
     def getLength(self):
         return len(self.residuals)
@@ -28,23 +60,23 @@ class RingStatistics:
         return self.fvariance;
     
     def getSerialCorrelation(self):
-        return self.fserialCorrelation;
-    
-    def update(self, e):
-        self.residuals.appendleft(e);
-        n = 0;
-        self.fmean = np.mean(self.residuals);
-        self.fvariance = np.var(self.residuals);
-        self.fserialCorrelation = 0.0;
+        fserialCorrelation = 0.0;
         it = np.nditer(self.residuals);
         pr = None;
+        n = 0;
         for r in it :
             if n > 0 :
-                self.fserialCorrelation += (r - self.fmean) * (pr - self.fmean) / self.fvariance;
+                fserialCorrelation += (r - self.fmean) * (pr - self.fmean) / self.fvariance;
             n += 1;
             pr = r;
         if n > 1 :
-            self.fserialCorrelation /= n - 1;
+            fserialCorrelation /= n - 1;
+        return fserialCorrelation;
+    
+    def update(self, e):
+        self.residuals.appendleft(e);
+        self.fmean = np.mean(self.residuals);
+        self.fvariance = np.var(self.residuals);
     
 class FadingStatistics:
     
