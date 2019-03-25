@@ -17,6 +17,9 @@ class RingStatistics:
         self.fmean = None;
         self.fvariance = None;
         self.fserialCorrelation = None;
+        
+    def getLength(self):
+        return len(self.residuals)
 
     def getMean(self):
         return self.fmean;

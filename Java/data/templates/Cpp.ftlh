@@ -10,4 +10,6 @@
 
 #include "${moduleInclude}"
 
+#pragma float_control(fast, on, push)
 ${cppBody}
+#pragma float_control(pop)

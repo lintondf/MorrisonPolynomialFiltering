@@ -9,7 +9,7 @@ from typing import Tuple;
 from netCDF4 import Dataset
 from math import sin, cos, exp
 import numpy as np
-from numpy import array, array2string, diag, eye, ones, transpose, zeros, sqrt
+from numpy import array, array2string, diag, eye, ones, transpose, zeros, sqrt, mean, std, var
 from numpy import array as vector
 from numpy.linalg.linalg import det, inv
 from numpy.random import randn
@@ -34,9 +34,9 @@ def writeTestVariable(group : Dataset, name : str, data : array) -> None:
     
 def hellingerDistance( u1, P1, u2, P2 ):
     P12 = 0.5 * (P1 + P2)
-#     print(det(P1), det(P2), det(P12))
     a = det(P1)**0.25 * det(P2)**0.25 / det(P12)**0.5;
     b = -(1/8)* transpose(u1-u2) @ inv(P12) @ (u1-u2)
+#     print(det(P1), det(P2), det(P12), a, b)
     return sqrt(1 - a * exp(b));
 
 def covarianceIntersection( P1, P2 ):
@@ -237,5 +237,11 @@ def scaleVRFEMP( V : array, t : float, n : float ) -> array:
             
 if __name__ == '__main__':
     pass
+    N = randn(10,1)
+    print(mean(N), std(N))
+    N2 = N*N;
+    print(mean(chi2.cdf(N2,1)))
+    print(chi2.cdf(sum(N2)/len(N2),len(N2)))
+    
         
     
