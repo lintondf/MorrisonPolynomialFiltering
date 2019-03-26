@@ -63,7 +63,7 @@ class TestFixedMemoryFiltering(unittest.TestCase):
         fixed = FixedMemoryFilter(order, window);
         for i in range(0,M) :
             fixed.add(times[i], observations[i]);
-        return fixed.getState(times[iCheck]);
+        return fixed.getMidpoint(times[iCheck]);
                 
                 
     def testPerfect(self):
@@ -181,7 +181,7 @@ class TestFixedMemoryFiltering(unittest.TestCase):
             results = zeros([N-window, order+1]);
             for i in range(window, N) :
                 fixed.add(times[i], observations[i]);
-                results[i-window,:] = fixed.getState(times[i]) - truth[i,:];
+                results[i-window,:] = fixed.getState() - truth[i,:];
             c = cov(results,rowvar=False);
             C[k,:] = c.flatten();
             V = fixed.getCovariance();

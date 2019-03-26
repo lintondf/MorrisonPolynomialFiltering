@@ -83,7 +83,7 @@ class AbstractRecursiveFilter(IRecursiveFilter):
     def _denormalizeState(self, Z : vector) -> vector:
         return Z / self.D
     
-    def predict(self, t : float) -> vector :
+    def predictState(self, t : float) -> vector :
         """
         Predict the filter state (Z*) at time t
         
@@ -94,7 +94,7 @@ class AbstractRecursiveFilter(IRecursiveFilter):
             A three tuple holding: (predicted-NORMALIZED-state, delta-time, delta-tau)
             
         Examples:
-            Zstar = self.predict(t)
+            Zstar = self.predictState(t)
         """
         '''@ Zstar : vector'''
         
@@ -105,8 +105,18 @@ class AbstractRecursiveFilter(IRecursiveFilter):
         dtau = self._normalizeDeltaTime(dt)
         F = self.stateTransitionMatrix(self.order+1, dtau)
         Zstar = F @ self.Z;
-#         Zstar = self.stateTransitionMatrix(self.order+1, dtau) @ self.Z
         return Zstar;
+    
+    def predictCovariance(self, t : float, R : float = 1.0) -> array:
+        '''@F : array'''
+        '''@ V : array'''
+        V = self._VRF();
+        if (V[0,0] == 0) :
+            return V;
+        F = self.stateTransitionMatrix(self.order+1, t-self.t );
+        V = (F) @ V @ transpose(F);
+        return V * R;
+        
     
     def update(self, t : float, Zstar : vector, e : float) -> vector:
         """
@@ -121,7 +131,7 @@ class AbstractRecursiveFilter(IRecursiveFilter):
             innovation vector
             
         Examples:
-            Zstar = self.predict(t)
+            Zstar = self.predictState(t)
             e = observation[0] - Zstar[0]
             self.update(t, Zstar, e )
         """
@@ -153,29 +163,15 @@ class AbstractRecursiveFilter(IRecursiveFilter):
     def getTime(self) -> float:
         return self.t
     
-    def getState(self, t : float) -> vector:
-        '''@ Z : vector'''
-        if (t == self.t) :
-            return self._denormalizeState(self.Z)
-        else :
-            '''@F : array'''
-            F = self.stateTransitionMatrix(self.order+1, self._normalizeDeltaTime(t-self.t));
-            Z = F @ self.Z
-            return self._denormalizeState(Z)
+    def getState(self) -> vector:
+        return self._denormalizeState(self.Z)
 
-    def getCovariance(self, t : float, R : float = 1.0) -> array:
-        '''@ V : vector'''
+    def getCovariance(self, R : float = 1.0) -> array:
+        '''@ V : array'''
         V = self._VRF();
         if (V[0,0] == 0) :
             return V;
-        if (t == (self.t + self.tau)) :
-            return V * R;
-        else :
-            '''@F : array'''
-            # the VRF equations used are for 1-step predictors
-            F = self.stateTransitionMatrix(self.order+1, t-(self.t+self.tau) ); # (self.t+self.tau)-t
-            V = (F) @ V @ transpose(F);
-            return V * R;
+        return V * R;
 
     @abstractmethod   
     def _gammaParameter(self, t : float, dtau : float) -> float:

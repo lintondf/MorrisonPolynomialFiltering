@@ -200,7 +200,7 @@ def testEMPPair() :
         emp.start(0, Z);
         
     actual = zeros([N,len(emps)]);
-    GOFs = 1.96**2+zeros([N,len(emps)]);
+    GOFs = 1.959964**2+zeros([N,len(emps)]);  # 95% value for normal distribution
     SSRs = zeros([N,len(emps)]);
     Innovations = zeros([N,len(emps)]);
     Best = zeros(N, int);
@@ -208,7 +208,7 @@ def testEMPPair() :
     for i in range(0,N) :
         for ie in range(0,len(emps)) :
             emp = emps[ie]
-            Zstar = emp.predict(times[i,0])
+            Zstar = emp.predictState(times[i,0])
             e = observations[i] - Zstar[0]
             innovation = emp.update(times[i,0], Zstar, e)
             V = emp._VRF();
@@ -220,7 +220,7 @@ def testEMPPair() :
                 if (GOFs[i,ie] < GOFs[i,Best[i]]) :
                     Best[i] = ie;
 #                 print('%3d, %d, %10.6f, %10.6f, %10.6f, %5d' % (i,ie,SSRs[i,ie], Innovations[i,ie], GOFs[i,ie], Best[i] ))
-            Y = emp.getState(times[i,0])
+            Y = emp.getState()
             actual[i,ie] = Y[0]
         print(i, GOFs[i,:]/GOFs[i,Best[i]], Best[i])
 #             for je in range(ie+1,len(emps)) :

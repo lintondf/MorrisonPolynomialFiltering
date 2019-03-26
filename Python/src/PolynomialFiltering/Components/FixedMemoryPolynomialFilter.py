@@ -49,7 +49,7 @@ class FixedMemoryFilter(AbstractFilter) :
     def getTime(self) -> float:
         return self.t
     
-    def getState(self, t : float) -> vector:
+    def getMidpoint(self, t : float) -> vector:
         '''@dt : vector'''
         '''@Tn : array'''
         '''@Tnt : array'''
@@ -62,6 +62,9 @@ class FixedMemoryFilter(AbstractFilter) :
         TntYn = Tnt @ self.yRing
         self.Z = solve(TntTn, TntYn); # lstsq(TntTn, TntYn, rcond=None)[0];
         return self.Z;
+    
+    def getState(self) -> vector:
+        return self.getMidpoint(self.t)
     
     def add(self, t : float, y : float, observationId : str = '') -> None:
         self.t = t;

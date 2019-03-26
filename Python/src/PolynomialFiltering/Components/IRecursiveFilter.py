@@ -21,7 +21,7 @@ class IRecursiveFilter(AbstractFilter):
     def start(self, t : float, Z : vector) -> None:
         pass
         
-    """ predict - predict state at time t
+    """ predictState - predictState state at time t
         
     Parameters
     ----------
@@ -36,7 +36,7 @@ class IRecursiveFilter(AbstractFilter):
         delta tau
     """
     @abstractmethod   
-    def predict(self, t : float) -> vector :
+    def predictState(self, t : float) -> vector :
         pass
  
     @abstractmethod   
@@ -52,5 +52,5 @@ class IRecursiveFilter(AbstractFilter):
         pass
     
     @abstractmethod   
-    def getState(self, t : float) -> vector:
+    def getState(self) -> vector:
         pass

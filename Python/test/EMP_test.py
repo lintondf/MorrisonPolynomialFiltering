@@ -53,10 +53,10 @@ class Test(unittest.TestCase):
         filter.start(0.0, self.Y0[0:order+1])
         residuals = zeros([N, order+1]);
         for i in range(1,N) :
-            Zstar = filter.predict(times[i][0])
+            Zstar = filter.predictState(times[i][0])
             e = observations[i] - Zstar[0]
             filter.update(times[i][0], Zstar, e)
-            Yf = filter.getState(times[i][0])
+            Yf = filter.getState()
             assert_allclose( Yf, truth[i,0:order+1], atol=1e-12 )
             residuals[i,:] - Yf - truth[i,0:order+1];
 #         print(cov(residuals, rowvar=True))
@@ -67,7 +67,7 @@ class Test(unittest.TestCase):
 #         emp.start(0.0, zeros([order+1]))
 #         residuals = zeros([N, order+1]);
 #         for i in range(1,N) :
-#             Zstar = emp.predict(times[i][0])
+#             Zstar = emp.predictState(times[i][0])
 #             if i == K :
 #                 e = 1;
 #             else :
@@ -103,7 +103,7 @@ class Test(unittest.TestCase):
 #         filter.start(0.0, self.Y0[0:order+1])
 #         residuals = zeros([N+M, order+1]);
 #         for i in range(1,M) :
-#             Zstar = filter.predict(times[i][0])
+#             Zstar = filter.predictState(times[i][0])
 #             e = observations[i] - Zstar[0]
 #             filter.update(times[i][0], Zstar, e)
 #             Yf = filter.getState(times[i][0])
@@ -111,7 +111,7 @@ class Test(unittest.TestCase):
 #             residuals[i,:] - Yf - truth[i,0:order+1];
 #         empP1 = deepcopy(filter)
 #         empM1 = deepcopy(filter)
-#         Zstar = filter.predict(times[M][0])
+#         Zstar = filter.predictState(times[M][0])
 #         if (True) :
 #             N = M + 10
 #             for M in range(M, N) :
@@ -170,11 +170,11 @@ class Test(unittest.TestCase):
         
         filter.start(times[0], actual[0,:]);
         for i in range(1,N) :
-            Zstar = filter.predict(times[i])
+            Zstar = filter.predictState(times[i])
             e = observations[i] - Zstar[0]
             filter.update(times[i], Zstar, e)
-            actual[i,:] = filter.getState(times[i])
-            V = filter.getCovariance(times[i]+filter.getTau(), 1); # _VRF(); # 
+            actual[i,:] = filter.getState()
+            V = filter.getCovariance(1); # _VRF(); # 
             if (V[0,0] != 0) :
                 diagV[i,:] = (diag(V));       
         return (actual, diagV, V);
@@ -248,7 +248,7 @@ class Test(unittest.TestCase):
                 for i in range(0,N) :
                     fixed.add(times[i], observations[i]);
                 X = V / fixed.getCovariance();  # EMP VRF vs Fixed MP VRF
-                Y = fixed.getState(fixed.getTime());
+                Y = fixed.getState();
 #                 print( (actual[-1,:] - Y) / Y )
 #                 print( A2S((V / fixed.getCovariance())-1))
                 assert_allclose( actual[-1,:], Y, rtol=1e-5, atol=0, verbose=True)
@@ -304,7 +304,7 @@ class Test(unittest.TestCase):
 #                 emp.start(times[0,0], self.Y0[0:emp.order+1])
 #                 V = 0;
 #                 for i in range(1,N) :
-#                     Zstar = emp.predict(times[i,0])
+#                     Zstar = emp.predictState(times[i,0])
 #                     e = observations[i] - Zstar[0]
 #                     emp.update(times[i,0], Zstar, e)
 #                     if (i >= N-K) :

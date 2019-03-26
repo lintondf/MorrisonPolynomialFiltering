@@ -91,7 +91,7 @@ class AbstractFilter(ABC):
         pass
     
     @abstractmethod   
-    def getState(self, t : float) -> vector:
+    def getState(self) -> vector:
         pass
     
 

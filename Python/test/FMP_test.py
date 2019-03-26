@@ -49,10 +49,10 @@ class Test(unittest.TestCase):
         filter.start(0.0, self.Y0[0:order+1])
         residuals = zeros([N, order+1]);
         for i in range(1,N) :
-            Zstar = filter.predict(times[i][0])
+            Zstar = filter.predictState(times[i][0])
             e = observations[i] - Zstar[0]
             filter.update(times[i][0], Zstar, e)
-            Yf = filter.getState(times[i][0])
+            Yf = filter.getState()
             assert_almost_equal( Yf, truth[i,0:order+1] )
             residuals[i,:] - Yf - truth[i,0:order+1];
         return residuals;
@@ -62,10 +62,10 @@ class Test(unittest.TestCase):
 #         filter.start(0.0, self.Y0[0:order+1])
 #         E = zeros([N,order+1]);
 #         for i in range(1,N) :
-#             Zstar = filter.predict(times[i][0])
+#             Zstar = filter.predictState(times[i][0])
 #             e = observations[i] - Zstar[0]
 #             filter.update(times[i][0], Zstar, e)
-#             Yf = filter.getState(times[i][0])
+#             Yf = filter.getState()
 # #             assert_almost_equal( Yf, truth[i,0:order+1] )
 #             E[i,:] = Yf - truth[i,:]
 # #             print(i, A2S(Yf), A2S(truth[i,:]), A2S(E[i,:]) )
@@ -80,11 +80,11 @@ class Test(unittest.TestCase):
         
         filter.start(times[0], actual[0,:]);
         for i in range(1,N) :
-            Zstar = filter.predict(times[i])
+            Zstar = filter.predictState(times[i])
             e = observations[i] - Zstar[0]
             residuals[i,:] = e;
             filter.update(times[i], Zstar, e)
-            actual[i,:] = filter.getState(times[i])
+            actual[i,:] = filter.getState()
         return (actual, residuals);
     
     def xtest_FMPPerfect(self):
@@ -150,7 +150,7 @@ class Test(unittest.TestCase):
                 (times, truth, observations, noise) = \
                     generateTestData(fmp.order, N, -1.0, Y, fmp.tau, bias=0.0, sigma=sqrt(R))
                 R = var(noise)
-                V = fmp.getCovariance(fmp.getTau() + fmp.getTime(), R)
+                V = fmp.getCovariance(R)
                 data = concatenate([times, observations, truth], axis=1);
                 
                 writeTestVariable(group, 'setup', setup);
@@ -321,10 +321,10 @@ Ran 2 tests in 3745.461s
 #             filter.start(0.0, self.Y0[0:order+1])
 #             E = zeros([N,order+1]);
 #             for i in range(0,N) :
-#                 Zstar = filter.predict(times[i][0])
+#                 Zstar = filter.predictState(times[i][0])
 #                 e = observations[i] - Zstar[0]
 #                 filter.update(times[i][0], Zstar, e)
-#                 Yf = filter.getState(times[i][0])
+#                 Yf = filter.getState()
 #                 r = ("FMP%d: %5d %10.6g %10.6g %s %s" % \
 #                      (order, i, times[i][0], truth[i,0], A2S(Yf), A2S((Yf-truth[i,:])/dV)))
 #     #             print(r)
@@ -434,9 +434,9 @@ Ran 1 test in 100.764s
                 fmp = makeFMP(order, theta, tau)
                 fmp.start(0.0, self.Y0);
                 print(order,theta,tau)
-                V0 = fmp.getCovariance(fmp.getTime(), R)
-                V1 = fmp.getCovariance(fmp.getTime() + tau, R)
-                V2 = fmp.getCovariance(fmp.getTime() + 2*tau, R)
+                V0 = fmp.getCovariance(R)
+                V1 = fmp.predictCovariance(fmp.getTime() - tau, R)
+                V2 = fmp.predictCovariance(fmp.getTime() + 2*tau, R)
                 expected = concatenate([V0, V1, V2],axis=0);
                 print(A2S((expected)))
                 writeTestVariable(group, 'expected', expected);
