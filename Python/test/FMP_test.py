@@ -87,7 +87,7 @@ class Test(unittest.TestCase):
             actual[i,:] = filter.getState(times[i])
         return (actual, residuals);
     
-    def test_FMPPerfect(self):
+    def xtest_FMPPerfect(self):
         iCase = 0;
         N = 10;
         tau = 1.0;
@@ -418,10 +418,29 @@ Ran 1 test in 100.764s
 #         self.fmpDriver(5, fmp, tau=fmp.getTau(), N=1000)
 
     def test_VRF(self):
-        for order in range(0,5+1) :
-            tau = 0.001
-            theta = 0.9
-            fmp = makeFMP(order, tau, theta)
+        R = 1;
+        iCase = 0;
+        for order in range(1,1+1) :
+            for tau in [1e-4, 1e-3, 1e-2, 1e-1, 1, 1e1, 1e2, 1e3] :
+                theta = thetaFromVrf(order, tau, 0.1)
+                iCase += 1
+                group = createTestGroup(self.cdf, 'testVRF_%d' % (iCase) );
+                setup = array([order, theta, tau])
+                data = self.Y0;
+                
+                writeTestVariable(group, 'setup', setup);
+                writeTestVariable(group, 'data', data);
+                
+                fmp = makeFMP(order, theta, tau)
+                fmp.start(0.0, self.Y0);
+                print(order,theta,tau)
+                V0 = fmp.getCovariance(fmp.getTime(), R)
+                V1 = fmp.getCovariance(fmp.getTime() + tau, R)
+                V2 = fmp.getCovariance(fmp.getTime() + 2*tau, R)
+                expected = concatenate([V0, V1, V2],axis=0);
+                print(A2S((expected)))
+                writeTestVariable(group, 'expected', expected);
+                
 
 if __name__ == "__main__":
     #import sys;sys.argv = ['', 'Test.testName']

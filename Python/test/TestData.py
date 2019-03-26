@@ -8,12 +8,15 @@ import csv
 from numpy import zeros, array, concatenate, arange, ones, diag, sqrt, transpose,\
     allclose, mean, std
 from numpy import array as vector;
-from numpy.linalg import cholesky, LinAlgError
+from numpy.linalg import cholesky, inv, LinAlgError
 from scipy.interpolate import PchipInterpolator
 import pymap3d
 import xml.etree.ElementTree as ET 
 from PolynomialFiltering.Components.ExpandingMemoryPolynomialFilter import makeEMP;
-from TestUtilities import A2S, scaleVRFEMP, covarianceToCorrelation, correlationToCovariance;
+from TestUtilities import A2S, scaleVRFEMP, covarianceToCorrelation, correlationToCovariance, generateTestData;
+import matplotlib.pyplot as plt
+import matplotlib.dates as mdates
+from numpy.random.mtrand import seed
 
 def readData(): 
     with open('../test/landing.csv', newline='') as csvfile:
@@ -56,7 +59,8 @@ def scaleVRFEMP( V : array, t : float, n : float ) -> array:
 
 def baseCovarianceToCorrelation( C : array) -> array:
     (K,__) = covarianceToCorrelation(C);
-    decl = 'K = array([';
+    K = inv(K)
+    decl = 'J = array([';
     for i in range(0,K.shape[0]) :
         if (i != 0) :
             decl += ', ';
@@ -179,10 +183,151 @@ def scaleDiagEMP( order : int, u : float, n : float) -> vector:
         S[i] = S[i-1] / ((u*n)*(u*n));
     return S;
     
+def testEMPPair() :
+    seed(1);
+    tau = 0.01
+    N = 150;
+    R = 10;
+    order = 2;
+    (times, truth, observations, noise) = \
+        generateTestData(order, N, 0.0, array([1000, -100, 50, -15]), tau, sigma=sqrt(R))
+    
+    emps = [];
+    for o in range(0, 1+order+1) :
+        emps.append( makeEMP(o, tau) );
+    Z = zeros(order+1);
+    for emp in emps :
+        emp.start(0, Z);
+        
+    actual = zeros([N,len(emps)]);
+    GOFs = 1.96**2+zeros([N,len(emps)]);
+    SSRs = zeros([N,len(emps)]);
+    Innovations = zeros([N,len(emps)]);
+    Best = zeros(N, int);
+    # actual[0,:] = truth[0,0]
+    for i in range(0,N) :
+        for ie in range(0,len(emps)) :
+            emp = emps[ie]
+            Zstar = emp.predict(times[i,0])
+            e = observations[i] - Zstar[0]
+            innovation = emp.update(times[i,0], Zstar, e)
+            V = emp._VRF();
+            SSRs[i,ie] = e * (1/(R+V[0,0])) * e / (1+emp.order)
+            if (i > ie) :
+                Innovations[i,ie] = (innovation @ inv(R*V) @ transpose(innovation)) / (1+emp.order)
+                w = 0.05
+                GOFs[i,ie] = (1-w)*GOFs[i-1,ie] + w*sqrt(SSRs[i,ie] + Innovations[i,ie]) # *Innovations[i,ie]
+                if (GOFs[i,ie] < GOFs[i,Best[i]]) :
+                    Best[i] = ie;
+#                 print('%3d, %d, %10.6f, %10.6f, %10.6f, %5d' % (i,ie,SSRs[i,ie], Innovations[i,ie], GOFs[i,ie], Best[i] ))
+            Y = emp.getState(times[i,0])
+            actual[i,ie] = Y[0]
+        print(i, GOFs[i,:]/GOFs[i,Best[i]], Best[i])
+#             for je in range(ie+1,len(emps)) :
+#                 if (emps[je]._VRF()[ie, ie] > 1) :
+#                     print('>>', ie, je, emps[je].Z[ie], emps[ie].Z[ie] )
+#                     print('fr',ie, je, A2S(emps[je].getState(emps[je].getTime())))
+#                     emps[je].Z[ie] = emps[ie].Z[ie];
+#                     print('to',ie, je, A2S(emps[je].getState(emps[je].getTime())))
+#             if (i < 5 and ie == 0 and SSRs[i,0] < 4) :
+#                 for j in range(1,len(emps)) :
+#                     emps[j].Z[0] = emps[0].Z[0];
+#             if (i < 8 and ie == 1 and i > 1 and SSRs[i,1] < 4) :
+#                 emps[2].Z[1] = emps[1].Z[1]
+#         print('     ', A2S(truth[i,:]) )
+#         print('    0', A2S(emps[0].getState(emps[0].getTime())), A2S(diag(emps[0]._VRF())))
+#         print('    1', A2S(emps[1].getState(emps[1].getTime())), A2S(diag(emps[1]._VRF())))
+#         print('    2', A2S(emps[2].getState(emps[2].getTime())), A2S(diag(emps[2]._VRF())))
+#     print(A2S(concatenate([SSRs, Innovations], axis=1)))
+#     print(A2S(GOFs))
+    
+    M = 0;
+    f0 = plt.figure(figsize=(10, 6))
+    ax = plt.subplot(1, 1, 1)
+#     ax.plot(times, GOFs)
+    plt.title('0th Z[0] 1st Z[1]')
+    ax.plot(times[M:], truth[M:,0], 'r.-', times[M:], observations[M:], 'b.', \
+            times[M:], actual[M:,0], 'k-', times[M:], actual[M:,1], 'm-', \
+            times[M:], actual[M:,2], 'c-', times[M:], actual[M:,3], 'g-', \
+            times[M:], 500*Best[M:], 'y-')
+    plt.show()
+    
+    '''
+  1, 0,   6.303073,   4.884882
+  2, 0,   2.218534,   1.010665
+  2, 1,   2.340498,   9.687764
+  3, 0,   3.410600,   1.087129
+  3, 1,   0.380322,   1.467683
+  3, 2,   1.984270,  14.350510
+  4, 0,   0.049769,   0.012144
+  4, 1,   4.184896,  14.774742
+  4, 2,   0.204774,   1.682303
+  5, 0,  10.743694,   2.118895
+  5, 1,   1.448050,   4.667719
+  5, 2,   8.481378,  74.626338
+  6, 0,   0.952081,   0.157385
+  6, 1,   6.310094,  18.629822
+  6, 2,   2.849539,  25.937561
+  7, 0,   3.867918,   0.549970
+  7, 1,   0.112314,   0.305136
+  7, 2,   3.247072,  29.928216
+  8, 0,   0.917849,   0.114448
+  8, 1,   0.384585,   0.966260
+  8, 2,   0.104558,   0.962601
+  9, 0,   2.988086,   0.331678
+  9, 1,   0.000468,   0.001092
+  9, 2,   0.637359,   5.808766
+ 10, 0,   0.026364,   0.002636
+ 10, 1,   1.512730,   3.296248
+ 10, 2,   0.151776,   1.361220
+    
+  1, 0,   6.303073,   4.884882
+  2, 0,   2.218534,   1.010665
+  2, 1,   1.040221,   4.305673
+  3, 0,   3.410600,   1.087129
+  3, 1,   0.064989,   0.250797
+  3, 2,   0.859556,   6.216423
+  4, 0,   0.049769,   0.012144
+  4, 1,   1.565771,   5.527943
+  4, 2,   0.095246,   0.782480
+  5, 0,  10.743694,   2.118895
+  5, 1,   0.977576,   3.151167
+  5, 2,   4.540983,  39.955405
+  6, 0,   0.952081,   0.157385
+  6, 1,   2.590235,   7.647368
+  6, 2,   1.323269,  12.044881
+  7, 0,   3.867918,   0.549970
+  7, 1,   0.108960,   0.296025
+  7, 2,   0.691245,   6.371192
+  8, 0,   0.917849,   0.114448
+  8, 1,   0.090598,   0.227626
+  8, 2,   0.027684,   0.254872
+  9, 0,   2.988086,   0.331678
+  9, 1,   0.043339,   0.101179
+  9, 2,   0.332512,   3.030448
+ 10, 0,   0.026364,   0.002636
+ 10, 1,   0.615658,   1.341523
+ 10, 2,   0.083545,   0.749281
+    '''
+#     V = emps[2]._VRF()
+# #     print(A2S(V))
+#     iV = inv(V)
+#     print(A2S(iV))
+#     (cV, dV) = covarianceToCorrelation(V)
+# #     print(A2S(dV))
+# #     print(A2S(cV))
+#     icV = inv(cV)
+# #     print(A2S(icV))
+#     iX = correlationToCovariance(icV, 1/dV)
+#     print(A2S(iX))
+    
+    
+    
         
 if __name__ == '__main__':
     pass
-    FMPVRFCorrelations();
+    testEMPPair();
+#     FMPVRFCorrelations();
 #     order = 2;
 #     u = 1;
 #     n = 10;

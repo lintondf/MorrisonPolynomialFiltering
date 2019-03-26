@@ -22,7 +22,7 @@ from numpy.ma.core import isarray
 from scipy.stats import norm as normalDistribution
 from math import sin
 from runstats import Statistics
-from gevent.libev.corecext import stat
+# from gevent.libev.corecext import stat
 
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates

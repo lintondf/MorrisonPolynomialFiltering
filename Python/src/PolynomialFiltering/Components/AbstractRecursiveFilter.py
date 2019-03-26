@@ -108,7 +108,7 @@ class AbstractRecursiveFilter(IRecursiveFilter):
 #         Zstar = self.stateTransitionMatrix(self.order+1, dtau) @ self.Z
         return Zstar;
     
-    def update(self, t : float, Zstar : vector, e : float) -> None:
+    def update(self, t : float, Zstar : vector, e : float) -> vector:
         """
         Update the filter state from using the prediction error e
         
@@ -118,7 +118,7 @@ class AbstractRecursiveFilter(IRecursiveFilter):
             e - prediction error (observation - predicted state)
             
         Returns:
-            None
+            innovation vector
             
         Examples:
             Zstar = self.predict(t)
@@ -129,17 +129,20 @@ class AbstractRecursiveFilter(IRecursiveFilter):
         '''@ dtau : float'''
         '''@ p : float'''
         '''@ gamma : vector'''
+        '''@ innovation : vector'''
         dt = t - self.t
         dtau = self._normalizeDeltaTime(dt)
         p = self._gammaParameter(t, dtau)
         gamma = self._gamma(p)
-        self.Z = (Zstar + gamma * e)
+        innovation = gamma * e;
+        self.Z = (Zstar + innovation)
         self.t = t
         self.n += 1;
         if (self.n < self.n0) :
             self.setStatus( FilterStatus.INITIALIZING )
         else :
             self.setStatus( FilterStatus.RUNNING )
+        return innovation;
         
     def getN(self)->int:
         return self.n
@@ -170,8 +173,8 @@ class AbstractRecursiveFilter(IRecursiveFilter):
         else :
             '''@F : array'''
             # the VRF equations used are for 1-step predictors
-            F = self.stateTransitionMatrix(self.order+1, self._normalizeDeltaTime(t-(self.t+self.tau))); # (self.t+self.tau)-t
-            V = transpose(F) @ V @ F;
+            F = self.stateTransitionMatrix(self.order+1, t-(self.t+self.tau) ); # (self.t+self.tau)-t
+            V = (F) @ V @ transpose(F);
             return V * R;
 
     @abstractmethod   

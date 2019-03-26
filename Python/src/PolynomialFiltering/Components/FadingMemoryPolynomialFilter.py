@@ -271,19 +271,25 @@ def makeFMP(order : int, theta : float, tau : float) -> FMPBase:
 def thetaFromVrf( order : int, tau : float, vrf : float) -> float:
     '''@x : float'''
     if (order == 0) :
+        vrf = max(1e-14, min(1-1e-6, vrf))
         return 2/(1+vrf) - 1;
     elif (order == 1) :
-        x = (vrf * 1./2.)**(1./3.); 
-        return -1. + 2./(1.0+tau**(2./3.)*x) 
+        x = tau**(2./3.)*(vrf * 1./2.)**(1./3.); 
+        x = max(1e-14, min(1-1e-6, x))
+        return -1. + 2./(1.0+x) 
     elif (order == 2) :
-        x = (vrf * 1./6.)**(1./5.); 
-        return -1. + 2./(1.0+tau**(4./5.)*x) 
+        x = tau**(4./5.)*(vrf * 1./6.)**(1./5.); 
+        x = max(1e-14, min(1-1e-6, x))
+        return -1. + 2./(1.0+x) 
     elif (order == 3) :
-        x = (vrf * 1./20.)**(1./7.); 
-        return -1. + 2./(1.0+tau**(6./7.)*x) 
+        x = tau**(6./7.)*(vrf * 1./20.)**(1./7.); 
+        x = max(1e-14, min(1-1e-6, x))
+        return -1. + 2./(1.0+x) 
     elif (order == 4) :
-        x = (vrf * 1./70.)**(1./9.); 
-        return -1. + 2./(1.0+tau**(8./9.)*x) 
+        x = tau**(8./9.)*(vrf * 1./70.)**(1./9.); 
+        x = max(1e-14, min(1-1e-6, x))
+        return -1. + 2./(1.0+x) 
     else : # (order == 5) :
-        x = (vrf * 14400./252.)**(1./11.); 
-        return -1. + 2./(1.0+tau**(10./11.)*x) 
+        x = tau**(10./11.)*(vrf * 14400./252.)**(1./11.); 
+        x = max(1e-14, min(1-1e-6, x))
+        return -1. + 2./(1.0+x) 
