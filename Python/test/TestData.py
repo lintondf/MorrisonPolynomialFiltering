@@ -6,7 +6,7 @@ Created on Feb 1, 2019
 import csv
 
 from numpy import zeros, array, concatenate, arange, ones, diag, sqrt, transpose,\
-    allclose, mean, std
+    allclose, mean, std, eye
 from numpy import array as vector;
 from numpy.linalg import cholesky, inv, LinAlgError
 from scipy.interpolate import PchipInterpolator
@@ -118,7 +118,7 @@ def VRF2(order : int):
     for n in [10, 25, 50, 100, 500, 1000, 5000] :
         print(order, u, n)
         emp.n = n;
-        P1 = emp.getCovariance(1)
+        P1 = emp.getCovariance(eye(1))
 #         V = scaleVRFEMP(ones([order+1,order+1]), u, n);
 #         print('scale diag ', A2S(diag(V)))
 #         print('       new ', A2S(scaleDiagEMP(order, u, n)))

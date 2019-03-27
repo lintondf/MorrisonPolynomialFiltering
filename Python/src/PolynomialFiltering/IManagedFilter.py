@@ -31,9 +31,5 @@ class IManagedFilter(AbstractFilter):
     def addWithVariance(self, t : float, y : vector, R : array, observationId : str = '') -> None:    
         pass
     
-    @abstractmethod   
-    def getCovariance(self, t : float) -> array:
-        pass
-
 if __name__ == '__main__':
     pass

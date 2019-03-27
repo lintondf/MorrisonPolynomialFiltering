@@ -150,7 +150,7 @@ class AbstractRecursiveFilter(AbstractFilter):
     def getState(self) -> vector:
         return self._denormalizeState(self.Z)
 
-    def getCovariance(self, R : float = 1.0) -> array:
+    def getCovariance(self, R : array) -> array:
         '''@ V : array'''
         V = self._VRF();
         if (V[0,0] == 0) :

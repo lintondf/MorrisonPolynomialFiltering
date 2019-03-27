@@ -71,15 +71,15 @@ class FixedMemoryFilter(AbstractFilter) :
         self.yRing[ self.n % self.L ] = y;
         self.n += 1;    
     
-    def getCovariance(self, R : float = 1.0) -> array:
+    def getCovariance(self, R : array) -> array:
         return self.transitionCovariance(self.t, R)
     
-    def transitionCovariance(self, t : float, R : float = 1.0) -> array:
+    def transitionCovariance(self, t : float, R : array) -> array:
         '''@dt : vector'''
         '''@Tn : array'''
         dt = self.tRing - t;
         Tn = self._getTn(dt);
-        return inv(transpose(Tn) @ Tn);
+        return R * inv(transpose(Tn) @ Tn);
     
     def _getTn(self, dt : vector ) -> array:
         '''@Tn : array'''

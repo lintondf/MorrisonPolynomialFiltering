@@ -135,7 +135,7 @@ class TestFixedMemoryFiltering(unittest.TestCase):
         fixed = FixedMemoryFilter(order, window);
         for i in range(0,M) :
             fixed.add(times[i], observations[i]);
-        return fixed.getCovariance();
+        return fixed.getCovariance(eye(1));
                 
     def testVRF(self) :
         tau = 0.1;
@@ -184,7 +184,7 @@ class TestFixedMemoryFiltering(unittest.TestCase):
                 results[i-window,:] = fixed.getState() - truth[i,:];
             c = cov(results,rowvar=False);
             C[k,:] = c.flatten();
-            V = fixed.getCovariance();
+            V = fixed.getCovariance(eye(1));
             
         E = mean(C,axis=0) / V.flatten()
         print( A2S( E ) );

@@ -9,7 +9,8 @@ from typing import Tuple;
 from netCDF4 import Dataset
 from math import sin, cos, exp
 import numpy as np
-from numpy import array, array2string, diag, eye, ones, transpose, zeros, sqrt, mean, std, var
+from numpy import array, array2string, diag, eye, ones, transpose, zeros, sqrt, mean, std, var,\
+    isscalar
 from numpy import array as vector
 from numpy.linalg.linalg import det, inv
 from numpy.random import randn
@@ -72,6 +73,8 @@ def generateTestData(order, N, t0, Y0, dt, bias=0.0, sigma=1.0):
         truth N by order+1
         observations N by 1
         noise N by 1 '''
+    if not isscalar(sigma) :
+        sigma = sigma[0,0]
     if (order >= 0) :
         truth = zeros([N,order+1])
         noise = bias + sigma*randn(N,1)

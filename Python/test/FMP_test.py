@@ -135,7 +135,7 @@ class Test(unittest.TestCase):
 #             for N in [1000, 2500, 5000, 10000, 50000] :
                 N = 1000;
                 tau = 5/N;
-                R = 1;
+                R = eye(1);
                 theta = thetaFromVrf(order, tau, 0.1 )
                 setup = array([order, theta, tau, N, R])
                 iCase += 1;
@@ -146,7 +146,7 @@ class Test(unittest.TestCase):
                     print( A2S( diag(fmp._VRF())))
             
 #                 Y = self.Y0[0:fmp.order+1];
-                Y = 1000*sqrt(R)*randn(fmp.order+1)
+                Y = 1000*sqrt(R[0,0])*randn(fmp.order+1)
                 (times, truth, observations, noise) = \
                     generateTestData(fmp.order, N, -1.0, Y, fmp.tau, bias=0.0, sigma=sqrt(R))
                 R = var(noise)
@@ -418,7 +418,7 @@ Ran 1 test in 100.764s
 #         self.fmpDriver(5, fmp, tau=fmp.getTau(), N=1000)
 
     def test_VRF(self):
-        R = 1;
+        R = eye(1);
         iCase = 0;
         for order in range(1,1+1) :
             for tau in [1e-4, 1e-3, 1e-2, 1e-1, 1, 1e1, 1e2, 1e3] :

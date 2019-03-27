@@ -91,7 +91,7 @@ class AbstractFilter(ABC):
         F = self.stateTransitionMatrix(self.order+1, dt );
         return F @ self.getState();
     
-    def transitionCovariance(self, t : float, R : float = 1.0) -> array:
+    def transitionCovariance(self, t : float, R : array ) -> array:
         '''@ dt : float'''
         '''@ F : array'''
         '''@ V : array'''
@@ -115,6 +115,6 @@ class AbstractFilter(ABC):
         pass
     
     @abstractmethod
-    def getCovariance(self, R : float = 1.0) -> array: #TODO R to array generally
+    def getCovariance(self, R : array) -> array:
         pass
 
