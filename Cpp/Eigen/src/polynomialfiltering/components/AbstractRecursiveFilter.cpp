@@ -25,13 +25,12 @@ namespace PolynomialFiltering {
                 return 1.0 - factor / n;
             }
 
-            AbstractRecursiveFilter::AbstractRecursiveFilter (const long order, const double tau) {
+            AbstractRecursiveFilter::AbstractRecursiveFilter (const long order, const double tau) : AbstractFilter(order) {
                 if (order < 0 || order > 5) {
                     throw ValueError("Polynomial orders < 0 or > 5 are not supported");
                 }
                 this->n = 0;
                 this->n0 = order + 1;
-                this->order = order;
                 this->dtau = 0;
                 this->t0 = 0;
                 this->t = 0;

@@ -27,7 +27,7 @@ namespace PolynomialFiltering {
 
     class AbstractFilter {
         public:
-            AbstractFilter(const std::string name="");
+            AbstractFilter(const long order, const std::string name="");
             static RealMatrix stateTransitionMatrix(const long N, const double dt);
             std::string getName();
             void setName(const std::string name);
@@ -38,7 +38,9 @@ namespace PolynomialFiltering {
             virtual long getN() = 0;
             virtual double getTime() = 0;
             virtual RealVector getState() = 0;
+            virtual RealMatrix getCovariance(const double R=1.0) = 0;
         protected:
+            long order;
             std::string name;
             FilterStatus status;
     }; // class AbstractFilter 

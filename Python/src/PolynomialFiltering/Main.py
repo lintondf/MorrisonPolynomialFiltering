@@ -33,14 +33,16 @@ class AbstractFilter(ABC):
     classdocs
     '''
     
+    '''@ order : int''' 
     '''@name : str'''
     '''@status : FilterStatus'''
 
-    def __init__(self, name : str = '') -> None:
+    def __init__(self, order : int, name : str = '') :
         '''
         Constructor
         '''
         self.setStatus( FilterStatus.IDLE )
+        self.order = order
         self.name = name
         
     @classmethod            
@@ -82,6 +84,24 @@ class AbstractFilter(ABC):
     def setStatus(self, status : FilterStatus) -> None:
         self.status = status
         
+    def transitionState(self, t : float) -> vector :
+        '''@ dt : float'''
+        '''@ F : array'''
+        dt = t - self.getTime()
+        F = self.stateTransitionMatrix(self.order+1, dt );
+        return F @ self.getState();
+    
+    def transitionCovariance(self, t : float, R : float = 1.0) -> array:
+        '''@ dt : float'''
+        '''@ F : array'''
+        '''@ V : array'''
+        V = self.getCovariance(R)
+        dt = t - self.getTime()
+        F = self.stateTransitionMatrix(self.order+1, dt );
+        V = (F) @ V @ transpose(F);
+        return V * R;
+        
+    
     @abstractmethod   
     def getN(self) -> int:
         pass
@@ -94,4 +114,7 @@ class AbstractFilter(ABC):
     def getState(self) -> vector:
         pass
     
+    @abstractmethod
+    def getCovariance(self, R : float = 1.0) -> array: #TODO R to array generally
+        pass
 

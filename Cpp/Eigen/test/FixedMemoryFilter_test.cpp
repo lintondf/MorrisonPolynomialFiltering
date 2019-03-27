@@ -35,7 +35,7 @@ RealMatrix executeEstimatedState(RealMatrix setup, RealMatrix data) {
 	for (int i = 0; i < M; i++) {
 		fixed.add( times(i), observations(i) );
 	}
-	return fixed.getState(times(iCheck));
+	return fixed.transitionState(times(iCheck));
 }
 
 RealMatrix executeVRF(RealMatrix setup, RealMatrix data) {

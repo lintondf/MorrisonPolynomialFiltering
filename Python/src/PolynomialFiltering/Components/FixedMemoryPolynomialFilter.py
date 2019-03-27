@@ -25,9 +25,8 @@ class FixedMemoryFilter(AbstractFilter) :
     '''@tRing :vector'''
     '''@yRing :vector'''
     
-    def __init__(self, order : int, memorySize : int = 51 ) -> None:
-        super().__init__();  # TODO name
-        self.order = order;
+    def __init__(self, order : int, memorySize : int = 51 ):
+        super().__init__(order);  # TODO name
         if (order < 0 or order > 5) :
             raise ValueError("Polynomial orders < 1 or > 5 are not supported")
         self.L = memorySize;
@@ -64,7 +63,7 @@ class FixedMemoryFilter(AbstractFilter) :
         return self.Z;
     
     def getState(self) -> vector:
-        return self.getMidpoint(self.t)
+        return self.transitionState(self.t)
     
     def add(self, t : float, y : float, observationId : str = '') -> None:
         self.t = t;

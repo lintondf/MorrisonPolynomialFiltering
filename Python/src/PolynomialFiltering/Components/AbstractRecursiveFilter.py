@@ -19,7 +19,6 @@ class AbstractRecursiveFilter(AbstractFilter):
     classdocs
     '''
     
-    '''@ order : int''' 
     '''@ n : int'''
     '''@ n0 : int'''
     '''@ dtau : float'''
@@ -37,13 +36,12 @@ class AbstractRecursiveFilter(AbstractFilter):
         factor = 1.148*order + 2.0367;
         return 1.0 - factor/n
     
-    def __init__(self, order : int, tau : float ) -> None :
-        super().__init__()
+    def __init__(self, order : int, tau : float ) :
+        super().__init__(order)
         if (order < 0 or order > 5) :
             raise ValueError("Polynomial orders < 0 or > 5 are not supported")
         self.n = 0
         self.n0 = order+1
-        self.order = order
         self.dtau = 0
         self.t0 = 0;
         self.t = 0;
@@ -159,24 +157,6 @@ class AbstractRecursiveFilter(AbstractFilter):
             return V;
         return V * R;
 
-    def transitionState(self, t : float) -> vector :
-        '''@ dt : float'''
-        '''@ F : array'''
-        dt = t - self.t
-        F = self.stateTransitionMatrix(self.order+1, dt );
-        return F @ self.getState();
-    
-    def transitionCovariance(self, t : float, R : float = 1.0) -> array:
-        '''@ dt : float'''
-        '''@ F : array'''
-        '''@ V : array'''
-        V = self.getCovariance(R)
-        dt = t - self.t
-        F = self.stateTransitionMatrix(self.order+1, dt );
-        V = (F) @ V @ transpose(F);
-        return V * R;
-        
-    
     @abstractmethod   
     def _gammaParameter(self, t : float, dtau : float) -> float:
         pass

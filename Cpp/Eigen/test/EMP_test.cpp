@@ -31,7 +31,7 @@ RealMatrix runCase(long order, double tau, long N, RealMatrix data ) {
 		double e = data(i, 1) - Z(0);
 		emp->update(data(i, 0), Z, e);
 		//std::cout << i << " " << emp->getState(emp->getTime()) << std::endl;
-		actual.block(i, 0, 1, order + 1) = emp->getState(emp->getTime()).transpose();
+		actual.block(i, 0, 1, order + 1) = emp->getState().transpose();
 	}
 	return actual;
 }

@@ -271,8 +271,8 @@ def makeFMP(order : int, theta : float, tau : float) -> FMPBase:
 def thetaFromVrf( order : int, tau : float, vrf : float) -> float:
     '''@x : float'''
     if (order == 0) :
-        vrf = max(1e-14, min(1-1e-6, vrf))
-        return 2/(1+vrf) - 1;
+        x = max(1e-14, min(1-1e-6, vrf))
+        return 2/(1+x) - 1;
     elif (order == 1) :
         x = tau**(2./3.)*(vrf * 1./2.)**(1./3.); 
         x = max(1e-14, min(1-1e-6, x))

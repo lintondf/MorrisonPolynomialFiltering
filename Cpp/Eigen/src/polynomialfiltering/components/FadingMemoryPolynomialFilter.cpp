@@ -241,27 +241,27 @@ namespace PolynomialFiltering {
         double thetaFromVrf (const long order, const double tau, const double vrf) {
             double x;
             if (order == 0) {
-                vrf = max(, std::min(1 -  1e-6 , vrf));
-                return 2 / (1 + vrf) - 1;
+                x = std::max(1e-14, std::min(1 - 1e-6, vrf));
+                return 2 / (1 + x) - 1;
             } else if (order == 1) {
                 x = pow(tau, (2. / 3.)) * pow((vrf * 1. / 2.), (1. / 3.));
-                x = max(, std::min(1 -  1e-6 , x));
+                x = std::max(1e-14, std::min(1 - 1e-6, x));
                 return  - 1. + 2. / (1.0 + x);
             } else if (order == 2) {
                 x = pow(tau, (4. / 5.)) * pow((vrf * 1. / 6.), (1. / 5.));
-                x = max(, std::min(1 -  1e-6 , x));
+                x = std::max(1e-14, std::min(1 - 1e-6, x));
                 return  - 1. + 2. / (1.0 + x);
             } else if (order == 3) {
                 x = pow(tau, (6. / 7.)) * pow((vrf * 1. / 20.), (1. / 7.));
-                x = max(, std::min(1 -  1e-6 , x));
+                x = std::max(1e-14, std::min(1 - 1e-6, x));
                 return  - 1. + 2. / (1.0 + x);
             } else if (order == 4) {
                 x = pow(tau, (8. / 9.)) * pow((vrf * 1. / 70.), (1. / 9.));
-                x = max(, std::min(1 -  1e-6 , x));
+                x = std::max(1e-14, std::min(1 - 1e-6, x));
                 return  - 1. + 2. / (1.0 + x);
             } else {
                 x = pow(tau, (10. / 11.)) * pow((vrf * 14400. / 252.), (1. / 11.));
-                x = max(, std::min(1 -  1e-6 , x));
+                x = std::max(1e-14, std::min(1 - 1e-6, x));
                 return  - 1. + 2. / (1.0 + x);
             }
         }

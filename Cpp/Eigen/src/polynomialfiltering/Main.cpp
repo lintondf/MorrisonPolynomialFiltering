@@ -15,8 +15,9 @@
 namespace PolynomialFiltering {
     using namespace Eigen;
     
-        AbstractFilter::AbstractFilter (const std::string name) {
+        AbstractFilter::AbstractFilter (const long order, const std::string name) {
             this->setStatus(FilterStatus::IDLE);
+            this->order = order;
             this->name = name;
         }
 
@@ -57,8 +58,8 @@ namespace PolynomialFiltering {
         RealVector AbstractFilter::transitionState (const double t) {
             double dt;
             RealMatrix F;
-            dt = t - this->t;
-            F = this->stateTransitionMatrix((*this) + 1, dt);
+            dt = t - this->getTime();
+            F = this->stateTransitionMatrix(this->order + 1, dt);
             return F * this->getState();
         }
 
@@ -66,9 +67,9 @@ namespace PolynomialFiltering {
             double dt;
             RealMatrix F;
             RealMatrix V;
-            V = (*this)(R);
-            dt = t - this->t;
-            F = this->stateTransitionMatrix((*this) + 1, dt);
+            V = this->getCovariance(R);
+            dt = t - this->getTime();
+            F = this->stateTransitionMatrix(this->order + 1, dt);
             V = (F) * V;
             return V * R;
         }

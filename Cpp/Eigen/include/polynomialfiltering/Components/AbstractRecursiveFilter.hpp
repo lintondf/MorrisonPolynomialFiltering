@@ -14,13 +14,12 @@
 
 #include <polynomialfiltering/PolynomialFilteringEigen.hpp>
 
-#include <polynomialfiltering/components/IRecursiveFilter.hpp>
 #include <polynomialfiltering/Main.hpp>
 
 
 namespace PolynomialFiltering {
     namespace Components {
-        class AbstractRecursiveFilter : public IRecursiveFilter {
+        class AbstractRecursiveFilter : public AbstractFilter {
             public:
                 static double effectiveTheta(const long order, const double n);
                 AbstractRecursiveFilter(const long order, const double tau);
@@ -33,7 +32,6 @@ namespace PolynomialFiltering {
                 RealVector getState();
                 RealMatrix getCovariance(const double R=1.0);
             protected:
-                long order;
                 long n;
                 long n0;
                 double dtau;

@@ -51,7 +51,7 @@ class ExpressionCompilationListener extends LcdPythonBaseListener {
 		
 		protected static final Pattern integerPattern = Pattern.compile("^(\\d+)$");
 		protected static final Pattern floatPattern = Pattern.compile("^(\\d+)\\.(\\d*)$");
-		
+		protected static final Pattern expPattern = Pattern.compile("^([-+]?\\d*\\.?\\d+)(?:[eE]([-+]?\\d+))?$");
 		protected TranslationNode defaultOperandOperator( ParserRuleContext ctx, String tag ) {
 			if (expressionRoot != null) {
 //				System.out.println( tag + " (" + ctx.getChildCount() + ")");
@@ -125,6 +125,11 @@ class ExpressionCompilationListener extends LcdPythonBaseListener {
 				return node;				
 			}
 			matcher = floatPattern.matcher(value);
+			if (matcher.matches()) {
+				node = new TranslationConstantNode(null,  parent, value, Kind.FLOAT );
+				return node;				
+			}
+			matcher = expPattern.matcher(value);
 			if (matcher.matches()) {
 				node = new TranslationConstantNode(null,  parent, value, Kind.FLOAT );
 				return node;				

@@ -16,8 +16,7 @@ namespace PolynomialFiltering {
     namespace Components {
         using namespace Eigen;
         
-            FixedMemoryFilter::FixedMemoryFilter (const long order, const long memorySize) : AbstractFilter() {
-                this->order = order;
+            FixedMemoryFilter::FixedMemoryFilter (const long order, const long memorySize) : AbstractFilter(order) {
                 if (order < 0 || order > 5) {
                     throw ValueError("Polynomial orders < 1 or > 5 are not supported");
                 }
@@ -60,7 +59,7 @@ namespace PolynomialFiltering {
             }
 
             RealVector FixedMemoryFilter::getState () {
-                return (*this)(this->t);
+                return this->transitionState(this->t);
             }
 
             void FixedMemoryFilter::add (const double t, const double y, const std::string observationId) {

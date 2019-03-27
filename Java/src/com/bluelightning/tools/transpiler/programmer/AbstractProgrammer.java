@@ -31,6 +31,7 @@ public abstract class AbstractProgrammer implements IProgrammer {
 		parameterRemap.put("RealVector", "RealVector&");
 		parameterRemap.put("RealMatrix", "RealMatrix&");
 		
+		simpleRemaps.put("max", new Symbol(libraryScope, "std::max", "int")); //TODO generic
 		simpleRemaps.put("min", new Symbol(libraryScope, "std::min", "int")); //TODO generic
 			Map<String, Symbol> libraryNames = new HashMap<>();
 			libraryNames.put("array",  new Symbol(libraryScope, "identity", "array") ); 

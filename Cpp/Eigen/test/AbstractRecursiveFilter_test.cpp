@@ -48,8 +48,8 @@ public:
 
 		RealMatrix actual = MatrixXd::Zero(this->order + 1,2);
 
-		actual.col(0) = getState(t0);
-		actual.col(1) = getState(setup(3));
+		actual.col(0) = getState();
+		actual.col(1) = transitionState(setup(3));
 		return actual;
 	}
 
@@ -64,11 +64,11 @@ public:
 		update(setup(3), Zstar, 0);
 
 		RealMatrix actual = MatrixXd::Zero(this->order + 1, 2);
-		actual.col(0) = getState(setup(3));
+		actual.col(0) = getState();
 
 		Zstar = predict(setup(4));
 		update(setup(4), Zstar, 1);
-		actual.col(1) = getState(setup(4));
+		actual.col(1) = transitionState(setup(4));
 		return actual;
 	}
 
