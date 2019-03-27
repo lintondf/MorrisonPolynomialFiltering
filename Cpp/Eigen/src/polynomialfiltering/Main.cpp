@@ -54,6 +54,25 @@ namespace PolynomialFiltering {
             this->status = status;
         }
 
+        RealVector AbstractFilter::transitionState (const double t) {
+            double dt;
+            RealMatrix F;
+            dt = t - this->t;
+            F = this->stateTransitionMatrix((*this) + 1, dt);
+            return F * this->getState();
+        }
+
+        RealMatrix AbstractFilter::transitionCovariance (const double t, const double R) {
+            double dt;
+            RealMatrix F;
+            RealMatrix V;
+            V = (*this)(R);
+            dt = t - this->t;
+            F = this->stateTransitionMatrix((*this) + 1, dt);
+            V = (F) * V;
+            return V * R;
+        }
+
 }; // namespace PolynomialFiltering
 
 #pragma float_control(pop)

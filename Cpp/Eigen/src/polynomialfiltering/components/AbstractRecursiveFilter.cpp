@@ -87,16 +87,18 @@ namespace PolynomialFiltering {
                 return Zstar;
             }
 
-            void AbstractRecursiveFilter::update (const double t, const RealVector& Zstar, const double e) {
+            RealVector AbstractRecursiveFilter::update (const double t, const RealVector& Zstar, const double e) {
                 double dt;
                 double dtau;
                 double p;
                 RealVector gamma;
+                RealVector innovation;
                 dt = t - this->t;
                 dtau = this->_normalizeDeltaTime(dt);
                 p = this->_gammaParameter(t, dtau);
                 gamma = this->_gamma(p);
-                this->Z = (Zstar + gamma * e);
+                innovation = gamma * e;
+                this->Z = (Zstar + innovation);
                 this->t = t;
                 this->n += 1;
                 if (this->n < this->n0) {
@@ -104,6 +106,7 @@ namespace PolynomialFiltering {
                 } else {
                     this->setStatus(FilterStatus::RUNNING);
                 }
+                return innovation;
             }
 
             long AbstractRecursiveFilter::getN () {
@@ -118,32 +121,17 @@ namespace PolynomialFiltering {
                 return this->t;
             }
 
-            RealVector AbstractRecursiveFilter::getState (const double t) {
-                RealVector Z;
-                if (t == this->t) {
-                    return this->_denormalizeState(this->Z);
-                } else {
-                    RealMatrix F;
-                    F = this->stateTransitionMatrix(this->order + 1, this->_normalizeDeltaTime(t - this->t));
-                    Z = F * this->Z;
-                    return this->_denormalizeState(Z);
-                }
+            RealVector AbstractRecursiveFilter::getState () {
+                return this->_denormalizeState(this->Z);
             }
 
-            RealMatrix AbstractRecursiveFilter::getCovariance (const double t, const double R) {
-                RealVector V;
+            RealMatrix AbstractRecursiveFilter::getCovariance (const double R) {
+                RealMatrix V;
                 V = this->_VRF();
                 if (V(0, 0) == 0) {
                     return V;
                 }
-                if (t == (this->t + this->tau)) {
-                    return V * R;
-                } else {
-                    RealMatrix F;
-                    F = this->stateTransitionMatrix(this->order + 1, this->_normalizeDeltaTime(t - (this->t + this->tau)));
-                    V = transpose(F) * V;
-                    return V * R;
-                }
+                return V * R;
             }
 
     }; // namespace Components

@@ -10,17 +10,16 @@ from typing import Tuple
 from numpy import array, diag, eye, ones, zeros, isscalar, transpose, array_equal
 from numpy import array as vector;
 
-from PolynomialFiltering.Components.IRecursiveFilter import IRecursiveFilter
 from PolynomialFiltering.Main import AbstractFilter, FilterStatus
 
 from TestUtilities import nearPD, A2S
     
-class AbstractRecursiveFilter(IRecursiveFilter):
+class AbstractRecursiveFilter(AbstractFilter):
     '''
     classdocs
     '''
     
-    '''@ order : int'''  # TODO why not auto inherited?
+    '''@ order : int''' 
     '''@ n : int'''
     '''@ n0 : int'''
     '''@ dtau : float'''
@@ -39,7 +38,7 @@ class AbstractRecursiveFilter(IRecursiveFilter):
         return 1.0 - factor/n
     
     def __init__(self, order : int, tau : float ) -> None :
-#         super().__init__(self)
+        super().__init__()
         if (order < 0 or order > 5) :
             raise ValueError("Polynomial orders < 0 or > 5 are not supported")
         self.n = 0
@@ -83,7 +82,7 @@ class AbstractRecursiveFilter(IRecursiveFilter):
     def _denormalizeState(self, Z : vector) -> vector:
         return Z / self.D
     
-    def predictState(self, t : float) -> vector :
+    def predict(self, t : float) -> vector :
         """
         Predict the filter state (Z*) at time t
         
@@ -91,10 +90,8 @@ class AbstractRecursiveFilter(IRecursiveFilter):
             t - target time
             
         Returns:
-            A three tuple holding: (predicted-NORMALIZED-state, delta-time, delta-tau)
+            predicted-NORMALIZED-state
             
-        Examples:
-            Zstar = self.predictState(t)
         """
         '''@ Zstar : vector'''
         
@@ -106,17 +103,6 @@ class AbstractRecursiveFilter(IRecursiveFilter):
         F = self.stateTransitionMatrix(self.order+1, dtau)
         Zstar = F @ self.Z;
         return Zstar;
-    
-    def predictCovariance(self, t : float, R : float = 1.0) -> array:
-        '''@F : array'''
-        '''@ V : array'''
-        V = self._VRF();
-        if (V[0,0] == 0) :
-            return V;
-        F = self.stateTransitionMatrix(self.order+1, t-self.t );
-        V = (F) @ V @ transpose(F);
-        return V * R;
-        
     
     def update(self, t : float, Zstar : vector, e : float) -> vector:
         """
@@ -131,7 +117,7 @@ class AbstractRecursiveFilter(IRecursiveFilter):
             innovation vector
             
         Examples:
-            Zstar = self.predictState(t)
+            Zstar = self.predict(t)
             e = observation[0] - Zstar[0]
             self.update(t, Zstar, e )
         """
@@ -173,6 +159,24 @@ class AbstractRecursiveFilter(IRecursiveFilter):
             return V;
         return V * R;
 
+    def transitionState(self, t : float) -> vector :
+        '''@ dt : float'''
+        '''@ F : array'''
+        dt = t - self.t
+        F = self.stateTransitionMatrix(self.order+1, dt );
+        return F @ self.getState();
+    
+    def transitionCovariance(self, t : float, R : float = 1.0) -> array:
+        '''@ dt : float'''
+        '''@ F : array'''
+        '''@ V : array'''
+        V = self.getCovariance(R)
+        dt = t - self.t
+        F = self.stateTransitionMatrix(self.order+1, dt );
+        V = (F) @ V @ transpose(F);
+        return V * R;
+        
+    
     @abstractmethod   
     def _gammaParameter(self, t : float, dtau : float) -> float:
         pass

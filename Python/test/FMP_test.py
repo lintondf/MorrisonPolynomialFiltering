@@ -49,7 +49,7 @@ class Test(unittest.TestCase):
         filter.start(0.0, self.Y0[0:order+1])
         residuals = zeros([N, order+1]);
         for i in range(1,N) :
-            Zstar = filter.predictState(times[i][0])
+            Zstar = filter.predict(times[i][0])
             e = observations[i] - Zstar[0]
             filter.update(times[i][0], Zstar, e)
             Yf = filter.getState()
@@ -62,7 +62,7 @@ class Test(unittest.TestCase):
 #         filter.start(0.0, self.Y0[0:order+1])
 #         E = zeros([N,order+1]);
 #         for i in range(1,N) :
-#             Zstar = filter.predictState(times[i][0])
+#             Zstar = filter.predict(times[i][0])
 #             e = observations[i] - Zstar[0]
 #             filter.update(times[i][0], Zstar, e)
 #             Yf = filter.getState()
@@ -80,7 +80,7 @@ class Test(unittest.TestCase):
         
         filter.start(times[0], actual[0,:]);
         for i in range(1,N) :
-            Zstar = filter.predictState(times[i])
+            Zstar = filter.predict(times[i])
             e = observations[i] - Zstar[0]
             residuals[i,:] = e;
             filter.update(times[i], Zstar, e)
@@ -321,7 +321,7 @@ Ran 2 tests in 3745.461s
 #             filter.start(0.0, self.Y0[0:order+1])
 #             E = zeros([N,order+1]);
 #             for i in range(0,N) :
-#                 Zstar = filter.predictState(times[i][0])
+#                 Zstar = filter.predict(times[i][0])
 #                 e = observations[i] - Zstar[0]
 #                 filter.update(times[i][0], Zstar, e)
 #                 Yf = filter.getState()
@@ -435,8 +435,8 @@ Ran 1 test in 100.764s
                 fmp.start(0.0, self.Y0);
                 print(order,theta,tau)
                 V0 = fmp.getCovariance(R)
-                V1 = fmp.predictCovariance(fmp.getTime() - tau, R)
-                V2 = fmp.predictCovariance(fmp.getTime() + 2*tau, R)
+                V1 = fmp.transitionCovariance(fmp.getTime() - tau, R)
+                V2 = fmp.transitionCovariance(fmp.getTime() + 2*tau, R)
                 expected = concatenate([V0, V1, V2],axis=0);
                 print(A2S((expected)))
                 writeTestVariable(group, 'expected', expected);

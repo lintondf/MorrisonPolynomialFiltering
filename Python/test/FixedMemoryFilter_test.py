@@ -63,7 +63,7 @@ class TestFixedMemoryFiltering(unittest.TestCase):
         fixed = FixedMemoryFilter(order, window);
         for i in range(0,M) :
             fixed.add(times[i], observations[i]);
-        return fixed.getMidpoint(times[iCheck]);
+        return fixed.transitionState(times[iCheck]);
                 
                 
     def testPerfect(self):

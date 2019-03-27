@@ -27,7 +27,7 @@ namespace PolynomialFiltering {
                 virtual void update(const double t, const RealVector& Zstar, const double e) = 0;
                 virtual long getN() = 0;
                 virtual double getTime() = 0;
-                virtual RealVector getState(const double t) = 0;
+                virtual RealVector getState() = 0;
         }; // class IRecursiveFilter 
 
     }; // namespace Components

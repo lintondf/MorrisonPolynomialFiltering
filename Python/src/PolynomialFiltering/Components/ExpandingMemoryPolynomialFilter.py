@@ -10,7 +10,7 @@ from abc import abstractmethod
 from math import isnan;
 from numpy import array, diag, zeros, sqrt, transpose
 from numpy import array as vector
-from PolynomialFiltering.Components.AbstractRecursiveFilter import AbstractRecursiveFilter, IRecursiveFilter
+from PolynomialFiltering.Components.AbstractRecursiveFilter import AbstractRecursiveFilter
 
 class EMPBase(AbstractRecursiveFilter):
     def __init__(self, order : int, tau : float) :

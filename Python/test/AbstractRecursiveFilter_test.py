@@ -116,7 +116,7 @@ class Test(unittest.TestCase):
 #                     print(A2S(X))
 #                     f.start(0, X)
 #                     print(A2S(f.Z))
-#                     Zs = f.predictState(tau);
+#                     Zs = f.predict(tau);
 #                     print(A2S(Zs))
 #                     Xs = f._denormalizeState(Zs)
 #                     print(A2S(Xs))
@@ -165,8 +165,8 @@ class Test(unittest.TestCase):
             t = f.getTime();
             assert(t == setup[2])
             expected = zeros([order+1,2]);
-            expected[:,0] = f._denormalizeState(f.predictState(setup[2]))
-            expected[:,1] = f._denormalizeState(f.predictState(setup[3]))
+            expected[:,0] = f.transitionState(setup[2])
+            expected[:,1] = f.transitionState(setup[3])
             assert_allclose( f.Z, ones(order+1) )
 #             print('data',A2S(data))
 #             print('expected', A2S(expected.T))
@@ -182,7 +182,7 @@ class Test(unittest.TestCase):
         Test the state update methods 
         
         tests these methods:
-            predictState()
+            predict()
             update()
         
         setup: [
@@ -222,14 +222,14 @@ class Test(unittest.TestCase):
             f = AbstractRecursiveFilterMock(int(setup[0]), setup[1])
             f.start(setup[2], data[0,:]);
             
-            Zstar = f.predictState(setup[3]);
+            Zstar = f.predict(setup[3]);
             assert_allclose(f._denormalizeState(Zstar), data[1,:], atol=1e-14);
             
             f.update( setup[3], Zstar, 0 );
             expected = zeros([order+1,2]);
             expected[:,0] = f.getState();
             
-            Zstar = f.predictState(setup[4]);
+            Zstar = f.predict(setup[4]);
             f.update( setup[4], Zstar, 1 );
             expected[:,1] = f.getState();
             

@@ -25,9 +25,11 @@ namespace PolynomialFiltering {
                 long getN();
                 double getTau();
                 double getTime();
-                RealVector getState(const double t);
+                RealVector transitionState(const double t);
+                RealVector getState();
                 void add(const double t, const double y, const std::string observationId="");
-                RealMatrix getCovariance();
+                RealMatrix getCovariance(const double R=1.0);
+                RealMatrix transitionCovariance(const double t, const double R=1.0);
             protected:
                 long order;
                 long L;

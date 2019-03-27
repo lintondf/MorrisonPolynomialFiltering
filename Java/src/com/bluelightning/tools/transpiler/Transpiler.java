@@ -72,7 +72,6 @@ public class Transpiler {
 		//new Target(Paths.get(""), "TranspilerTest"),
 		new Target(Paths.get("PolynomialFiltering"), "Main"),
 		new Target(Paths.get("PolynomialFiltering/Components"), "FixedMemoryPolynomialFilter"),
-		new Target(Paths.get("PolynomialFiltering/Components"), "IRecursiveFilter"),
 		new Target(Paths.get("PolynomialFiltering/Components"), "AbstractRecursiveFilter"),
 		new Target(Paths.get("PolynomialFiltering/Components"), "ExpandingMemoryPolynomialFilter"),
 		new Target(Paths.get("PolynomialFiltering/Components"), "FadingMemoryPolynomialFilter"),
@@ -430,6 +429,7 @@ public class Transpiler {
 		symbolTable.add( importScope, "eye", "array");
 		symbolTable.add( importScope, "inv", "array" );
 		symbolTable.add( importScope, "len", "int" );
+		symbolTable.add( importScope, "max", "int" );  //TODO generic type
 		symbolTable.add( importScope, "min", "int" );  //TODO generic type
 		symbolTable.add( importScope, "ones", "array");
 		symbolTable.add( importScope, "pow", "float");

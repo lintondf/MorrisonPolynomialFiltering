@@ -49,7 +49,7 @@ class FixedMemoryFilter(AbstractFilter) :
     def getTime(self) -> float:
         return self.t
     
-    def getMidpoint(self, t : float) -> vector:
+    def transitionState(self, t : float) -> vector:
         '''@dt : vector'''
         '''@Tn : array'''
         '''@Tnt : array'''
@@ -72,13 +72,15 @@ class FixedMemoryFilter(AbstractFilter) :
         self.yRing[ self.n % self.L ] = y;
         self.n += 1;    
     
-    def getCovariance(self) -> array:
+    def getCovariance(self, R : float = 1.0) -> array:
+        return self.transitionCovariance(self.t, R)
+    
+    def transitionCovariance(self, t : float, R : float = 1.0) -> array:
         '''@dt : vector'''
         '''@Tn : array'''
-        dt = self.tRing - self.t;
+        dt = self.tRing - t;
         Tn = self._getTn(dt);
         return inv(transpose(Tn) @ Tn);
-        
     
     def _getTn(self, dt : vector ) -> array:
         '''@Tn : array'''

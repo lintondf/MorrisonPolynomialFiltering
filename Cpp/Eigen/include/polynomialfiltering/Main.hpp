@@ -33,9 +33,11 @@ namespace PolynomialFiltering {
             void setName(const std::string name);
             FilterStatus getStatus();
             void setStatus(const FilterStatus status);
+            RealVector transitionState(const double t);
+            RealMatrix transitionCovariance(const double t, const double R=1.0);
             virtual long getN() = 0;
             virtual double getTime() = 0;
-            virtual RealVector getState(const double t) = 0;
+            virtual RealVector getState() = 0;
         protected:
             std::string name;
             FilterStatus status;

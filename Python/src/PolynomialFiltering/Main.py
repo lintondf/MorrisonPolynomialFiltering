@@ -12,7 +12,7 @@ pip install netcdf4
 '''
 from abc import ABC, abstractmethod
 from enum import Enum
-from numpy import array, eye, zeros, isscalar
+from numpy import array, eye, transpose
 from numpy import array as vector;
 
 class FilterStatus(Enum):

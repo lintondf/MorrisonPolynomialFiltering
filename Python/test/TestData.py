@@ -208,7 +208,7 @@ def testEMPPair() :
     for i in range(0,N) :
         for ie in range(0,len(emps)) :
             emp = emps[ie]
-            Zstar = emp.predictState(times[i,0])
+            Zstar = emp.predict(times[i,0])
             e = observations[i] - Zstar[0]
             innovation = emp.update(times[i,0], Zstar, e)
             V = emp._VRF();

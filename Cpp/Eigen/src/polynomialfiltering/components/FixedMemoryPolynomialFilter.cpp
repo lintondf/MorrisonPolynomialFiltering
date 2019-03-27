@@ -44,7 +44,7 @@ namespace PolynomialFiltering {
                 return this->t;
             }
 
-            RealVector FixedMemoryFilter::getState (const double t) {
+            RealVector FixedMemoryFilter::transitionState (const double t) {
                 RealVector dt;
                 RealMatrix Tn;
                 RealMatrix Tnt;
@@ -59,6 +59,10 @@ namespace PolynomialFiltering {
                 return this->Z;
             }
 
+            RealVector FixedMemoryFilter::getState () {
+                return (*this)(this->t);
+            }
+
             void FixedMemoryFilter::add (const double t, const double y, const std::string observationId) {
                 this->t = t;
                 this->tRing(this->n % this->L) = t;
@@ -66,10 +70,14 @@ namespace PolynomialFiltering {
                 this->n += 1;
             }
 
-            RealMatrix FixedMemoryFilter::getCovariance () {
+            RealMatrix FixedMemoryFilter::getCovariance (const double R) {
+                return this->transitionCovariance(this->t, R);
+            }
+
+            RealMatrix FixedMemoryFilter::transitionCovariance (const double t, const double R) {
                 RealVector dt;
                 RealMatrix Tn;
-                dt = this->tRing - this->t;
+                dt = this->tRing - t;
                 Tn = this->_getTn(dt);
                 return inv(transpose(Tn) * Tn);
             }
