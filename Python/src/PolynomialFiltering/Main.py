@@ -15,6 +15,9 @@ from enum import Enum
 from numpy import array, eye, transpose
 from numpy import array as vector;
 
+def virtual(funcobj):
+    return funcobj;
+
 class FilterStatus(Enum):
     '''@IDLE : enum'''
     IDLE = 0;        # Filter is awaiting the first observation    
@@ -84,24 +87,14 @@ class AbstractFilter(ABC):
     def setStatus(self, status : FilterStatus) -> None:
         self.status = status
         
+    @virtual
     def transitionState(self, t : float) -> vector :
         '''@ dt : float'''
         '''@ F : array'''
         dt = t - self.getTime()
         F = self.stateTransitionMatrix(self.order+1, dt );
         return F @ self.getState();
-    
-    def transitionCovariance(self, t : float, R : array ) -> array:
-        '''@ dt : float'''
-        '''@ F : array'''
-        '''@ V : array'''
-        V = self.getCovariance(R)
-        dt = t - self.getTime()
-        F = self.stateTransitionMatrix(self.order+1, dt );
-        V = (F) @ V @ transpose(F);
-        return V * R;
         
-    
     @abstractmethod   
     def getN(self) -> int:
         pass
@@ -114,7 +107,25 @@ class AbstractFilter(ABC):
     def getState(self) -> vector:
         pass
     
+class AbstractFilterWithCovariance(AbstractFilter) :
+    def __init__(self, order : int, name : str = '') :
+        super().__init__(order, name)
+
+    @virtual
+    def transitionCovariance(self, t : float, R : array ) -> array:
+        '''@ dt : float'''
+        '''@ F : array'''
+        '''@ V : array'''
+        V = self.getCovarianceX()
+        dt = t - self.getTime()
+        return transitionCovariance(self.order, dt, V);
+        
     @abstractmethod
-    def getCovariance(self, R : array) -> array:
+    def getCovariance(self) -> array:
         pass
 
+
+def transitionCovariance(order : int, dt : float, V : array ) -> array:
+    '''@ F : array'''
+    F = AbstractFilter.stateTransitionMatrix(order+1, dt );
+    return (F) @ V @ transpose(F);

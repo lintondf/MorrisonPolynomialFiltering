@@ -62,12 +62,6 @@ class AbstractRecursiveFilter(AbstractFilter):
         Z[0:m] = state[0:m]
         return Z
         
-    def start(self, t : float, Z : vector) -> None:
-        self.n = 0;
-        self.t0 = t;
-        self.t = t;
-        self.Z = self._normalizeState(self._conformState(Z));
-    
     def _normalizeTime(self, t : float) -> float:
         return (t - self.t0)/self.tau
     
@@ -79,6 +73,12 @@ class AbstractRecursiveFilter(AbstractFilter):
     
     def _denormalizeState(self, Z : vector) -> vector:
         return Z / self.D
+    
+    def start(self, t : float, Z : vector) -> None:
+        self.n = 0;
+        self.t0 = t;
+        self.t = t;
+        self.Z = self._normalizeState(self._conformState(Z));
     
     def predict(self, t : float) -> vector :
         """
@@ -150,12 +150,10 @@ class AbstractRecursiveFilter(AbstractFilter):
     def getState(self) -> vector:
         return self._denormalizeState(self.Z)
 
-    def getCovariance(self, R : array) -> array:
+    def getVRF(self) -> array:
         '''@ V : array'''
         V = self._VRF();
-        if (V[0,0] == 0) :
-            return V;
-        return V * R;
+        return V;
 
     @abstractmethod   
     def _gammaParameter(self, t : float, dtau : float) -> float:

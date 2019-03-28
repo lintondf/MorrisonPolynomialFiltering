@@ -174,7 +174,7 @@ class Test(unittest.TestCase):
             e = observations[i] - Zstar[0]
             filter.update(times[i], Zstar, e)
             actual[i,:] = filter.getState()
-            V = filter.getCovariance(eye(1)); # _VRF(); # 
+            V = filter.getVRF(); # _VRF(); # 
             if (V[0,0] != 0) :
                 diagV[i,:] = (diag(V));       
         return (actual, diagV, V);
@@ -247,10 +247,10 @@ class Test(unittest.TestCase):
                 fixed = FixedMemoryFilter(emp.order, N);
                 for i in range(0,N) :
                     fixed.add(times[i], observations[i]);
-                X = V / fixed.getCovariance(eye(1));  # EMP VRF vs Fixed MP VRF
+                X = V / fixed.getCovariance();  # EMP VRF vs Fixed MP VRF
                 Y = fixed.getState();
 #                 print( (actual[-1,:] - Y) / Y )
-#                 print( A2S((V / fixed.getCovariance())-1))
+#                 print( A2S((V / fixed.getVRF())-1))
                 assert_allclose( actual[-1,:], Y, rtol=1e-5, atol=0, verbose=True)
                 assert_allclose( X, ones([emp.order+1, emp.order+1]), rtol=2e-3, atol=0, verbose=True )
             
@@ -276,7 +276,7 @@ class Test(unittest.TestCase):
         #         print(A2S(fixed.getVRF()))
         #         
         #         print( actual[-1,:] - fixed.getState(fixed.getTime()) )
-                X = V / fixed.getCovariance(eye(1));  # EMP VRF vs Fixed MP VRF
+                X = V / fixed.getVRF();  # EMP VRF vs Fixed MP VRF
                 assert_allclose( X, ones([emp.order+1, emp.order+1]), atol=1e-2 )
 
 
@@ -308,7 +308,7 @@ class Test(unittest.TestCase):
 #                     e = observations[i] - Zstar[0]
 #                     emp.update(times[i,0], Zstar, e)
 #                     if (i >= N-K) :
-#                         V = emp.getCovariance(data[i,0], R)
+#                         V = emp.getVRF(data[i,0], R)
 #                         actual[m*K + i-(N-K),:] = (emp.getState(times[i,0]) - truth[i,:]) # / sqrt(diag(V))
 #                     
 #         print(emp.tau, N, sigma, A2S(mean(actual,axis=0)), A2S(std(actual,axis=0)))

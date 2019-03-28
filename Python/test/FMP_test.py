@@ -5,6 +5,7 @@ Created on Feb 15, 2019
 '''
 import unittest
 
+from PolynomialFiltering.Main import transitionCovariance;
 from PolynomialFiltering.Components.FadingMemoryPolynomialFilter import *
 
 from TestUtilities import *
@@ -150,7 +151,7 @@ class Test(unittest.TestCase):
                 (times, truth, observations, noise) = \
                     generateTestData(fmp.order, N, -1.0, Y, fmp.tau, bias=0.0, sigma=sqrt(R))
                 R = var(noise)
-                V = fmp.getCovariance(R)
+                V = R*fmp.getVRF()
                 data = concatenate([times, observations, truth], axis=1);
                 
                 writeTestVariable(group, 'setup', setup);
@@ -434,9 +435,9 @@ Ran 1 test in 100.764s
                 fmp = makeFMP(order, theta, tau)
                 fmp.start(0.0, self.Y0);
                 print(order,theta,tau)
-                V0 = fmp.getCovariance(R)
-                V1 = fmp.transitionCovariance(fmp.getTime() - tau, R)
-                V2 = fmp.transitionCovariance(fmp.getTime() + 2*tau, R)
+                V0 = R * fmp.getVRF()
+                V1 = transitionCovariance(fmp.order, - tau, V0)
+                V2 = transitionCovariance(fmp.order, + 2*tau, V0)
                 expected = concatenate([V0, V1, V2],axis=0);
                 print(A2S((expected)))
                 writeTestVariable(group, 'expected', expected);

@@ -6,13 +6,13 @@ Created on Feb 18, 2019
 
 from abc import abstractmethod
 
-from numpy import array, copy, ones, zeros, transpose
+from numpy import array, copy, eye, ones, zeros, transpose
 from numpy import array as vector
 from numpy.linalg.linalg import solve, lstsq, inv
 
-from PolynomialFiltering.Main import AbstractFilter, FilterStatus
+from PolynomialFiltering.Main import AbstractFilterWithCovariance, FilterStatus
 
-class FixedMemoryFilter(AbstractFilter) :
+class FixedMemoryFilter(AbstractFilterWithCovariance) :
     
     '''@order :int'''
     '''@L :int'''
@@ -71,8 +71,8 @@ class FixedMemoryFilter(AbstractFilter) :
         self.yRing[ self.n % self.L ] = y;
         self.n += 1;    
     
-    def getCovariance(self, R : array) -> array:
-        return self.transitionCovariance(self.t, R)
+    def getCovariance(self) -> array:
+        return self.transitionCovariance(self.t, eye(1))
     
     def transitionCovariance(self, t : float, R : array) -> array:
         '''@dt : vector'''

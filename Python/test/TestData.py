@@ -118,7 +118,7 @@ def VRF2(order : int):
     for n in [10, 25, 50, 100, 500, 1000, 5000] :
         print(order, u, n)
         emp.n = n;
-        P1 = emp.getCovariance(eye(1))
+        P1 = emp.getVRF()
 #         V = scaleVRFEMP(ones([order+1,order+1]), u, n);
 #         print('scale diag ', A2S(diag(V)))
 #         print('       new ', A2S(scaleDiagEMP(order, u, n)))
@@ -216,7 +216,7 @@ def testEMPPair() :
             if (i > ie) :
                 Innovations[i,ie] = (innovation @ inv(R*V) @ transpose(innovation)) / (1+emp.order)
                 w = 0.05
-                GOFs[i,ie] = (1-w)*GOFs[i-1,ie] + w*sqrt(SSRs[i,ie] + Innovations[i,ie]) # *Innovations[i,ie]
+                GOFs[i,ie] = (1-w)*GOFs[i-1,ie] + w*sqrt(SSRs[i,ie]) # *Innovations[i,ie]
                 if (GOFs[i,ie] < GOFs[i,Best[i]]) :
                     Best[i] = ie;
 #                 print('%3d, %d, %10.6f, %10.6f, %10.6f, %5d' % (i,ie,SSRs[i,ie], Innovations[i,ie], GOFs[i,ie], Best[i] ))
@@ -248,8 +248,10 @@ def testEMPPair() :
     plt.title('0th Z[0] 1st Z[1]')
     ax.plot(times[M:], truth[M:,0], 'r.-', times[M:], observations[M:], 'b.', \
             times[M:], actual[M:,0], 'k-', times[M:], actual[M:,1], 'm-', \
-            times[M:], actual[M:,2], 'c-', times[M:], actual[M:,3], 'g-', \
-            times[M:], 500*Best[M:], 'y-')
+            times[M:], actual[M:,2], 'c-', times[M:], actual[M:,3], 'g-');
+    ax2 = ax.twinx() 
+    ax2.plot(times[M:], Best[M:], 'y-')
+    f0.tight_layout()
     plt.show()
     
     '''

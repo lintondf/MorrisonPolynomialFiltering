@@ -3,6 +3,7 @@
  * TODO remove _ from private methods (decl and use)
  * TODO Error if function output type not provided
  * TODO non member functions
+ * TODO marking methods as virtual
  */
 package com.bluelightning.tools.transpiler;
 

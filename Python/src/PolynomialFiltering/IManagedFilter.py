@@ -8,10 +8,19 @@ from enum import Enum
 from numpy import array, eye, zeros, isscalar
 from numpy import array as vector;
 
-from PolynomialFiltering.Main import AbstractFilter;
 
+class IObservationErrorModel(ABC):
+    def __init__(self):
+        pass
 
-class IManagedFilter(AbstractFilter):
+    @abstractmethod   
+    def getInverseCovariance(self, t : float, y : vector, observationId : str) -> array:
+        pass
+    
+
+    
+    
+class IManagedFilter(ABC):
     def __init__(self,name : str = ''):
         super().__init__(name);
     
@@ -20,15 +29,15 @@ class IManagedFilter(AbstractFilter):
         pass
     
     @abstractmethod   
-    def getBiasOfFit(self) -> float:
-        pass
-        
-    @abstractmethod   
     def add(self, t : float, y : vector, observationId : str = '') -> None:    
         pass
 
     @abstractmethod   
-    def addWithVariance(self, t : float, y : vector, R : array, observationId : str = '') -> None:    
+    def addWithVariance(self, t : float, y : vector, inverseR : array, observationId : str = '') -> None:    
+        pass
+    
+    @abstractmethod   
+    def addWithErrorModel(self, t : float, y : vector, errorModel : IObservationErrorModel, observationId : str = '') -> None:    
         pass
     
 if __name__ == '__main__':
