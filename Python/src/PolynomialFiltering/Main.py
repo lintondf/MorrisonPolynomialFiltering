@@ -48,13 +48,13 @@ class AbstractFilter(ABC):
         
     @classmethod            
     def stateTransitionMatrix(self, N : int, dt : float) -> array: # TODO remove
-        '''
+        """
         Return a Pade' expanded status transition matrix of order N [RMKdR(7)]
             P(d)_i,j = (d^(j-i))/(j-i)! where 0 <= i <= j <= N elsewhere zero
         
         :param N: return matrix is (N,N)
         :param dt: time step
-        '''
+        """
         '''@B: array'''
         '''@i : int'''
         '''@j : int'''
@@ -79,6 +79,9 @@ class AbstractFilter(ABC):
     def setName(self, name : str) -> None:
         self.name = name
         
+    def getOrder(self) -> int:
+        return self.order;
+    
     def getStatus(self) -> FilterStatus:
         return self.status    
         

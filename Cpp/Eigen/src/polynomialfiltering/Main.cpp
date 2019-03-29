@@ -47,6 +47,10 @@ namespace PolynomialFiltering {
             this->name = name;
         }
 
+        long AbstractFilter::getOrder () {
+            return this->order;
+        }
+
         FilterStatus AbstractFilter::getStatus () {
             return this->status;
         }

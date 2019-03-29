@@ -6,17 +6,19 @@ Created on Feb 1, 2019
 import csv
 
 from numpy import zeros, array, concatenate, arange, ones, diag, sqrt, transpose,\
-    allclose, mean, std, eye
+    allclose, mean, std, eye, cov
 from numpy import array as vector;
-from numpy.linalg import cholesky, inv, LinAlgError
+from numpy.linalg import cholesky, inv, LinAlgError, det
 from scipy.interpolate import PchipInterpolator
 import pymap3d
 import xml.etree.ElementTree as ET 
 from PolynomialFiltering.Components.ExpandingMemoryPolynomialFilter import makeEMP;
-from TestUtilities import A2S, scaleVRFEMP, covarianceToCorrelation, correlationToCovariance, generateTestData;
+from PolynomialFiltering.Components.FadingMemoryPolynomialFilter import makeFMP;
+from TestUtilities import A2S, scaleVRFEMP, covarianceToCorrelation, correlationToCovariance, generateTestData, hellingerDistance
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 from numpy.random.mtrand import seed
+from numpy.random import multivariate_normal
 
 def readData(): 
     with open('../test/landing.csv', newline='') as csvfile:
@@ -323,12 +325,72 @@ def testEMPPair() :
 #     iX = correlationToCovariance(icV, 1/dV)
 #     print(A2S(iX))
     
+def testMvnrand():
+    ''' demonstrate that input correlations are preserved for multichannel filters
+    '''
+    theta = 0.995;
+    tau = 1e-3;
+    N = 500000;
+    u = array([0, 0, 0])
+    P = array([[1,0.5, 0.8],[0.5,1,0.2],[0.8,0.2,1]])
+    X = multivariate_normal(u, P, N)
+    print(A2S(P))
+    order = 2;
+    op1 = order+1
+    innovations = zeros([N,3*op1])
+    residuals = zeros([N,3*op1])
+    for i in range(0, X.shape[1]) :
+        (times, truth, __, __) = \
+            generateTestData(order, N, 0.0, array([1000, -100, 50, -15])[i:i+op1], tau, sigma=0)
+        observations = truth[:,0] + X[:,i]
+        f = makeFMP(order, theta, tau);
+        f.start(0.0, truth[0,:])
+#         print(A2S(f.getState()))
+#         print(A2S(f.predict(times[1])))
+        for j in range(1,N)  :
+            Zstar = f.predict(times[j,0])
+#             print(i,j,times[j,0], Zstar, observations[j])
+            e = observations[j] - Zstar[0]
+#             print(e)
+            innovations[j,i*op1:(i+1)*op1] = e;
+            f.update(times[j,0], Zstar, e)
+            residuals[j,i*op1:(i+1)*op1] = f.getState() - truth[j,:]
     
+    V = f.getVRF()
+    print(A2S(V))
+    (cV, dV) = covarianceToCorrelation(V)
+    print(A2S(dV))
+    print(A2S(cV))
+    K = cov(residuals, rowvar=False)
+#     print(A2S(K))
     
+#     print(A2S(K[0:3,0:3]))
+#     print(A2S(K[3:6,3:6]))
+#     print(A2S(K[6:9,6:9]))
+#     print(residuals.shape)
+#     
+#     print(A2S(mean(residuals,axis=0)))
+#     K = cov(residuals, rowvar=False)
+    (cK, dK) = covarianceToCorrelation(K)
+#     print(A2S(dK))
+    print(A2S(cK))
+    
+    Q0 = concatenate([cV, P[0,1]*cV, P[0,2]*cV],axis=1)
+    Q1 = concatenate([P[1,0]*cV, cV, P[1,2]*cV],axis=1)
+    Q2 = concatenate([P[2,0]*cV, P[2,1]*cV, cV],axis=1)
+    Q = concatenate([Q0, Q1, Q2], axis=0)
+    print(A2S(Q/cK))
+    
+    print(det(cK), det(Q), det(cK+Q))
+    print(N, 'H', hellingerDistance(0*diag(Q), Q, 0*diag(cK), cK) )
+    """
+500000 H 0.036667127445717866    
+    """
         
 if __name__ == '__main__':
     pass
-    testEMPPair();
+    testMvnrand()
+#     testEMPPair();
 #     FMPVRFCorrelations();
 #     order = 2;
 #     u = 1;

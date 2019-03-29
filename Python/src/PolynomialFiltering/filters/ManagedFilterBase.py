@@ -85,8 +85,8 @@ class ManagedFilterBase(AbstractFilterWithCovariance, IManagedFilter):
         self._updateSSR(t, y, e, innovation)
         
     def _updateSSR(self, t:float, y:vector, e : float, innovation : vector):
-        if (self.target.getN() > self.target.order) :
-            SSR = e * self.iR * e / (1+self.target.order)
+        if (self.target.getN() > self.target.getOrder()) :
+            SSR = e * self.iR * e / (1+self.target.getOrder())
             self.SSR = self.w*self.SSR + (1-self.w)*SSR
         
 

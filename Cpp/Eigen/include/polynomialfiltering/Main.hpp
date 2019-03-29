@@ -31,6 +31,7 @@ namespace PolynomialFiltering {
             static RealMatrix stateTransitionMatrix(const long N, const double dt);
             std::string getName();
             void setName(const std::string name);
+            long getOrder();
             FilterStatus getStatus();
             void setStatus(const FilterStatus status);
             virtual RealVector transitionState(const double t);
