@@ -57,12 +57,31 @@ class DeclarationsListener extends LcdPythonBaseListener {
 				transpiler.reportError("Dimensions only allowed on vector and array: " + fields[0]);
 			}
 		}
+		
  		protected Symbol declareSymbol( Token token, String declaration ) {
 			declaration = declaration.trim().replaceAll(" +", " ");
 			String[] fields = declaration.split(":");
 			if (fields.length >= 2) {
 				Scope currentScope = scopeStack.peek();
 				Symbol symbol = transpiler.symbolTable.add(currentScope, fields[0], fields[1]);
+				Symbol type = transpiler.symbolTable.lookup(currentScope, fields[1]);
+				if (type != null) {
+					if (type.isClass()) {
+//						System.out.println("declareSymbol: " + declaration + " " + type);
+						List<Symbol> inheritance = transpiler.symbolTable.atScope(type.getScope());
+						Scope inheritedScope = symbol.getScope().getChild(Level.CLASS, type.getName() );
+						for (Symbol i : inheritance ) {
+							if (i.getName().equals("__init__"))
+								continue;
+//							System.out.println("     " + i.isClass() + " " + i.getName() + " " + inheritedScope );
+							if (i.isClass() || i.isEnum()) {
+								transpiler.symbolTable.inherit(i, inheritedScope.getChild(Level.CLASS, symbol.getName()) );
+							} else {
+								transpiler.symbolTable.inherit(i, inheritedScope);
+							}
+						}
+					}
+				}
 				if (fields.length > 2) {
 					addSymbolDimensions( symbol, fields );
 				}
@@ -78,6 +97,8 @@ class DeclarationsListener extends LcdPythonBaseListener {
 //			transpiler.dumpChildren( ctx );
 			Scope currentScope = scopeStack.peek();
 			String name = getChildText(ctx, 1);
+			if (name.equals("virtual"))
+				transpiler.dumpChildren( ctx );
 			Scope functionScope = currentScope.getChild(Scope.Level.FUNCTION, name);
 			if (functionScope == null) {
 				this.transpiler.reportError(ctx.start, "Invalid function scope");
@@ -205,20 +226,23 @@ class DeclarationsListener extends LcdPythonBaseListener {
 					List<Symbol> inheritance = transpiler.symbolTable.atScope(membersScope);
 					Scope inheritedScope = scopeStack.peek(); 
 //					System.out.println("import " + membersScope.toString() + " -> " + inheritedScope );
+//					System.out.println("    " + symbol );
 //					System.out.println("   " + inheritance.size() + " " + symbol.isClass());
 					if (symbol.isClass() || symbol.isEnum()) {
 						Symbol r = transpiler.symbolTable.inherit(symbol, inheritedScope);
 						inheritedScope = inheritedScope.getChild(Level.CLASS, r.getName() );
-					}
-					for (Symbol i : inheritance ) {
-						if (i.getName().equals("__init__"))
-							continue;
-//						System.out.println("     " + i.isClass() + " " + i.getName() );
-						if (i.isClass() || i.isEnum()) {
-							Symbol r = transpiler.symbolTable.inherit(i, inheritedScope.getChild(Level.CLASS, name) );
-						} else {
-							Symbol r = transpiler.symbolTable.inherit(i, inheritedScope);
+						for (Symbol i : inheritance ) {
+							if (i.getName().equals("__init__"))
+								continue;
+//							System.out.println("     " + i.isClass() + " " + i.getName() + " " + inheritedScope );
+							if (i.isClass() || i.isEnum()) {
+								transpiler.symbolTable.inherit(i, inheritedScope.getChild(Level.CLASS, name) );
+							} else {
+								transpiler.symbolTable.inherit(i, inheritedScope);
+							}
 						}
+					} else {
+						Symbol r = transpiler.symbolTable.inherit(symbol, inheritedScope);
 					}
 				}
 			}

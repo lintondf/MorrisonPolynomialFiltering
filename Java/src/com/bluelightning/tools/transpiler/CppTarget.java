@@ -289,7 +289,8 @@ public class CppTarget extends AbstractLanguageTarget {
 				String decl = String.format("%s%s(%s)", type, name, header.out.toString() ); 
 				if (fpi.decorators.contains("@classmethod")) {
 					where.append("static " + decl);
-				} else if (fpi.decorators.contains("@abstractmethod")) {
+				} else if (fpi.decorators.contains("@abstractmethod") ||
+						   fpi.decorators.contains("@virtual")) {
 					where.append("virtual " + decl);
 				} else {
 					where.append(decl);
@@ -402,6 +403,16 @@ public class CppTarget extends AbstractLanguageTarget {
 					return 2;
 				}
 			}
+			if (symbol.getName().equals("self")) {
+				if (child.getRightSibling() instanceof TranslationUnaryNode) {
+					TranslationUnaryNode unary = (TranslationUnaryNode) child.getRightSibling();
+					if (unary.getRhsSymbol() != null && unary.getRhsSymbol().isClassMethod()) {
+						Symbol c = Transpiler.instance().lookup(symbol.getScope(), unary.getRhsSymbol().getScope().getLast());
+						if (c != null && c.isClass()) 
+							symbol = c;
+					}
+				}
+			}
 			programmer.writeSymbol( out, symbol );
 		} else if (child instanceof TranslationConstantNode) {
 			programmer.writeConstant( out, (TranslationConstantNode) child );
@@ -413,7 +424,21 @@ public class CppTarget extends AbstractLanguageTarget {
 			Symbol symbol = unary.getRhsSymbol();
 			TranslationNode node = unary.getRhsNode();
 			if (symbol != null) {
-				programmer.writeOperator( out, unary.getLhsValue() );
+				if (symbol.isClassMethod()) {
+					programmer.writeOperator( out, "::" );
+				} else {
+					if (child.getLeftSibling() != null && child.getLeftSibling() instanceof TranslationUnaryNode) {
+						TranslationUnaryNode u = (TranslationUnaryNode) child.getLeftSibling();
+						if (u.getRhsSymbol() != null) {
+							Symbol type = Transpiler.instance().lookup(currentScope, u.getRhsSymbol().getType());
+							if (type != null && type.isClass() && !type.isEnum()) {
+								programmer.writeOperator( out, "->" );
+							}
+						}
+					} else {
+						programmer.writeOperator( out, unary.getLhsValue() );
+					}
+				}
 				if (symbol.getName().equals("shape")) {
 					if (child.getRightSibling() == null) {
 						Transpiler.instance().logger.error("No right sibling on 'shape'");
@@ -671,12 +696,11 @@ public class CppTarget extends AbstractLanguageTarget {
 		}
 		if (cppType.equals("enum"))
 			return;
+		Symbol type = Transpiler.instance().lookup(currentScope, cppType);
+		if (type != null && type.isClass() && !type.isEnum()) {
+			cppType = String.format("shared_ptr<%s>", cppType );
+		}
 		String declaration = String.format("%s %s", cppType, symbol.getName() );
-//		if (symbol.getName().equals("C")) {
-//			System.out.println(symbol);
-//			System.out.println(symbol.getScope().getLevel());
-//			System.out.println(currentScope.getLevel() + " " + symbol.isStatic());
-//		}
 		switch (currentScope.getLevel()) {
 		case MODULE: 
 			cppIndent.writeln( declaration + ";");

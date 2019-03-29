@@ -73,10 +73,10 @@ public class Scope {
 				if (childLevel == Level.FUNCTION)
 					scope.level = Level.MEMBER;
 				else
-					return null;
+					scope.level = Level.CLASS;
 				break;
 			case MEMBER:
-				return null;
+				scope.level = Level.CLASS;
 			}	
 //			if (childName.equals(qualifiers[qualifiers.length-1])) {
 //				System.err.println("Double Qualifiers: " + this.toString() + " + " + childName );

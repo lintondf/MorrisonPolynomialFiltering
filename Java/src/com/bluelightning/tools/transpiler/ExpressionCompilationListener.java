@@ -52,6 +52,8 @@ class ExpressionCompilationListener extends LcdPythonBaseListener {
 		protected static final Pattern integerPattern = Pattern.compile("^(\\d+)$");
 		protected static final Pattern floatPattern = Pattern.compile("^(\\d+)\\.(\\d*)$");
 		protected static final Pattern expPattern = Pattern.compile("^([-+]?\\d*\\.?\\d+)(?:[eE]([-+]?\\d+))?$");
+		
+		
 		protected TranslationNode defaultOperandOperator( ParserRuleContext ctx, String tag ) {
 			if (expressionRoot != null) {
 //				System.out.println( tag + " (" + ctx.getChildCount() + ")");
@@ -434,6 +436,7 @@ class ExpressionCompilationListener extends LcdPythonBaseListener {
 
 		@Override
 		public void exitExpr(LcdPythonParser.ExprContext ctx) {
+//			transpiler.dumpChildren(ctx);
 			defaultOperandOperator( ctx, "exitexpr" );
 		}
 
@@ -529,9 +532,24 @@ class ExpressionCompilationListener extends LcdPythonBaseListener {
 										payload = TranslationUnaryNode.staticFieldReference;
 									}
 								}
+								if (field == null) {
+//									System.out.println(parent.getLastChild().getClass().getSimpleName() + " " +parent.getLastChild());
+									if (parent.getLastChild() instanceof TranslationUnaryNode) {
+										TranslationUnaryNode tun = (TranslationUnaryNode) parent.getLastChild();
+										Symbol s = tun.getRhsSymbol();
+										if (s != null) {
+											Symbol c = transpiler.symbolTable.lookup(scope, s.getType() );
+											if (c.isClass()) {
+												Scope refScope = s.getScope().getParent().getChild(Level.CLASS, s.getType());
+												field = transpiler.symbolTable.lookup(refScope, fieldName );
+											}
+										}
+									}
+								}
 							}
-							if (field == null) {
+							if (field == null) { 
 								transpiler.reportError( ctx, "Unknown member: " + fieldName + " at " + scope );
+//								transpiler.dumpChildren(ctx.getParent());
 							}
 							new TranslationUnaryNode(ctx,  parent, (CommonToken) payload, field );
 							

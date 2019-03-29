@@ -51,13 +51,6 @@ namespace PolynomialFiltering {
                 return Z;
             }
 
-            void AbstractRecursiveFilter::start (const double t, const RealVector& Z) {
-                this->n = 0;
-                this->t0 = t;
-                this->t = t;
-                this->Z = this->_normalizeState(this->_conformState(Z));
-            }
-
             double AbstractRecursiveFilter::_normalizeTime (const double t) {
                 return (t - this->t0) / this->tau;
             }
@@ -74,6 +67,13 @@ namespace PolynomialFiltering {
                 return arrayDivide(Z, this->D);
             }
 
+            void AbstractRecursiveFilter::start (const double t, const RealVector& Z) {
+                this->n = 0;
+                this->t0 = t;
+                this->t = t;
+                this->Z = this->_normalizeState(this->_conformState(Z));
+            }
+
             RealVector AbstractRecursiveFilter::predict (const double t) {
                 RealVector Zstar;
                 double dt;
@@ -81,7 +81,7 @@ namespace PolynomialFiltering {
                 RealMatrix F;
                 dt = t - this->t;
                 dtau = this->_normalizeDeltaTime(dt);
-                F = this->stateTransitionMatrix(this->order + 1, dtau);
+                F = AbstractRecursiveFilter::stateTransitionMatrix(this->order + 1, dtau);
                 Zstar = F * this->Z;
                 return Zstar;
             }
@@ -124,13 +124,10 @@ namespace PolynomialFiltering {
                 return this->_denormalizeState(this->Z);
             }
 
-            RealMatrix AbstractRecursiveFilter::getCovariance (const double R) {
+            RealMatrix AbstractRecursiveFilter::getVRF () {
                 RealMatrix V;
                 V = this->_VRF();
-                if (V(0, 0) == 0) {
-                    return V;
-                }
-                return V * R;
+                return V;
             }
 
     }; // namespace Components

@@ -22,6 +22,7 @@ namespace PolynomialFiltering {
         class FMPBase : public AbstractRecursiveFilter {
             public:
                 FMPBase(const long order, const double theta, const double tau);
+                double getTheta();
             protected:
                 long n0;
                 double theta;

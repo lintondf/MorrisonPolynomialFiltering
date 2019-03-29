@@ -33,17 +33,23 @@ namespace PolynomialFiltering {
             void setName(const std::string name);
             FilterStatus getStatus();
             void setStatus(const FilterStatus status);
-            RealVector transitionState(const double t);
-            RealMatrix transitionCovariance(const double t, const double R=1.0);
+            virtual RealVector transitionState(const double t);
             virtual long getN() = 0;
             virtual double getTime() = 0;
             virtual RealVector getState() = 0;
-            virtual RealMatrix getCovariance(const double R=1.0) = 0;
         protected:
             long order;
             std::string name;
             FilterStatus status;
     }; // class AbstractFilter 
+
+    class AbstractFilterWithCovariance : public AbstractFilter {
+        public:
+            AbstractFilterWithCovariance(const long order, const std::string name="");
+            static RealMatrix transitionCovarianceMatrix(const long order, const double dt, const RealMatrix& V);
+            virtual RealMatrix transitionCovariance(const double t, const RealMatrix& R);
+            virtual RealMatrix getCovariance() = 0;
+    }; // class AbstractFilterWithCovariance 
 
 }; // namespace PolynomialFiltering
 

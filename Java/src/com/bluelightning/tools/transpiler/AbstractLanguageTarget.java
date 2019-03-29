@@ -55,7 +55,6 @@ public abstract class AbstractLanguageTarget implements ILanguageTarget {
 							   lhs instanceof TranslationSubexpressionNode) {
 							lhs = lhs.getChild(0);
 						}
-						// TODO self.name
 						if (lhs instanceof TranslationSymbolNode) {
 							Symbol s = ((TranslationSymbolNode) lhs).getSymbol();
 							if (s.getName().equals("self")) {

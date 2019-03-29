@@ -22,6 +22,9 @@ class FMPBase(AbstractRecursiveFilter) :
         self.theta = theta;
         self.n0 = 1;
         
+    def getTheta(self) -> float:
+        return self.theta;
+        
     #TODO functions to compute theta from effective L and vice versa [Morrison 1969, Table 13.4]    
     def _gammaParameter(self, t : float, dtau : float) -> float:
         return pow(self.theta, abs(dtau))

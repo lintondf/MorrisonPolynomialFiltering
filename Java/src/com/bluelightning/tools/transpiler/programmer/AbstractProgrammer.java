@@ -187,6 +187,9 @@ public abstract class AbstractProgrammer implements IProgrammer {
 		case "::":
 			out.append(operator);				
 			break;
+		case "->":
+			out.append(operator);				
+			break;
 		case "or":
 			out.append(" || ");
 			break;

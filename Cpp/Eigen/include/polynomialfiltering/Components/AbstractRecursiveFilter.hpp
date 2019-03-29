@@ -30,7 +30,7 @@ namespace PolynomialFiltering {
                 double getTau();
                 double getTime();
                 RealVector getState();
-                RealMatrix getCovariance(const double R=1.0);
+                RealMatrix getVRF();
             protected:
                 long n;
                 long n0;

@@ -145,6 +145,12 @@ public class Symbol {
 			return false;
 		return name.startsWith("_");
 	}
+	
+	public boolean isClassMethod() {
+		if (this.functionParametersInfo == null)
+			return false;
+		return this.functionParametersInfo.decorators.contains("@classmethod");
+	}
 
 	public void setDimensions(Integer[] dims) {
 		this.dimensions = dims;

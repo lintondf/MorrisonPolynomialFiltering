@@ -21,6 +21,10 @@ namespace PolynomialFiltering {
                 this->n0 = 1;
             }
 
+            double FMPBase::getTheta () {
+                return this->theta;
+            }
+
             double FMPBase::_gammaParameter (const double t, const double dtau) {
                 return pow(this->theta, abs(dtau));
             }

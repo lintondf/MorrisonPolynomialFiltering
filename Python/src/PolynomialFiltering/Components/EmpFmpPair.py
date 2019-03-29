@@ -10,8 +10,8 @@ from math import isnan;
 from numpy import array, diag, zeros, sqrt, transpose
 from numpy import array as vector
 from PolynomialFiltering.Components.AbstractRecursiveFilter import AbstractRecursiveFilter
-from PolynomialFiltering.Components.ExpandingMemoryPolynomialFilter import EMPBase, makeEMP
-from PolynomialFiltering.Components.FadingMemoryPolynomialFilter import FMPBase, makeFMP
+from PolynomialFiltering.Components.ExpandingMemoryPolynomialFilter import makeEMP, EMPBase
+from PolynomialFiltering.Components.FadingMemoryPolynomialFilter import makeFMP, FMPBase
 
 class EmpFmpPair(AbstractRecursiveFilter) :
     
@@ -36,7 +36,7 @@ class EmpFmpPair(AbstractRecursiveFilter) :
         '''@ innovation : vector'''
         innovation = self.current.update(t, Zstar, e)
         if (self.current == self.emp) :
-            if (self.emp.getN() >= self.emp.nSwitch(self.fmp.theta)) :
+            if (self.emp.getN() >= self.emp.nSwitch(self.fmp.getTheta())) :
                 self.fmp.start(self.emp.getTime(), self.emp.getState() );
                 self.current = self.fmp;
         return innovation;
@@ -57,13 +57,10 @@ class EmpFmpPair(AbstractRecursiveFilter) :
         return self.current.getVRF()
 
     def _gammaParameter(self, t : float, dtau : float) -> float:
-        return self.current._gammaParameter(t, dtau)
+        return 0
     
     def _gamma(self, n : float) -> vector:
-        return self.current._gamma(n)
+        return zeros([self.order+1,1])
     
     def _VRF(self) -> array:
-        return self.current._VRF()
-
-if __name__ == '__main__':
-    pass
+        return zeros([self.order+1, self.order+1])

@@ -75,6 +75,7 @@ public class Transpiler {
 		new Target(Paths.get("PolynomialFiltering/Components"), "AbstractRecursiveFilter"),
 		new Target(Paths.get("PolynomialFiltering/Components"), "ExpandingMemoryPolynomialFilter"),
 		new Target(Paths.get("PolynomialFiltering/Components"), "FadingMemoryPolynomialFilter"),
+		new Target(Paths.get("PolynomialFiltering/Components"), "EmpFmpPair"),
 	};
 	
 	protected Logger logger;
@@ -144,7 +145,7 @@ public class Transpiler {
 	public Symbol lookup( Scope scope, String name ) {
 		return symbolTable.lookup(scope, name);
 	}
-
+	
 	protected void processDeclaration(Token token, Scope scope, String str) {
 		String[] fields = str.split(":");
 		if (fields.length == 2) {

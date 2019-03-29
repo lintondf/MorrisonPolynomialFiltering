@@ -14,9 +14,7 @@ from abc import ABC, abstractmethod
 from enum import Enum
 from numpy import array, eye, transpose
 from numpy import array as vector;
-
-def virtual(funcobj):
-    return funcobj;
+from PolynomialFiltering.PythonUtilities import virtual;
 
 class FilterStatus(Enum):
     '''@IDLE : enum'''
@@ -49,7 +47,7 @@ class AbstractFilter(ABC):
         self.name = name
         
     @classmethod            
-    def stateTransitionMatrix(self, N : int, dt : float) -> array:
+    def stateTransitionMatrix(self, N : int, dt : float) -> array: # TODO remove
         '''
         Return a Pade' expanded status transition matrix of order N [RMKdR(7)]
             P(d)_i,j = (d^(j-i))/(j-i)! where 0 <= i <= j <= N elsewhere zero
@@ -111,21 +109,24 @@ class AbstractFilterWithCovariance(AbstractFilter) :
     def __init__(self, order : int, name : str = '') :
         super().__init__(order, name)
 
+    @classmethod
+    def transitionCovarianceMatrix(order : int, dt : float, V : array ) -> array:
+        '''@ F : array'''
+        F = AbstractFilter.stateTransitionMatrix(order+1, dt );
+        return (F) @ V @ transpose(F);
+
     @virtual
     def transitionCovariance(self, t : float, R : array ) -> array:
         '''@ dt : float'''
         '''@ F : array'''
         '''@ V : array'''
-        V = self.getCovarianceX()
+        V = self.getCovariance()
         dt = t - self.getTime()
-        return transitionCovariance(self.order, dt, V);
+        return self.transitionCovarianceMatrix(self.order, dt, V);
         
     @abstractmethod
     def getCovariance(self) -> array:
         pass
 
 
-def transitionCovariance(order : int, dt : float, V : array ) -> array:
-    '''@ F : array'''
-    F = AbstractFilter.stateTransitionMatrix(order+1, dt );
-    return (F) @ V @ transpose(F);
+
