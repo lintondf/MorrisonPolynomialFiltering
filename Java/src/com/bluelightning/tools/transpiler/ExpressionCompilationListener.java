@@ -331,20 +331,23 @@ class ExpressionCompilationListener extends LcdPythonBaseListener {
 		public void enterExpr_stmt(LcdPythonParser.Expr_stmtContext ctx) {
 			transpiler.logger.info(StringUtils.left(ctx.getText(), 80));
 			String value = this.transpiler.valueMap.get(ctx.getPayload());
-			if ( !(value.startsWith("'''") || value.startsWith("\"\"\"")) ) {
+			if (value.startsWith("'''")) {
+				if (value.startsWith("'''@")) {
+					value = value.trim().replaceAll(" +", "");
+					String[] fields = value.substring(4).replaceAll("'''", "").split("-"); // drop any comments
+					fields = fields[0].split(":");
+					Symbol symbol = transpiler.symbolTable.lookup(scope, fields[0]);
+					if (symbol != null) {
+						transpiler.dispatcher.emitSymbolDeclaration(symbol);
+					}
+				}				
+			} else if (value.startsWith("\"\"\"")) {
+			} else {
 //				System.out.println("EXPR_STMT> [{" + value + "}] <- " + ctx.toStringTree(transpiler.parser));
 //				this.transpiler.dumpChildren( ctx, 1 );
 				expressionRoot = new TranslationExpressionNode(ctx, value);
 				translateMap = new HashMap<>();
-			} else if (value.startsWith("'''@")) {
-				value = value.trim().replaceAll(" +", "");
-				String[] fields = value.substring(4).replaceAll("'''", "").split("-"); // drop any comments
-				fields = fields[0].split(":");
-				Symbol symbol = transpiler.symbolTable.lookup(scope, fields[0]);
-				if (symbol != null) {
-					transpiler.dispatcher.emitSymbolDeclaration(symbol);
-				}
-			}
+			} 
 		}
 
 		@Override

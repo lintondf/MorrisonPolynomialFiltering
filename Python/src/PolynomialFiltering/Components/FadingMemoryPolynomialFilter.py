@@ -13,35 +13,67 @@ from PolynomialFiltering.Components.AbstractRecursiveFilter import AbstractRecur
 
 
 class FMPBase(AbstractRecursiveFilter) :
+    """
+    Base class for the fading memory polynomial filters.
+            
+    Attributes:
+        theta - fading factor
+    """
 
-    '''@n0 : int'''
     '''@theta : float'''
 
     def __init__(self, order : int, theta : float, tau : float) :
         super().__init__(order, tau);
+        """
+        Constructor
+        
+        Arguments:
+            order - integer polynomial orer
+            theta - fading factor
+            tau - nominal time step
+        """
         self.theta = theta;
         self.n0 = 1;
         
     def getTheta(self) -> float:
+        """
+        Return the fading factor for the filter
+        
+        Arguments:
+            None
+        
+        Returns:
+            fading factor
+        """
         return self.theta;
         
-    #TODO functions to compute theta from effective L and vice versa [Morrison 1969, Table 13.4]    
     def _gammaParameter(self, t : float, dtau : float) -> float:
+        """@super"""
         return pow(self.theta, abs(dtau))
 
-    @abstractmethod
-    def _VRF(self) -> array:
-        pass
         
             
 class FMP0(FMPBase):    
+    """
+    Class for the 0th order fading memory polynomial filter.
+    """
+
     def __init__(self, theta : float, tau : float):
         super().__init__(0, theta, tau)
+        """
+        Constructor
+        
+        Arguments:
+            theta - fading factor
+            tau - nominal time step
+        """
 
     def _gamma(self, t : float) -> vector:
+        """@super"""
         return array([1-t])
 
     def _VRF(self) -> array:
+        """@super"""
         '''@t : float'''
         '''@V : array'''
         t = self.theta
@@ -50,10 +82,22 @@ class FMP0(FMPBase):
         return V;
 
 class FMP1(FMPBase):    
+    """
+    Class for the 1st order fading memory polynomial filter.
+    """
+
     def __init__(self, theta : float, tau : float) :
         super().__init__(1, theta, tau)
+        """
+        Constructor
+        
+        Arguments:
+            theta - fading factor
+            tau - nominal time step
+        """
 
     def _gamma(self, t : float) -> vector:
+        """@super"""
         '''@t2 : float'''
         '''@mt2 : float'''
         t2 = t*t 
@@ -62,6 +106,7 @@ class FMP1(FMPBase):
                       mt2])
 
     def _VRF(self) -> array:
+        """@super"""
         '''@t : float'''
         '''@u : float'''
         '''@K : array'''
@@ -69,7 +114,7 @@ class FMP1(FMPBase):
         '''@D : array'''
         t = self.theta
         u = self.tau;
-        """VRF correlations from approximating constants from Morrison 2013, Supplemental Materials, Problem 13.3"""
+        '''correlation matrix from VRF approximating constants from Morrison 2013, Supplemental Materials, Problem 13.3'''
         K = array([[1, 0.894427191], [0.894427191, 1]]);
         d = zeros([self.order+1]);
         d[0] = (t**2+4*t+5)*(1-t) / (1+t)**3
@@ -78,10 +123,22 @@ class FMP1(FMPBase):
         return D @ K @ D;
         
 class FMP2(FMPBase):    
+    """
+    Class for the 2nd order fading memory polynomial filter.
+    """
+
     def __init__(self, theta : float, tau : float) :
         super().__init__(2, theta, tau)
+        """
+        Constructor
+        
+        Arguments:
+            theta - fading factor
+            tau - nominal time step
+        """
 
     def _gamma(self, t : float) -> vector:
+        """@super"""
         '''@t2 : float'''
         '''@t3 : float'''
         '''@mt2 : float'''
@@ -95,6 +152,7 @@ class FMP2(FMPBase):
                       (2*1)*1.0/2.0*mt3])  # 2! * 1-T^3 ?
 
     def _VRF(self) -> array:
+        """@super"""
         '''@t : float'''
         '''@u : float'''
         '''@K : array'''
@@ -102,7 +160,7 @@ class FMP2(FMPBase):
         '''@D : array'''
         t = self.theta
         u = self.tau;
-        """VRF approximating constants from Morrison 2013, Supplemental Materials, Problem 13.3"""
+        '''correlation matrix from VRF approximating constants from Morrison 2013, Supplemental Materials, Problem 13.3'''
         K = array([[1, 0.888234788196, 0.804030252207], [0.888234788196, 1, 0.981980506062], [0.804030252207, 0.981980506062, 1]]);
         d = zeros([self.order+1]);
         d[0] = (t**4 + 6*t**3 + 16*t**2 + 24*t + 19) *(1-t) / (1+t)**5
@@ -112,10 +170,22 @@ class FMP2(FMPBase):
         return D @ K @ D;
 
 class FMP3(FMPBase):    
+    """
+    Class for the 3rd order fading memory polynomial filter.
+    """
+
     def __init__(self, theta : float, tau : float):
         super().__init__(3, theta, tau)
+        """
+        Constructor
+        
+        Arguments:
+            theta - fading factor
+            tau - nominal time step
+        """
 
     def _gamma(self, t : float) -> vector:
+        """@super"""
         '''@t2 : float'''
         '''@t3 : float'''
         '''@t4 : float'''
@@ -134,6 +204,7 @@ class FMP3(FMPBase):
                       (3*2*1)*1.0/6.0*mt4]) # ?
 
     def _VRF(self) -> array:
+        """@super"""
         '''@t : float'''
         '''@u : float'''
         '''@K : array'''
@@ -141,7 +212,7 @@ class FMP3(FMPBase):
         '''@D : array'''
         t = self.theta
         u = self.tau;
-        """VRF approximating constants from Morrison 2013, Supplemental Materials, Problem 13.3"""
+        '''correlation matrix from VRF approximating constants from Morrison 2013, Supplemental Materials, Problem 13.3'''
         K = array([[1, 0.88436317611, 0.794996299293, 0.741982233216], [0.88436317611, 1, 0.980286162792, 0.953514126371], [0.794996299293, 0.980286162792, 1, 0.99380799], [0.741982233216, 0.953514126371, 0.99380799, 1]]);
         d = zeros([self.order+1]);
         d[0] = (t**6 + 8*t**5 + 29*t**4 + 64*t**3 + 97*t**2 + 104*t + 69)*(1-t) / (1+t)**7
@@ -152,10 +223,22 @@ class FMP3(FMPBase):
         return D @ K @ D;
 
 class FMP4(FMPBase):    
+    """
+    Class for the 4th order fading memory polynomial filter.
+    """
+
     def __init__(self, theta : float, tau : float):
         super().__init__(4, theta, tau)
+        """
+        Constructor
+        
+        Arguments:
+            theta - fading factor
+            tau - nominal time step
+        """
 
     def _gamma(self, t : float) -> vector:
+        """@super"""
         '''@t2 : float'''
         '''@t3 : float'''
         '''@t5 : float'''
@@ -177,6 +260,7 @@ class FMP4(FMPBase):
                       (4*3*2*1)*1.0/24.0*mt5])
 
     def _VRF(self) -> array:
+        """@super"""
         '''@t : float'''
         '''@u : float'''
         '''@K : array'''
@@ -184,7 +268,7 @@ class FMP4(FMPBase):
         '''@D : array'''
         t = self.theta
         u = self.tau;
-        """VRF approximating constants from Morrison 2013, Supplemental Materials, Problem 13.3"""
+        '''correlation matrix from VRF approximating constants from Morrison 2013, Supplemental Materials, Problem 13.3'''
         K = array([[1, 0.881694998952, 0.788560555275, 0.732485084173, 0.696485834473], [0.881694998952, 1, 0.979001802066, 0.95, 0.925929720202], [0.788560555275, 0.979001802066, 1, 0.993190197131, 0.981794965522], [0.732485084173, 0.95, 0.993190197131, 1, 0.997155044022], [0.696485834473, 0.925929720202, 0.981794965522, 0.997155044022, 1]]);
         d = zeros([self.order+1]);
         d[0] = (t**8+10*t**7+46*t**6+130*t**5+256*t**4+380*t**3+446*t**2+410*t+251)*(1-t) / ((1+t)**9)
@@ -196,10 +280,22 @@ class FMP4(FMPBase):
         return D @ K @ D;
 
 class FMP5(FMPBase):    
+    """
+    Class for the 5th order fading memory polynomial filter.
+    """
+
     def __init__(self, theta : float, tau : float):
         super().__init__(5, theta, tau)
+        """
+        Constructor
+        
+        Arguments:
+            theta - fading factor
+            tau - nominal time step
+        """
 
     def _gamma(self, t : float) -> vector:
+        """@super"""
         '''@t2 : float'''
         '''@t3 : float'''
         '''@t4 : float'''
@@ -224,17 +320,9 @@ class FMP5(FMPBase):
                       1.0/24.0*mt4*(17+26*t+17*t2),
                       1.0/8.0*mt5*(1+t),
                       mt6/120.0 ])
-#         return array([1-t6, 
-#                       1.0/60.0*mt2 * (137+202*t+222*t2+202*t3+137*t4),
-#                       (2*1)*5.0/8.0*mt3*(1+t)*(3+2*t+3*t2),
-#                       (3*2*1)*1.0/24.0*mt4*(17+26*t+17*t2),
-#                       (4*3*2*1)*1.0/8.0*mt5*(1+t),
-#                       (5*4*3*2*1)*1.0/120.0*mt6 ])
         
-#     def nSwitch(self) -> float:
-#         return 7.7478/(1.0-self.theta)
- 
     def _VRF(self) -> array:
+        """@super"""
         '''@t : float'''
         '''@u : float'''
         '''@K : array'''
@@ -242,7 +330,7 @@ class FMP5(FMPBase):
         '''@D : array'''
         t = self.theta
         u = self.tau;
-        """correlation matrix from VRF approximating constants from Morrison 2013, Supplemental Materials, Problem 13.3"""
+        '''correlation matrix from VRF approximating constants from Morrison 2013, Supplemental Materials, Problem 13.3'''
         K = array([[1, 0.87973592749, 0.783712552247, 0.725202936114, 0.687322471879, 0.661260314876], [0.87973592749, 1, 0.977989154933, 0.947173349319, 0.921318523517, 0.901006701352], [0.783712552247, 0.977989154933, 1, 0.992676628391, 0.980284789003, 0.96828182239], [0.725202936114, 0.947173349319, 0.992676628391, 1, 0.996879269744, 0.991020788184], [0.687322471879, 0.921318523517, 0.980284789003, 0.996879269744, 1, 0.99846033011], [0.661260314876, 0.901006701352, 0.96828182239, 0.991020788184, 0.99846033011, 1]]);
         d = zeros([self.order+1]);
         d[0] = (t**10+12*t**9+67*t**8+232*t**7+562*t**6+1024*t**5+1484*t**4+1792*t**3+1847*t**2+1572*t+923)*(1-t) / (1+t)**11 
@@ -258,6 +346,17 @@ class FMP5(FMPBase):
 
     
 def makeFMP(order : int, theta : float, tau : float) -> FMPBase:
+    """
+    Factory for fading memory polynomial filters
+    
+    Arguments:
+        order - integer polynomial orer
+        theta - fading factor
+        tau - nominal time step
+        
+    Returns:
+        fading memory filter object
+    """
     if (order == 0) :
         return FMP0(theta, tau);
     elif (order == 1) :
@@ -272,6 +371,23 @@ def makeFMP(order : int, theta : float, tau : float) -> FMPBase:
         return FMP5(theta, tau);
 
 def thetaFromVrf( order : int, tau : float, vrf : float) -> float:
+    """
+    Compute the fading factor which give the target value
+    
+    Determines the theta values which yields a VRF[0,0] element with
+    the value vrf at the specified order and nominal time step.
+    At some orders and tau values the target may not be achievable
+    in these cases the theta value yielding the nearest V[0,0] is
+    returned.
+    
+    Arguments:
+        order - integer polynomial orer
+        tau - nominal time step
+        vrf - target VRF[0,0] value
+        
+    Returns:
+        fading factor
+    """
     '''@x : float'''
     if (order == 0) :
         x = max(1e-14, min(1-1e-6, vrf))

@@ -16,7 +16,7 @@ namespace PolynomialFiltering {
     namespace Components {
         using namespace Eigen;
         
-            double AbstractRecursiveFilter::effectiveTheta (const long order, const double n) {
+            double AbstractRecursiveFilter::effectiveTheta (const int order, const double n) {
                 double factor;
                 if (n < 1) {
                     return 0.0;
@@ -25,7 +25,7 @@ namespace PolynomialFiltering {
                 return 1.0 - factor / n;
             }
 
-            AbstractRecursiveFilter::AbstractRecursiveFilter (const long order, const double tau) : AbstractFilter(order) {
+            AbstractRecursiveFilter::AbstractRecursiveFilter (const int order, const double tau) : AbstractFilter(order) {
                 if (order < 0 || order > 5) {
                     throw ValueError("Polynomial orders < 0 or > 5 are not supported");
                 }
@@ -37,16 +37,16 @@ namespace PolynomialFiltering {
                 this->Z = ArrayXd::Zero(this->order + 1);
                 this->tau = tau;
                 this->D = ArrayXd::Zero(this->order + 1);
-                for (long d = 0; d < this->order + 1; d++) {
+                for (int d = 0; d < this->order + 1; d++) {
                     this->D(d) = pow(this->tau, d);
                 }
             }
 
             RealVector AbstractRecursiveFilter::_conformState (const RealVector& state) {
                 RealVector Z;
-                long m;
+                int m;
                 Z = ArrayXd::Zero(this->order + 1);
-                m = std::min(this->order + 1, len(state));
+                m = min(this->order + 1, state.size());
                 Z.segment(0, m) = state.segment(0, m);
                 return Z;
             }
@@ -108,7 +108,7 @@ namespace PolynomialFiltering {
                 return innovation;
             }
 
-            long AbstractRecursiveFilter::getN () {
+            int AbstractRecursiveFilter::getN () {
                 return this->n;
             }
 

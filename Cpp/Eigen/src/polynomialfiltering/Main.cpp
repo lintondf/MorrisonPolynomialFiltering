@@ -15,19 +15,19 @@
 namespace PolynomialFiltering {
     using namespace Eigen;
     
-        AbstractFilter::AbstractFilter (const long order, const std::string name) {
+        AbstractFilter::AbstractFilter (const int order, const std::string name) {
             this->setStatus(FilterStatus::IDLE);
             this->order = order;
             this->name = name;
         }
 
-        RealMatrix AbstractFilter::stateTransitionMatrix (const long N, const double dt) {
+        RealMatrix AbstractFilter::stateTransitionMatrix (const int N, const double dt) {
             RealMatrix B;
-            long ji;
+            int ji;
             double fji;
             B = identity(N);
-            for (long i = 0; i < N; i++) {
-                for (long j = i + 1; j < N; j++) {
+            for (int i = 0; i < N; i++) {
+                for (int j = i + 1; j < N; j++) {
                     ji = j - i;
                     fji = ji;
                     for (double x = 2; x < ji; x++) {
@@ -47,7 +47,7 @@ namespace PolynomialFiltering {
             this->name = name;
         }
 
-        long AbstractFilter::getOrder () {
+        int AbstractFilter::getOrder () {
             return this->order;
         }
 
@@ -67,22 +67,22 @@ namespace PolynomialFiltering {
             return F * this->getState();
         }
 
-        AbstractFilterWithCovariance::AbstractFilterWithCovariance (const long order, const std::string name) : AbstractFilter(order,name) {
+        AbstractFilterWithCovariance::AbstractFilterWithCovariance (const int order, const std::string name) : AbstractFilter(order,name) {
         }
 
-        RealMatrix AbstractFilterWithCovariance::transitionCovarianceMatrix (const long order, const double dt, const RealMatrix& V) {
+        RealMatrix AbstractFilterWithCovariance::transitionCovarianceMatrix (const double dt, const RealMatrix& V) {
             RealMatrix F;
-            F = AbstractFilter::stateTransitionMatrix(order + 1, dt);
+            F = AbstractFilter::stateTransitionMatrix(int(V.rows()), dt);
             return (F) * V;
         }
 
-        RealMatrix AbstractFilterWithCovariance::transitionCovariance (const double t, const RealMatrix& R) {
+        RealMatrix AbstractFilterWithCovariance::transitionCovariance (const double t) {
             double dt;
             RealMatrix F;
             RealMatrix V;
             V = this->getCovariance();
             dt = t - this->getTime();
-            return AbstractFilterWithCovariance::transitionCovarianceMatrix(this->order, dt, V);
+            return AbstractFilterWithCovariance::transitionCovarianceMatrix(dt, V);
         }
 
 }; // namespace PolynomialFiltering

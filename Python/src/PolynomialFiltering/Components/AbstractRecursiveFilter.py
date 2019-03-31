@@ -5,19 +5,26 @@ Created on Feb 13, 2019
 '''
 
 from abc import abstractmethod
-from typing import Tuple
 
-from numpy import array, diag, eye, ones, zeros, isscalar, transpose, array_equal
+from numpy import array, zeros;
 from numpy import array as vector;
 
 from PolynomialFiltering.Main import AbstractFilter, FilterStatus
 
-from TestUtilities import nearPD, A2S
     
 class AbstractRecursiveFilter(AbstractFilter):
-    '''
-    classdocs
-    '''
+    """
+    Base class for both expanding and fading polynomial filter and their combinations.
+            
+    Attributes:
+        n - number of samples
+        n0 - threshold number of samples for valid output
+        dtau - delta nominal scaled time step
+        tau - nominal scaled time step
+        t - time of the last input
+        Z - NORMALIZED state vector at time of last input
+        D - noralization/denormalization scaling vector; D(tau) = [tau^-0, tau^-1,...tau^-order]
+    """
     
     '''@ n : int'''
     '''@ n0 : int'''
@@ -30,6 +37,13 @@ class AbstractRecursiveFilter(AbstractFilter):
             
     @classmethod            
     def effectiveTheta(self, order : int, n : float) -> float:
+        """
+        Estimate of the FMP fading factor theta to match 0th variance of an EMP
+        
+        Arguments:
+            order - integer polynomial order
+            n - float sample number
+        """
         '''@factor : float'''
         if (n < 1):
             return 0.0
@@ -38,6 +52,13 @@ class AbstractRecursiveFilter(AbstractFilter):
     
     def __init__(self, order : int, tau : float ) :
         super().__init__(order)
+        """
+        Constructor
+        
+        Arguments:
+            order - integer polynomial orer
+            tau - nominal time step
+        """
         if (order < 0 or order > 5) :
             raise ValueError("Polynomial orders < 0 or > 5 are not supported")
         self.n = 0
@@ -55,26 +76,93 @@ class AbstractRecursiveFilter(AbstractFilter):
             self.D[d] = pow(self.tau, d)
             
     def _conformState(self, state : vector) -> vector:
+        """
+        Matches an input state vector to the filter order
+        
+        Longer state vectors are truncated and short ones are zero filled
+        
+        Arguments:
+            state(vector) - arbitrary length input state vector
+        
+        Returns:
+            conformed state vector with order+1 elements
+        
+        """
         '''@Z : vector'''
         '''@m : int'''
         Z = zeros([self.order+1])
-        m = min( self.order+1, len(state) )
+        m = min( self.order+1, state.shape[0] )
         Z[0:m] = state[0:m]
         return Z
         
     def _normalizeTime(self, t : float) -> float:
+        """
+        Convert an external time to internal (tau) units
+        
+        Arguments:
+            t - external time (e.g. seconds)
+        
+        Returns:
+            time in internal units (tau steps since t0)
+        
+        """
         return (t - self.t0)/self.tau
     
     def _normalizeDeltaTime(self, dt : float) -> float:
+        """
+        Converts external delta time to internal (tau) step units
+        
+        Arguments:
+            dt - external time step (e.g. seconds)
+        
+        Returns:
+            time step in internal units
+        
+        """
         return dt / self.tau
     
     def _normalizeState(self, Z : vector) -> vector:
+        """
+        Normalize a state vector
+        
+        Multiplies the input state vector by the normalization vector D
+        
+        Arguments:
+            Z(vector) - state vector in external units
+        
+        Returns:
+            state vector in internal units
+        
+        """
         return Z * self.D
     
     def _denormalizeState(self, Z : vector) -> vector:
+        """
+        Denormalize a state vector
+        
+        Divides the input state vector by the normalization vector D
+        
+        Arguments:
+            Z(vector) - state vector in internal units
+        
+        Returns:
+            state vector in external units
+        
+        """
         return Z / self.D
     
     def start(self, t : float, Z : vector) -> None:
+        """
+        Start or restart the filter
+        
+        Arguments:
+            t - external start time
+            Z - state vector in external units
+        
+        Returns:
+            None
+        
+        """
         self.n = 0;
         self.t0 = t;
         self.t = t;
@@ -84,15 +172,14 @@ class AbstractRecursiveFilter(AbstractFilter):
         """
         Predict the filter state (Z*) at time t
         
-        Args:
+        Arguments:
             t - target time
             
         Returns:
-            predicted-NORMALIZED-state
+            predicted state INTERNAL UNITS
             
         """
         '''@ Zstar : vector'''
-        
         '''@ dt : float'''
         '''@ dtau : float'''
         '''@ F : array'''
@@ -106,7 +193,7 @@ class AbstractRecursiveFilter(AbstractFilter):
         """
         Update the filter state from using the prediction error e
         
-        Args:
+        Arguments:
             t - update time
             Zstar - predicted NORMALIZED state at update time
             e - prediction error (observation - predicted state)
@@ -139,30 +226,110 @@ class AbstractRecursiveFilter(AbstractFilter):
         return innovation;
         
     def getN(self)->int:
+        """
+        Return the number of processed observations since start
+        
+        Arguments:
+            None
+        
+        Returns:
+            Count of processed observations
+        
+        """
         return self.n
     
     def getTau(self) -> float:
+        """
+        Return the nominal time step for the filter
+        
+        Arguments:
+            None
+        
+        Returns:
+            Nominal time step (tau) in external units
+        
+        """
         return self.tau
     
     def getTime(self) -> float:
+        """
+        Return the time of the last processed observation or filter start
+        
+        Arguments:
+            None
+        
+        Returns:
+            Time in external units
+        
+        """
         return self.t
     
     def getState(self) -> vector:
+        """
+        Get the current filter state vector
+        
+        Arguments:
+            None
+        
+        Returns:
+            State vector in external units
+        
+        """
         return self._denormalizeState(self.Z)
 
     def getVRF(self) -> array:
+        """
+        Get the variance reduction factor matrix
+        
+        Arguments:
+            None
+        
+        Returns:
+            Square matrix (order+1) of input to output variance ratios
+        
+        """
         '''@ V : array'''
         V = self._VRF();
         return V;
 
     @abstractmethod   
     def _gammaParameter(self, t : float, dtau : float) -> float:
+        """
+        Compute the parameter for the _gamma method
+        
+        Arguments:
+            t - external time
+            dtau - internal step
+        
+        Returns:
+            parameter based on filter subclass
+        
+        """
         pass
             
     @abstractmethod   
     def _gamma(self, nOrT : float) -> vector:
+        """
+        Get the innovation scale vector
+        
+        Arguments:
+            nOrT - n for EMP; t for FMP
+        
+        Returns:
+            vector (order+1) of (observation-predict) multipliers
+        """
         pass
 
     @abstractmethod
     def _VRF(self) -> array:
+        """
+        Get the variance reduction matrix
+        
+        Arguments:
+            None
+        
+        Returns:
+            Square matrix (order+1) of input to output variance ratios
+        
+        """
         pass

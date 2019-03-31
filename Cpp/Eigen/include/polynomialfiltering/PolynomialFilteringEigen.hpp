@@ -47,6 +47,30 @@ namespace PolynomialFiltering {
 	typedef MatrixXd RealMatrix;
 	using std::shared_ptr;
 
+	inline int integerCast(Index a) {
+		return static_cast<int>(a);
+	}
+
+	inline int min(int a, int b) {
+		return std::min(a, b);
+	}
+
+	inline int min(int a, Index b) {
+		return std::min(a, static_cast<int>(b));
+	}
+
+	inline int min(Index a, int b) {
+		return std::min(b, static_cast<int>(a));
+	}
+
+	inline double min(double a, double b) {
+		return std::min(a, b);
+	}
+
+	inline double max(double a, double b) {
+		return std::max(a, b);
+	}
+
 	// wrapper to match Python eye syntax for square matrices
 	inline RealMatrix copy(const RealMatrix& m) {
 		return m;

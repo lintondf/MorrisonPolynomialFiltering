@@ -21,7 +21,7 @@ public abstract class AbstractProgrammer implements IProgrammer {
 	
 	public AbstractProgrammer() {
 		typeRemap.put("None", "void");
-		typeRemap.put("int", "long");
+		typeRemap.put("int", "int");
 		typeRemap.put("float", "double");
 		typeRemap.put("vector", "RealVector");
 		typeRemap.put("array", "RealMatrix");
@@ -31,8 +31,9 @@ public abstract class AbstractProgrammer implements IProgrammer {
 		parameterRemap.put("RealVector", "RealVector&");
 		parameterRemap.put("RealMatrix", "RealMatrix&");
 		
-		simpleRemaps.put("max", new Symbol(libraryScope, "std::max", "int")); //TODO generic
-		simpleRemaps.put("min", new Symbol(libraryScope, "std::min", "int")); //TODO generic
+		simpleRemaps.put("int", new Symbol(libraryScope, "int", "int")); //TODO generic
+		simpleRemaps.put("max", new Symbol(libraryScope, "max", "int")); //TODO generic
+		simpleRemaps.put("min", new Symbol(libraryScope, "min", "int")); //TODO generic
 			Map<String, Symbol> libraryNames = new HashMap<>();
 			libraryNames.put("array",  new Symbol(libraryScope, "identity", "array") ); 
 			libraryNames.put("vector", new Symbol(libraryScope, "???vector_eye???", "vector") ); //Eigen

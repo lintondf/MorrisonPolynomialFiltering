@@ -16,7 +16,7 @@ namespace PolynomialFiltering {
     namespace Components {
         using namespace Eigen;
         
-            EMPBase::EMPBase (const long order, const double tau) : AbstractRecursiveFilter(order,tau) {
+            EMPBase::EMPBase (const int order, const double tau) : AbstractRecursiveFilter(order,tau) {
             }
 
             double EMPBase::_gammaParameter (const double t, const double dtau) {
@@ -35,7 +35,7 @@ namespace PolynomialFiltering {
             }
 
             RealMatrix EMP0::_VRF () {
-                long n;
+                int n;
                 RealMatrix V;
                 n = this->n;
                 V = Map<RowVectorXd>( new double[1] {1. / (n + 1.)}, 1);
@@ -56,7 +56,7 @@ namespace PolynomialFiltering {
             }
 
             RealMatrix EMP1::_VRF () {
-                long n;
+                int n;
                 double u;
                 RealMatrix D;
                 RealMatrix K;
@@ -90,7 +90,7 @@ namespace PolynomialFiltering {
             }
 
             RealMatrix EMP2::_VRF () {
-                long n;
+                int n;
                 double u;
                 RealMatrix D;
                 RealMatrix K;
@@ -127,7 +127,7 @@ namespace PolynomialFiltering {
             }
 
             RealMatrix EMP3::_VRF () {
-                long n;
+                int n;
                 double u;
                 RealMatrix D;
                 RealMatrix K;
@@ -168,7 +168,7 @@ namespace PolynomialFiltering {
             }
 
             RealMatrix EMP4::_VRF () {
-                long n;
+                int n;
                 double u;
                 RealMatrix D;
                 RealMatrix K;
@@ -209,7 +209,7 @@ namespace PolynomialFiltering {
             }
 
             RealMatrix EMP5::_VRF () {
-                long n;
+                int n;
                 double u;
                 RealMatrix D;
                 RealMatrix K;
@@ -231,7 +231,7 @@ namespace PolynomialFiltering {
                 return D * K;
             }
 
-        shared_ptr<EMPBase> makeEMP (const long order, const double tau) {
+        shared_ptr<EMPBase> makeEMP (const int order, const double tau) {
             if (order == 0) {
                 return std::shared_ptr<EMP0>(new EMP0(tau));
             } else if (order == 1) {

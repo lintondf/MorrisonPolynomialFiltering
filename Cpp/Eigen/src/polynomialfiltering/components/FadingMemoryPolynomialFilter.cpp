@@ -16,7 +16,7 @@ namespace PolynomialFiltering {
     namespace Components {
         using namespace Eigen;
         
-            FMPBase::FMPBase (const long order, const double theta, const double tau) : AbstractRecursiveFilter(order,tau) {
+            FMPBase::FMPBase (const int order, const double theta, const double tau) : AbstractRecursiveFilter(order,tau) {
                 this->theta = theta;
                 this->n0 = 1;
             }
@@ -226,7 +226,7 @@ namespace PolynomialFiltering {
                 return D * K;
             }
 
-        shared_ptr<FMPBase> makeFMP (const long order, const double theta, const double tau) {
+        shared_ptr<FMPBase> makeFMP (const int order, const double theta, const double tau) {
             if (order == 0) {
                 return std::shared_ptr<FMP0>(new FMP0(theta, tau));
             } else if (order == 1) {
@@ -242,30 +242,30 @@ namespace PolynomialFiltering {
             }
         }
 
-        double thetaFromVrf (const long order, const double tau, const double vrf) {
+        double thetaFromVrf (const int order, const double tau, const double vrf) {
             double x;
             if (order == 0) {
-                x = std::max(1e-14, std::min(1 - 1e-6, vrf));
+                x = max(1e-14, min(1 - 1e-6, vrf));
                 return 2 / (1 + x) - 1;
             } else if (order == 1) {
                 x = pow(tau, (2. / 3.)) * pow((vrf * 1. / 2.), (1. / 3.));
-                x = std::max(1e-14, std::min(1 - 1e-6, x));
+                x = max(1e-14, min(1 - 1e-6, x));
                 return  - 1. + 2. / (1.0 + x);
             } else if (order == 2) {
                 x = pow(tau, (4. / 5.)) * pow((vrf * 1. / 6.), (1. / 5.));
-                x = std::max(1e-14, std::min(1 - 1e-6, x));
+                x = max(1e-14, min(1 - 1e-6, x));
                 return  - 1. + 2. / (1.0 + x);
             } else if (order == 3) {
                 x = pow(tau, (6. / 7.)) * pow((vrf * 1. / 20.), (1. / 7.));
-                x = std::max(1e-14, std::min(1 - 1e-6, x));
+                x = max(1e-14, min(1 - 1e-6, x));
                 return  - 1. + 2. / (1.0 + x);
             } else if (order == 4) {
                 x = pow(tau, (8. / 9.)) * pow((vrf * 1. / 70.), (1. / 9.));
-                x = std::max(1e-14, std::min(1 - 1e-6, x));
+                x = max(1e-14, min(1 - 1e-6, x));
                 return  - 1. + 2. / (1.0 + x);
             } else {
                 x = pow(tau, (10. / 11.)) * pow((vrf * 14400. / 252.), (1. / 11.));
-                x = std::max(1e-14, std::min(1 - 1e-6, x));
+                x = max(1e-14, min(1 - 1e-6, x));
                 return  - 1. + 2. / (1.0 + x);
             }
         }

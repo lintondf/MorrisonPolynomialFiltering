@@ -1,7 +1,8 @@
 /**
- * TODO docstrings
  * TODO remove _ from private methods (decl and use)
  * TODO Error if function output type not provided
+ * TODO FMP VRF at init
+ * TODO EMP VRF cache?
  */
 package com.bluelightning.tools.transpiler;
 
@@ -19,6 +20,7 @@ import java.util.Set;
 import java.util.Stack;
 import java.util.TreeSet;
 
+import com.bluelightning.tools.transpiler.Scope.Level;
 import com.bluelightning.tools.transpiler.nodes.TranslationConstantNode;
 import com.bluelightning.tools.transpiler.nodes.TranslationListNode;
 import com.bluelightning.tools.transpiler.nodes.TranslationNode;
@@ -193,7 +195,14 @@ public class CppTarget extends AbstractLanguageTarget {
 				}
 			}
 		}
+		
 		hppIndent.writeln( String.format("%s {", decl));
+		String headerScope = currentScope.toString();
+		String headerComments = Transpiler.instance().getDocumenter().getDoxygenComments(headerScope, hppIndent.toString());
+		if (headerComments != null) {
+			hppIndent.append(headerComments);
+			hppIndent.append("\n");
+		}
 		hppIndent.in();
 		cppIndent.in();
 		if (! inEnum) {
@@ -282,6 +291,12 @@ public class CppTarget extends AbstractLanguageTarget {
 				if (symbol.isPrivate()) {
 					where = hppPrivate;
 //					/System.out.printf("private %s %s %s\n", symbol.getName(), name, ""+symbol.isPrivate() );
+				}
+				String headerScope = symbol.getScope().toString() + symbol.getName() + "/";
+				String headerComments = Transpiler.instance().getDocumenter().getDoxygenComments(headerScope, where.toString());
+				if (headerComments != null) {
+					where.append("\n");
+					where.append(headerComments);
 				}
 				where.write( "" );
 				String decl = String.format("%s%s(%s)", type, name, header.out.toString() ); 

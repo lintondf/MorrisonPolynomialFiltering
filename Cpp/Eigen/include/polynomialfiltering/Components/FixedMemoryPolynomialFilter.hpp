@@ -21,20 +21,20 @@ namespace PolynomialFiltering {
     namespace Components {
         class FixedMemoryFilter : public AbstractFilterWithCovariance {
             public:
-                FixedMemoryFilter(const long order, const long memorySize=51);
-                long getN();
+                FixedMemoryFilter(const int order, const int memorySize=51);
+                int getN();
                 double getTau();
                 double getTime();
                 RealVector transitionState(const double t);
                 RealVector getState();
                 void add(const double t, const double y, const std::string observationId="");
                 RealMatrix getCovariance();
-                RealMatrix transitionCovariance(const double t, const RealMatrix& R);
+                RealMatrix transitionCovariance(const double t);
             protected:
-                long order;
-                long L;
-                long n;
-                long n0;
+                int order;
+                int L;
+                int n;
+                int n0;
                 double t0;
                 double t;
                 double tau;

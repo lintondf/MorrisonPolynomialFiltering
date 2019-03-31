@@ -23,11 +23,11 @@ namespace PolynomialFiltering {
     namespace Components {
         class EmpFmpPair : public AbstractRecursiveFilter {
             public:
-                EmpFmpPair(const long order, const double theta, const double tau);
+                EmpFmpPair(const int order, const double theta, const double tau);
                 void start(const double t, const RealVector& Z);
                 RealVector predict(const double t);
                 RealVector update(const double t, const RealVector& Zstar, const double e);
-                long getN();
+                int getN();
                 double getTau();
                 double getTime();
                 RealVector getState();

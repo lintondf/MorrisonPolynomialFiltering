@@ -43,6 +43,7 @@ import com.bluelightning.tools.transpiler.nodes.TranslationExpressionNode;
 import com.bluelightning.tools.transpiler.nodes.TranslationNode;
 import com.bluelightning.tools.transpiler.nodes.TranslationUnaryNode;
 import com.bluelightning.tools.transpiler.programmer.BoostProgrammer;
+import com.bluelightning.tools.transpiler.programmer.Documenter;
 import com.bluelightning.tools.transpiler.programmer.EigenProgrammer;
 
 import freemarker.core.PlainTextOutputFormat;
@@ -130,6 +131,11 @@ public class Transpiler {
 		return text.trim().replaceAll(" +", "");
 	}
 
+	protected Documenter documenter = new Documenter();
+	
+	public Documenter getDocumenter() {
+		return documenter;
+	}
 
 	protected Map<Object, String> valueMap = new HashMap<>();
 	
@@ -144,6 +150,10 @@ public class Transpiler {
 	
 	public Symbol lookup( Scope scope, String name ) {
 		return symbolTable.lookup(scope, name);
+	}
+	
+	public Symbol lookupClass( Scope scope, String name ) {
+		return symbolTable.lookupClass(scope, name);
 	}
 	
 	protected void processDeclaration(Token token, Scope scope, String str) {
@@ -429,6 +439,7 @@ public class Transpiler {
 		symbolTable.add( importScope, "diag", "array");
 		symbolTable.add( importScope, "eye", "array");
 		symbolTable.add( importScope, "inv", "array" );
+		symbolTable.add( importScope, "int", "integerCast" );
 		symbolTable.add( importScope, "len", "int" );
 		symbolTable.add( importScope, "max", "int" );  //TODO generic type
 		symbolTable.add( importScope, "min", "int" );  //TODO generic type

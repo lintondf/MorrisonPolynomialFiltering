@@ -8,6 +8,7 @@ import org.antlr.v4.runtime.CommonToken;
 import org.antlr.v4.runtime.Token;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.RuleNode;
+import org.apache.commons.lang3.StringUtils;
 
 import com.bluelightning.tools.transpiler.Scope.Level;
 import com.bluelightning.tools.transpiler.antlr4.LcdPythonBaseListener;
@@ -248,6 +249,16 @@ class DeclarationsListener extends LcdPythonBaseListener {
 			}
 		}
 
+		@Override
+		public void enterExpr_stmt(LcdPythonParser.Expr_stmtContext ctx) {
+			Scope currentScope = scopeStack.peek();
+			String value = this.transpiler.valueMap.get(ctx.getPayload());
+			if (value.startsWith("\"\"\"")) {
+				transpiler.getDocumenter().putDocumentation(currentScope, value);
+			}
+		}
+		
+		
 		// for <var> in <range> :
 		@Override 
 		public void enterFor_stmt(LcdPythonParser.For_stmtContext ctx) {

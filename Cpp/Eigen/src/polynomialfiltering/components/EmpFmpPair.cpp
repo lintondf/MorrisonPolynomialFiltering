@@ -16,7 +16,7 @@ namespace PolynomialFiltering {
     namespace Components {
         using namespace Eigen;
         
-            EmpFmpPair::EmpFmpPair (const long order, const double theta, const double tau) : AbstractRecursiveFilter(order,tau) {
+            EmpFmpPair::EmpFmpPair (const int order, const double theta, const double tau) : AbstractRecursiveFilter(order,tau) {
                 this->emp = makeEMP(order, tau);
                 this->fmp = makeFMP(order, theta, tau);
                 this->current = this->emp;
@@ -43,7 +43,7 @@ namespace PolynomialFiltering {
                 return innovation;
             }
 
-            long EmpFmpPair::getN () {
+            int EmpFmpPair::getN () {
                 return this->current->getN();
             }
 

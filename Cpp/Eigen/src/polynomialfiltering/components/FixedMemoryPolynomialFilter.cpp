@@ -16,7 +16,7 @@ namespace PolynomialFiltering {
     namespace Components {
         using namespace Eigen;
         
-            FixedMemoryFilter::FixedMemoryFilter (const long order, const long memorySize) : AbstractFilterWithCovariance(order) {
+            FixedMemoryFilter::FixedMemoryFilter (const int order, const int memorySize) : AbstractFilterWithCovariance(order) {
                 if (order < 0 || order > 5) {
                     throw ValueError("Polynomial orders < 1 or > 5 are not supported");
                 }
@@ -31,7 +31,7 @@ namespace PolynomialFiltering {
                 this->yRing = ArrayXd::Zero(memorySize);
             }
 
-            long FixedMemoryFilter::getN () {
+            int FixedMemoryFilter::getN () {
                 return this->n;
             }
 
@@ -70,15 +70,15 @@ namespace PolynomialFiltering {
             }
 
             RealMatrix FixedMemoryFilter::getCovariance () {
-                return this->transitionCovariance(this->t, identity(1));
+                return this->transitionCovariance(this->t);
             }
 
-            RealMatrix FixedMemoryFilter::transitionCovariance (const double t, const RealMatrix& R) {
+            RealMatrix FixedMemoryFilter::transitionCovariance (const double t) {
                 RealVector dt;
                 RealMatrix Tn;
                 dt = this->tRing - t;
                 Tn = this->_getTn(dt);
-                return arrayTimes(R, inv(transpose(Tn) * Tn));
+                return inv(transpose(Tn) * Tn);
             }
 
             RealMatrix FixedMemoryFilter::_getTn (const RealVector& dt) {
@@ -89,7 +89,7 @@ namespace PolynomialFiltering {
                 Tn.col(0) = ones(dt.size());
                 C = copy(dt);
                 fact = 1.0;
-                for (long i = 1; i < this->order + 1; i++) {
+                for (int i = 1; i < this->order + 1; i++) {
                     fact /= i;
                     Tn.col(i) = C * fact;
                     C = arrayTimes(C, dt);

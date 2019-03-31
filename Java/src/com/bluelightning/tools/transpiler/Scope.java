@@ -42,6 +42,14 @@ public class Scope {
 			return qualifiers[ qualifiers.length-1 ];
 		}
 		
+		public Scope getAtLevel(int level, Level last) {
+			Scope scope = new Scope();
+			for (int i = 1; i <= level; i++) {
+				scope = scope.getChild(last, this.qualifiers[i]);
+			}
+			return scope;
+		}
+		
 		public Scope getChild( Scope.Level childLevel, String childName ) {
 //			System.out.println( this.toString() );
 			Scope scope = new Scope();
@@ -49,6 +57,9 @@ public class Scope {
 			case IMPORT:
 				switch (childLevel) {
 				case MODULE:
+					scope.level = childLevel;
+					break;
+				case CLASS:
 					scope.level = childLevel;
 					break;
 				default:

@@ -9,6 +9,11 @@ pip install numpy_ringbuffer
 pip install runstats
 pip install statistics
 pip install netcdf4
+pip install doxypypy
+'''
+''' TODO
+1. cache state transition matrices
+2. cache FMP VRF
 '''
 from abc import ABC, abstractmethod
 from enum import Enum
@@ -17,31 +22,49 @@ from numpy import array as vector;
 from PolynomialFiltering.PythonUtilities import virtual;
 
 class FilterStatus(Enum):
+    """
+    The FilterStats enumeration defines the possible states of a filter.
+    
+    IDLE - Filter is awaiting the first observation
+    INITIALIZING - Filter has processed one or more observations, but status estimate is not reliable
+    RUNNING - Filter status estimate is reliable
+    COASTING - Filter has not received a recent observation, but the predicted status should be usable
+    RESETING - Filter coast interval has been exceed and it will reinitialize on the next observation
+    """
     '''@IDLE : enum'''
-    IDLE = 0;        # Filter is awaiting the first observation    
+    IDLE = 0;        #    
     '''@INITIALIZING : enum'''
-    INITIALIZING = 1; # Filter has processed one or more observations, but status estimate is not reliable
+    INITIALIZING = 1; # 
     '''@RUNNING : enum'''
-    RUNNING = 2;      # Filter status estimate is reliable 
+    RUNNING = 2;      # 
     '''@COASTING : enum'''
-    COASTING = 3;     # Filter has not received a recent observation, but the predicted status should be usable
+    COASTING = 3;     # 
     '''@RESETING : enum'''
-    RESETING = 4;     # Filter coast interval has been exceed and it will reinitialize on the next observation
+    RESETING = 4;     # 
         
 
 class AbstractFilter(ABC):
-    '''
-    classdocs
-    '''
+    """
+    AbstractFilter is the base class for all of the filters and components in this package.    
+    
+    Attributes:
+        order - polynomial order of the filter (state contains order+1 elements)
+        name - optional identifying string
+        status(FilterStatus) - current filter status
+    """
     
     '''@ order : int''' 
     '''@name : str'''
     '''@status : FilterStatus'''
 
     def __init__(self, order : int, name : str = '') :
-        '''
-        Constructor
-        '''
+        """
+        Base Constructor
+        
+        Arguments:
+            order - polynomial order of the filter (state contains order+1 elements)
+            name - optional identifying string
+        """
         self.setStatus( FilterStatus.IDLE )
         self.order = order
         self.name = name
@@ -49,11 +72,17 @@ class AbstractFilter(ABC):
     @classmethod            
     def stateTransitionMatrix(self, N : int, dt : float) -> array: # TODO remove
         """
-        Return a Pade' expanded status transition matrix of order N [RMKdR(7)]
+        Return a state transition matrix of order N for time step dt
+        
+        Returns a Pade' expanded status transition matrix of order N [RMKdR(7)]
             P(d)_i,j = (d^(j-i))/(j-i)! where 0 <= i <= j <= N elsewhere zero
         
-        :param N: return matrix is (N,N)
-        :param dt: time step
+        Arguments:
+            N - return matrix is (N,N)
+            dt - time step
+        
+        Returns:
+            N by N state transition matrix
         """
         '''@B: array'''
         '''@i : int'''
@@ -74,22 +103,62 @@ class AbstractFilter(ABC):
     
     
     def getName(self) -> str:
+        """
+        Return the filter name
+        
+        Returns:
+            Name string, empty if none
+            
+        """
         return self.name
     
     def setName(self, name : str) -> None:
+        """
+        Set the filter name
+        
+        Arguments:
+            name - string name
+        """
         self.name = name
         
     def getOrder(self) -> int:
+        """
+        Return the filter order
+        
+        Returns:
+            integer filter order
+        """
         return self.order;
     
     def getStatus(self) -> FilterStatus:
+        """
+        Return the filter status
+        
+        Returns:
+            FilterStatus enumeration
+        """
         return self.status    
         
     def setStatus(self, status : FilterStatus) -> None:
+        """
+        Set the filter status
+        
+        Arguments:
+            status - enumeration value to set
+        """
         self.status = status
         
     @virtual
     def transitionState(self, t : float) -> vector :
+        """
+        Transition the current state to the target time t
+        
+        Arguments:
+            t - target time
+            
+        Returns: 
+            predicted-state (not normalized)
+        """        
         '''@ dt : float'''
         '''@ F : array'''
         dt = t - self.getTime()
@@ -98,37 +167,91 @@ class AbstractFilter(ABC):
         
     @abstractmethod   
     def getN(self) -> int:
+        """
+        Return the number of observation the filter has processed
+        
+        Returns:
+            Count of observations used
+        """
         pass
         
     @abstractmethod   
     def getTime(self) -> float:
+        """
+        Return the current filter time
+        
+        Returns:
+            Filter time
+        """
         pass
     
     @abstractmethod   
     def getState(self) -> vector:
+        """
+        Returns the current filter state vector
+        
+        Returns:
+            State vector (order+1 elements)
+        """
         pass
     
 class AbstractFilterWithCovariance(AbstractFilter) :
+    """
+    Extends AbstractFilter to support state vector covariance methods.
+    """
+    
     def __init__(self, order : int, name : str = '') :
         super().__init__(order, name)
+        """
+        Constructor
+        
+        Arguments:
+            order - polynomial order of the filter (state contains order+1 elements)
+            name - optional identifying string
+        """
 
     @classmethod
-    def transitionCovarianceMatrix(order : int, dt : float, V : array ) -> array:
+    def transitionCovarianceMatrix(self, dt : float, V : array ) -> array:
+        """
+        Transition the specified covariance by the specified time step
+        
+        Arguments:
+            dt - time step
+            V - N x N covariance matrix
+            
+        Returns:
+            N x N covariance matrix
+        """
         '''@ F : array'''
-        F = AbstractFilter.stateTransitionMatrix(order+1, dt );
+        F = AbstractFilter.stateTransitionMatrix(int(V.shape[0]), dt );
         return (F) @ V @ transpose(F);
 
     @virtual
-    def transitionCovariance(self, t : float, R : array ) -> array:
+    def transitionCovariance(self, t : float ) -> array:
+        """
+        Transition the current filter covariance matrix by to the specified time
+        
+        Arguments:
+            t - target time
+            
+        Returns:
+            N x N covariance matrix
+        """
         '''@ dt : float'''
         '''@ F : array'''
         '''@ V : array'''
         V = self.getCovariance()
         dt = t - self.getTime()
-        return self.transitionCovarianceMatrix(self.order, dt, V);
+        return self.transitionCovarianceMatrix(dt, V);
         
     @abstractmethod
     def getCovariance(self) -> array:
+        """
+        Get the current filter covariance matrix
+        
+        Returns:
+            Covariance matrix
+        """
         pass
 
 

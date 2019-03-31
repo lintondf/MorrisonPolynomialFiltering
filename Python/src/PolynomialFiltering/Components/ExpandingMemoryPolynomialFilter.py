@@ -13,32 +13,76 @@ from numpy import array as vector
 from PolynomialFiltering.Components.AbstractRecursiveFilter import AbstractRecursiveFilter
 
 class EMPBase(AbstractRecursiveFilter):
+    """
+    Base class for expanding memory polynomial filters.
+    """
     def __init__(self, order : int, tau : float) :
         super().__init__(order, tau);
+        """
+        Constructor
+        
+        Arguments:
+            order - integer polynomial orer
+            tau - nominal time step
+        """
         
     def _gammaParameter(self, t : float, dtau : float) -> float:
+        """
+        Compute the parameter for the _gamma method
+        
+        Arguments:
+            t - external time
+            dtau - internal step
+        
+        Returns:
+            parameter based on filter subclass
+        
+        """
         return self._normalizeTime(t)
     
     @abstractmethod
     def nSwitch(self, theta : float) -> float:
+        """
+        Compute the observation count to switch from EMP to FMP
+        
+        The 0th element of the EMP VRF declines as the number of observations
+        increases.  For the FMP the VRF is constant.  This function returns the 
+        observation number at which these elements match
+        
+        Arguments:
+            theta - fading factor at which to switch
+        
+        Returns:
+            matching observation count
+        
+        """
         pass
     
-    @abstractmethod
-    def _VRF(self) -> array:
-        pass
-        
 
 class EMP0(EMPBase) :
+    """
+    Class for the 0th order expanding memory polynomial filter.
+    """
+
     def __init__(self, tau : float) :
         super().__init__( 0, tau)
+        """
+        Constructor
+        
+        Arguments:
+            tau - nominal time step
+        """
         
     def _gamma(self, n : float) -> vector:
+        """@super"""
         return array([1/(1+n)])
     
     def nSwitch(self, theta : float) -> float:
+        """@super"""
         return 2.0/(1.0-theta)
     
     def _VRF(self) -> array:
+        """@super"""
         '''@n : int'''
         '''@V : array'''
         n = self.n
@@ -47,26 +91,39 @@ class EMP0(EMPBase) :
 
     
 class EMP1(EMPBase) :
+    """
+    Class for the 1st order expanding memory polynomial filter.
+    """
+
     def __init__(self, tau : float) :
         super().__init__( 1, tau )
+        """
+        Constructor
+        
+        Arguments:
+            tau - nominal time step
+        """
         
     def _gamma(self, n : float) -> vector: #
+        """@super"""
         '''@denom : float'''
         denom = 1.0/((n+2)*(n+1))
         return denom*array([2*(2*n+1), 
                             6])
     
     def nSwitch(self, theta : float) -> float:
+        """@super"""
         return 3.2/(1.0-theta)
-    """
+    '''
 K1 = array([[1, 0.866025403784], [0.866025403784, 1]]);
 K2 = array([[1, 0.866025403784, 0.7453559925], [0.866025403784, 1, 0.968245836552], [0.7453559925, 0.968245836552, 1]]);
 K3 = array([[1, 0.866025403784, 0.7453559925, 0.661437827766], [0.866025403784, 1, 0.968245836552, 0.916515138991], [0.7453559925, 0.968245836552, 1, 0.986013297183], [0.661437827766, 0.916515138991, 0.986013297183, 1]]);
 K4 = array([[1, 0.866025403784, 0.7453559925, 0.661437827766, 0.6], [0.866025403784, 1, 0.968245836552, 0.916515138991, 0.866025403784], [0.7453559925, 0.968245836552, 1, 0.986013297183, 0.9583148475], [0.661437827766, 0.916515138991, 0.986013297183, 1, 0.992156741649], [0.6, 0.866025403784, 0.9583148475, 0.992156741649, 1]]);
 K5 = array([[1, 0.866025403784, 0.7453559925, 0.661437827766, 0.6, 0.552770798393], [0.866025403784, 1, 0.968245836552, 0.916515138991, 0.866025403784, 0.820651806648], [0.7453559925, 0.968245836552, 1, 0.986013297183, 0.9583148475, 0.927024810887], [0.661437827766, 0.916515138991, 0.986013297183, 1, 0.992156741649, 0.974996043044], [0.6, 0.866025403784, 0.9583148475, 0.992156741649, 1, 0.994987437107], [0.552770798393, 0.820651806648, 0.927024810887, 0.974996043044, 0.994987437107, 1]]);    
-    """
+    '''
     
     def _VRF(self) -> array:
+        """@super"""
         '''@n : int'''
         '''@u : float'''
         '''@D : array'''
@@ -84,10 +141,21 @@ K5 = array([[1, 0.866025403784, 0.7453559925, 0.661437827766, 0.6, 0.55277079839
         return D @ K @ D;
 
 class EMP2(EMPBase) :
+    """
+    Class for the 2nd order expanding memory polynomial filter.
+    """
+
     def __init__(self, tau : float) :
         super().__init__( 2, tau )
+        """
+        Constructor
+        
+        Arguments:
+            tau - nominal time step
+        """
         
     def _gamma(self, n : float) -> vector: #
+        """@super"""
         '''@n2 : float'''
         '''@denom : float'''
         n2 = n*n 
@@ -97,10 +165,12 @@ class EMP2(EMPBase) :
                             (2*1)*30])
     
     def nSwitch(self, theta : float) -> float:
+        """@super"""
         return 4.3636/(1.0-theta)
     
 
     def _VRF(self) -> array:
+        """@super"""
         '''@n : int'''
         '''@u : float'''
         '''@D : array'''
@@ -119,10 +189,21 @@ class EMP2(EMPBase) :
         return D @ K @ D;
         
 class EMP3(EMPBase) :
+    """
+    Class for the 3rd order expanding memory polynomial filter.
+    """
+
     def __init__(self, tau : float) :
         super().__init__( 3, tau )
+        """
+        Constructor
+        
+        Arguments:
+            tau - nominal time step
+        """
         
     def _gamma(self, n : float) -> vector: #
+        """@super"""
         '''@n2 : float'''
         '''@n3 : float'''
         '''@denom : float'''
@@ -135,10 +216,12 @@ class EMP3(EMPBase) :
                             (3*2*1)*140])   # 
     
     def nSwitch(self, theta : float) -> float:
+        """@super"""
         return 5.50546/(1.0-theta)
     
 
     def _VRF(self) -> array:
+        """@super"""
         '''@n : int'''
         '''@u : float'''
         '''@D : array'''
@@ -164,10 +247,21 @@ class EMP3(EMPBase) :
         return D
 
 class EMP4(EMPBase) :
+    """
+    Class for the 4th order expanding memory polynomial filter.
+    """
+
     def __init__(self, tau : float) :
         super().__init__( 4, tau )
+        """
+        Constructor
+        
+        Arguments:
+            tau - nominal time step
+        """
         
     def _gamma(self, n : float) -> vector: # 
+        """@super"""
         '''@n2 : float'''
         '''@n3 : float'''
         '''@n4 : float'''
@@ -183,10 +277,12 @@ class EMP4(EMPBase) :
                             (4*3*2*1)*630]) #
     
     def nSwitch(self, theta : float) -> float:
+        """@super"""
         return 6.6321/(1.0-theta)
     
 
     def _VRF(self) -> array:
+        """@super"""
         '''@n : int'''
         '''@u : float'''
         '''@D : array'''
@@ -213,10 +309,21 @@ class EMP4(EMPBase) :
         return D @ K @ D;
 
 class EMP5(EMPBase) :
+    """
+    Class for the 5th order expanding memory polynomial filter.
+    """
+
     def __init__(self, tau : float) :
         super().__init__( 5, tau )
+        """
+        Constructor
+        
+        Arguments:
+            tau - nominal time step
+        """
         
     def _gamma(self, n : float) -> vector:
+        """@super"""
         '''@n2 : float'''
         '''@n3 : float'''
         '''@n4 : float'''
@@ -233,10 +340,12 @@ class EMP5(EMPBase) :
                             (5*4*3*2*1)*2772]) #
         
     def nSwitch(self, theta : float) -> float:
+        """@super"""
         return 7.7478/(1.0-theta)
     
    
     def _VRF(self) -> array:
+        """@super"""
         '''@n : int'''
         '''@u : float'''
         '''@D : array'''
@@ -264,6 +373,16 @@ class EMP5(EMPBase) :
         return D @ K @ D;
 
 def makeEMP(order : int, tau : float) -> EMPBase:
+    """
+    Factory for expanding memory polynomial filters
+    
+    Arguments:
+        order - integer polynomial orer
+        tau - nominal time step
+        
+    Returns:
+        expanding memory filter object
+    """
     if (order == 0) :
         return EMP0(tau);
     elif (order == 1) :
@@ -276,38 +395,3 @@ def makeEMP(order : int, tau : float) -> EMPBase:
         return EMP4(tau);
     else : # (order == 5) :
         return EMP5(tau);
-
-
-# if __name__ == "__main__":
-#     from TestUtilities import A2S
-#     order = 2;
-#     for tau in [1e-3, 1e-2, 1e-1, 1, 1e1, 1e2] :
-# #         emp = makeEMP(order, tau);
-# #         emp.start(0.0, [1, 1, 1])
-# #         emp.n = 50;
-# #         V = (emp.getCovariance(emp.tau, 1))
-# #         print(tau,order, (diag(V)))
-# 
-#         order = 1;
-#         n = 1;
-#         emp= EMP0(tau);
-#         emp.start(0.0, [1, 1, 1])
-#         emp.n = 1;
-#         P = emp.getCovariance(emp.tau, 1)
-#         P.shape = (1,1);
-#         while (order < 5+1) :
-#             emp = makeEMP(order, tau);
-#             emp.start(0.0, [1, 1, 1])
-#             while (True) :
-#                 emp.n = n;
-#                 V = emp.getCovariance(0.0+emp.tau, 1)
-#                 if (V[0,0] > 0) :
-#                     if (V[order-1,order-1] <= P[order-1,order-1] and V[order,order] <= 1) :
-#                         print(tau, order, n, A2S(diag(V)))
-#                         P = V;
-#                         break;
-#                 n += 1;
-#             order += 1;
-#     """
-#     """
-#     

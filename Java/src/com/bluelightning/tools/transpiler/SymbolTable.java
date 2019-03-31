@@ -2,9 +2,13 @@ package com.bluelightning.tools.transpiler;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+
+import com.bluelightning.tools.transpiler.Scope.Level;
+
 import java.util.TreeMap;
 
 class SymbolTable {
@@ -57,6 +61,23 @@ class SymbolTable {
 			aliases.put( scope.toString(), i ); //TODO collisions
 			table.put(i.getName(),  aliases);
 			return i;
+		}
+		
+		public Symbol lookupClass( Scope scope, String name ) {
+			name = name.trim();
+			Map<String, Symbol> aliases = table.get(name);
+			if (aliases == null) {
+				return null;
+			}
+			Symbol symbol = null;
+			Iterator<String> it = aliases.keySet().iterator();
+			String s = it.next();
+			while (it.hasNext()) {
+				String t = it.next();
+				if (t.length() < s.length())
+					s = t;
+			}
+			return aliases.get(s);
 		}
 		
 		public Symbol lookup( Scope scope, String name ) {
