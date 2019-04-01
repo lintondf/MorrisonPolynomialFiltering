@@ -30,7 +30,7 @@ public interface ILanguageTarget {
 	
 	public void finishMethod( Scope scope );
 	
-	public void emitSymbolDeclaration( Symbol symbol );
+	public void emitSymbolDeclaration( Symbol symbol, String comment );
 	
 	public void emitElifStatement(Scope scope, TranslationNode expressionRoot);
 

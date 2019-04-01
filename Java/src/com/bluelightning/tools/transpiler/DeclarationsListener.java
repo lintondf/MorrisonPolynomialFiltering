@@ -279,7 +279,7 @@ class DeclarationsListener extends LcdPythonBaseListener {
 					String str = token.getText();
 					str = str.trim().replaceAll(" +", " ");
 					if (str.startsWith("'''@")) {
-						String[] fields = str.substring(4).replaceAll("'''", "").split("-");
+						String[] fields = str.substring(4).replaceAll("'''", "").split("\\|");
 						if (fields.length > 0) {
 							declareSymbol( token, fields[0] );
 						} else {

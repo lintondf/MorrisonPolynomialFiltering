@@ -17,8 +17,9 @@
 
 
 namespace PolynomialFiltering {
-    enum FilterStatus {
-    ///// @brief The FilterStats enumeration defines the possible states of a filter.
+
+    ///// @class FilterStatus
+    /// @brief The FilterStats enumeration defines the possible states of a filter.
     /// 
     ///  	IDLE	Filter is awaiting the first observation
     ///  	INITIALIZING	Filter has processed one or more observations, but status estimate is not reliable
@@ -26,7 +27,7 @@ namespace PolynomialFiltering {
     ///  	COASTING	Filter has not received a recent observation, but the predicted status should be usable
     ///  	RESETING	Filter coast interval has been exceed and it will reinitialize on the next observation
     /// 
-
+    enum FilterStatus {
         IDLE = 0,
         INITIALIZING = 1,
         RUNNING = 2,
@@ -34,18 +35,11 @@ namespace PolynomialFiltering {
         RESETING = 4,
     }; // class FilterStatus 
 
-    class AbstractFilter {
-    ///// @brief AbstractFilter is the base class for all of the filters and components in this package.
-    /// 
-    /// 
-    /// @property		order
-    ///  polynomial order of the filter (state contains order+1 elements)
-    /// @property		name
-    ///  optional identifying string
-    /// @property		status
-    ///  current filter status
-    /// 
 
+    ///// @class AbstractFilter
+    /// @brief The base class for all of the filters and components in this package.
+    /// 
+    class AbstractFilter {
         public:
 
             ///// @brief Base Constructor
@@ -129,15 +123,16 @@ namespace PolynomialFiltering {
             /// 
             virtual RealVector getState() = 0;
         protected:
-            int order;
-            std::string name;
-            FilterStatus status;
+            int order; ///<  polynomial order
+            std::string name; ///<  name of this filter
+            FilterStatus status; ///<  current status
     }; // class AbstractFilter 
 
-    class AbstractFilterWithCovariance : public AbstractFilter {
-    ///// @brief Extends AbstractFilter to support state vector covariance methods.
-    /// 
 
+    ///// @class AbstractFilterWithCovariance
+    /// @brief Extends AbstractFilter to support state vector covariance methods.
+    /// 
+    class AbstractFilterWithCovariance : public AbstractFilter {
         public:
 
             ///// @brief Constructor
@@ -158,7 +153,7 @@ namespace PolynomialFiltering {
             /// 
             static RealMatrix transitionCovarianceMatrix(const double dt, const RealMatrix& V);
 
-            ///// @brief Transition the current filter covariance matrix by to the specified time
+            ///// @brief Transition the current filter covariance matrix to the specified time
             /// 
             /// 
             ///  @param		t	target time

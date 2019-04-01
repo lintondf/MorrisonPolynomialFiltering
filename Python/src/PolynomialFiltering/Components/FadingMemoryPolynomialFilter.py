@@ -14,6 +14,8 @@ from PolynomialFiltering.Components.AbstractRecursiveFilter import AbstractRecur
 
 class FMPBase(AbstractRecursiveFilter) :
     """
+    FMPBase
+    
     Base class for the fading memory polynomial filters.
             
     Attributes:
@@ -55,6 +57,8 @@ class FMPBase(AbstractRecursiveFilter) :
             
 class FMP0(FMPBase):    
     """
+    FMP0
+    
     Class for the 0th order fading memory polynomial filter.
     """
 
@@ -83,6 +87,8 @@ class FMP0(FMPBase):
 
 class FMP1(FMPBase):    
     """
+    FMP1
+    
     Class for the 1st order fading memory polynomial filter.
     """
 
@@ -124,6 +130,8 @@ class FMP1(FMPBase):
         
 class FMP2(FMPBase):    
     """
+    FMP2
+    
     Class for the 2nd order fading memory polynomial filter.
     """
 
@@ -171,6 +179,8 @@ class FMP2(FMPBase):
 
 class FMP3(FMPBase):    
     """
+    FMP3
+    
     Class for the 3rd order fading memory polynomial filter.
     """
 
@@ -224,6 +234,8 @@ class FMP3(FMPBase):
 
 class FMP4(FMPBase):    
     """
+    FMP4
+    
     Class for the 4th order fading memory polynomial filter.
     """
 
@@ -281,6 +293,8 @@ class FMP4(FMPBase):
 
 class FMP5(FMPBase):    
     """
+    FMP5
+    
     Class for the 5th order fading memory polynomial filter.
     """
 

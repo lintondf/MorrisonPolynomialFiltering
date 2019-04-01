@@ -62,10 +62,18 @@ public class Transpiler {
 	public static class Target {
 		public Path  dir;
 		public String module;
+		public boolean headerOnly;
 		
 		public Target( Path dir, String module ) {
 			this.dir = dir;
 			this.module = module;
+			this.headerOnly = false;
+		}
+
+		public Target( Path dir, String module, boolean headerOnly ) {
+			this.dir = dir;
+			this.module = module;
+			this.headerOnly = headerOnly;
 		}
 	}
 	
@@ -264,9 +272,9 @@ public class Transpiler {
 		}
 
 		@Override
-		public void emitSymbolDeclaration(Symbol symbol) {
+		public void emitSymbolDeclaration(Symbol symbol, String comment) {
 			for (ILanguageTarget target : targets) {
-				target.emitSymbolDeclaration(symbol);
+				target.emitSymbolDeclaration(symbol, comment);
 			}
 		}
 

@@ -19,8 +19,9 @@
 
 namespace PolynomialFiltering {
     namespace Components {
-        class AbstractRecursiveFilter : public AbstractFilter {
-        ///// @brief Base class for both expanding and fading polynomial filter and their combinations.
+
+        ///// @class AbstractRecursiveFilter
+        /// @brief Base class for both expanding and fading polynomial filter and their combinations.
         /// 
         /// 
         /// @property		n
@@ -38,7 +39,7 @@ namespace PolynomialFiltering {
         /// @property		D
         ///  noralization/denormalization scaling vector; D(tau) = [tau^-0, tau^-1,...tau^-order]
         /// 
-
+        class AbstractRecursiveFilter : public AbstractFilter {
             public:
 
                 ///// @brief Estimate of the FMP fading factor theta to match 0th variance of an EMP

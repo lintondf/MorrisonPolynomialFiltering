@@ -387,9 +387,34 @@ def testMvnrand():
 500000 H 0.036667127445717866    
     """
         
+        
+def EmpVrfCorrelation(n : float):
+    V = array([[(7 * n ** 3 + 22 * n ** 2 + 55 * n + 60) / (n * (n ** 3 - n ** 2 - n + 1)), \
+                6 * (4 * n ** 2 + 13 * n + 19) / (n * (n ** 3 - n ** 2 - n +1)), \
+                18 * (n + 3) / (n * (n ** 3 - n ** 2 - n + 1))],\
+                [6 * (4 * n ** 2 + 13 * n + 19) / (n * (n ** 3 - n ** 2 - n + 1)), \
+                 12 * ((n - 1) ** 2 + 9 * (n + 2) ** 2) / (n * (n - 1) ** 2 * (n + 1) * (n + 2)),\
+                 108 / (n * (n - 1) ** 2 * (n + 1))],\
+                [18 * (n + 3) / (n * (n ** 3 - n ** 2 - n + 1)), \
+                 108 / (n * (n - 1) ** 2 * (n + 1)), \
+                 108 / (n * (n - 1) ** 2 * (n + 1) * (n + 2))]]);
+    V = array( [[3*(3*n**2 + 9*n + 8)/(n*(n**2 - 1)),18*(2*n + 3)/(n*(n**2 - 1)), 30/(n**3 -n)],\
+       [18*(2*n + 3)/(n*(n**2 - 1)), 12*((n - 1)*(n + 3) + 15*(n + 2)**2)/(n*(n - 1)*(n + 1)*(n + 2)*(n + 3)), 180/(n*(n - 1)*(n + 1)*(n + 3))], \
+       [30/(n**3 - n), 180/(n*(n - 1)*(n + 1)*(n + 3)), 180/(n*(n - 1)*(n + 1)*(n + 2)*(n + 3))]]);              
+#     print(A2S(V))
+    (cV, dV) = covarianceToCorrelation(V)
+#     print(A2S(dV))
+    print(A2S(cV))
+    
+ 
+            
 if __name__ == '__main__':
     pass
-    testMvnrand()
+    for n in range(3,100,10) :
+        print(n)
+        EmpVrfCorrelation(n)
+    
+#     testMvnrand()
 #     testEMPPair();
 #     FMPVRFCorrelations();
 #     order = 2;

@@ -154,7 +154,7 @@ public abstract class AbstractLanguageTarget implements ILanguageTarget {
 	 * @see com.bluelightning.tools.transpiler.ILanguageTarget#emitSymbolDeclaration(com.bluelightning.tools.transpiler.Symbol)
 	 */
 	@Override
-	public void emitSymbolDeclaration(Symbol symbol) {
+	public void emitSymbolDeclaration(Symbol symbol, String comment) {
 		// TODO Auto-generated method stub
 
 	}

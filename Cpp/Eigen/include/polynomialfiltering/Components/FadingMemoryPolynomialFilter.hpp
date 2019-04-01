@@ -19,14 +19,17 @@
 
 namespace PolynomialFiltering {
     namespace Components {
-        class FMPBase : public AbstractRecursiveFilter {
-        ///// @brief Base class for the fading memory polynomial filters.
+
+        ///// @class FMPBase
+        /// @brief FMPBase
+        /// 
+        /// Base class for the fading memory polynomial filters.
         /// 
         /// 
         /// @property		theta
         ///  fading factor
         /// 
-
+        class FMPBase : public AbstractRecursiveFilter {
             public:
 
                 ///// @brief Constructor
@@ -61,10 +64,13 @@ namespace PolynomialFiltering {
                 double _gammaParameter(const double t, const double dtau);
         }; // class FMPBase 
 
-        class FMP0 : public FMPBase {
-        ///// @brief Class for the 0th order fading memory polynomial filter.
-        /// 
 
+        ///// @class FMP0
+        /// @brief FMP0
+        /// 
+        /// Class for the 0th order fading memory polynomial filter.
+        /// 
+        class FMP0 : public FMPBase {
             public:
 
                 ///// @brief Constructor
@@ -96,10 +102,13 @@ namespace PolynomialFiltering {
                 RealMatrix _VRF();
         }; // class FMP0 
 
-        class FMP1 : public FMPBase {
-        ///// @brief Class for the 1st order fading memory polynomial filter.
-        /// 
 
+        ///// @class FMP1
+        /// @brief FMP1
+        /// 
+        /// Class for the 1st order fading memory polynomial filter.
+        /// 
+        class FMP1 : public FMPBase {
             public:
 
                 ///// @brief Constructor
@@ -131,10 +140,13 @@ namespace PolynomialFiltering {
                 RealMatrix _VRF();
         }; // class FMP1 
 
-        class FMP2 : public FMPBase {
-        ///// @brief Class for the 2nd order fading memory polynomial filter.
-        /// 
 
+        ///// @class FMP2
+        /// @brief FMP2
+        /// 
+        /// Class for the 2nd order fading memory polynomial filter.
+        /// 
+        class FMP2 : public FMPBase {
             public:
 
                 ///// @brief Constructor
@@ -166,10 +178,13 @@ namespace PolynomialFiltering {
                 RealMatrix _VRF();
         }; // class FMP2 
 
-        class FMP3 : public FMPBase {
-        ///// @brief Class for the 3rd order fading memory polynomial filter.
-        /// 
 
+        ///// @class FMP3
+        /// @brief FMP3
+        /// 
+        /// Class for the 3rd order fading memory polynomial filter.
+        /// 
+        class FMP3 : public FMPBase {
             public:
 
                 ///// @brief Constructor
@@ -201,10 +216,13 @@ namespace PolynomialFiltering {
                 RealMatrix _VRF();
         }; // class FMP3 
 
-        class FMP4 : public FMPBase {
-        ///// @brief Class for the 4th order fading memory polynomial filter.
-        /// 
 
+        ///// @class FMP4
+        /// @brief FMP4
+        /// 
+        /// Class for the 4th order fading memory polynomial filter.
+        /// 
+        class FMP4 : public FMPBase {
             public:
 
                 ///// @brief Constructor
@@ -236,10 +254,13 @@ namespace PolynomialFiltering {
                 RealMatrix _VRF();
         }; // class FMP4 
 
-        class FMP5 : public FMPBase {
-        ///// @brief Class for the 5th order fading memory polynomial filter.
-        /// 
 
+        ///// @class FMP5
+        /// @brief FMP5
+        /// 
+        /// Class for the 5th order fading memory polynomial filter.
+        /// 
+        class FMP5 : public FMPBase {
             public:
 
                 ///// @brief Constructor

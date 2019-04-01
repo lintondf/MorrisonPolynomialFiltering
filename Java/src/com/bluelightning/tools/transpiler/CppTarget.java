@@ -196,13 +196,14 @@ public class CppTarget extends AbstractLanguageTarget {
 			}
 		}
 		
-		hppIndent.writeln( String.format("%s {", decl));
 		String headerScope = currentScope.toString();
 		String headerComments = Transpiler.instance().getDocumenter().getDoxygenComments(headerScope, hppIndent.toString());
 		if (headerComments != null) {
-			hppIndent.append(headerComments);
+			headerComments = headerComments.replace("///// @brief", "///// @class " + currentClass + "\n" + hppIndent.toString() +"/// @brief");
 			hppIndent.append("\n");
+			hppIndent.append(headerComments);
 		}
+		hppIndent.writeln( String.format("%s {", decl));
 		hppIndent.in();
 		cppIndent.in();
 		if (! inEnum) {
@@ -700,7 +701,7 @@ public class CppTarget extends AbstractLanguageTarget {
 	}
 
 	@Override
-	public void emitSymbolDeclaration(Symbol symbol) {
+	public void emitSymbolDeclaration(Symbol symbol, String comment) {
 		if ( symbol.isForVariable() )
 			return;
 		String cppType = programmer.remapType(symbol);
@@ -714,23 +715,27 @@ public class CppTarget extends AbstractLanguageTarget {
 			cppType = String.format("shared_ptr<%s>", cppType );
 		}
 		String declaration = String.format("%s %s", cppType, symbol.getName() );
+		String endLine = ";";
+		if (comment != null) {
+			endLine = String.format("; ///< %s", comment);
+		}
 		switch (currentScope.getLevel()) {
 		case MODULE: 
-			cppIndent.writeln( declaration + ";");
+			cppIndent.writeln( declaration + endLine);
 			break;
 		case FUNCTION:
-			cppIndent.writeln( declaration + ";");
+			cppIndent.writeln( declaration + endLine);
 			break;
 		case CLASS:
 			//hppIndent.writeln( declaration + ";");
-			hppPrivate.writeln( declaration + ";");
+			hppPrivate.writeln( declaration + endLine);
 			if (symbol.isStatic()) {
 				cppIndent.writeln( String.format("%s %s::%s;", 
 						cppType, currentScope.getLast(), symbol.getName()) );
 			}
 			break;
 		case MEMBER:
-			cppIndent.writeln( declaration + ";");
+			cppIndent.writeln( declaration + endLine);
 			break;
 		}
 	}

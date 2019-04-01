@@ -327,18 +327,43 @@ class ExpressionCompilationListener extends LcdPythonBaseListener {
 			transpiler.dispatcher.finishStatement();
 		}
 		
+//		public static class DeclarationComment {
+//			public String name;
+//			public String type;
+//			public String comment;
+//			
+//			public DeclarationComment( String value ) {
+//				name = "";
+//				type = "";
+//				comment = null;
+//				String[] fields = value.trim().split("|");
+//				if (fields.length > 1)
+//					comment = fields[1];
+//				value = fields[0].replaceAll(" +", "");
+//				
+//				value = value.trim().replaceAll(" +", "");
+//				String[] fields = value.substring(4).replaceAll("'''", "").split("|"); // drop any comments
+//				fields = fields[0].split(":");
+//				
+//			}
+//		}
+		
 		@Override
 		public void enterExpr_stmt(LcdPythonParser.Expr_stmtContext ctx) {
 			transpiler.logger.info(StringUtils.left(ctx.getText(), 80));
 			String value = this.transpiler.valueMap.get(ctx.getPayload());
 			if (value.startsWith("'''")) {
 				if (value.startsWith("'''@")) {
-					value = value.trim().replaceAll(" +", "");
-					String[] fields = value.substring(4).replaceAll("'''", "").split("-"); // drop any comments
-					fields = fields[0].split(":");
+					value = value.trim().substring(4).replaceAll("'''", "");
+					String[] comments = value.split("\\|"); // extract any comments
+					String comment = null;
+					if (comments.length > 1)
+						comment = comments[1];
+					value = comments[0].trim().replaceAll(" +", "");
+					String[] fields = value.split(":");
 					Symbol symbol = transpiler.symbolTable.lookup(scope, fields[0]);
 					if (symbol != null) {
-						transpiler.dispatcher.emitSymbolDeclaration(symbol);
+						transpiler.dispatcher.emitSymbolDeclaration(symbol, comment);
 					}
 				}				
 			} else if (value.startsWith("\"\"\"")) {

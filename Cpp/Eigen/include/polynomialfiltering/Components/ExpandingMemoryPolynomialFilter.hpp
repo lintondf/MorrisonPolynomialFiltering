@@ -19,10 +19,11 @@
 
 namespace PolynomialFiltering {
     namespace Components {
-        class EMPBase : public AbstractRecursiveFilter {
-        ///// @brief Base class for expanding memory polynomial filters.
-        /// 
 
+        ///// @class EMPBase
+        /// @brief Base class for expanding memory polynomial filters.
+        /// 
+        class EMPBase : public AbstractRecursiveFilter {
             public:
 
                 ///// @brief Constructor
@@ -60,10 +61,11 @@ namespace PolynomialFiltering {
                 double _gammaParameter(const double t, const double dtau);
         }; // class EMPBase 
 
-        class EMP0 : public EMPBase {
-        ///// @brief Class for the 0th order expanding memory polynomial filter.
-        /// 
 
+        ///// @class EMP0
+        /// @brief Class for the 0th order expanding memory polynomial filter.
+        /// 
+        class EMP0 : public EMPBase {
             public:
 
                 ///// @brief Constructor
@@ -108,10 +110,11 @@ namespace PolynomialFiltering {
                 RealMatrix _VRF();
         }; // class EMP0 
 
-        class EMP1 : public EMPBase {
-        ///// @brief Class for the 1st order expanding memory polynomial filter.
-        /// 
 
+        ///// @class EMP1
+        /// @brief Class for the 1st order expanding memory polynomial filter.
+        /// 
+        class EMP1 : public EMPBase {
             public:
 
                 ///// @brief Constructor
@@ -156,10 +159,11 @@ namespace PolynomialFiltering {
                 RealMatrix _VRF();
         }; // class EMP1 
 
-        class EMP2 : public EMPBase {
-        ///// @brief Class for the 2nd order expanding memory polynomial filter.
-        /// 
 
+        ///// @class EMP2
+        /// @brief Class for the 2nd order expanding memory polynomial filter.
+        /// 
+        class EMP2 : public EMPBase {
             public:
 
                 ///// @brief Constructor
@@ -204,10 +208,11 @@ namespace PolynomialFiltering {
                 RealMatrix _VRF();
         }; // class EMP2 
 
-        class EMP3 : public EMPBase {
-        ///// @brief Class for the 3rd order expanding memory polynomial filter.
-        /// 
 
+        ///// @class EMP3
+        /// @brief Class for the 3rd order expanding memory polynomial filter.
+        /// 
+        class EMP3 : public EMPBase {
             public:
 
                 ///// @brief Constructor
@@ -252,10 +257,11 @@ namespace PolynomialFiltering {
                 RealMatrix _VRF();
         }; // class EMP3 
 
-        class EMP4 : public EMPBase {
-        ///// @brief Class for the 4th order expanding memory polynomial filter.
-        /// 
 
+        ///// @class EMP4
+        /// @brief Class for the 4th order expanding memory polynomial filter.
+        /// 
+        class EMP4 : public EMPBase {
             public:
 
                 ///// @brief Constructor
@@ -300,10 +306,11 @@ namespace PolynomialFiltering {
                 RealMatrix _VRF();
         }; // class EMP4 
 
-        class EMP5 : public EMPBase {
-        ///// @brief Class for the 5th order expanding memory polynomial filter.
-        /// 
 
+        ///// @class EMP5
+        /// @brief Class for the 5th order expanding memory polynomial filter.
+        /// 
+        class EMP5 : public EMPBase {
             public:
 
                 ///// @brief Constructor

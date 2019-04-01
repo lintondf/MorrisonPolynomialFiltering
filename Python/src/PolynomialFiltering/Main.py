@@ -45,17 +45,12 @@ class FilterStatus(Enum):
 
 class AbstractFilter(ABC):
     """
-    AbstractFilter is the base class for all of the filters and components in this package.    
-    
-    Attributes:
-        order - polynomial order of the filter (state contains order+1 elements)
-        name - optional identifying string
-        status(FilterStatus) - current filter status
+    The base class for all of the filters and components in this package.    
     """
     
-    '''@ order : int''' 
-    '''@name : str'''
-    '''@status : FilterStatus'''
+    '''@ order : int | polynomial order''' 
+    '''@name : str | name of this filter'''
+    '''@status : FilterStatus | current status'''
 
     def __init__(self, order : int, name : str = '') :
         """
@@ -195,6 +190,7 @@ class AbstractFilter(ABC):
         """
         pass
     
+    
 class AbstractFilterWithCovariance(AbstractFilter) :
     """
     Extends AbstractFilter to support state vector covariance methods.
@@ -229,7 +225,7 @@ class AbstractFilterWithCovariance(AbstractFilter) :
     @virtual
     def transitionCovariance(self, t : float ) -> array:
         """
-        Transition the current filter covariance matrix by to the specified time
+        Transition the current filter covariance matrix to the specified time
         
         Arguments:
             t - target time
@@ -238,8 +234,7 @@ class AbstractFilterWithCovariance(AbstractFilter) :
             N x N covariance matrix
         """
         '''@ dt : float'''
-        '''@ F : array'''
-        '''@ V : array'''
+        '''@ V : array | covariance matrix of the filter'''
         V = self.getCovariance()
         dt = t - self.getTime()
         return self.transitionCovarianceMatrix(dt, V);
