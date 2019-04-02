@@ -3,6 +3,8 @@
  */
 package com.bluelightning.tools;
 
+import java.io.File;
+import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -78,6 +80,7 @@ public class TranslateOctaveDiary {
 			if (src.get(i).startsWith(name))
 				return i;
 		}
+		System.err.println("COULD NOT FIND: " + name );
 		return -1;
 	}
 	
@@ -114,13 +117,14 @@ public class TranslateOctaveDiary {
 			src = new ArrayList<String>( Arrays.asList( new String( bytes, "UTF-8" ).split("\n") ) );
 			for (int order = 0; order < 6; order++) {
 				int i = findClass( String.format("class %s%d", classBase, order) );
-				System.out.println(src.get(i));
+				System.out.print(i + ": " + src.get(i));
 				i = skipToVrf(i);
-				System.out.println(src.get(i));
+				System.out.print(i + ": " + src.get(i));
 				int j = findReturn(i);
-				System.out.println(src.get(j));
+				System.out.print(j + ": " + src.get(j));
 				for (int k = i+1; k < j; k++) {
-					src.remove(k);
+					System.out.println("Removing: " + src.get(i+1));
+					src.remove(i+1);
 				}
 				String key = String.format("%s%d %s", classBase, order, which);
 				List<String> block = codeBlocks.get( key );
@@ -135,7 +139,9 @@ public class TranslateOctaveDiary {
 					}
 				}
 			}
-			src.forEach(System.out::print);
+			PrintWriter out = new PrintWriter( new File(srcPath) );
+			src.forEach(out::print);
+			out.close();
 		} catch (Exception x) {
 			x.printStackTrace();
 		}
@@ -148,6 +154,9 @@ public class TranslateOctaveDiary {
 		new TranslateOctaveDiary( "FMP", FMP_CURRENT, 
 				"C:\\Users\\NOOK\\GITHUB\\MorrisonPolynomialFiltering\\Java\\data\\FMP_diary.txt",
 				"C:\\Users\\NOOK\\GITHUB\\MorrisonPolynomialFiltering\\Python\\src\\PolynomialFiltering\\Components\\FadingMemoryPolynomialFilter.py" );
+		new TranslateOctaveDiary( "EMP", EMP_CURRENT, 
+				"C:\\Users\\NOOK\\GITHUB\\MorrisonPolynomialFiltering\\Java\\data\\EMP_diary.txt",
+				"C:\\Users\\NOOK\\GITHUB\\MorrisonPolynomialFiltering\\Python\\src\\PolynomialFiltering\\Components\\ExpandingMemoryPolynomialFilter.py" );
 	}
 
 }
