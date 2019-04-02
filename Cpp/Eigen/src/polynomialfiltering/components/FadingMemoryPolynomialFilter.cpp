@@ -59,17 +59,11 @@ namespace PolynomialFiltering {
             RealMatrix FMP1::_VRF () {
                 double t;
                 double u;
-                RealMatrix K;
-                RealVector d;
-                RealMatrix D;
+                RealMatrix V;
                 t = this->theta;
                 u = this->tau;
-                K = Map<RowVectorXd>( new double[4] {(1., 0.894427191), (0.894427191, 1.)}, 4);
-                d = ArrayXd::Zero(this->order + 1);
-                d(0) = (pow(t, 2) + 4 * t + 5) * (1 - t) / pow((1 + t), 3);
-                d(1) = 2 * pow((1 - t), 3) / (pow(u, 2) * pow((1 + t), 3));
-                D = diag(sqrt(d));
-                return D * K;
+                V = ArrayXXd::Zero(this->order + 1, this->order + 1);
+                return V;
             }
 
             FMP2::FMP2 (const double theta, const double tau) : FMPBase(2,theta,tau) {
@@ -90,18 +84,11 @@ namespace PolynomialFiltering {
             RealMatrix FMP2::_VRF () {
                 double t;
                 double u;
-                RealMatrix K;
-                RealVector d;
-                RealMatrix D;
+                RealMatrix V;
                 t = this->theta;
                 u = this->tau;
-                K = Map<RowVectorXd>( new double[9] {(1., 0.888234788196, 0.804030252207), (0.888234788196, 1., 0.981980506062), (0.804030252207, 0.981980506062, 1.)}, 9);
-                d = ArrayXd::Zero(this->order + 1);
-                d(0) = (pow(t, 4) + 6 * pow(t, 3) + 16 * pow(t, 2) + 24 * t + 19) * (1 - t) / pow((1 + t), 5);
-                d(1) = (13 * pow(t, 2) + 50 * t + 49) * pow((1 - t), 3) / (2 * pow(u, 2) * pow((1 + t), 5));
-                d(2) = 6 * pow((1 - t), 5) / (pow(u, 4) * pow((1 + t), 5));
-                D = diag(sqrt(d));
-                return D * K;
+                V = ArrayXXd::Zero(this->order + 1, this->order + 1);
+                return V;
             }
 
             FMP3::FMP3 (const double theta, const double tau) : FMPBase(3,theta,tau) {
@@ -126,19 +113,11 @@ namespace PolynomialFiltering {
             RealMatrix FMP3::_VRF () {
                 double t;
                 double u;
-                RealMatrix K;
-                RealVector d;
-                RealMatrix D;
+                RealMatrix V;
                 t = this->theta;
                 u = this->tau;
-                K = Map<RowVectorXd>( new double[16] {(1., 0.88436317611, 0.794996299293, 0.741982233216), (0.88436317611, 1., 0.980286162792, 0.953514126371), (0.794996299293, 0.980286162792, 1., 0.99380799), (0.741982233216, 0.953514126371, 0.99380799, 1.)}, 16);
-                d = ArrayXd::Zero(this->order + 1);
-                d(0) = (pow(t, 6) + 8 * pow(t, 5) + 29 * pow(t, 4) + 64 * pow(t, 3) + 97 * pow(t, 2) + 104 * t + 69) * (1 - t) / pow((1 + t), 7);
-                d(1) = 5 / 18 * (53 * pow(t, 4) + 298 * pow(t, 3) + 762 * pow(t, 2) + 970 * t + 581) * pow((1 - t), 3) / (pow(u, 2) * pow((1 + t), 7));
-                d(2) = 2 * (23 * pow(t, 2) + 76 * t + 63) * pow((1 - t), 5) / (pow(u, 4) * pow((1 + t), 7));
-                d(3) = 20 * pow((1 - t), 7) / (pow(u, 6) * pow((1 + t), 7));
-                D = diag(sqrt(d));
-                return D * K;
+                V = ArrayXXd::Zero(this->order + 1, this->order + 1);
+                return V;
             }
 
             FMP4::FMP4 (const double theta, const double tau) : FMPBase(4,theta,tau) {
@@ -165,20 +144,11 @@ namespace PolynomialFiltering {
             RealMatrix FMP4::_VRF () {
                 double t;
                 double u;
-                RealMatrix K;
-                RealVector d;
-                RealMatrix D;
+                RealMatrix V;
                 t = this->theta;
                 u = this->tau;
-                K = Map<RowVectorXd>( new double[25] {(1., 0.881694998952, 0.788560555275, 0.732485084173, 0.696485834473), (0.881694998952, 1., 0.979001802066, 0.95, 0.925929720202), (0.788560555275, 0.979001802066, 1., 0.993190197131, 0.981794965522), (0.732485084173, 0.95, 0.993190197131, 1., 0.997155044022), (0.696485834473, 0.925929720202, 0.981794965522, 0.997155044022, 1.)}, 25);
-                d = ArrayXd::Zero(this->order + 1);
-                d(0) = (pow(t, 8) + 10 * pow(t, 7) + 46 * pow(t, 6) + 130 * pow(t, 5) + 256 * pow(t, 4) + 380 * pow(t, 3) + 446 * pow(t, 2) + 410 * t + 251) * (1 - t) / (pow((1 + t), 9));
-                d(1) = 5 * (449 * pow(t, 6) + 2988 * pow(t, 5) + 10013 * pow(t, 4) + 21216 * pow(t, 3) + 28923 * pow(t, 2) + 25588 * t + 12199) * pow((1 - t), 3) / (72 * pow(u, 2) * pow((1 + t), 9));
-                d(2) = 7 * (2021 * pow(t, 4) + 10144 * pow(t, 3) + 22746 * pow(t, 2) + 25144 * t + 12521) * pow((1 - t), 5) / (72 * pow(u, 4) * pow((1 + t), 9));
-                d(3) = 5 * (113 * pow(t, 2) + 338 * t + 253) * pow((1 - t), 7) / (2 * pow(u, 6) * pow((1 + t), 9));
-                d(4) = 70 * pow((1 - t), 9) / (pow(u, 8) * pow((1 + t), 9));
-                D = diag(sqrt(d));
-                return D * K;
+                V = ArrayXXd::Zero(this->order + 1, this->order + 1);
+                return V;
             }
 
             FMP5::FMP5 (const double theta, const double tau) : FMPBase(5,theta,tau) {
@@ -209,21 +179,11 @@ namespace PolynomialFiltering {
             RealMatrix FMP5::_VRF () {
                 double t;
                 double u;
-                RealMatrix K;
-                RealVector d;
-                RealMatrix D;
+                RealMatrix V;
                 t = this->theta;
                 u = this->tau;
-                K = Map<RowVectorXd>( new double[36] {(1., 0.87973592749, 0.783712552247, 0.725202936114, 0.687322471879, 0.661260314876), (0.87973592749, 1., 0.977989154933, 0.947173349319, 0.921318523517, 0.901006701352), (0.783712552247, 0.977989154933, 1., 0.992676628391, 0.980284789003, 0.96828182239), (0.725202936114, 0.947173349319, 0.992676628391, 1., 0.996879269744, 0.991020788184), (0.687322471879, 0.921318523517, 0.980284789003, 0.996879269744, 1., 0.99846033011), (0.661260314876, 0.901006701352, 0.96828182239, 0.991020788184, 0.99846033011, 1.)}, 36);
-                d = ArrayXd::Zero(this->order + 1);
-                d(0) = (pow(t, 10) + 12 * pow(t, 9) + 67 * pow(t, 8) + 232 * pow(t, 7) + 562 * pow(t, 6) + 1024 * pow(t, 5) + 1484 * pow(t, 4) + 1792 * pow(t, 3) + 1847 * pow(t, 2) + 1572 * t + 923) * (1 - t) / pow((1 + t), 11);
-                d(1) = 7 * (17467 * pow(t, 8) + 124874 * pow(t, 7) + 478036 * pow(t, 6) + 1239958 * pow(t, 5) + 2345510 * pow(t, 4) + 3250918 * pow(t, 3) + 3352636 * pow(t, 2) + 2454074 * t + 1028527) * pow((1 - t), 3) / (1800 * pow(u, 2) * pow((1 + t), 11));
-                d(2) = 7 * (7121 * pow(t, 6) + 43016 * pow(t, 5) + 129715 * pow(t, 4) + 244880 * pow(t, 3) + 295855 * pow(t, 2) + 225176 * t + 87581) * pow((1 - t), 5) / (72 * pow((2 * 1), 2) * pow(u, 4) * pow((1 + t), 11));
-                d(3) = 3 * (2549 * pow(t, 4) + 12072 * pow(t, 3) + 24926 * pow(t, 2) + 25176 * t + 11117) * pow((1 - t), 7) / (pow((3 * 2 * 1), 2) * 4 * pow(u, 6) * pow((1 + t), 11));
-                d(4) = 14 * (113 * pow(t, 2) + 316 * t + 221) * pow((1 - t), 9) / (pow((4 * 3 * 2 * 1), 2) * pow(u, 8) * pow((1 + t), 11));
-                d(5) = (252 * pow((1 - t), 11)) / (pow((5 * 4 * 3 * 2 * 1), 2) * pow(u, 10) * pow((1 + t), 11));
-                D = diag(sqrt(d));
-                return D * K;
+                V = ArrayXXd::Zero(this->order + 1, this->order + 1);
+                return V;
             }
 
         shared_ptr<FMPBase> makeFMP (const int order, const double theta, const double tau) {

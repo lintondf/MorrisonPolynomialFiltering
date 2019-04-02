@@ -123,9 +123,9 @@ namespace PolynomialFiltering {
             /// 
             virtual RealVector getState() = 0;
         protected:
-            int order; ///<  polynomial order
-            std::string name; ///<  name of this filter
-            FilterStatus status; ///<  current status
+            int | polynomial order order; ///<  polynomial order
+            str | name of this filter name; ///<  name of this filter
+            FilterStatus | current status status; ///<  current status
     }; // class AbstractFilter 
 
 
@@ -153,7 +153,7 @@ namespace PolynomialFiltering {
             /// 
             static RealMatrix transitionCovarianceMatrix(const double dt, const RealMatrix& V);
 
-            ///// @brief Transition the current filter covariance matrix to the specified time
+            ///// @brief Transition the current filter covariance matrix by to the specified time
             /// 
             /// 
             ///  @param		t	target time
