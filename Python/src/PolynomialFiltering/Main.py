@@ -48,7 +48,7 @@ class AbstractFilter(ABC):
     The base class for all of the filters and components in this package.    
     """
     
-    '''@ order : int | polynomial order''' 
+    '''@order : int | polynomial order''' 
     '''@name : str | name of this filter'''
     '''@status : FilterStatus | current status'''
 
@@ -67,7 +67,7 @@ class AbstractFilter(ABC):
     @classmethod            
     def stateTransitionMatrix(self, N : int, dt : float) -> array: # TODO remove
         """
-        Return a state transition matrix of order N for time step dt
+        Return a state transition matrix of size N for time step dt
         
         Returns a Pade' expanded status transition matrix of order N [RMKdR(7)]
             P(d)_i,j = (d^(j-i))/(j-i)! where 0 <= i <= j <= N elsewhere zero

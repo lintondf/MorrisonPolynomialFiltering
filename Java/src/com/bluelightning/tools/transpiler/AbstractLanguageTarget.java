@@ -1,4 +1,12 @@
-/**
+/** TODO
+ * ** Languages
+ * 1. C++/Eigen
+ * 2. Java/EJML
+ * 3. CUDA
+ * 4. Julia
+ * 5. Rust
+ * 6. Go
+ * 7. C? de'classify' from transpiler? -> OpenCL kernels
  * 
  */
 package com.bluelightning.tools.transpiler;

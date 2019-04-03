@@ -13,22 +13,27 @@ from numpy.linalg.linalg import solve, lstsq, inv
 from PolynomialFiltering.Main import AbstractFilterWithCovariance, FilterStatus
 
 class FixedMemoryFilter(AbstractFilterWithCovariance) :
+    """
+    Equally-weighted, fixed memory size, irregularly spaced data filter
     
-    '''@order :int'''
-    '''@L :int'''
-    '''@n :int'''
-    '''@n0 :int'''
-    '''@t0 :float'''
-    '''@t :float'''
-    '''@tau :float'''
-    '''@Z :vector'''
-    '''@tRing :vector'''
-    '''@yRing :vector'''
+    Same units between state and observations
+    """
+    
+    '''@order :int | order of fitted polynomial'''
+    '''@L :int | number of samples in memory window'''
+    '''@n :int | total number of observations processed'''
+    '''@n0 :int | number of observations required for valid result'''
+    '''@t0 :float | start time of filter'''
+    '''@t :float | current time of filter'''
+    '''@tau :float | nominal step time of filter'''
+    '''@Z :vector | UNNORMALIZED (external units) state vector'''
+    '''@tRing :vector | ring buffer holding times of observations'''
+    '''@yRing :vector | ring buffer holding values of observations'''
     
     def __init__(self, order : int, memorySize : int = 51 ):
         super().__init__(order);  # TODO name
         if (order < 0 or order > 5) :
-            raise ValueError("Polynomial orders < 1 or > 5 are not supported")
+            raise ValueError("Polynomial orders < 1 or > 5 are not supported") # TODO exceptions
         self.L = memorySize;
         self.n = 0
         self.n0 = memorySize;
@@ -49,9 +54,9 @@ class FixedMemoryFilter(AbstractFilterWithCovariance) :
         return self.t
     
     def transitionState(self, t : float) -> vector:
-        '''@dt : vector'''
+        '''@dt : vector | array of delta times'''
         '''@Tn : array'''
-        '''@Tnt : array'''
+        '''@Tnt : array | transpose of Tn'''
         '''@TntTn : array'''
         '''@TntYn : array'''
         dt = self.tRing - t;

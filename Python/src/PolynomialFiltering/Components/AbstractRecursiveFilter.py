@@ -14,26 +14,17 @@ from PolynomialFiltering.Main import AbstractFilter, FilterStatus
     
 class AbstractRecursiveFilter(AbstractFilter):
     """
-    Base class for both expanding and fading polynomial filter and their combinations.
-            
-    Attributes:
-        n - number of samples
-        n0 - threshold number of samples for valid output
-        dtau - delta nominal scaled time step
-        tau - nominal scaled time step
-        t - time of the last input
-        Z - NORMALIZED state vector at time of last input
-        D - noralization/denormalization scaling vector; D(tau) = [tau^-0, tau^-1,...tau^-order]
+    Base class for both expanding and fading polynomial filter and their combinations.            
     """
     
-    '''@ n : int'''
-    '''@ n0 : int'''
-    '''@ dtau : float'''
-    '''@ t0 : float'''
-    '''@ tau : float'''
-    '''@ t : float'''
-    '''@ Z : vector'''
-    '''@ D : vector'''
+    '''@ n : int | number of samples'''
+    '''@ n0 : int | threshold number of samples for valid output'''
+    '''@ dtau : float | delta nominal scaled time step'''
+    '''@ t0 : float | filter start time'''
+    '''@ tau : float | nominal scaled time step'''
+    '''@ t : float |  time of the last input'''
+    '''@ Z : vector | NORMALIZED state vector at time of last input'''
+    '''@ D : vector | noralization/denormalization scaling vector; D(tau) = [tau^-0, tau^-1,...tau^-order]'''
             
     @classmethod            
     def effectiveTheta(self, order : int, n : float) -> float:
@@ -49,6 +40,7 @@ class AbstractRecursiveFilter(AbstractFilter):
             return 0.0
         factor = 1.148*order + 2.0367;
         return 1.0 - factor/n
+    
     
     def __init__(self, order : int, tau : float ) :
         super().__init__(order)
