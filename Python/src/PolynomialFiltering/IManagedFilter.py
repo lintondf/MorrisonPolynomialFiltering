@@ -4,17 +4,20 @@ Created on Mar 13, 2019
 @author: NOOK
 '''
 from abc import ABC, abstractmethod
+
 from enum import Enum
 from numpy import array, eye, zeros, isscalar
 from numpy import array as vector;
+
+from PolynomialFiltering.Main import AbstractFilterWithCovariance
 
 
 class IObservationErrorModel(ABC):
     def __init__(self):
         pass
 
-    @abstractmethod   
-    def getInverseCovariance(self, t : float, y : vector, observationId : str) -> array:
+    @abstractmethod # pragma: no cover
+    def getInverseCovariance(self, f : AbstractFilterWithCovariance, t : float, y : vector, observationId : int) -> array:
         pass
     
 
@@ -24,21 +27,22 @@ class IManagedFilter(ABC):
     def __init__(self,name : str = ''):
         super().__init__(name);
     
-    @abstractmethod   
+    @abstractmethod # pragma: no cover 
     def getGoodnessOfFit(self) -> float:
         pass
     
-    @abstractmethod   
-    def add(self, t : float, y : vector, observationId : str = '') -> None:    
+    @abstractmethod # pragma: no cover
+    def add(self, t : float, y : vector, observationId : int = 0) -> None:    
         pass
 
-    @abstractmethod   
-    def addWithVariance(self, t : float, y : vector, inverseR : array, observationId : str = '') -> None:    
+    @abstractmethod # pragma: no cover
+    def setObservationInverseR(self, inverseR:array):
         pass
-    
-    @abstractmethod   
-    def addWithErrorModel(self, t : float, y : vector, errorModel : IObservationErrorModel, observationId : str = '') -> None:    
+        
+    @abstractmethod # pragma: no cover  
+    def setObservationErrorModel(self, errorModel : IObservationErrorModel):
         pass
+
     
 if __name__ == '__main__':
     pass

@@ -50,7 +50,7 @@ namespace PolynomialFiltering {
             /// 
             AbstractFilter(const int order, const std::string name="");
 
-            ///// @brief Return a state transition matrix of order N for time step dt
+            ///// @brief Return a state transition matrix of size N for time step dt
             /// 
             /// Returns a Pade' expanded status transition matrix of order N [RMKdR(7)]
             /// P(d)_i,j = (d^(j-i))/(j-i)! where 0 <= i <= j <= N elsewhere zero
@@ -123,9 +123,9 @@ namespace PolynomialFiltering {
             /// 
             virtual RealVector getState() = 0;
         protected:
-            int | polynomial order order; ///<  polynomial order
-            str | name of this filter name; ///<  name of this filter
-            FilterStatus | current status status; ///<  current status
+            int order; ///<  polynomial order
+            std::string name; ///<  name of this filter
+            FilterStatus status; ///<  current status
     }; // class AbstractFilter 
 
 
@@ -153,7 +153,7 @@ namespace PolynomialFiltering {
             /// 
             static RealMatrix transitionCovarianceMatrix(const double dt, const RealMatrix& V);
 
-            ///// @brief Transition the current filter covariance matrix by to the specified time
+            ///// @brief Transition the current filter covariance matrix to the specified time
             /// 
             /// 
             ///  @param		t	target time

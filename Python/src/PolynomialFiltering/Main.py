@@ -160,7 +160,7 @@ class AbstractFilter(ABC):
         F = self.stateTransitionMatrix(self.order+1, dt );
         return F @ self.getState();
         
-    @abstractmethod   
+    @abstractmethod   # pragma: no cover
     def getN(self) -> int:
         """
         Return the number of observation the filter has processed
@@ -170,7 +170,7 @@ class AbstractFilter(ABC):
         """
         pass
         
-    @abstractmethod   
+    @abstractmethod   # pragma: no cover
     def getTime(self) -> float:
         """
         Return the current filter time
@@ -180,7 +180,7 @@ class AbstractFilter(ABC):
         """
         pass
     
-    @abstractmethod   
+    @abstractmethod   # pragma: no cover
     def getState(self) -> vector:
         """
         Returns the current filter state vector
@@ -239,7 +239,7 @@ class AbstractFilterWithCovariance(AbstractFilter) :
         dt = t - self.getTime()
         return self.transitionCovarianceMatrix(dt, V);
         
-    @abstractmethod
+    @abstractmethod # pragma: no cover
     def getCovariance(self) -> array:
         """
         Get the current filter covariance matrix

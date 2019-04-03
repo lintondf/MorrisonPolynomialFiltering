@@ -23,22 +23,6 @@ namespace PolynomialFiltering {
         ///// @class AbstractRecursiveFilter
         /// @brief Base class for both expanding and fading polynomial filter and their combinations.
         /// 
-        /// 
-        /// @property		n
-        ///  number of samples
-        /// @property		n0
-        ///  threshold number of samples for valid output
-        /// @property		dtau
-        ///  delta nominal scaled time step
-        /// @property		tau
-        ///  nominal scaled time step
-        /// @property		t
-        ///  time of the last input
-        /// @property		Z
-        ///  NORMALIZED state vector at time of last input
-        /// @property		D
-        ///  noralization/denormalization scaling vector; D(tau) = [tau^-0, tau^-1,...tau^-order]
-        /// 
         class AbstractRecursiveFilter : public AbstractFilter {
             public:
 
@@ -145,14 +129,14 @@ namespace PolynomialFiltering {
                 /// 
                 RealMatrix getVRF();
             protected:
-                int n;
-                int n0;
-                double dtau;
-                double t0;
-                double tau;
-                double t;
-                RealVector Z;
-                RealVector D;
+                int n; ///<  number of samples
+                int n0; ///<  threshold number of samples for valid output
+                double dtau; ///<  delta nominal scaled time step
+                double t0; ///<  filter start time
+                double tau; ///<  nominal scaled time step
+                double t; ///<   time of the last input
+                RealVector Z; ///<  NORMALIZED state vector at time of last input
+                RealVector D; ///<  noralization/denormalization scaling vector; D(tau) = [tau^-0, tau^-1,...tau^-order]
                 
                 ///// @brief Matches an input state vector to the filter order
                 /// 

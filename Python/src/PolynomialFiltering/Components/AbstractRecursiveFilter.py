@@ -284,7 +284,7 @@ class AbstractRecursiveFilter(AbstractFilter):
         V = self._VRF();
         return V;
 
-    @abstractmethod   
+    @abstractmethod # pragma: no cover
     def _gammaParameter(self, t : float, dtau : float) -> float:
         """
         Compute the parameter for the _gamma method
@@ -299,7 +299,7 @@ class AbstractRecursiveFilter(AbstractFilter):
         """
         pass
             
-    @abstractmethod   
+    @abstractmethod # pragma: no cover   
     def _gamma(self, nOrT : float) -> vector:
         """
         Get the innovation scale vector
@@ -312,7 +312,7 @@ class AbstractRecursiveFilter(AbstractFilter):
         """
         pass
 
-    @abstractmethod
+    @abstractmethod # pragma: no cover
     def _VRF(self) -> array:
         """
         Get the variance reduction matrix

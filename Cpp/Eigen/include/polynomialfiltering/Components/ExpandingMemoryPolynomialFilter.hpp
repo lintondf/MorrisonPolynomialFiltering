@@ -21,12 +21,14 @@ namespace PolynomialFiltering {
     namespace Components {
 
         ///// @class EMPBase
-        /// @brief Base class for expanding memory polynomial filters.
+        /// @brief     Base class for expanding memory polynomial filters.
+        /// 
+        ///     This class implements the 'current-estimate' form of the expanding memory polynomial filter.
         /// 
         class EMPBase : public AbstractRecursiveFilter {
             public:
 
-                ///// @brief Constructor
+                ///// @brief         Constructor
                 /// 
                 /// 
                 ///  @param		order	integer polynomial orer
@@ -34,28 +36,28 @@ namespace PolynomialFiltering {
                 /// 
                 EMPBase(const int order, const double tau);
 
-                ///// @brief Compute the observation count to switch from EMP to FMP
+                ///// @brief         Compute the observation count to switch from EMP to FMP
                 /// 
-                /// The 0th element of the EMP VRF declines as the number of observations
-                /// increases.  For the FMP the VRF is constant.  This function returns the
-                /// observation number at which these elements match
+                ///         The 0th element of the EMP VRF declines as the number of observations
+                ///         increases.  For the FMP the VRF is constant.  This function returns the
+                ///         observation number at which these elements match
                 /// 
                 /// 
                 ///  @param		theta	fading factor at which to switch
                 /// 
-                ///  @return  matching observation count
+                ///  @return              matching observation count
                 /// 
                 /// 
                 virtual double nSwitch(const double theta) = 0;
             protected:
                 
-                ///// @brief Compute the parameter for the _gamma method
+                ///// @brief         Compute the parameter for the _gamma method
                 /// 
                 /// 
                 ///  @param		t	external time
                 ///  @param		dtau	internal step
                 /// 
-                ///  @return  parameter based on filter subclass
+                ///  @return              parameter based on filter subclass
                 /// 
                 /// 
                 double _gammaParameter(const double t, const double dtau);
@@ -63,28 +65,28 @@ namespace PolynomialFiltering {
 
 
         ///// @class EMP0
-        /// @brief Class for the 0th order expanding memory polynomial filter.
+        /// @brief     Class for the 0th order expanding memory polynomial filter.
         /// 
         class EMP0 : public EMPBase {
             public:
 
-                ///// @brief Constructor
+                ///// @brief         Constructor
                 /// 
                 /// 
                 ///  @param		tau	nominal time step
                 /// 
                 EMP0(const double tau);
 
-                ///// @brief Compute the observation count to switch from EMP to FMP
+                ///// @brief         Compute the observation count to switch from EMP to FMP
                 /// 
-                /// The 0th element of the EMP VRF declines as the number of observations
-                /// increases.  For the FMP the VRF is constant.  This function returns the
-                /// observation number at which these elements match
+                ///         The 0th element of the EMP VRF declines as the number of observations
+                ///         increases.  For the FMP the VRF is constant.  This function returns the
+                ///         observation number at which these elements match
                 /// 
                 /// 
                 ///  @param		theta	fading factor at which to switch
                 /// 
-                ///  @return  matching observation count
+                ///  @return              matching observation count
                 /// 
                 /// 
                 double nSwitch(const double theta);
@@ -112,28 +114,28 @@ namespace PolynomialFiltering {
 
 
         ///// @class EMP1
-        /// @brief Class for the 1st order expanding memory polynomial filter.
+        /// @brief     Class for the 1st order expanding memory polynomial filter.
         /// 
         class EMP1 : public EMPBase {
             public:
 
-                ///// @brief Constructor
+                ///// @brief         Constructor
                 /// 
                 /// 
                 ///  @param		tau	nominal time step
                 /// 
                 EMP1(const double tau);
 
-                ///// @brief Compute the observation count to switch from EMP to FMP
+                ///// @brief         Compute the observation count to switch from EMP to FMP
                 /// 
-                /// The 0th element of the EMP VRF declines as the number of observations
-                /// increases.  For the FMP the VRF is constant.  This function returns the
-                /// observation number at which these elements match
+                ///         The 0th element of the EMP VRF declines as the number of observations
+                ///         increases.  For the FMP the VRF is constant.  This function returns the
+                ///         observation number at which these elements match
                 /// 
                 /// 
                 ///  @param		theta	fading factor at which to switch
                 /// 
-                ///  @return  matching observation count
+                ///  @return              matching observation count
                 /// 
                 /// 
                 double nSwitch(const double theta);
@@ -161,28 +163,28 @@ namespace PolynomialFiltering {
 
 
         ///// @class EMP2
-        /// @brief Class for the 2nd order expanding memory polynomial filter.
+        /// @brief     Class for the 2nd order expanding memory polynomial filter.
         /// 
         class EMP2 : public EMPBase {
             public:
 
-                ///// @brief Constructor
+                ///// @brief         Constructor
                 /// 
                 /// 
                 ///  @param		tau	nominal time step
                 /// 
                 EMP2(const double tau);
 
-                ///// @brief Compute the observation count to switch from EMP to FMP
+                ///// @brief         Compute the observation count to switch from EMP to FMP
                 /// 
-                /// The 0th element of the EMP VRF declines as the number of observations
-                /// increases.  For the FMP the VRF is constant.  This function returns the
-                /// observation number at which these elements match
+                ///         The 0th element of the EMP VRF declines as the number of observations
+                ///         increases.  For the FMP the VRF is constant.  This function returns the
+                ///         observation number at which these elements match
                 /// 
                 /// 
                 ///  @param		theta	fading factor at which to switch
                 /// 
-                ///  @return  matching observation count
+                ///  @return              matching observation count
                 /// 
                 /// 
                 double nSwitch(const double theta);
@@ -210,28 +212,28 @@ namespace PolynomialFiltering {
 
 
         ///// @class EMP3
-        /// @brief Class for the 3rd order expanding memory polynomial filter.
+        /// @brief     Class for the 3rd order expanding memory polynomial filter.
         /// 
         class EMP3 : public EMPBase {
             public:
 
-                ///// @brief Constructor
+                ///// @brief         Constructor
                 /// 
                 /// 
                 ///  @param		tau	nominal time step
                 /// 
                 EMP3(const double tau);
 
-                ///// @brief Compute the observation count to switch from EMP to FMP
+                ///// @brief         Compute the observation count to switch from EMP to FMP
                 /// 
-                /// The 0th element of the EMP VRF declines as the number of observations
-                /// increases.  For the FMP the VRF is constant.  This function returns the
-                /// observation number at which these elements match
+                ///         The 0th element of the EMP VRF declines as the number of observations
+                ///         increases.  For the FMP the VRF is constant.  This function returns the
+                ///         observation number at which these elements match
                 /// 
                 /// 
                 ///  @param		theta	fading factor at which to switch
                 /// 
-                ///  @return  matching observation count
+                ///  @return              matching observation count
                 /// 
                 /// 
                 double nSwitch(const double theta);
@@ -259,28 +261,28 @@ namespace PolynomialFiltering {
 
 
         ///// @class EMP4
-        /// @brief Class for the 4th order expanding memory polynomial filter.
+        /// @brief     Class for the 4th order expanding memory polynomial filter.
         /// 
         class EMP4 : public EMPBase {
             public:
 
-                ///// @brief Constructor
+                ///// @brief         Constructor
                 /// 
                 /// 
                 ///  @param		tau	nominal time step
                 /// 
                 EMP4(const double tau);
 
-                ///// @brief Compute the observation count to switch from EMP to FMP
+                ///// @brief         Compute the observation count to switch from EMP to FMP
                 /// 
-                /// The 0th element of the EMP VRF declines as the number of observations
-                /// increases.  For the FMP the VRF is constant.  This function returns the
-                /// observation number at which these elements match
+                ///         The 0th element of the EMP VRF declines as the number of observations
+                ///         increases.  For the FMP the VRF is constant.  This function returns the
+                ///         observation number at which these elements match
                 /// 
                 /// 
                 ///  @param		theta	fading factor at which to switch
                 /// 
-                ///  @return  matching observation count
+                ///  @return              matching observation count
                 /// 
                 /// 
                 double nSwitch(const double theta);
@@ -308,28 +310,28 @@ namespace PolynomialFiltering {
 
 
         ///// @class EMP5
-        /// @brief Class for the 5th order expanding memory polynomial filter.
+        /// @brief     Class for the 5th order expanding memory polynomial filter.
         /// 
         class EMP5 : public EMPBase {
             public:
 
-                ///// @brief Constructor
+                ///// @brief         Constructor
                 /// 
                 /// 
                 ///  @param		tau	nominal time step
                 /// 
                 EMP5(const double tau);
 
-                ///// @brief Compute the observation count to switch from EMP to FMP
+                ///// @brief         Compute the observation count to switch from EMP to FMP
                 /// 
-                /// The 0th element of the EMP VRF declines as the number of observations
-                /// increases.  For the FMP the VRF is constant.  This function returns the
-                /// observation number at which these elements match
+                ///         The 0th element of the EMP VRF declines as the number of observations
+                ///         increases.  For the FMP the VRF is constant.  This function returns the
+                ///         observation number at which these elements match
                 /// 
                 /// 
                 ///  @param		theta	fading factor at which to switch
                 /// 
-                ///  @return  matching observation count
+                ///  @return              matching observation count
                 /// 
                 /// 
                 double nSwitch(const double theta);
@@ -356,13 +358,13 @@ namespace PolynomialFiltering {
         }; // class EMP5 
 
 
-        ///// @brief Factory for expanding memory polynomial filters
+        ///// @brief     Factory for expanding memory polynomial filters
         /// 
         /// 
         ///  @param		order	integer polynomial orer
         ///  @param		tau	nominal time step
         /// 
-        ///  @return  expanding memory filter object
+        ///  @return          expanding memory filter object
         /// 
         shared_ptr<EMPBase> makeEMP(const int order, const double tau);
     }; // namespace Components

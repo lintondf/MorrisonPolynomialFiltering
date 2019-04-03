@@ -21,18 +21,14 @@ namespace PolynomialFiltering {
     namespace Components {
 
         ///// @class FMPBase
-        /// @brief FMPBase
+        /// @brief     Base class for the fading memory polynomial filters.
         /// 
-        /// Base class for the fading memory polynomial filters.
-        /// 
-        /// 
-        /// @property		theta
-        ///  fading factor
+        ///     This class implements the 'current-estimate' form of the fading memory polynomial filter.
         /// 
         class FMPBase : public AbstractRecursiveFilter {
             public:
 
-                ///// @brief Constructor
+                ///// @brief         Constructor
                 /// 
                 /// 
                 ///  @param		order	integer polynomial orer
@@ -41,16 +37,16 @@ namespace PolynomialFiltering {
                 /// 
                 FMPBase(const int order, const double theta, const double tau);
 
-                ///// @brief Return the fading factor for the filter
+                ///// @brief         Return the fading factor for the filter
                 /// 
                 /// 
-                ///  @param		None
+                ///  @param		            None
                 /// 
-                ///  @return  fading factor
+                ///  @return              fading factor
                 /// 
                 double getTheta();
             protected:
-                double theta;
+                double theta; ///<  fading factor
                 
                 ///// @brief Compute the parameter for the _gamma method
                 /// 
@@ -66,14 +62,12 @@ namespace PolynomialFiltering {
 
 
         ///// @class FMP0
-        /// @brief FMP0
-        /// 
-        /// Class for the 0th order fading memory polynomial filter.
+        /// @brief     Class for the 0th order fading memory polynomial filter.
         /// 
         class FMP0 : public FMPBase {
             public:
 
-                ///// @brief Constructor
+                ///// @brief         Constructor
                 /// 
                 /// 
                 ///  @param		theta	fading factor
@@ -104,14 +98,12 @@ namespace PolynomialFiltering {
 
 
         ///// @class FMP1
-        /// @brief FMP1
-        /// 
-        /// Class for the 1st order fading memory polynomial filter.
+        /// @brief     Class for the 1st order fading memory polynomial filter.
         /// 
         class FMP1 : public FMPBase {
             public:
 
-                ///// @brief Constructor
+                ///// @brief         Constructor
                 /// 
                 /// 
                 ///  @param		theta	fading factor
@@ -142,14 +134,12 @@ namespace PolynomialFiltering {
 
 
         ///// @class FMP2
-        /// @brief FMP2
-        /// 
-        /// Class for the 2nd order fading memory polynomial filter.
+        /// @brief     Class for the 2nd order fading memory polynomial filter.
         /// 
         class FMP2 : public FMPBase {
             public:
 
-                ///// @brief Constructor
+                ///// @brief         Constructor
                 /// 
                 /// 
                 ///  @param		theta	fading factor
@@ -180,14 +170,12 @@ namespace PolynomialFiltering {
 
 
         ///// @class FMP3
-        /// @brief FMP3
-        /// 
-        /// Class for the 3rd order fading memory polynomial filter.
+        /// @brief     Class for the 3rd order fading memory polynomial filter.
         /// 
         class FMP3 : public FMPBase {
             public:
 
-                ///// @brief Constructor
+                ///// @brief         Constructor
                 /// 
                 /// 
                 ///  @param		theta	fading factor
@@ -218,14 +206,12 @@ namespace PolynomialFiltering {
 
 
         ///// @class FMP4
-        /// @brief FMP4
-        /// 
-        /// Class for the 4th order fading memory polynomial filter.
+        /// @brief     Class for the 4th order fading memory polynomial filter.
         /// 
         class FMP4 : public FMPBase {
             public:
 
-                ///// @brief Constructor
+                ///// @brief         Constructor
                 /// 
                 /// 
                 ///  @param		theta	fading factor
@@ -256,14 +242,12 @@ namespace PolynomialFiltering {
 
 
         ///// @class FMP5
-        /// @brief FMP5
-        /// 
-        /// Class for the 5th order fading memory polynomial filter.
+        /// @brief     Class for the 5th order fading memory polynomial filter.
         /// 
         class FMP5 : public FMPBase {
             public:
 
-                ///// @brief Constructor
+                ///// @brief         Constructor
                 /// 
                 /// 
                 ///  @param		theta	fading factor
@@ -293,31 +277,31 @@ namespace PolynomialFiltering {
         }; // class FMP5 
 
 
-        ///// @brief Factory for fading memory polynomial filters
+        ///// @brief     Factory for fading memory polynomial filters
         /// 
         /// 
         ///  @param		order	integer polynomial orer
         ///  @param		theta	fading factor
         ///  @param		tau	nominal time step
         /// 
-        ///  @return  fading memory filter object
+        ///  @return          fading memory filter object
         /// 
         shared_ptr<FMPBase> makeFMP(const int order, const double theta, const double tau);
 
-        ///// @brief Compute the fading factor which give the target value
+        ///// @brief     Compute the fading factor which give the target value
         /// 
-        /// Determines the theta values which yields a VRF[0,0] element with
-        /// the value vrf at the specified order and nominal time step.
-        /// At some orders and tau values the target may not be achievable
-        /// in these cases the theta value yielding the nearest V[0,0] is
-        /// returned.
+        ///     Determines the theta values which yields a VRF[0,0] element with
+        ///     the value vrf at the specified order and nominal time step.
+        ///     At some orders and tau values the target may not be achievable
+        ///     in these cases the theta value yielding the nearest V[0,0] is
+        ///     returned.
         /// 
         /// 
         ///  @param		order	integer polynomial orer
         ///  @param		tau	nominal time step
         ///  @param		vrf	target VRF[0,0] value
         /// 
-        ///  @return  fading factor
+        ///  @return          fading factor
         /// 
         double thetaFromVrf(const int order, const double tau, const double vrf);
     }; // namespace Components

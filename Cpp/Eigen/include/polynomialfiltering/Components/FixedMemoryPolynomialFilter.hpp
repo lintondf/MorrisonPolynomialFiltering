@@ -19,6 +19,12 @@
 
 namespace PolynomialFiltering {
     namespace Components {
+
+        ///// @class FixedMemoryFilter
+        /// @brief Equally-weighted, fixed memory size, irregularly spaced data filter
+        /// 
+        /// Same units between state and observations
+        /// 
         class FixedMemoryFilter : public AbstractFilterWithCovariance {
             public:
                 FixedMemoryFilter(const int order, const int memorySize=51);
@@ -31,16 +37,16 @@ namespace PolynomialFiltering {
                 RealMatrix getCovariance();
                 RealMatrix transitionCovariance(const double t);
             protected:
-                int order;
-                int L;
-                int n;
-                int n0;
-                double t0;
-                double t;
-                double tau;
-                RealVector Z;
-                RealVector tRing;
-                RealVector yRing;
+                int order; ///<  order of fitted polynomial
+                int L; ///<  number of samples in memory window
+                int n; ///<  total number of observations processed
+                int n0; ///<  number of observations required for valid result
+                double t0; ///<  start time of filter
+                double t; ///<  current time of filter
+                double tau; ///<  nominal step time of filter
+                RealVector Z; ///<  UNNORMALIZED (external units) state vector
+                RealVector tRing; ///<  ring buffer holding times of observations
+                RealVector yRing; ///<  ring buffer holding values of observations
                 RealMatrix _getTn(const RealVector& dt);
         }; // class FixedMemoryFilter 
 

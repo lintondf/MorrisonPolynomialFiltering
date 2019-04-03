@@ -4,13 +4,17 @@ Created on Mar 27, 2019
 @author: NOOK
 '''
 import unittest
+import coverage
+
+
+# .. call your code ..
 
 def runAll():
     testmodules = [
-        'AbstractRecursiveFilter_test',
-        'EMP_test',
-        'FixedMemoryFilter_test',
-        'FMP_test'
+        'Components.AbstractRecursiveFilter_test',
+        'Components.EMP_test',
+        'Components.FixedMemoryFilter_test',
+        'Components.FMP_test'
         ]
     
     suite = unittest.TestSuite()
@@ -28,4 +32,10 @@ def runAll():
     unittest.TextTestRunner().run(suite)    
 
 if __name__ == '__main__':
+    cov = coverage.Coverage()
+    cov.start()
     runAll()
+    cov.stop()
+    cov.save()
+    cov.html_report()
+    

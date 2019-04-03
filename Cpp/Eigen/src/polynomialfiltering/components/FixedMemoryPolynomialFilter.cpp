@@ -44,9 +44,9 @@ namespace PolynomialFiltering {
             }
 
             RealVector FixedMemoryFilter::transitionState (const double t) {
-                RealVector dt;
+                RealVector dt; ///<  array of delta times
                 RealMatrix Tn;
-                RealMatrix Tnt;
+                RealMatrix Tnt; ///<  transpose of Tn
                 RealMatrix TntTn;
                 RealMatrix TntYn;
                 dt = this->tRing - t;
