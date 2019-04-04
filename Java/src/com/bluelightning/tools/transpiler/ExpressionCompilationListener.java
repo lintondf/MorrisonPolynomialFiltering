@@ -32,6 +32,7 @@ class ExpressionCompilationListener extends LcdPythonBaseListener {
 		Scope scope = null;
 		TranslationNode expressionRoot = null;
 		HashMap<Object, TranslationNode> translateMap = null;
+		boolean headerOnly;
 		
 		protected HashMap<Object, TranslationNode> newTranslateMap() {
 			HashMap<Object, TranslationNode> map = new HashMap<>();
@@ -42,10 +43,12 @@ class ExpressionCompilationListener extends LcdPythonBaseListener {
 		
 		/**
 		 * @param transpiler
+		 * @param headerOnly 
 		 */
-		ExpressionCompilationListener(Transpiler transpiler) {
+		ExpressionCompilationListener(Transpiler transpiler, boolean headerOnly) {
 			this.transpiler = transpiler;
 			scope = this.transpiler.moduleScope;
+			this.headerOnly = headerOnly;
 			transpiler.logger.info("module > " + scope);
 		}
 		
@@ -222,7 +225,7 @@ class ExpressionCompilationListener extends LcdPythonBaseListener {
 				return;
 			}
 
-			ExpressionCompilationListener subListener = new ExpressionCompilationListener(transpiler);
+			ExpressionCompilationListener subListener = new ExpressionCompilationListener(transpiler, this.headerOnly);
 			subListener.expressionRoot = new TranslationSubexpressionNode(ctx, null, "FOR_STMT");
 			subListener.translateMap = newTranslateMap();
 			subListener.scope = symbol.getScope();
@@ -243,7 +246,7 @@ class ExpressionCompilationListener extends LcdPythonBaseListener {
 //			System.out.println( ctx.getChild(1).getText());
 //			System.out.println( ctx.getChild(1).getChild(0).getChild(0).getText());
 			
-			ExpressionCompilationListener subListener = new ExpressionCompilationListener(transpiler);
+			ExpressionCompilationListener subListener = new ExpressionCompilationListener(transpiler, this.headerOnly);
 			subListener.expressionRoot = new TranslationExpressionNode(ctx, "IF_STMT");
 			subListener.translateMap = newTranslateMap();
 			subListener.scope = scope;
@@ -262,7 +265,7 @@ class ExpressionCompilationListener extends LcdPythonBaseListener {
 		
 		@Override public void enterElif_stmt(LcdPythonParser.Elif_stmtContext ctx) { 
 			transpiler.logger.info(StringUtils.left(ctx.getText(), 80));
-			ExpressionCompilationListener subListener = new ExpressionCompilationListener(transpiler);
+			ExpressionCompilationListener subListener = new ExpressionCompilationListener(transpiler, this.headerOnly);
 			subListener.expressionRoot = new TranslationExpressionNode(ctx, "IF_STMT");
 			subListener.translateMap = newTranslateMap();
 			subListener.scope = scope;

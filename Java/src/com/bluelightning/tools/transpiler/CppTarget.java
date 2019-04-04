@@ -109,8 +109,9 @@ public class CppTarget extends AbstractLanguageTarget {
 
 
 	@Override
-	public void startModule(Scope scope) {
+	public void startModule(Scope scope, boolean headerOnly) {
 		System.out.println("\nCppBoost " + scope.toString() );
+		this.headerOnly = headerOnly;
 		
 		currentScope = scope;
 		hppIndent = new Indent();
@@ -133,7 +134,9 @@ public class CppTarget extends AbstractLanguageTarget {
 		cppPath = cppPath.resolve( moduleName + ".cpp" );
 		moduleIncludeFile.append( moduleName + ".hpp" );
 		System.out.println(hppPath.toString());
-		System.out.println(cppPath.toString());
+		if (!headerOnly) {
+			System.out.println(cppPath.toString());
+		}
 		templateDataModel.put("scope", scope);
 		define = String.format("__%sHPP", scope.toString().replace("/", "_").toUpperCase());
 		templateDataModel.put("hppDefine", define);
@@ -174,6 +177,7 @@ public class CppTarget extends AbstractLanguageTarget {
 	String currentClass = null;
 	boolean inEnum = false;
 	boolean isAbstract = false;
+	boolean headerOnly = false;
 
 	@Override
 	public void startClass(Scope scope) {
@@ -369,16 +373,19 @@ public class CppTarget extends AbstractLanguageTarget {
 			cppIndent.out();
 		}
 		templateDataModel.put("hppBody", hppIndent.out.toString());
-		templateDataModel.put("cppBody", cppIndent.out.toString().replaceAll("\\(\\*([^\\)]*)\\)\\.", "$1->")); //.replace("(*this).", "this->"));
+		if (!headerOnly) {
+			templateDataModel.put("cppBody", cppIndent.out.toString().replaceAll("\\(\\*([^\\)]*)\\)\\.", "$1->")); //.replace("(*this).", "this->"));
+		}
 		try {
 			Writer out = new OutputStreamWriter(new FileOutputStream(hppPath.toFile()));
 			//System.out.println(hppFile.toString());
 			hpp.process(templateDataModel, out);
 			out.close();
-			
-			out = new OutputStreamWriter(new FileOutputStream(cppPath.toFile()));
-			cpp.process(templateDataModel, out);
-			out.close();
+			if (!headerOnly) {
+				out = new OutputStreamWriter(new FileOutputStream(cppPath.toFile()));
+				cpp.process(templateDataModel, out);
+				out.close();
+			}
 		} catch (IOException iox ) {
 			iox.printStackTrace();
 		} catch (TemplateException e) {

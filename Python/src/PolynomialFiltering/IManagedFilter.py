@@ -5,8 +5,7 @@ Created on Mar 13, 2019
 '''
 from abc import ABC, abstractmethod
 
-from enum import Enum
-from numpy import array, eye, zeros, isscalar
+from numpy import array
 from numpy import array as vector;
 
 from PolynomialFiltering.Main import AbstractFilterWithCovariance
@@ -17,9 +16,12 @@ class IObservationErrorModel(ABC):
         pass
 
     @abstractmethod # pragma: no cover
-    def getInverseCovariance(self, f : AbstractFilterWithCovariance, t : float, y : vector, observationId : int) -> array:
+    def getInformationMatrix(self, f : AbstractFilterWithCovariance, t : float, y : vector, observationId : int) -> array:
         pass
     
+    @abstractmethod # pragma: no cover
+    def getCovarianceMatrix(self, f : AbstractFilterWithCovariance, t : float, y : vector, observationId : int) -> array:
+        pass
 
     
     
@@ -36,11 +38,11 @@ class IManagedFilter(ABC):
         pass
 
     @abstractmethod # pragma: no cover
-    def setObservationInverseR(self, inverseR:array):
+    def setObservationInverseR(self, inverseR:array) -> None:
         pass
         
     @abstractmethod # pragma: no cover  
-    def setObservationErrorModel(self, errorModel : IObservationErrorModel):
+    def setObservationErrorModel(self, errorModel : IObservationErrorModel) -> None:
         pass
 
     

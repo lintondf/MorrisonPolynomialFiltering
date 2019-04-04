@@ -5,22 +5,30 @@ Created on Mar 27, 2019
 '''
 
 from abc import abstractmethod
-from typing import List;
 
-from math import isnan;
-from numpy import array, diag, zeros, sqrt, transpose, eye
+from numpy import array, eye
 from numpy import array as vector
-from PolynomialFiltering.Main import virtual, AbstractFilterWithCovariance
+from PolynomialFiltering.Main import AbstractFilterWithCovariance
 from PolynomialFiltering.Components import AbstractRecursiveFilter
 from PolynomialFiltering.IManagedFilter import IManagedFilter, IObservationErrorModel
 
 
 class ConstantObservationErrorModel(IObservationErrorModel):
-    def __init__(self, inverseR:array):
+    def __init__(self, R : array, inverseR : array):
+        self.R = R;
         self.iR = inverseR;
 
-    def getInverseCovariance(self, f: AbstractFilterWithCovariance, t:float, y:vector, observationId:int = 0):
-        return self.iR;
+    def getInformationMatrix(self, f: AbstractFilterWithCovariance, t:float, y:vector, observationId:int = -1):
+        if (observationId == -1) :
+            return self.iR;
+        else :
+            return self.iR[observationId,observationId];
+
+    def getCovarianceMatrix(self, f : AbstractFilterWithCovariance, t : float, y : vector, observationId : int = -1) -> array:
+        if (observationId == -1) :
+            return self.R;
+        else :
+            return self.R[observationId,observationId];
 
         
 
@@ -29,21 +37,21 @@ class ManagedFilterBase(AbstractFilterWithCovariance, IManagedFilter):
     classdocs
     '''
 
-    '''@INITIAL_SSR : float'''
-    '''@ worker : AbstractRecursiveFilter'''
-    '''@ errorModel : IObservationErrorModel'''
-    '''@ iR : array'''
-    '''@ SSR : float'''
-    '''@ w : float'''
+    '''@INITIAL_SSR : float | start point for smoothed SSR '''
+    '''@ worker : AbstractRecursiveFilter | that which is managed'''
+    '''@ errorModel : IObservationErrorModel | observation covariance/information matrix source'''
+    '''@ iR : array | last observation information matrix'''
+    '''@ SSR : float | smooth, scaled sigma ratio of observation mis-predict'''
+    '''@ w : float | SSR smoothing factor'''
     
     def __init__(self, worker : AbstractRecursiveFilter):
         '''
         Constructor
         '''
         self.worker = worker;
-        self.errorModel = ConstantObservationErrorModel(eye(1))
+        self.errorModel = ConstantObservationErrorModel(eye(1), eye(1))
         self.iR = 1;
-        self.INITIAL_SSR = 1.959964**2;
+        self.INITIAL_SSR = 3**2;
         self.SSR = self.INITIAL_SSR;
         self.w = 0.9
 
@@ -86,62 +94,3 @@ class ManagedFilterBase(AbstractFilterWithCovariance, IManagedFilter):
     @abstractmethod # pragma: no cover
     def _updateSSR(self, t:float, y:vector, e : float, innovation : vector):
         pass
-
-        
-class Managed1CRecursiveFilter(ManagedFilterBase):
-    
-    def __init__(self, worker : AbstractRecursiveFilter):
-        super().__init__(worker);
-        
-    @virtual
-    def add(self, t:float, y:vector, observationId:int = 0):
-        self.iR = self.errorModel.getInverseCovariance(self, t, y, observationId)
-        Zstar = self.worker.predict(t)
-        e = y[0] - Zstar[0]
-        innovation = self.worker.update(t, Zstar, e)
-        self._updateSSR(t, y, e, innovation)
-        
-    @virtual
-    def getCovariance(self):
-        return self.worker.getVRF(self) * 1/self.iR[0,0]
-
-    @virtual
-    def _updateSSR(self, t:float, y:vector, e : float, innovation : vector):
-        if (self.worker.getN() > self.worker.getOrder()) :
-            SSR = e * self.iR * e / (1+self.worker.getOrder())
-            self.SSR = self.w*self.SSR + (1-self.w)*SSR
-        
-
-class Managed1CRecursiveFilterSet(ManagedFilterBase):
-    
-    def __init__(self, worker : AbstractRecursiveFilter):
-        super().__init__(None);
-        
-    '''workers : List<AbstractRecursiveFilter>'''
-    '''SSRs    : List<float>'''
-        
-    def setWorkers(self, workers : List[AbstractRecursiveFilter]) -> None:
-        self.workers = workers;
-        self.worker = workers[0];
-        self.SSRs = len(workers)*[self.SSR];
-        
-    def getWorkers(self) -> List[AbstractRecursiveFilter]:
-        return self.workers;
-    
-    @virtual
-    def add(self, t:float, y:vector, observationId:int = 0):
-        self.iR = self.errorModel.getInverseCovariance(self, t, y, observationId)
-        minSSR = 1e100;
-        iBest = -1;
-        for iW in range(0, len(self.workers)) :
-            Zstar = self.workers[iW].predict(t)
-            e = y[0] - Zstar[0]
-            innovation = self.workers[iW].update(t, Zstar, e)
-            self._updateSSR(t, y, e, innovation)
-            self.SSRs[iW] = self.SSR;
-            if (self.SSR < minSSR) :
-                minSSR = self.SSR;
-                iBest = iW;
-        self.SSR = self.SSRs[iBest];
-        self.worker = self.workers[iBest];
-    

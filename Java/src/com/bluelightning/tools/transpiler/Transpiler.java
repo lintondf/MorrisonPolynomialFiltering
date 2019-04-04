@@ -85,6 +85,7 @@ public class Transpiler {
 		new Target(Paths.get("PolynomialFiltering/Components"), "ExpandingMemoryPolynomialFilter"),
 		new Target(Paths.get("PolynomialFiltering/Components"), "FadingMemoryPolynomialFilter"),
 		new Target(Paths.get("PolynomialFiltering/Components"), "EmpFmpPair"),
+		new Target(Paths.get("PolynomialFiltering"), "IManagedFilter", true),
 	};
 	
 	protected Logger logger;
@@ -219,9 +220,9 @@ public class Transpiler {
 		}
 
 		@Override
-		public void startModule(Scope scope) {
+		public void startModule(Scope scope, boolean headerOnly) {
 			for (ILanguageTarget target : targets) {
-				target.startModule(scope);
+				target.startModule(scope, headerOnly);
 			}
 		}
 
@@ -478,7 +479,7 @@ public class Transpiler {
 
 	}
 	
-	public void compile(Path where, List<String> dottedModule) {
+	public void compile(Path where, List<String> dottedModule, boolean headerOnly) {
 		
 		String module = dottedModule.get(dottedModule.size()-1);
 		try {
@@ -508,7 +509,7 @@ public class Transpiler {
 		// PASS 2 - handle all imports, variable, function, and class declarations
 		DeclarationsListener declarationsListener = new DeclarationsListener(this, moduleScope);
 		walker.walk(declarationsListener, tree);
-		dispatcher.startModule(moduleScope);
+		dispatcher.startModule(moduleScope, headerOnly);
 		try {
 			PrintWriter sym = new PrintWriter("out/symbols.txt");
 			sym.println("\n\n-------------------------------------");
@@ -520,7 +521,7 @@ public class Transpiler {
 			x.printStackTrace();
 		}
 		
-		ExpressionCompilationListener expressionCompilationListener = new ExpressionCompilationListener(this);
+		ExpressionCompilationListener expressionCompilationListener = new ExpressionCompilationListener(this, headerOnly);
 		walker.walk(expressionCompilationListener, tree);
 
 		dispatcher.finishModule();
@@ -567,7 +568,7 @@ public class Transpiler {
 				}
 			}
 			dottedModule.add(target.module);
-			transpiler.compile( where, dottedModule);
+			transpiler.compile( where, dottedModule, target.headerOnly);
 		}
 		System.out.printf("Compiled %d targets\n", targets.length);
 	}

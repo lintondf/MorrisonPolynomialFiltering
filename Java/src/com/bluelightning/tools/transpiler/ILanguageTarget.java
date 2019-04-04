@@ -20,7 +20,7 @@ public interface ILanguageTarget {
 	
 	public void addParameterClass( String className );
 	
-	public void startModule( Scope scope );
+	public void startModule( Scope scope, boolean headerOnly );
 	
 	public void finishModule();
 	
