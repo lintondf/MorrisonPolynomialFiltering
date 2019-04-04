@@ -64,6 +64,10 @@ class DeclarationsListener extends LcdPythonBaseListener {
 			String[] fields = declaration.split(":");
 			if (fields.length >= 2) {
 				Scope currentScope = scopeStack.peek();
+				if (fields[1].startsWith("'")) { 
+					fields[1] = fields[1].substring(1, fields[1].length()-1);
+					declaration = declaration.replace("'", "");
+				}
 				Symbol symbol = transpiler.symbolTable.add(currentScope, fields[0], fields[1]);
 				Symbol type = transpiler.symbolTable.lookup(currentScope, fields[1]);
 				if (type != null) {
@@ -98,8 +102,15 @@ class DeclarationsListener extends LcdPythonBaseListener {
 //			transpiler.dumpChildren( ctx );
 			Scope currentScope = scopeStack.peek();
 			String name = getChildText(ctx, 1);
-			if (name.equals("virtual"))
-				transpiler.dumpChildren( ctx );
+			if (! name.startsWith("__init__")) {
+				if (ctx.getChildCount() <= 5) {
+					this.transpiler.reportError(ctx.start, "Non-init functions must have declared return type");
+				}
+			} else {
+				if (ctx.getChildCount() > 5) {
+					this.transpiler.reportError(ctx.start, "init functions must NOT have declared return type");
+				}
+			}
 			Scope functionScope = currentScope.getChild(Scope.Level.FUNCTION, name);
 			if (functionScope == null) {
 				this.transpiler.reportError(ctx.start, "Invalid function scope");
@@ -110,6 +121,8 @@ class DeclarationsListener extends LcdPythonBaseListener {
 			Symbol symbol = transpiler.symbolTable.add(currentScope, name, functionType);
 			transpiler.scopeMap.put( ctx.getPayload(), functionScope );
 			ParseTree parameterDeclaration = ctx.getChild(2);
+//			if (name.equals("copy"))
+//				transpiler.dumpChildren( ctx, 2 );
 			if (parameterDeclaration.getChildCount() > 2) {
 				ParseTree parameters = parameterDeclaration.getChild(1);
 				for (int i = 0; i < parameters.getChildCount(); i++) {
@@ -126,6 +139,14 @@ class DeclarationsListener extends LcdPythonBaseListener {
 						declaration += ":"+currentScope.getLast();
 					}
 					Symbol p = declareSymbol( ctx.getStart(), declaration);
+					if (! p.getName().equals("self")) {
+						Symbol c = transpiler.lookupClass(currentScope, p.getType());
+						if (c != null) {
+							p.setClassReference(true);
+							System.out.println("ADDING: " + c );
+							transpiler.addParameterClass(p.getType());
+						}
+					}
 					fpi.parameters.add(p);
 				}
 			}

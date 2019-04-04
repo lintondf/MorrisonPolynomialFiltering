@@ -3,6 +3,7 @@ Created on Mar 27, 2019
 
 @author: NOOK
 '''
+import os
 import unittest
 
 from PolynomialFiltering.Components.EmpFmpPair import *
@@ -22,7 +23,10 @@ class Test(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        cls.cdf = Dataset("../../testdata/EmpFmpPair.nc", "w", format="NETCDF4");
+ 
+        dirpath = os.getcwd()
+        print("current directory is : " + dirpath)
+        cls.cdf = Dataset("../../../testdata/EmpFmpPair.nc", "w", format="NETCDF4");
 
     @classmethod
     def tearDownClass(cls):
@@ -50,7 +54,8 @@ class Test(unittest.TestCase):
             actual[i,:] = filter.getState()
             V = filter.getVRF(); # _VRF(); # 
             if (V[0,0] != 0) :
-                diagV[i,:] = (diag(V));       
+                diagV[i,:] = (diag(V));   
+            assert(filter.getN() == i );    
         return (actual, diagV, V);
     
     

@@ -42,6 +42,15 @@ namespace PolynomialFiltering {
                 }
             }
 
+            void AbstractRecursiveFilter::copyState (const std::shared_ptr<AbstractRecursiveFilter> that) {
+                this->n = that->n;
+                this->t0 = that->t0;
+                this->t = that->t;
+                this->tau = that->tau;
+                this->D = that->D;
+                this->Z = that->Z;
+            }
+
             RealVector AbstractRecursiveFilter::_conformState (const RealVector& state) {
                 RealVector Z;
                 int m;

@@ -69,15 +69,20 @@ class SymbolTable {
 			if (aliases == null) {
 				return null;
 			}
-			Symbol symbol = null;
 			Iterator<String> it = aliases.keySet().iterator();
 			String s = it.next();
 			while (it.hasNext()) {
 				String t = it.next();
-				if (t.length() < s.length())
+				if (aliases.get(t).isClass() && t.length() < s.length())
 					s = t;
 			}
-			return aliases.get(s);
+			Symbol c = aliases.get(s);
+			if (c.isEnum())
+				return null;
+			if (c.isClass())
+				return c;
+			else
+				return null;
 		}
 		
 		public Symbol lookup( Scope scope, String name ) {

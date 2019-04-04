@@ -29,7 +29,7 @@ class TestFixedMemoryFiltering(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        cls.cdf = Dataset("../../testdata/FixedMemoryFiltering.nc", "w", format="NETCDF4");
+        cls.cdf = Dataset("../../../testdata/FixedMemoryFiltering.nc", "w", format="NETCDF4");
 
     @classmethod
     def tearDownClass(cls):

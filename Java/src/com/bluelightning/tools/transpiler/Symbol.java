@@ -48,6 +48,7 @@ public class Symbol {
 	protected FunctionParametersInfo functionParametersInfo = null;
 	protected Symbol ancestor = null;
 	protected Integer[] dimensions;
+	protected boolean isClasRef = false;
 	
 	public Symbol inhert( Scope heir ) {
 		Symbol that = new Symbol( heir, this.name, this.type );
@@ -68,6 +69,7 @@ public class Symbol {
 			r += functionParametersInfo.toString();
 			r += ")";
 		}
+		r += "CR: " + this.isClasRef;
 		return r;
 	}
 	
@@ -159,4 +161,13 @@ public class Symbol {
 	public Integer[] getDimensions() {
 		return this.dimensions;
 	}
+
+	public boolean isClassReference() {
+		return this.isClasRef;
+	}
+	
+	public void setClassReference( boolean tf) {
+		this.isClasRef = tf;
+	}
+
 }

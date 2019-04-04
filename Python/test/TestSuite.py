@@ -14,7 +14,8 @@ def runAll():
         'Components.AbstractRecursiveFilter_test',
         'Components.EMP_test',
         'Components.FixedMemoryFilter_test',
-        'Components.FMP_test'
+        'Components.FMP_test',
+        'Components.EmpFmpPair_test'
         ]
     
     suite = unittest.TestSuite()

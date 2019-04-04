@@ -369,7 +369,7 @@ public class CppTarget extends AbstractLanguageTarget {
 			cppIndent.out();
 		}
 		templateDataModel.put("hppBody", hppIndent.out.toString());
-		templateDataModel.put("cppBody", cppIndent.out.toString().replace("(*this).", "this->"));
+		templateDataModel.put("cppBody", cppIndent.out.toString().replaceAll("\\(\\*([^\\)]*)\\)\\.", "$1->")); //.replace("(*this).", "this->"));
 		try {
 			Writer out = new OutputStreamWriter(new FileOutputStream(hppPath.toFile()));
 			//System.out.println(hppFile.toString());
@@ -813,6 +813,12 @@ public class CppTarget extends AbstractLanguageTarget {
 		}
 		includeFile.append( scope.getLast() + ".hpp" );
 		includeFiles.add(includeFile.toString());
+	}
+
+
+	@Override
+	public void addParameterClass(String className) {
+		programmer.addParameterClass(className);
 	}
 
 }

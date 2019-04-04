@@ -36,7 +36,7 @@ namespace PolynomialFiltering {
                 innovation = this->current->update(t, Zstar, e);
                 if (this->current == this->emp) {
                     if (this->emp->getN() >= this->emp->nSwitch(this->fmp->getTheta())) {
-                        this->fmp->start(this->emp->getTime(), this->emp->getState());
+                        this->fmp->copyState(this->emp);
                         this->current = this->fmp;
                     }
                 }

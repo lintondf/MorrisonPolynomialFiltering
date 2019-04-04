@@ -3,12 +3,14 @@ Created on Feb 13, 2019
 
 @author: NOOK
 '''
+# from __future__ import annotations;
 
 from abc import abstractmethod
 
 from numpy import array, zeros;
 from numpy import array as vector;
 
+from PolynomialFiltering.PythonUtilities import virtual;
 from PolynomialFiltering.Main import AbstractFilter, FilterStatus
 
     
@@ -66,6 +68,18 @@ class AbstractRecursiveFilter(AbstractFilter):
         '''@ d : int'''
         for d in range(0,self.order+1):
             self.D[d] = pow(self.tau, d)
+      
+    @virtual      
+    def copyState(self, that : 'AbstractRecursiveFilter') -> None:
+        """
+        Copy the state of another filter into this filter.
+        """
+        self.n = that.n;
+        self.t0 = that.t0;
+        self.t = that.t;
+        self.tau = that.tau;
+        self.D = that.D;
+        self.Z = that.Z;
             
     def _conformState(self, state : vector) -> vector:
         """

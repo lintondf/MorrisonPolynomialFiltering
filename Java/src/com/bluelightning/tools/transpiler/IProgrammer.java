@@ -8,6 +8,8 @@ public interface IProgrammer {
 	String getInclude();
 	
 	String[] getUsings();
+	
+	void addParameterClass( String className );
 
 	Symbol remapFunctionName(String functionName, String type);
 

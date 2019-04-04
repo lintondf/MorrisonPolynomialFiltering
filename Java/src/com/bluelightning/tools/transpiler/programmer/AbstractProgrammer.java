@@ -130,7 +130,9 @@ public abstract class AbstractProgrammer implements IProgrammer {
 	@Override //General
 	public void writeSymbol(Indent out, Symbol symbol) {
 		if (symbol.getName().equals("self")) {
-			out.append("(*this)");  
+			out.append("(*this)"); 
+		} else if (symbol.isClassReference()) {
+			out.append("(*" + symbol.getName() + ")" );
 		} else {
 			String name = symbol.getName(); 
 			out.append(name);
@@ -314,6 +316,13 @@ public abstract class AbstractProgrammer implements IProgrammer {
 			remappedType = parameterRemap.get(remappedType);
 		}
 		return remappedType;
+	}
+
+	@Override
+	public void addParameterClass(String className) {
+		if (! parameterRemap.containsKey(className)) {
+			parameterRemap.put(className, "std::shared_ptr<" + className + ">");
+		}
 	}
 
 }

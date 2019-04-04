@@ -164,6 +164,11 @@ public class Transpiler {
 		return symbolTable.lookupClass(scope, name);
 	}
 	
+
+	public void addParameterClass(String type) {
+		dispatcher.addParameterClass(type);
+	}
+	
 	protected void processDeclaration(Token token, Scope scope, String str) {
 		String[] fields = str.split(":");
 		if (fields.length == 2) {
@@ -351,6 +356,13 @@ public class Transpiler {
 		public void emitNewExpression(Scope scope, String className, TranslationNode root) {
 			for (ILanguageTarget target : targets) {
 				target.emitNewExpression( scope, className, root );
+			}
+		}
+
+		@Override
+		public void addParameterClass(String className) {
+			for (ILanguageTarget target : targets) {
+				target.addParameterClass( className );
 			}
 		}
 		

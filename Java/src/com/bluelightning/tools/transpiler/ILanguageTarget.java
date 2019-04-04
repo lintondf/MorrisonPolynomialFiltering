@@ -18,6 +18,8 @@ public interface ILanguageTarget {
 	
 	public void addImport( Scope scope);
 	
+	public void addParameterClass( String className );
+	
 	public void startModule( Scope scope );
 	
 	public void finishModule();

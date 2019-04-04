@@ -42,6 +42,10 @@ namespace PolynomialFiltering {
                 /// 
                 AbstractRecursiveFilter(const int order, const double tau);
 
+                ///// @brief Copy the state of another filter into this filter.
+                /// 
+                virtual void copyState(const std::shared_ptr<AbstractRecursiveFilter> that);
+
                 ///// @brief Start or restart the filter
                 /// 
                 /// 

@@ -37,7 +37,7 @@ class EmpFmpPair(AbstractRecursiveFilter) :
         innovation = self.current.update(t, Zstar, e)
         if (self.current == self.emp) :
             if (self.emp.getN() >= self.emp.nSwitch(self.fmp.getTheta())) :
-                self.fmp.start(self.emp.getTime(), self.emp.getState() );
+                self.fmp.copyState( self.emp );
                 self.current = self.fmp;
         return innovation;
     
@@ -56,11 +56,11 @@ class EmpFmpPair(AbstractRecursiveFilter) :
     def getVRF(self) -> array:
         return self.current.getVRF()
 
-    def _gammaParameter(self, t : float, dtau : float) -> float:
+    def _gammaParameter(self, t : float, dtau : float) -> float: # pragma: no cover
         return 0
     
-    def _gamma(self, n : float) -> vector:
+    def _gamma(self, n : float) -> vector: # pragma: no cover
         return zeros([self.order+1,1])
     
-    def _VRF(self) -> array:
+    def _VRF(self) -> array: # pragma: no cover
         return zeros([self.order+1, self.order+1])
