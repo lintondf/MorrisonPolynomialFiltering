@@ -143,7 +143,6 @@ class DeclarationsListener extends LcdPythonBaseListener {
 						Symbol c = transpiler.lookupClass(currentScope, p.getType());
 						if (c != null) {
 							p.setClassReference(true);
-							System.out.println("ADDING: " + c );
 							transpiler.addParameterClass(p.getType());
 						}
 					}

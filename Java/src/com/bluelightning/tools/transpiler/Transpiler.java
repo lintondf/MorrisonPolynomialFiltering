@@ -85,7 +85,7 @@ public class Transpiler {
 		new Target(Paths.get("PolynomialFiltering/Components"), "ExpandingMemoryPolynomialFilter"),
 		new Target(Paths.get("PolynomialFiltering/Components"), "FadingMemoryPolynomialFilter"),
 		new Target(Paths.get("PolynomialFiltering/Components"), "EmpFmpPair"),
-		new Target(Paths.get("PolynomialFiltering"), "IManagedFilter", true),
+		new Target(Paths.get("PolynomialFiltering/filters"), "IManagedFilter", true),
 	};
 	
 	protected Logger logger;

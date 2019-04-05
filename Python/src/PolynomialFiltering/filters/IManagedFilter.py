@@ -23,6 +23,27 @@ class IObservationErrorModel(ABC):
     def getCovarianceMatrix(self, f : AbstractFilterWithCovariance, t : float, y : vector, observationId : int) -> array:
         pass
 
+
+class IJudge(ABC):
+    def __init__(self):
+        pass
+
+    @abstractmethod # pragma: no cover
+    def scalarGOF(self, e : float, innovation : vector, iR : array ) -> float:
+        pass
+
+    def vectorGOF(self, e : vector, innovation : vector, iR : array ) -> float:
+        pass
+
+    
+class IMonitor(ABC):
+    def __init__(self):
+        pass
+    
+    @abstractmethod # pragma: no cover
+    def check(self, f : AbstractFilterWithCovariance, t : float, y : vector, observationId : int, wasEdited : bool ) -> None:
+        pass
+    
     
     
 class IManagedFilter(ABC):
@@ -34,7 +55,7 @@ class IManagedFilter(ABC):
         pass
     
     @abstractmethod # pragma: no cover
-    def add(self, t : float, y : vector, observationId : int = 0) -> None:    
+    def add(self, t : float, y : vector, observationId : int = 0) -> bool:    
         pass
 
     @abstractmethod # pragma: no cover

@@ -8,7 +8,7 @@ from abc import abstractmethod
 
 from numpy import array, eye
 from numpy import array as vector
-from PolynomialFiltering.Main import AbstractFilterWithCovariance
+from PolynomialFiltering.Main import AbstractFilterWithCovariance, FilterStatus
 from PolynomialFiltering.Components import AbstractRecursiveFilter
 from PolynomialFiltering.IManagedFilter import IManagedFilter, IObservationErrorModel
 
@@ -55,42 +55,42 @@ class ManagedFilterBase(AbstractFilterWithCovariance, IManagedFilter):
         self.SSR = self.INITIAL_SSR;
         self.w = 0.9
 
-    def getStatus(self):
+    def getStatus(self) -> FilterStatus:
         return self.worker.getStatus(self)
 
 
-    def getN(self):
+    def getN(self) -> int:
         return self.worker.getN(self)
 
 
-    def getTime(self):
+    def getTime(self) -> float:
         return self.worker.getTime(self)
 
 
-    def getState(self):
+    def getState(self) -> vector:
         return self.worker.getState(self)
 
 
-    def setGoodnessOfFitFading(self, w : float):
+    def setGoodnessOfFitFading(self, w : float) -> None:
         self.w = w;
 
-    def getGoodnessOfFit(self):
+    def getGoodnessOfFit(self) -> float:
         return self.SSR
 
-    def setObservationInverseR(self, inverseR:array):
+    def setObservationInverseR(self, inverseR:array) -> None:
         self.errorModel = ConstantObservationErrorModel(inverseR)
         
-    def setObservationErrorModel(self, errorModel : IObservationErrorModel):
+    def setObservationErrorModel(self, errorModel : IObservationErrorModel) -> None:
         self.errorModel = errorModel;
 
     @abstractmethod # pragma: no cover
-    def add(self, t:float, y:vector, observationId:int = 0):
+    def add(self, t:float, y:vector, observationId:int = 0) ->bool :
         pass
     
     @abstractmethod # pragma: no cover
-    def getCovariance(self):
+    def getCovariance(self) -> array:
         pass
 
     @abstractmethod # pragma: no cover
-    def _updateSSR(self, t:float, y:vector, e : float, innovation : vector):
+    def _updateSSR(self, t:float, y:vector, e : float, innovation : vector) -> None:
         pass
