@@ -11,6 +11,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -377,11 +378,13 @@ public class CppTarget extends AbstractLanguageTarget {
 			templateDataModel.put("cppBody", cppIndent.out.toString().replaceAll("\\(\\*([^\\)]*)\\)\\.", "$1->")); //.replace("(*this).", "this->"));
 		}
 		try {
+//			try { Files.createDirectories(hppPath); } catch (Exception x) {}
 			Writer out = new OutputStreamWriter(new FileOutputStream(hppPath.toFile()));
 			//System.out.println(hppFile.toString());
 			hpp.process(templateDataModel, out);
 			out.close();
 			if (!headerOnly) {
+//				try { Files.createDirectories(cppPath); } catch (Exception x) {}
 				out = new OutputStreamWriter(new FileOutputStream(cppPath.toFile()));
 				cpp.process(templateDataModel, out);
 				out.close();

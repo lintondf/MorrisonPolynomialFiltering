@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import com.bluelightning.tools.transpiler.Scope.Level;
+import com.bluelightning.tools.transpiler.programmer.Documenter;
 
 import java.util.TreeMap;
 
@@ -33,7 +34,7 @@ class SymbolTable {
 				Map<String, Symbol> aliases = table.get(name);
 				for (String scope : aliases.keySet()) {
 					sb.append( String.format("    {%s}\n", scope.toString() ));
-					sb.append( String.format("      {%s}\n", aliases.get(scope).toString()));
+					sb.append( String.format("      {%s}[%s]\n", aliases.get(scope).toString(), aliases.get(scope).getScope().getLevel().toString()));
 				}
 			}
 			return sb.toString();
@@ -116,4 +117,70 @@ class SymbolTable {
 			}
 			return out;
 		}
+		
+		private void addShorter( TreeMap<String, Symbol> map, Symbol symbol) {
+			Symbol that = map.get(symbol.getName());
+			if (that == null) {
+				map.put(symbol.getName(), symbol);
+			} else {
+				if (symbol.getScope().toString().length() < that.getScope().toString().length()) {
+					map.put(symbol.getName(), symbol);
+				}
+			}
+		}
+		
+		public void report(Documenter documenter) {
+			System.out.println("--- SYMBOL TABLE ------------------");
+			System.out.println( table.size() );
+			
+			TreeMap<String, Symbol> enums = new TreeMap<>();
+			TreeMap<String, Symbol> classes = new TreeMap<>();
+			TreeMap<String, Symbol> methods = new TreeMap<>();
+			
+			for (Map<String, Symbol> occurences : table.values() ) {
+				for (Symbol symbol : occurences.values()) {
+					if (symbol.isInherited)
+						continue;
+					if (symbol.isEnum()) {
+//						System.out.println("ENUM " + symbol.getName() );
+						addShorter(enums, symbol);
+					} else if (symbol.isClass()) {
+//						System.out.println("CLASS " + symbol.getName() + " " + symbol.getScope().toString() );						
+						addShorter(classes, symbol);
+					} else if (symbol.getFunctionParametersInfo() != null) {
+						addShorter(methods, symbol);
+					} else if (symbol.getScope().getLevel() == Level.CLASS) {
+//						System.out.println("MEMBER: " + symbol );
+					}
+				}
+			}
+			for (String name : enums.keySet() ) {
+				Symbol symbol = enums.get(name);
+				Scope objectScope = symbol.scope.getChild(Level.CLASS, symbol.getName());
+				if (!documenter.isDocumented(objectScope)) {
+					System.out.printf("Enum %-25s ", name);
+					System.out.println( documenter.isDocumented(objectScope) + " " + objectScope);
+				}
+			}
+			for (String name : classes.keySet() ) {
+				Symbol symbol = classes.get(name);
+				Scope objectScope = symbol.scope.getChild(Level.CLASS, symbol.getName());
+				if (!documenter.isDocumented(objectScope)) {
+					System.out.printf("Class %-25s ", name);
+					System.out.println( documenter.isDocumented(objectScope) + " " + objectScope);
+				}
+			}
+			for (String name : methods.keySet() ) {
+				Symbol symbol = methods.get(name);
+				Scope objectScope = symbol.scope.getChild(Level.MEMBER, symbol.getName());
+				if (objectScope == null) {
+					objectScope = symbol.scope.getChild(Level.FUNCTION, symbol.getName());
+				}
+				if (!documenter.isDocumented(objectScope)) {
+					System.out.printf("Member %-35s ", name);
+					System.out.println( documenter.isDocumented(objectScope) + " " + objectScope);
+				}
+			}
+		}
+		
 	}

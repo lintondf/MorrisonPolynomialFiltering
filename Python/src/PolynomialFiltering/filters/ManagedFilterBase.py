@@ -10,27 +10,9 @@ from numpy import array, eye
 from numpy import array as vector
 from PolynomialFiltering.Main import AbstractFilterWithCovariance, FilterStatus
 from PolynomialFiltering.Components import AbstractRecursiveFilter
-from PolynomialFiltering.IManagedFilter import IManagedFilter, IObservationErrorModel
+from PolynomialFiltering.filters.IManagedFilter import IManagedFilter;
+from PolynomialFiltering.filters.controls import IObservationErrorModel, ConstantObservationErrorModel;
 
-
-class ConstantObservationErrorModel(IObservationErrorModel):
-    def __init__(self, R : array, inverseR : array):
-        self.R = R;
-        self.iR = inverseR;
-
-    def getInformationMatrix(self, f: AbstractFilterWithCovariance, t:float, y:vector, observationId:int = -1):
-        if (observationId == -1) :
-            return self.iR;
-        else :
-            return self.iR[observationId,observationId];
-
-    def getCovarianceMatrix(self, f : AbstractFilterWithCovariance, t : float, y : vector, observationId : int = -1) -> array:
-        if (observationId == -1) :
-            return self.R;
-        else :
-            return self.R[observationId,observationId];
-
-        
 
 class ManagedFilterBase(AbstractFilterWithCovariance, IManagedFilter):
     '''
@@ -70,7 +52,6 @@ class ManagedFilterBase(AbstractFilterWithCovariance, IManagedFilter):
     def getState(self) -> vector:
         return self.worker.getState(self)
 
-
     def setGoodnessOfFitFading(self, w : float) -> None:
         self.w = w;
 
@@ -89,8 +70,4 @@ class ManagedFilterBase(AbstractFilterWithCovariance, IManagedFilter):
     
     @abstractmethod # pragma: no cover
     def getCovariance(self) -> array:
-        pass
-
-    @abstractmethod # pragma: no cover
-    def _updateSSR(self, t:float, y:vector, e : float, innovation : vector) -> None:
         pass

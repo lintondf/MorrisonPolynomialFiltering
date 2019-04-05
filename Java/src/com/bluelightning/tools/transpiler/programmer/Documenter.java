@@ -124,6 +124,10 @@ public class Documenter {
 		}
 	}
 	
+	public boolean isDocumented( Scope scope ) {
+		return documentation.containsKey(scope.toString());
+	}
+	
 	public void configureDoxygen(DoxygenConfiguration c) {
 		doxygenGenerator.configure(c);
 	}
@@ -134,6 +138,12 @@ public class Documenter {
 		}
 //		System.out.println("NO COMMENT: " + scope.toString());
 		return null;
+	}
+	
+	public void report() {
+		System.out.println("--- DOCUMENTER ------------------");
+		System.out.println( documentation.size() );
+		documentation.keySet().forEach(System.out::println);
 	}
 	
 }

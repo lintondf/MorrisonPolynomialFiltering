@@ -571,6 +571,10 @@ public class Transpiler {
 			transpiler.compile( where, dottedModule, target.headerOnly);
 		}
 		System.out.printf("Compiled %d targets\n", targets.length);
+		System.out.println();
+		transpiler.symbolTable.report(transpiler.documenter);
+//		System.out.println();
+//		transpiler.documenter.report();
 	}
 
 }

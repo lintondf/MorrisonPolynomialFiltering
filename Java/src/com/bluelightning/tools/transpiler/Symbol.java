@@ -49,13 +49,23 @@ public class Symbol {
 	protected Symbol ancestor = null;
 	protected Integer[] dimensions;
 	protected boolean isClasRef = false;
+	protected boolean isInherited = false;
 	
+	public boolean isInherited() {
+		return isInherited;
+	}
+
+	public void setInherited(boolean isInherited) {
+		this.isInherited = isInherited;
+	}
+
 	public Symbol inhert( Scope heir ) {
 		Symbol that = new Symbol( heir, this.name, this.type );
 		that.initialization = this.initialization;
 		that.superClassInfo = this.superClassInfo;
 		that.functionParametersInfo = this.functionParametersInfo;
 		that.ancestor = this;
+		that.isInherited = true;
 		return that;
 	}
 	
