@@ -1,7 +1,9 @@
-'''
-Created on Feb 18, 2019
+''' PolynomialFiltering.components.FixedMemoryPolynomialFilter
+ (C) Copyright 2019 - Blue Lightning Development, LLC.
+ D. F. Linton. support@BlueLightningDevelopment.com
 
-@author: NOOK
+ SPDX-License-Identifier: MIT
+ See separate LICENSE file for full text
 '''
 
 from abc import abstractmethod

@@ -397,8 +397,6 @@ class ExpressionCompilationListener extends LcdPythonBaseListener {
 				} else if ( ! transpiler.valueMap.get(ctx.getPayload()).startsWith("'''@")) {
 //					System.out.println( expr.traverse(1));
 					transpiler.dispatcher.emitExpressionStatement(scope, expressionRoot);
-				} else {
-					//TODO docstring?
 				}
 			}
 			expressionRoot = null;

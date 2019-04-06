@@ -1,7 +1,9 @@
-'''
-Created on Mar 27, 2019
+''' PolynomialFiltering.filters.ManagedFilterBase
+ (C) Copyright 2019 - Blue Lightning Development, LLC.
+ D. F. Linton. support@BlueLightningDevelopment.com
 
-@author: NOOK
+ SPDX-License-Identifier: MIT
+ See separate LICENSE file for full text
 '''
 
 from abc import abstractmethod
@@ -11,7 +13,7 @@ from numpy import array as vector
 from PolynomialFiltering.Main import AbstractFilterWithCovariance, FilterStatus
 from PolynomialFiltering.Components import AbstractRecursiveFilter
 from PolynomialFiltering.filters.IManagedFilter import IManagedFilter;
-from PolynomialFiltering.filters.controls import IObservationErrorModel, ConstantObservationErrorModel;
+from PolynomialFiltering.filters.controls import IObservationErrorModel, IJudge, IMonitor, ConstantObservationErrorModel;
 
 
 class ManagedFilterBase(AbstractFilterWithCovariance, IManagedFilter):
@@ -22,9 +24,6 @@ class ManagedFilterBase(AbstractFilterWithCovariance, IManagedFilter):
     '''@INITIAL_SSR : float | start point for smoothed SSR '''
     '''@ worker : AbstractRecursiveFilter | that which is managed'''
     '''@ errorModel : IObservationErrorModel | observation covariance/information matrix source'''
-    '''@ iR : array | last observation information matrix'''
-    '''@ SSR : float | smooth, scaled sigma ratio of observation mis-predict'''
-    '''@ w : float | SSR smoothing factor'''
     
     def __init__(self, worker : AbstractRecursiveFilter):
         '''
@@ -32,40 +31,35 @@ class ManagedFilterBase(AbstractFilterWithCovariance, IManagedFilter):
         '''
         self.worker = worker;
         self.errorModel = ConstantObservationErrorModel(eye(1), eye(1))
-        self.iR = 1;
-        self.INITIAL_SSR = 3**2;
-        self.SSR = self.INITIAL_SSR;
-        self.w = 0.9
+        self.judge = None;
+        self.monitor = None;
 
     def getStatus(self) -> FilterStatus:
         return self.worker.getStatus(self)
 
-
     def getN(self) -> int:
         return self.worker.getN(self)
-
 
     def getTime(self) -> float:
         return self.worker.getTime(self)
 
-
     def getState(self) -> vector:
         return self.worker.getState(self)
-
-    def setGoodnessOfFitFading(self, w : float) -> None:
-        self.w = w;
-
-    def getGoodnessOfFit(self) -> float:
-        return self.SSR
 
     def setObservationInverseR(self, inverseR:array) -> None:
         self.errorModel = ConstantObservationErrorModel(inverseR)
         
     def setObservationErrorModel(self, errorModel : IObservationErrorModel) -> None:
         self.errorModel = errorModel;
+        
+    def setJudge(self, judge : IJudge ) -> None:
+        self.judge = judge;
+        
+    def setMonitor(self, monitor : IMonitor) -> None:
+        self.monitor = monitor;
 
     @abstractmethod # pragma: no cover
-    def add(self, t:float, y:vector, observationId:int = 0) ->bool :
+    def add(self, t:float, y:vector, observationId:int = 0) -> bool :
         pass
     
     @abstractmethod # pragma: no cover

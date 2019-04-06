@@ -1,8 +1,5 @@
 /**
  * TODO remove _ from private methods (decl and use)
- * TODO Error if function output type not provided
- * TODO FMP VRF at init
- * TODO EMP VRF cache?
  */
 package com.bluelightning.tools.transpiler;
 

@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.bluelightning.tools.transpiler.programmer;
+package com.bluelightning.tools.transpiler;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -10,10 +10,7 @@ import java.io.PrintWriter;
 import java.util.HashMap;
 
 import com.bluelightning.tools.Execute;
-import com.bluelightning.tools.transpiler.Scope;
 import com.bluelightning.tools.transpiler.Scope.Level;
-import com.bluelightning.tools.transpiler.Symbol;
-import com.bluelightning.tools.transpiler.Transpiler;
 
 /**
  * @author NOOK
@@ -107,6 +104,9 @@ public class Documenter {
 				return;
 			documentation.put(scope.toString(), doc);			
 			return;
+		} else if (doc.startsWith("\"\"\"@none")) {
+			documentation.put(scope.toString(), "");
+			return;
 		}
 		try {
 			PrintWriter w = new PrintWriter(scratch);
@@ -134,7 +134,10 @@ public class Documenter {
 	
 	public String getDoxygenComments( String scope, String indent ) {
 		if (documentation.containsKey(scope)) {
-			return doxygenGenerator.generate(indent, documentation.get(scope));
+			String doc = documentation.get(scope);
+			if (doc == null || doc.isEmpty())
+				return null;
+			return doxygenGenerator.generate(indent, doc);
 		}
 //		System.out.println("NO COMMENT: " + scope.toString());
 		return null;

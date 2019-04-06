@@ -1,4 +1,4 @@
-''' PolynomialFiltering.filters.controls.IObservationErrorModel
+''' PolynomialFiltering.filters.controls.IMonitor
  (C) Copyright 2019 - Blue Lightning Development, LLC.
  D. F. Linton. support@BlueLightningDevelopment.com
 
@@ -12,17 +12,19 @@ from numpy import array
 from numpy import array as vector;
 
 from PolynomialFiltering.Main import AbstractFilterWithCovariance
+from PolynomialFiltering.filters.controls.IMonitor import IMonitor
 
-class IObservationErrorModel(ABC):
+class NullMonitor(IMonitor):
     def __init__(self):
-        pass
-
-    @abstractmethod # pragma: no cover
-    def getPrecisionMatrix(self, f : AbstractFilterWithCovariance, t : float, y : vector, observationId : int) -> array:
         pass
     
     @abstractmethod # pragma: no cover
-    def getCovarianceMatrix(self, f : AbstractFilterWithCovariance, t : float, y : vector, observationId : int) -> array:
+    def accepted(self, f : AbstractFilterWithCovariance, t : float, y : vector, innovation : vector, observationId : int ) -> None:
         pass
-
-
+    
+    @abstractmethod # pragma: no cover
+    def rejected(self, f : AbstractFilterWithCovariance, t : float, y : vector, observationId : int ) -> None:
+        pass
+    
+    
+    

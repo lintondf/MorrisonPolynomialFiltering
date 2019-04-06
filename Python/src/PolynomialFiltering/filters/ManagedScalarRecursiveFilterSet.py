@@ -1,7 +1,9 @@
-'''
-Created on Apr 4, 2019
+''' PolynomialFiltering.filters.ManagedScalarRecursiveFilter
+ (C) Copyright 2019 - Blue Lightning Development, LLC.
+ D. F. Linton. support@BlueLightningDevelopment.com
 
-@author: NOOK
+ SPDX-License-Identifier: MIT
+ See separate LICENSE file for full text
 '''
 
 from abc import abstractmethod
@@ -31,7 +33,7 @@ class ManagedScalarRecursiveFilterSet(ManagedFilterBase):
     
     @virtual
     def add(self, t:float, y:vector, observationId:int = -1):
-        self.iR = self.errorModel.getInformationMatrix(self, t, y, observationId)
+        self.iR = self.errorModel.getPrecisionMatrix(self, t, y, observationId)
         minSSR = 0;
         iBest = -1;
         for iW in range(0, len(self.workers)) :

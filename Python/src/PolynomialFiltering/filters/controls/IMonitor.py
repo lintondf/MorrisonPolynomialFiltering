@@ -1,8 +1,11 @@
-'''
-Created on Apr 5, 2019
+''' PolynomialFiltering.filters.controls.IMonitor
+ (C) Copyright 2019 - Blue Lightning Development, LLC.
+ D. F. Linton. support@BlueLightningDevelopment.com
 
-@author: NOOK
+ SPDX-License-Identifier: MIT
+ See separate LICENSE file for full text
 '''
+
 from abc import ABC, abstractmethod
 
 from numpy import array
@@ -15,8 +18,9 @@ class IMonitor(ABC):
         pass
     
     @abstractmethod # pragma: no cover
-    def check(self, f : AbstractFilterWithCovariance, t : float, y : vector, observationId : int, wasEdited : bool ) -> None:
+    def accepted(self, f : AbstractFilterWithCovariance, t : float, y : vector, innovation : vector, observationId : int ) -> None:
         pass
     
-    
-    
+    @abstractmethod # pragma: no cover
+    def rejected(self, f : AbstractFilterWithCovariance, t : float, y : vector, innovation : vector, observationId : int ) -> None:
+        pass

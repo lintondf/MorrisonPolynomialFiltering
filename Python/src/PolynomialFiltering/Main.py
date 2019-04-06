@@ -1,20 +1,17 @@
-'''
-Created on Feb 13, 2019
+''' PolynomialFiltering.Main
+ (C) Copyright 2019 - Blue Lightning Development, LLC.
+ D. F. Linton. support@BlueLightningDevelopment.com
 
-@author: NOOK
-https://filterpy.readthedocs.io/en/latest/kalman/UnscentedKalmanFilter.html
+ SPDX-License-Identifier: MIT
+ See separate LICENSE file for full text
 '''
-''' TODO requirements.txt
-pip install numpy_ringbuffer
-pip install runstats
-pip install statistics
-pip install netcdf4
-pip install doxypypy
-'''
+
 ''' TODO
+0. https://filterpy.readthedocs.io/en/latest/kalman/UnscentedKalmanFilter.html
 1. cache state transition matrices
 2. cache FMP VRF
 '''
+
 from abc import ABC, abstractmethod
 from enum import Enum
 from numpy import array, eye, transpose

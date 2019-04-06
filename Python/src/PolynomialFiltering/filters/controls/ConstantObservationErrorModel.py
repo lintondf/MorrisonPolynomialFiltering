@@ -1,13 +1,15 @@
-'''
-Created on Apr 5, 2019
+''' PolynomialFiltering.filters.controls.ConstantObservationErrorModel
+ (C) Copyright 2019 - Blue Lightning Development, LLC.
+ D. F. Linton. support@BlueLightningDevelopment.com
 
-@author: NOOK
+ SPDX-License-Identifier: MIT
+ See separate LICENSE file for full text
 '''
 
 from numpy import array
 from numpy import array as vector
 from PolynomialFiltering.Main import AbstractFilterWithCovariance
-from PolynomialFiltering.filters.controls import IObservationErrorModel
+from PolynomialFiltering.filters.controls.IObservationErrorModel import IObservationErrorModel
 
 
 class ConstantObservationErrorModel(IObservationErrorModel):
@@ -15,7 +17,7 @@ class ConstantObservationErrorModel(IObservationErrorModel):
         self.R = R;
         self.iR = inverseR;
 
-    def getInformationMatrix(self, f: AbstractFilterWithCovariance, t:float, y:vector, observationId:int = -1):
+    def getPrecisionMatrix(self, f: AbstractFilterWithCovariance, t:float, y:vector, observationId:int = -1):
         if (observationId == -1) :
             return self.iR;
         else :

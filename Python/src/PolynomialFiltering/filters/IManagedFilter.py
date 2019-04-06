@@ -1,8 +1,11 @@
-'''
-Created on Mar 13, 2019
+''' PolynomialFiltering.filters.IManagedFilter
+ (C) Copyright 2019 - Blue Lightning Development, LLC.
+ D. F. Linton. support@BlueLightningDevelopment.com
 
-@author: NOOK
+ SPDX-License-Identifier: MIT
+ See separate LICENSE file for full text
 '''
+
 from abc import ABC, abstractmethod
 
 from numpy import array

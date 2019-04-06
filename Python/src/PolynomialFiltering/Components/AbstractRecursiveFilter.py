@@ -1,8 +1,11 @@
-'''
-Created on Feb 13, 2019
+''' PolynomialFiltering.components.AbstractRecursiveFilter
+ (C) Copyright 2019 - Blue Lightning Development, LLC.
+ D. F. Linton. support@BlueLightningDevelopment.com
 
-@author: NOOK
+ SPDX-License-Identifier: MIT
+ See separate LICENSE file for full text
 '''
+
 # from __future__ import annotations;
 
 from abc import abstractmethod

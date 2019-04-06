@@ -21,15 +21,46 @@
 
 namespace PolynomialFiltering {
     namespace Components {
+
+        ///// @class EmpFmpPair
+        /// @brief Filter composed of an expanding memory and a fading memory filter of the same order.
+        /// 
+        /// The EMP filter is used to initialize and after the sample number when the 0th order
+        /// variance of the EMP filter matches that variance of the FMP at the configured theta
+        /// fading factor, we switch to the FMP filter.
+        /// 
         class EmpFmpPair : public AbstractRecursiveFilter {
             public:
+
+                ///// @brief Constructor
+                /// 
+                /// 
+                ///  @param		order	integer polynomial orer
+                ///  @param		theta	fading factor
+                ///  @param		tau	nominal time step
+                /// 
                 EmpFmpPair(const int order, const double theta, const double tau);
                 void start(const double t, const RealVector& Z);
                 RealVector predict(const double t);
                 RealVector update(const double t, const RealVector& Zstar, const double e);
+
+                ///// @brief Return the number of observation the filter has processed
+                /// 
+                ///  @return  Count of observations used
+                /// 
                 int getN();
                 double getTau();
+
+                ///// @brief Return the current filter time
+                /// 
+                ///  @return  Filter time
+                /// 
                 double getTime();
+
+                ///// @brief Returns the current filter state vector
+                /// 
+                ///  @return  State vector (order+1 elements)
+                /// 
                 RealVector getState();
                 RealMatrix getVRF();
             protected:

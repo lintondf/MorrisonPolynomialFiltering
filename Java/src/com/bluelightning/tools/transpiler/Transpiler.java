@@ -43,7 +43,6 @@ import com.bluelightning.tools.transpiler.nodes.TranslationExpressionNode;
 import com.bluelightning.tools.transpiler.nodes.TranslationNode;
 import com.bluelightning.tools.transpiler.nodes.TranslationUnaryNode;
 import com.bluelightning.tools.transpiler.programmer.BoostProgrammer;
-import com.bluelightning.tools.transpiler.programmer.Documenter;
 import com.bluelightning.tools.transpiler.programmer.EigenProgrammer;
 
 import freemarker.core.PlainTextOutputFormat;

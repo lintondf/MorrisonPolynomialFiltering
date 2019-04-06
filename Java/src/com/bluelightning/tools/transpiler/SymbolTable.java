@@ -8,7 +8,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import com.bluelightning.tools.transpiler.Scope.Level;
-import com.bluelightning.tools.transpiler.programmer.Documenter;
 
 import java.util.TreeMap;
 
