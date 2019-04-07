@@ -21,7 +21,7 @@ from scipy.stats._continuous_distns import chi2
 
 from PolynomialFiltering.Components.FixedMemoryPolynomialFilter import FixedMemoryFilter;
 
-
+from TestSuite import testDataPath;
 
 class TestFixedMemoryFiltering(unittest.TestCase):
     
@@ -29,7 +29,8 @@ class TestFixedMemoryFiltering(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        cls.cdf = Dataset("../../../testdata/FixedMemoryFiltering.nc", "w", format="NETCDF4");
+        path = testDataPath('FixedMemoryFiltering.nc');
+        cls.cdf = Dataset(path, "w", format="NETCDF4");
 
     @classmethod
     def tearDownClass(cls):

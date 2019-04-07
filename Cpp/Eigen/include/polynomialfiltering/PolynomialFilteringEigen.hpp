@@ -39,6 +39,7 @@ namespace PolynomialFiltering {
 #define eigen_assert(X) do { if(!(X)) throw ::PolynomialFiltering::EigenException(#X); } while(false);
 
 #include <Eigen/Dense>
+#include <gsl/gsl_cdf.h>
 
 using namespace Eigen;
 namespace PolynomialFiltering {
@@ -144,6 +145,21 @@ namespace PolynomialFiltering {
 		return Map<RowVectorXd>(new double[3] { 1, 2, 3 }, 3);
 	}
 
+	inline double chi2Cdf(double chi, int df) {
+		return gsl_cdf_chisq_P(chi, df);
+	}
+
+	inline double chi2Ppf(double p, int df) {
+		return gsl_cdf_chisq_Pinv(1.0 - p, df);
+	}
+
+	inline double fdistCdf(double chi, int df1, int df2) {
+		return gsl_cdf_fdist_P(chi, df1, df2);
+	}
+
+	inline double fdistPpf(double p, int df1, int df2) {
+		return gsl_cdf_fdist_Pinv(1.0 - p, df1, df2);
+	}
 }
 
 

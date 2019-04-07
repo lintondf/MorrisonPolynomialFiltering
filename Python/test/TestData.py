@@ -12,6 +12,7 @@ from numpy.linalg import cholesky, inv, LinAlgError, det
 from scipy.interpolate import PchipInterpolator
 import pymap3d
 import xml.etree.ElementTree as ET 
+from PolynomialFiltering.Main import FilterStatus;
 from PolynomialFiltering.Components.ExpandingMemoryPolynomialFilter import makeEMP;
 from PolynomialFiltering.Components.FadingMemoryPolynomialFilter import makeFMP;
 from TestUtilities import A2S, scaleVRFEMP, covarianceToCorrelation, correlationToCovariance, generateTestData, hellingerDistance
@@ -19,6 +20,9 @@ import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 from numpy.random.mtrand import seed
 from numpy.random import multivariate_normal
+
+from PolynomialFiltering.PythonUtilities import fdistCdf, fdistPpf, chi2Cdf,\
+    chi2Ppf
 
 def readData(): 
     with open('../test/landing.csv', newline='') as csvfile:
@@ -185,46 +189,102 @@ def scaleDiagEMP( order : int, u : float, n : float) -> vector:
         S[i] = S[i-1] / ((u*n)*(u*n));
     return S;
     
-def testEMPPair() :
+def testEMPSet() :
     seed(1);
-    tau = 0.01
+    tau = 0.1
     N = 150;
     R = 10;
-    order = 2;
+    w = 0.95
+    L = int(2.0 / (1.0-w)) # effective length [Morrison1969, Table 13.4]
+    order = 0;
     (times, truth, observations, noise) = \
-        generateTestData(order, N, 0.0, array([1000, -100, 50, -15]), tau, sigma=sqrt(R))
+        generateTestData(order, N, 0.0, array([1000, -100, 50, -15, 25, -50]), tau, sigma=sqrt(R))
     
     emps = [];
-    for o in range(0, 1+order+1) :
+    for o in range(0, 5+1) :
         emps.append( makeEMP(o, tau) );
+    K = len(emps);
     Z = zeros(order+1);
     for emp in emps :
         emp.start(0, Z);
         
-    actual = zeros([N,len(emps)]);
-    GOFs = 1.959964**2+zeros([N,len(emps)]);  # 95% value for normal distribution
-    SSRs = zeros([N,len(emps)]);
-    Innovations = zeros([N,len(emps)]);
+    actual = zeros([N,K]);
+    GOFs = 1.959964**2+zeros([N,K]);  # 95% value for normal distribution
+    SSRs = zeros([N,K]);
+    Innovations = zeros([N,K]);
     Best = zeros(N, int);
     # actual[0,:] = truth[0,0]
+    gofThresholds = zeros([L+1]);
+    for i in range(0,L+1) :
+        gofThresholds[i] = chi2Ppf(0.99, i);
     for i in range(0,N) :
-        for ie in range(0,len(emps)) :
+        S = zeros([K, K])
+        F = zeros([K, K])
+        Best[i] = -1;
+        bestGOF = 0
+        for ie in range(0,K) :
             emp = emps[ie]
             Zstar = emp.predict(times[i,0])
             e = observations[i] - Zstar[0]
             innovation = emp.update(times[i,0], Zstar, e)
-            V = emp._VRF();
-            SSRs[i,ie] = e * (1/(R+V[0,0])) * e / (1+emp.order)
-            if (i > ie) :
-                Innovations[i,ie] = (innovation @ inv(R*V) @ transpose(innovation)) / (1+emp.order)
-                w = 0.05
-                GOFs[i,ie] = (1-w)*GOFs[i-1,ie] + w*sqrt(SSRs[i,ie]) # *Innovations[i,ie]
-                if (GOFs[i,ie] < GOFs[i,Best[i]]) :
-                    Best[i] = ie;
-#                 print('%3d, %d, %10.6f, %10.6f, %10.6f, %5d' % (i,ie,SSRs[i,ie], Innovations[i,ie], GOFs[i,ie], Best[i] ))
             Y = emp.getState()
             actual[i,ie] = Y[0]
-        print(i, GOFs[i,:]/GOFs[i,Best[i]], Best[i])
+            if (emp.getStatus() != FilterStatus.RUNNING) :
+                GOFs[i,ie] = 1.959964**2;
+                continue;
+            V = emp._VRF();
+            SSRs[i,ie] = e * 1/R * e # (1/(R+V[0,0]))
+#             Innovations[i,ie] = (innovation @ inv(R*V) @ transpose(innovation))
+            GOFs[i,ie] = w*GOFs[i-1,ie] + (1-w)*(SSRs[i,ie])
+            vie = (L-ie+1-1);
+            if (GOFs[i,ie] > gofThresholds[vie]) :
+#                 print('BAD', i, ie, SSRs[i,ie], GOFs[i,ie], gofThresholds[vie] )
+                continue;
+            if (Best[i] < 0) :
+                Best[i] = ie;
+                bestGOF = GOFs[i,ie];
+            elif (GOFs[i,ie] < bestGOF) :
+                Best[i] = ie;
+                bestGOF = GOFs[i,ie];                       
+            S[ie, ie] = GOFs[i,ie];
+            F[ie, ie] = S[ie, ie]
+#         print(i, A2S(diag(S)))
+        bestRatio = -1;
+        for j in range(0,K) :
+            if (S[j,j] != 0.0) :
+                for k in range(j+1,K) :
+                    if (S[k,k] != 0.0 and S[k,k] < S[j,j]) :
+                        S[j,k] = S[j,j] - S[k,k];
+                        F[j,k] = (S[j,k]/(k-j)) /  (S[j,j]/(L-j-1))
+                        fThreshold = fdistPpf(0.95, (k-j), (L-j-1) );
+                        F[j,k] /= fThreshold;
+                        if (F[j,k] > bestRatio) :
+                            bestRatio = F[j,k]
+                            Best[i] = k;
+        print(i, times[i,0], Best[i], bestRatio, A2S(diag(S)))
+        if (i > 0 and Best[i] != Best[i-1]) :
+            print(A2S(F))
+#             if (ie != Best[i]) :
+#                 cie = (GOFs[i,ie]/(ie+1))
+#                 vbest = (L-Best[i]+1-1)
+#                 cbest = (GOFs[i,Best[i]]/(Best[i]+1))
+#                 if (vie <= vbest) : 
+#                     fThreshold = fdistPpf(0.95, vie, vbest );
+#                     x = cie / cbest;
+#                     print(ie, Best[i], vie, vbest, cie, cbest, x, fThreshold, fdistCdf(x, vie, vbest))
+#                 else:  
+#                     fThreshold = fdistPpf(0.95, vbest, vie );
+#                     x = cbest / cie;
+#                     print(ie, Best[i], vie, vbest, cie, cbest, x, fThreshold, fdistCdf(x, vbest,vie))
+#                 if (x < fThreshold) :
+#                     Best[i] = ie;
+    #                 print('%3d, %d, %10.6f, %10.6f, %10.6f, %5d' % (i,ie,SSRs[i,ie], Innovations[i,ie], GOFs[i,ie], Best[i] ))
+#         print('%5d, %8.3f, %5d, %8.3f, %8.3f, %8.3f, %8.3f, %8.3f, %8.3f' % (i, GOFs[i,Best[i]], Best[i], \
+#                  GOFs[i,0], GOFs[i,1], GOFs[i,2], GOFs[i,3], GOFs[i,4], GOFs[i,5]) );
+#     print(w, L)
+#     for i in range(0, 5) :
+#         print( (GOFs[-1,i]/(L-i+1-1)) / (GOFs[-1,i+1]/(L-i+2-1)), fdistPpf(0.95, (L-i+1-1), (L-i+2-1)) )
+        
 #             for je in range(ie+1,len(emps)) :
 #                 if (emps[je]._VRF()[ie, ie] > 1) :
 #                     print('>>', ie, je, emps[je].Z[ie], emps[ie].Z[ie] )
@@ -242,19 +302,19 @@ def testEMPPair() :
 #         print('    2', A2S(emps[2].getState(emps[2].getTime())), A2S(diag(emps[2]._VRF())))
 #     print(A2S(concatenate([SSRs, Innovations], axis=1)))
 #     print(A2S(GOFs))
-    
-    M = 0;
-    f0 = plt.figure(figsize=(10, 6))
-    ax = plt.subplot(1, 1, 1)
-#     ax.plot(times, GOFs)
-    plt.title('0th Z[0] 1st Z[1]')
-    ax.plot(times[M:], truth[M:,0], 'r.-', times[M:], observations[M:], 'b.', \
-            times[M:], actual[M:,0], 'k-', times[M:], actual[M:,1], 'm-', \
-            times[M:], actual[M:,2], 'c-', times[M:], actual[M:,3], 'g-');
-    ax2 = ax.twinx() 
-    ax2.plot(times[M:], Best[M:], 'y-')
-    f0.tight_layout()
-    plt.show()
+    if (True) :
+        M = 0;
+        f0 = plt.figure(figsize=(10, 6))
+        ax = plt.subplot(1, 1, 1)
+    #     ax.plot(times, GOFs)
+        plt.title('order %d' % order)
+        ax.plot(times[M:], truth[M:,0], 'r.-', times[M:], observations[M:], 'b.', \
+                times[M:], actual[M:,0], 'k-', times[M:], actual[M:,1], 'm-', \
+                times[M:], actual[M:,2], 'c-', times[M:], actual[M:,3], 'g-');
+        ax2 = ax.twinx() 
+        ax2.plot(times[M:], Best[M:], 'y.-')
+        f0.tight_layout()
+        plt.show()
     
     '''
   1, 0,   6.303073,   4.884882
@@ -410,9 +470,10 @@ def EmpVrfCorrelation(n : float):
             
 if __name__ == '__main__':
     pass
-    for n in range(3,100,10) :
-        print(n)
-        EmpVrfCorrelation(n)
+    testEMPSet()
+#     for n in range(3,100,10) :
+#         print(n)
+#         EmpVrfCorrelation(n)
     
 #     testMvnrand()
 #     testEMPPair();

@@ -6,7 +6,7 @@ Cpp/Boost/include/boost
 Cpp/Eigen/.vs
 Cpp/Eigen/doc
 Cpp/Eigen/include/Eigen
-Cpp/Eigen/include/StatsLib
+Cpp/GSL
 Cpp/cpptest
 Java/*.log
 Java/bin

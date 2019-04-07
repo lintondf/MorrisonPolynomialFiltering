@@ -27,7 +27,7 @@ namespace PolynomialFiltering {
         /// 
         /// The EMP filter is used to initialize and after the sample number when the 0th order
         /// variance of the EMP filter matches that variance of the FMP at the configured theta
-        /// fading factor, we switch to the FMP filter.
+        /// fading factor, we switch to the FMP filter. See Morrison 1969, Section 13.8
         /// 
         class EmpFmpPair : public AbstractRecursiveFilter {
             public:

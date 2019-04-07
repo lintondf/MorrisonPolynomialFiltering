@@ -34,6 +34,8 @@ public abstract class AbstractProgrammer implements IProgrammer {
 		simpleRemaps.put("int", new Symbol(libraryScope, "int", "int")); //TODO generic
 		simpleRemaps.put("max", new Symbol(libraryScope, "max", "int")); //TODO generic
 		simpleRemaps.put("min", new Symbol(libraryScope, "min", "int")); //TODO generic
+		simpleRemaps.put("chi2Cdf", new Symbol(libraryScope, "chi2Cdf", "float"));
+		simpleRemaps.put("chi2Ppf", new Symbol(libraryScope, "chi2Ppf", "float"));
 			Map<String, Symbol> libraryNames = new HashMap<>();
 			libraryNames.put("array",  new Symbol(libraryScope, "identity", "array") ); 
 			libraryNames.put("vector", new Symbol(libraryScope, "???vector_eye???", "vector") ); //Eigen

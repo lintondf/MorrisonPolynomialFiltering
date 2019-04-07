@@ -2,14 +2,35 @@
 
 #include <iostream>
 #include <Eigen/Dense>
+#include <chrono>
+#include<math.h>
+#include <gsl/gsl_cdf.h>
+
 //#include <polynomialfiltering/PolynomialFilteringEigen.hpp>
 //#include <polynomialfiltering/Main.hpp>
 //#include <polynomialfiltering/components/FixedMemoryPolynomialFilter.hpp>
 using namespace Eigen;
 //using namespace std;
 
+class Timer
+{
+public:
+	Timer() : beg_(clock_::now()) {}
+	void reset() { beg_ = clock_::now(); }
+	double elapsed() const {
+		return std::chrono::duration_cast<second_>
+			(clock_::now() - beg_).count();
+	}
+
+private:
+	typedef std::chrono::high_resolution_clock clock_;
+	typedef std::chrono::duration<double, std::ratio<1> > second_;
+	std::chrono::time_point<clock_> beg_;
+};
+
 typedef VectorXd RealVector;
 typedef MatrixXd RealMatrix;
+
 
 void t1(const Matrix3d m) {
 	std::cout << m << std::endl;
@@ -20,6 +41,20 @@ void t2(const Vector3d v) {
 }
 
 int main() {
+	double x = 0.05;
+	double nu = 2;
+	double chicdf = 0;
+	double chi = 0;
+	Timer tmr;
+	for (int i = 0; i < 1500000; i++) {
+		x += 1e-6;
+		//chi += gsl_cdf_chisq_Pinv(1 - x, nu);
+		chicdf += gsl_cdf_chisq_P(3.0, nu);
+	}
+	double t = tmr.elapsed();
+	std::cout << t << std::endl;
+
+	/*
 	Matrix<double, 4, 4> mx;
 	Matrix3d m = Matrix3d::Constant(2.0);
 	t1(m);
@@ -33,6 +68,7 @@ int main() {
 	MatrixXd m2 = MatrixXd::Ones(10, 5);
 	t2(m2.row(6).head(3));
 	//(6, 2, 4.0);
+	*/
 	/*
 	int N = 3;
 	PMatrix m = MatrixXd::Identity(N, N);

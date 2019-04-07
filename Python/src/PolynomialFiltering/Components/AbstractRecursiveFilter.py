@@ -59,7 +59,7 @@ class AbstractRecursiveFilter(AbstractFilter):
         if (order < 0 or order > 5) :
             raise ValueError("Polynomial orders < 0 or > 5 are not supported")
         self.n = 0
-        self.n0 = order+1
+        self.n0 = order+2
         self.dtau = 0
         self.t0 = 0;
         self.t = 0;

@@ -20,6 +20,7 @@ from numpy.testing.nose_tools.utils import assert_allclose
 from numpy.linalg.linalg import norm
 from numpy.ma.core import isarray
 
+from TestSuite import testDataPath;
 
 class AbstractRecursiveFilterMock(AbstractRecursiveFilter):
     def __init__(self, order : int, tau : float) :
@@ -41,7 +42,8 @@ class Test(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        cls.cdf = Dataset("../../../testdata/AbstractRecursiveFilter.nc", "w", format="NETCDF4");
+        path = testDataPath('AbstractRecursiveFilter.nc');
+        cls.cdf = Dataset(path, "w", format="NETCDF4");
 
     @classmethod
     def tearDownClass(cls):

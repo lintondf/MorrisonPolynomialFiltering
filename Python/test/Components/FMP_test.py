@@ -23,6 +23,8 @@ import matplotlib.dates as mdates
 #from CovarianceIntersection import *
 from FadingStatistics import RingStatistics
 
+from TestSuite import testDataPath;
+
 class Test(unittest.TestCase):
 
     Y0 = array([1, -5, 5, 5, -6*2, -1*4]); #1e4, -5e3, +1e2, -5e1, 1e1, -5e0]);
@@ -32,7 +34,8 @@ class Test(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        cls.cdf = Dataset("../../testdata/FadingMemoryFiltering.nc", "w", format="NETCDF4");
+        path = testDataPath('FadingMemoryFiltering.nc');
+        cls.cdf = Dataset(path, "w", format="NETCDF4");
 
     @classmethod
     def tearDownClass(cls):

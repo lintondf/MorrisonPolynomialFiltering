@@ -14,7 +14,7 @@ message(" lib =  ${NETCDF_LIBRARIES_C}  ")
 
 include_directories(eigen 
        ../..
-       ${NETCDF_INCLUDES_C} )
+       ${NETCDF_INCLUDES_C}  ${GSL_INCLUDE_DIRS} )
 #	   ${CPPTEST_INCLUDES} )
 #  link_directories(${NETCDF_LIBRARIES_C})
 
@@ -31,4 +31,4 @@ set(SOURCES  ${MAIN_SRC}
 	${TEST_SRC}
 	testMain.cpp)
 add_executable(FilteringEigenTest ${SOURCES})
-target_link_libraries( FilteringEigenTest ${NETCDF_LIBRARIES_C} ) 
+target_link_libraries( FilteringEigenTest ${NETCDF_LIBRARIES_C}  GSL::gsl ) 

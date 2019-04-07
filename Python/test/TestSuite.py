@@ -3,9 +3,13 @@ Created on Mar 27, 2019
 
 @author: NOOK
 '''
+import os
 import unittest
 import coverage
 
+def testDataPath( filename : str) -> str:
+    path = os.getcwd();
+    return path.replace("\\", "/").replace("Python/test", "testdata/") + filename;
 
 # .. call your code ..
 

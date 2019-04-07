@@ -27,6 +27,8 @@ from runstats import Statistics
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 
+from TestSuite import testDataPath;
+
 class Test(unittest.TestCase):
 
     Y0 = array([1e4, -5e3, +1e3, -5e2, +1e2, -5e1]);
@@ -35,7 +37,8 @@ class Test(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        cls.cdf = Dataset("../../../testdata/ExpandingMemoryFiltering.nc", "w", format="NETCDF4");
+        path = testDataPath('ExpandingMemoryFiltering.nc'); # "../../../testdata/ExpandingMemoryFiltering.nc"
+        cls.cdf = Dataset(path, "w", format="NETCDF4");
 
     @classmethod
     def tearDownClass(cls):
