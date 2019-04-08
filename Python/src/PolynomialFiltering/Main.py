@@ -14,7 +14,7 @@
 
 from abc import ABC, abstractmethod
 from enum import Enum
-from numpy import array, eye, transpose
+from numpy import array, eye, transpose, zeros
 from numpy import array as vector;
 from PolynomialFiltering.PythonUtilities import virtual;
 
@@ -60,6 +60,30 @@ class AbstractFilter(ABC):
         self.setStatus( FilterStatus.IDLE )
         self.order = order
         self.name = name
+        
+    @classmethod
+    def conformState(self, order : int, state : vector) -> vector:
+        """
+        Matches an input state vector to the filter order
+        
+        Longer state vectors are truncated and short ones are zero filled
+        
+        Arguments:
+            order - target state vector order
+            state(vector) - arbitrary length input state vector
+        
+        Returns:
+            conformed state vector with order+1 elements
+        
+        """
+        '''@Z : vector'''
+        '''@m : int'''
+        Z = zeros([order+1])
+        m = min( order+1, state.shape[0] )
+        Z[0:m] = state[0:m]
+        return Z
+        
+    
         
     @classmethod            
     def stateTransitionMatrix(self, N : int, dt : float) -> array: # TODO remove

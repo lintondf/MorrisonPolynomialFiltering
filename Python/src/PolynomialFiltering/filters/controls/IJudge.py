@@ -42,6 +42,11 @@ class IJudge(ABC):
         pass;
     
     @abstractmethod # pragma: no cover
+    def getFilter(self) ->  AbstractFilterWithCovariance:
+        return self.f;
+
+    @abstractmethod # pragma: no cover
     def getGOF(self) -> float:
         pass;
-
+    
+    

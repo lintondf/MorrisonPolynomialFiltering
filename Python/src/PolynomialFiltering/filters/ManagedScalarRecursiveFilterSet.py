@@ -13,6 +13,7 @@ from numpy import array as vector
 from PolynomialFiltering.PythonUtilities import virtual;
 from PolynomialFiltering.Components import AbstractRecursiveFilter
 from PolynomialFiltering.filters import ManagedFilterBase;
+from PolynomialFiltering.filters.controls.BaseScalarJudge import BaseScalarJudge
 
 
 class ManagedScalarRecursiveFilterSet(ManagedFilterBase):
@@ -22,32 +23,37 @@ class ManagedScalarRecursiveFilterSet(ManagedFilterBase):
         
     '''workers : List<AbstractRecursiveFilter>'''
     '''SSRs    : List<float>'''
+    '''judges  : List<IJudge>'''
         
     def setWorkers(self, workers : List[AbstractRecursiveFilter]) -> None:
         self.workers = workers;
         self.worker = workers[0];
-        self.SSRs = len(workers)*[self.SSR];
+        self.SSRs = [];
+        self.judges = []
+        for i in range(0,len(workers)) : 
+            self.SSRs[i] = self.SSR;
+            self.judges[i] = BaseScalarJudge(self);
         
     def getWorkers(self) -> List[AbstractRecursiveFilter]:
         return self.workers;
     
     @virtual
-    def add(self, t:float, y:vector, observationId:int = -1):
+    def add(self, t:float, y:vector, observationId:int = -1) -> bool:
         self.iR = self.errorModel.getPrecisionMatrix(self, t, y, observationId)
         minSSR = 0;
-        iBest = -1;
         for iW in range(0, len(self.workers)) :
             Zstar = self.workers[iW].predict(t)
             e = y[0] - Zstar[0]
             innovation = self.workers[iW].update(t, Zstar, e)
-            self._updateSSR(t, y, e, innovation)
-            self.SSRs[iW] = self.SSR;
-            if (iBest < 0) :
-                iBest = iW;
-                minSSR = self.SSR;
-            elif (self.SSR < minSSR) :
-                minSSR = self.SSR;
-                iBest = iW;
+            if (self.judges[iW].scalarUpdate(t, y, e, self.iR)) :
+                innovation = self.worker.update(t, Zstar, e)
+                self.monitor.accepted(t, y, innovation, observationId );
+                return True;
+            else : 
+                self.monitor.rejected(t, y, observationId );
+                return False;
+        iBest = BaseScalarJudge.best(self.judges);
+        if (iBest < 0) :
+            iBest = 0;
         self.SSR = self.SSRs[iBest];
         self.worker = self.workers[iBest];
-            

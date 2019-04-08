@@ -6,8 +6,6 @@
  See separate LICENSE file for full text
 '''
 
-from typing import List;
-
 from PolynomialFiltering.PythonUtilities import virtual, chi2Cdf, chi2Ppf
 
 from numpy import array, zeros, eye, exp, transpose
@@ -18,7 +16,7 @@ from PolynomialFiltering.Components.FadingMemoryPolynomialFilter import makeFMP
 from PolynomialFiltering.filters.controls.IJudge import IJudge
 
 
-class BaseScalarJudge(IJudge):
+class BaseVectorJudge(IJudge):
     """
     Judges the goodness of fit of a filter
     """
@@ -31,7 +29,7 @@ class BaseScalarJudge(IJudge):
     '''@chi2Smoothed : float | Smoothed Chi2 statistic'''
         
     
-    def __init__(self, f : AbstractFilterWithCovariance, editChi2 : float = 3.0, chi2Smoothing : float = 0.9, gofThreshold=0.5):
+    def __init__(self, f : AbstractFilterWithCovariance, editChi2 : float, chi2Smoothing : float = 0.9):
         # computed via chi2.ppf(1-1e-6, df)
         self.chi2Starts = array([23.92812697687947, 27.631021115871036, 30.664849706154268, 33.37684158165888, 35.88818687961042, 38.258336377145845]);
 
@@ -41,33 +39,16 @@ class BaseScalarJudge(IJudge):
         self.chi2Smoothing = chi2Smoothing;
         self.chi2 = self.chi2Starts[f.getOrder()];
         self.chi2Smoothed = self.chi2;
-        self.gofThreshold = chi2Ppf(gofThreshold, 1);
         
     @classmethod
     def probabilityToChi2(self, p : float, df : int) -> float:
         return chi2Ppf(p, df);
 
-    @classmethod
-    def best(self, pSwitch : float, judges : List[IJudge]) -> int:
-        iBest = -1;
-        bestGOF = 0;
-        for iJ in range(0, len(judges)) :
-            if (self.judges[iJ].getFilter().getLastVRF() < 1.0 and self.judges[iJ].getGOF() > self.gofThreshold) :
-                if (iBest < 0) :
-                    iBest = iJ;
-                    bestGOF = self.judges[iJ].getGOF();
-                elif (self.judges[iJ].getGOF() < bestGOF) : # better; but significant?
-                    dG = bestGOF - self.judges[iJ].getGOF();
-                    if (dG > chi2Ppf(pSwitch, 1)) :
-                        iBest = iJ;
-                        bestGOF = self.judges[iJ].getGOF();
-        return iBest;
-    
     @virtual
     def scalarUpdate(self, e : float, iR : array ) -> bool:
         if (iR[0,0] == 0) :
             return True;
-        self.chi2 = (e * iR[0,0] * e);
+        self.chi2 = 1e-9 + (e * iR[0,0] * e);
         self.chi2Smoothed = self.chi2Smoothing * self.chi2Smoothed + (1-self.chi2Smoothing) * self.chi2;
         return self.chi2 < self.editChi2;
 
@@ -75,7 +56,35 @@ class BaseScalarJudge(IJudge):
     def vectorUpdate(self, e : vector, iR : array ) -> bool:
         if (iR[0,0] == 0) :
             return True;
-        self.chi2 = (e[0] * iR[0,0] * e[0]);
+#             S[ie, ie] = GOFs[i,ie];
+#             F[ie, ie] = chi2Cdf(S[ie, ie], 1)
+#         print(i, A2S(diag(S)))
+#         bestRatio = -1;
+#         for j in range(0,K) :
+#             if (S[j,j] != 0.0) :
+#                 for k in range(j+1,K) :
+#                     if (S[k,k] != 0.0 and S[k,k] < S[j,j]) :
+#                         dS = S[j,j] - S[k,k];
+#                         if (dS < chi2Ppf(0.5, 1)) :
+#                             continue
+#                         S[j,k] = dS
+# #                         threshold = chi2Ppf(0.95, 1)
+# #                         threshold = fdistPpf(0.95, 1, 2 );
+# #                         x = dS / S[j,j]
+# #                         x /= threshold;
+#                         F[j,k] = dS
+#                         if (dS < bestRatio) :
+#                             bestRatio = dS;
+#                             Best[i] = k; 
+# # residual chi2 mean is not dependent on L; do this only for multi-element residuals                        
+# #                         F[j,k] = (S[j,k]/(k-j)) /  (S[j,j]/(L-j-1))
+# #                         fThreshold = fdistPpf(0.95, (k-j), (L-j-1) );
+# #                         F[j,k] /= fThreshold;
+# #                         if (F[j,k] < bestRatio)
+# #                             bestRatio = F[j,k]
+# #                             Best[i] = k;
+# # residual chi2 mean is not dependent on L; do this only for multi-element residuals                        
+        self.chi2 = (transpose(e) @ iR @ e);
         self.chi2Smoothed = self.chi2Smoothing * self.chi2Smoothed + (1-self.chi2Smoothing) * self.chi2;
         return self.chi2 < self.editChi2;
 
@@ -84,20 +93,15 @@ class BaseScalarJudge(IJudge):
         return self.chi2;
     
     @virtual
-    def getFilter(self) ->  AbstractFilterWithCovariance:
-        return self.f;
-    
-    @virtual
     def getGOF(self):
-        return self.chi2Smoothed
-
+        return chi2Cdf(self.chi2Smoothed, self.df)
 
     
 if __name__ == "__main__":
     fmp = makeFMP(5, 0.99, 0.1);
-    threshold = BaseScalarJudge.probabilityToChi2(0.95, fmp.getOrder()+1);
+    threshold = BaseVectorJudge.probabilityToChi2(0.95, fmp.getOrder()+1);
     print(threshold)
-    judge = BaseScalarJudge(fmp, threshold, 0.0)
+    judge = BaseVectorJudge(fmp, threshold, 0.0)
     i = zeros([6])
     for e in range(0,10) :
         chi2 = judge.scalarUpdate(e, eye(1));

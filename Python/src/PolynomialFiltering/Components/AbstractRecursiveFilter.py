@@ -99,10 +99,8 @@ class AbstractRecursiveFilter(AbstractFilter):
         """
         '''@Z : vector'''
         '''@m : int'''
-        Z = zeros([self.order+1])
-        m = min( self.order+1, state.shape[0] )
-        Z[0:m] = state[0:m]
-        return Z
+        
+        return AbstractFilter.conformState(self.order, state)
         
     def _normalizeTime(self, t : float) -> float:
         """
@@ -285,6 +283,30 @@ class AbstractRecursiveFilter(AbstractFilter):
         
         """
         return self._denormalizeState(self.Z)
+    
+    def getFirstVRF(self) -> float:
+        """
+        Get the variance reduction factor for the 0th derivative
+        
+        Arguments:
+            None
+        
+        Returns:
+            0th derivative input to output variance ratio
+        """
+        return self.getVRF()[0,0]; # TODO more efficient
+
+    def getLastVRF(self) -> float:
+        """
+        Get the variance reduction factor for the 'order'th derivative
+        
+        Arguments:
+            None
+        
+        Returns:
+            'order'th derivative input to output variance ratio
+        """
+        return self.getVRF()[self.order, self.order]; # TODO more efficient
 
     def getVRF(self) -> array:
         """

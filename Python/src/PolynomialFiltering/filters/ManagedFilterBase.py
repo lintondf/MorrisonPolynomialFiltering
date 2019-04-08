@@ -23,7 +23,9 @@ class ManagedFilterBase(AbstractFilterWithCovariance, IManagedFilter):
 
     '''@INITIAL_SSR : float | start point for smoothed SSR '''
     '''@ worker : AbstractRecursiveFilter | that which is managed'''
-    '''@ errorModel : IObservationErrorModel | observation covariance/information matrix source'''
+    '''@ errorModel : IObservationErrorModel | observation covariance/precision matrix source'''
+    '''@ judge : IJudge | residuals-based observation editing and goodness-of-fit evaluator'''
+    '''@ monitor : IMonitor | filter state monitoring and control'''
     
     def __init__(self, worker : AbstractRecursiveFilter):
         '''

@@ -6,15 +6,15 @@ Created on Feb 1, 2019
 import csv
 
 from numpy import zeros, array, concatenate, arange, ones, diag, sqrt, transpose,\
-    allclose, mean, std, eye, cov
+    allclose, mean, std, eye, cov, var, sum
 from numpy import array as vector;
 from numpy.linalg import cholesky, inv, LinAlgError, det
 from scipy.interpolate import PchipInterpolator
 import pymap3d
 import xml.etree.ElementTree as ET 
-from PolynomialFiltering.Main import FilterStatus;
-from PolynomialFiltering.Components.ExpandingMemoryPolynomialFilter import makeEMP;
-from PolynomialFiltering.Components.FadingMemoryPolynomialFilter import makeFMP;
+from PolynomialFiltering.Main import FilterStatus, AbstractFilter
+from PolynomialFiltering.Components.ExpandingMemoryPolynomialFilter import makeEMP
+from PolynomialFiltering.Components.FadingMemoryPolynomialFilter import makeFMP
 from TestUtilities import A2S, scaleVRFEMP, covarianceToCorrelation, correlationToCovariance, generateTestData, hellingerDistance
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
@@ -23,6 +23,8 @@ from numpy.random import multivariate_normal
 
 from PolynomialFiltering.PythonUtilities import fdistCdf, fdistPpf, chi2Cdf,\
     chi2Ppf
+from numpy.matlib import randn
+from PolynomialFiltering.Main import AbstractFilter
 
 def readData(): 
     with open('../test/landing.csv', newline='') as csvfile:
@@ -189,17 +191,17 @@ def scaleDiagEMP( order : int, u : float, n : float) -> vector:
         S[i] = S[i-1] / ((u*n)*(u*n));
     return S;
     
-def testEMPSet() :
-    seed(1);
+def testEMPSet(Leff : int, pSwitch : float) :
     tau = 0.1
-    N = 150;
+    N = 2500;
     R = 10;
-    w = 0.95
+    w = 1 - 2/Leff
     L = int(2.0 / (1.0-w)) # effective length [Morrison1969, Table 13.4]
-    order = 0;
+    order = 3;
     (times, truth, observations, noise) = \
         generateTestData(order, N, 0.0, array([1000, -100, 50, -15, 25, -50]), tau, sigma=sqrt(R))
     
+    BET = zeros([N,order+1]);
     emps = [];
     for o in range(0, 5+1) :
         emps.append( makeEMP(o, tau) );
@@ -211,12 +213,14 @@ def testEMPSet() :
     actual = zeros([N,K]);
     GOFs = 1.959964**2+zeros([N,K]);  # 95% value for normal distribution
     SSRs = zeros([N,K]);
-    Innovations = zeros([N,K]);
+#     Innovations = zeros([N,K]);
     Best = zeros(N, int);
     # actual[0,:] = truth[0,0]
     gofThresholds = zeros([L+1]);
     for i in range(0,L+1) :
         gofThresholds[i] = chi2Ppf(0.99, i);
+        
+    nSwitches = 0;
     for i in range(0,N) :
         S = zeros([K, K])
         F = zeros([K, K])
@@ -232,58 +236,61 @@ def testEMPSet() :
             if (emp.getStatus() != FilterStatus.RUNNING) :
                 GOFs[i,ie] = 1.959964**2;
                 continue;
-            V = emp._VRF();
+            V = emp.getVRF();
             SSRs[i,ie] = e * 1/R * e # (1/(R+V[0,0]))
 #             Innovations[i,ie] = (innovation @ inv(R*V) @ transpose(innovation))
             GOFs[i,ie] = w*GOFs[i-1,ie] + (1-w)*(SSRs[i,ie])
             vie = (L-ie+1-1);
-            if (GOFs[i,ie] > gofThresholds[vie]) :
-#                 print('BAD', i, ie, SSRs[i,ie], GOFs[i,ie], gofThresholds[vie] )
+            if (V[ie, ie] > 1 or GOFs[i,ie] > gofThresholds[vie]) :
+#                 print('BAD', i, ie, SSRs[i,ie], GOFs[i,ie], gofThresholds[vie], V[ie,ie] )
                 continue;
             if (Best[i] < 0) :
                 Best[i] = ie;
                 bestGOF = GOFs[i,ie];
-            elif (GOFs[i,ie] < bestGOF) :
-                Best[i] = ie;
-                bestGOF = GOFs[i,ie];                       
-            S[ie, ie] = GOFs[i,ie];
-            F[ie, ie] = S[ie, ie]
+            elif (GOFs[i,ie] < bestGOF) : # better; but significant?
+                dG = bestGOF - GOFs[i,ie];
+                if (dG > chi2Ppf(pSwitch, 1)) :
+                    Best[i] = ie;
+                    bestGOF = GOFs[i,ie]; 
+        if (Best[i] >= 0 and i > 0) :
+            BET[i,:] = BET[i-1,:]
+            BET[i,:] = AbstractFilter.conformState(order, emps[Best[i]].getState() );
+            if (Best[i] != Best[i-1]) :
+                nSwitches += 1  
+                 
+#             S[ie, ie] = GOFs[i,ie];
+#             F[ie, ie] = chi2Cdf(S[ie, ie], 1)
 #         print(i, A2S(diag(S)))
-        bestRatio = -1;
-        for j in range(0,K) :
-            if (S[j,j] != 0.0) :
-                for k in range(j+1,K) :
-                    if (S[k,k] != 0.0 and S[k,k] < S[j,j]) :
-                        S[j,k] = S[j,j] - S[k,k];
-                        F[j,k] = (S[j,k]/(k-j)) /  (S[j,j]/(L-j-1))
-                        fThreshold = fdistPpf(0.95, (k-j), (L-j-1) );
-                        F[j,k] /= fThreshold;
-                        if (F[j,k] > bestRatio) :
-                            bestRatio = F[j,k]
-                            Best[i] = k;
-        print(i, times[i,0], Best[i], bestRatio, A2S(diag(S)))
-        if (i > 0 and Best[i] != Best[i-1]) :
-            print(A2S(F))
-#             if (ie != Best[i]) :
-#                 cie = (GOFs[i,ie]/(ie+1))
-#                 vbest = (L-Best[i]+1-1)
-#                 cbest = (GOFs[i,Best[i]]/(Best[i]+1))
-#                 if (vie <= vbest) : 
-#                     fThreshold = fdistPpf(0.95, vie, vbest );
-#                     x = cie / cbest;
-#                     print(ie, Best[i], vie, vbest, cie, cbest, x, fThreshold, fdistCdf(x, vie, vbest))
-#                 else:  
-#                     fThreshold = fdistPpf(0.95, vbest, vie );
-#                     x = cbest / cie;
-#                     print(ie, Best[i], vie, vbest, cie, cbest, x, fThreshold, fdistCdf(x, vbest,vie))
-#                 if (x < fThreshold) :
-#                     Best[i] = ie;
-    #                 print('%3d, %d, %10.6f, %10.6f, %10.6f, %5d' % (i,ie,SSRs[i,ie], Innovations[i,ie], GOFs[i,ie], Best[i] ))
-#         print('%5d, %8.3f, %5d, %8.3f, %8.3f, %8.3f, %8.3f, %8.3f, %8.3f' % (i, GOFs[i,Best[i]], Best[i], \
-#                  GOFs[i,0], GOFs[i,1], GOFs[i,2], GOFs[i,3], GOFs[i,4], GOFs[i,5]) );
-#     print(w, L)
-#     for i in range(0, 5) :
-#         print( (GOFs[-1,i]/(L-i+1-1)) / (GOFs[-1,i+1]/(L-i+2-1)), fdistPpf(0.95, (L-i+1-1), (L-i+2-1)) )
+#         bestRatio = -1;
+#         for j in range(0,K) :
+#             if (S[j,j] != 0.0) :
+#                 for k in range(j+1,K) :
+#                     if (S[k,k] != 0.0 and S[k,k] < S[j,j]) :
+#                         dS = S[j,j] - S[k,k];
+#                         if (dS < chi2Ppf(0.5, 1)) :
+#                             continue
+#                         S[j,k] = dS
+# #                         threshold = chi2Ppf(0.95, 1)
+# #                         threshold = fdistPpf(0.95, 1, 2 );
+# #                         x = dS / S[j,j]
+# #                         x /= threshold;
+#                         F[j,k] = dS
+#                         if (dS < bestRatio) :
+#                             bestRatio = dS;
+#                             Best[i] = k; 
+# # residual chi2 mean is not dependent on L; do this only for multi-element residuals                        
+# #                         F[j,k] = (S[j,k]/(k-j)) /  (S[j,j]/(L-j-1))
+# #                         fThreshold = fdistPpf(0.95, (k-j), (L-j-1) );
+# #                         F[j,k] /= fThreshold;
+# #                         if (F[j,k] < bestRatio)
+# #                             bestRatio = F[j,k]
+# #                             Best[i] = k;
+# # residual chi2 mean is not dependent on L; do this only for multi-element residuals                        
+#         if (i > 0 and Best[i] == 5 ) : # != Best[i-1]) :
+#             print(i, times[i,0], Best[i], bestRatio, A2S(diag(S)))
+#             print(A2S(S))
+#             print(A2S(F))
+#             return
         
 #             for je in range(ie+1,len(emps)) :
 #                 if (emps[je]._VRF()[ie, ie] > 1) :
@@ -302,15 +309,28 @@ def testEMPSet() :
 #         print('    2', A2S(emps[2].getState(emps[2].getTime())), A2S(diag(emps[2]._VRF())))
 #     print(A2S(concatenate([SSRs, Innovations], axis=1)))
 #     print(A2S(GOFs))
-    if (True) :
-        M = 0;
+
+    D = BET[1:,:] - truth[1:,:]
+#     print(A2S(var(D, axis=0)))
+    tr = sum(var(D, axis=0));
+    print('%5.3f %5d %6.4f, %10.3f %5d' % (w, L, pSwitch, tr, nSwitches))
+#     print(order, mean(Innovations[:,order]), var(Innovations[:,order]))
+    if (True or tr > 1e4) :
+#         print(truth[0:15,:])
+#         print(BET)
+#         print(A2S(D))
+#         print(A2S(std(D, axis=0)))
+#         actual = BET;
+        M = 1;
         f0 = plt.figure(figsize=(10, 6))
         ax = plt.subplot(1, 1, 1)
     #     ax.plot(times, GOFs)
         plt.title('order %d' % order)
-        ax.plot(times[M:], truth[M:,0], 'r.-', times[M:], observations[M:], 'b.', \
-                times[M:], actual[M:,0], 'k-', times[M:], actual[M:,1], 'm-', \
-                times[M:], actual[M:,2], 'c-', times[M:], actual[M:,3], 'g-');
+#         ax.plot(times[M:], truth[M:,0], 'r.-', times[M:], observations[M:], 'b.', \
+#                 times[M:], actual[M:,0], 'k-', times[M:], actual[M:,1], 'm-', \
+#                 times[M:], actual[M:,2], 'c-', times[M:], actual[M:,3], 'g-');
+        ax.plot(times[M:], actual[M:,0]-truth[M:,0], 'k-', times[M:], actual[M:,1]-truth[M:,0], 'm-', \
+                times[M:], actual[M:,2]-truth[M:,0], 'c-', times[M:], actual[M:,3]-truth[M:,0], 'g-');
         ax2 = ax.twinx() 
         ax2.plot(times[M:], Best[M:], 'y.-')
         f0.tight_layout()
@@ -466,11 +486,35 @@ def EmpVrfCorrelation(n : float):
 #     print(A2S(dV))
     print(A2S(cV))
     
- 
+
+def fadingChi2():
+    N = 10000;
+    X = randn(N, 1);
+    X2 = zeros([N,1]);
+    S = zeros([N,1]);
+    for w in [0.5, 0.6, 0.7, 0.8, 0.9, 0.95, 0.99] :
+        L = int(2.0 / (1.0-w)) # effective length [Morrison1969, Table 13.4]
+        print(w, L)
+        V = (-w+1)/(w+1)
+        for i in range(0,N) :
+            X2[i,0] = X[i,0]**2
+            if (i == 0) :
+                S[i,0] = X2[i,0]
+            else :
+                S[i,0] = (1-w)*X2[i,0] + w*S[i-1,0]
+                
+        print(A2S(mean(X2)), A2S(var(X2)))
+        print(A2S(mean(S)), A2S(var(S)), V*var(X2))
+    
             
 if __name__ == '__main__':
     pass
-    testEMPSet()
+#     fadingChi2();
+    for i in range(0,100) :
+        for l in [25] : # [10, 20, 30, 40] :
+            for p in [0.750] : #[0.50, 0.60, 0.70, 0.80, 0.90] :
+    #             seed(1)
+                testEMPSet(l, p)
 #     for n in range(3,100,10) :
 #         print(n)
 #         EmpVrfCorrelation(n)

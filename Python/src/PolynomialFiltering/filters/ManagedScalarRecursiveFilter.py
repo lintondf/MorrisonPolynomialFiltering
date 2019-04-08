@@ -29,7 +29,7 @@ class ManagedScalarRecursiveFilter(ManagedFilterBase):
         self.iR = self.errorModel.getPrecisionMatrix(self, t, y, observationId)
         Zstar = self.worker.predict(t)
         e = y[0] - Zstar[0]
-        if (self.iR[0,0] == 0 or self.judge.scalarUpdate(t, y, e, self.iR)) :
+        if (self.judge.scalarUpdate(t, y, e, self.iR)) :
             innovation = self.worker.update(t, Zstar, e)
             self.monitor.accepted(t, y, innovation, observationId );
             return True;

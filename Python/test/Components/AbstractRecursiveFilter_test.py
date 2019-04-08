@@ -97,7 +97,7 @@ class Test(unittest.TestCase):
             expected = concatenate([expected, f.Z], axis=0);
             expected = concatenate([expected, f.D], axis=0);
             
-            actual = array([0, order+1, 0, 0, tau]);
+            actual = array([0, order+2, 0, 0, tau]);
             actual = concatenate([actual, zeros(order+1)], axis=0);
             D = zeros(order+1);
             for i in range(0,order+1) :
