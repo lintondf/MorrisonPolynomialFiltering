@@ -50,6 +50,19 @@ namespace PolynomialFiltering {
             /// 
             AbstractFilter(const int order, const std::string name="");
 
+            ///// @brief Matches an input state vector to the filter order
+            /// 
+            /// Longer state vectors are truncated and short ones are zero filled
+            /// 
+            /// 
+            ///  @param		order	target state vector order
+            ///  @param		state	arbitrary length input state vector
+            /// 
+            ///  @return  conformed state vector with order+1 elements
+            /// 
+            /// 
+            static RealVector conformState(const int order, const RealVector& state);
+
             ///// @brief Return a state transition matrix of size N for time step dt
             /// 
             /// Returns a Pade' expanded status transition matrix of order N [RMKdR(7)]

@@ -40,28 +40,92 @@ namespace PolynomialFiltering {
                 ///  @param		tau	nominal time step
                 /// 
                 EmpFmpPair(const int order, const double theta, const double tau);
+
+                ///// @brief Start or restart the filter
+                /// 
+                /// 
+                ///  @param		t	external start time
+                ///  @param		Z	state vector in external units
+                /// 
+                ///  @return   @return		None
+                /// 
+                /// 
                 void start(const double t, const RealVector& Z);
+
+                ///// @brief Predict the filter state (Z*) at time t
+                /// 
+                /// 
+                ///  @param		t	target time
+                /// 
+                ///  @return  predicted state INTERNAL UNITS
+                /// 
+                /// 
                 RealVector predict(const double t);
+
+                ///// @brief Update the filter state from using the prediction error e
+                /// 
+                /// 
+                ///  @param		t	update time
+                ///  @param		Zstar	predicted NORMALIZED state at update time
+                ///  @param		e	prediction error (observation - predicted state)
+                /// 
+                ///  @return  innovation vector
+                /// 
+                ///  @par Examples
+                /// Zstar = self.predict(t)
+                /// e = observation[0] - Zstar[0]
+                /// self.update(t, Zstar, e )
+                /// 
                 RealVector update(const double t, const RealVector& Zstar, const double e);
 
-                ///// @brief Return the number of observation the filter has processed
+                ///// @brief Return the number of processed observations since start
                 /// 
-                ///  @return  Count of observations used
+                /// 
+                ///  @param		None
+                /// 
+                ///  @return  Count of processed observations
+                /// 
                 /// 
                 int getN();
+
+                ///// @brief Return the nominal time step for the filter
+                /// 
+                /// 
+                ///  @param		None
+                /// 
+                ///  @return  Nominal time step (tau) in external units
+                /// 
+                /// 
                 double getTau();
 
-                ///// @brief Return the current filter time
+                ///// @brief Return the time of the last processed observation or filter start
                 /// 
-                ///  @return  Filter time
+                /// 
+                ///  @param		None
+                /// 
+                ///  @return  Time in external units
+                /// 
                 /// 
                 double getTime();
 
-                ///// @brief Returns the current filter state vector
+                ///// @brief Get the current filter state vector
                 /// 
-                ///  @return  State vector (order+1 elements)
+                /// 
+                ///  @param		None
+                /// 
+                ///  @return  State vector in external units
+                /// 
                 /// 
                 RealVector getState();
+
+                ///// @brief Get the variance reduction factor matrix
+                /// 
+                /// 
+                ///  @param		None
+                /// 
+                ///  @return  Square matrix (order+1) of input to output variance ratios
+                /// 
+                /// 
                 RealMatrix getVRF();
             protected:
                 shared_ptr<EMPBase> emp;

@@ -21,6 +21,15 @@ namespace PolynomialFiltering {
             this->name = name;
         }
 
+        RealVector AbstractFilter::conformState (const int order, const RealVector& state) {
+            RealVector Z;
+            int m;
+            Z = ArrayXd::Zero(order + 1);
+            m = min(order + 1, state.size());
+            Z.segment(0, m) = state.segment(0, m);
+            return Z;
+        }
+
         RealMatrix AbstractFilter::stateTransitionMatrix (const int N, const double dt) {
             RealMatrix B;
             int ji;

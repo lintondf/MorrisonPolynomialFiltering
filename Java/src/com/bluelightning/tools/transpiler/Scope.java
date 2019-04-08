@@ -92,16 +92,20 @@ public class Scope {
 //			if (childName.equals(qualifiers[qualifiers.length-1])) {
 //				System.err.println("Double Qualifiers: " + this.toString() + " + " + childName );
 //			}
-			scope.qualifiers = new String[this.qualifiers.length+1];
+			int n = qualifiers.length;
+			if (qualifiers[n-1].equals(childName)) {
+				n--;
+			}
+			scope.qualifiers = new String[n+1];
 			StringBuffer sb = new StringBuffer();
-			for (int i = 0; i < qualifiers.length; i++) {
+			for (int i = 0; i < n; i++) {
 				sb.append(qualifiers[i]);
 				sb.append('/');
 				scope.qualifiers[i] = qualifiers[i];
 			}
 			sb.append(childName);
 			sb.append('/');
-			scope.qualifiers[this.qualifiers.length] = childName;
+			scope.qualifiers[n] = childName;
 			scope.qString = sb.toString();			
 			scopeMap.put(scope.qString, scope);
 			return scope;

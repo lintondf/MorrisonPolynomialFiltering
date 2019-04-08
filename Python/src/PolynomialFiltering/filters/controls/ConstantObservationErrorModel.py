@@ -13,11 +13,15 @@ from PolynomialFiltering.filters.controls.IObservationErrorModel import IObserva
 
 
 class ConstantObservationErrorModel(IObservationErrorModel):
+    
+    '''@ R : array | observation covariance matrix'''
+    '''@ iR : array | observation precision (inverse covariance) matrix'''
+    
     def __init__(self, R : array, inverseR : array):
         self.R = R;
         self.iR = inverseR;
 
-    def getPrecisionMatrix(self, f: AbstractFilterWithCovariance, t:float, y:vector, observationId:int = -1):
+    def getPrecisionMatrix(self, f: AbstractFilterWithCovariance, t:float, y:vector, observationId:int = -1) -> array:
         if (observationId == -1) :
             return self.iR;
         else :

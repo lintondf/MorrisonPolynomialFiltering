@@ -11,9 +11,12 @@ from abc import abstractmethod
 from numpy import array, eye
 from numpy import array as vector
 from PolynomialFiltering.Main import AbstractFilterWithCovariance, FilterStatus
-from PolynomialFiltering.Components import AbstractRecursiveFilter
+from PolynomialFiltering.Components.AbstractRecursiveFilter import AbstractRecursiveFilter
 from PolynomialFiltering.filters.IManagedFilter import IManagedFilter;
-from PolynomialFiltering.filters.controls import IObservationErrorModel, IJudge, IMonitor, ConstantObservationErrorModel;
+from PolynomialFiltering.filters.controls.IObservationErrorModel import IObservationErrorModel
+from PolynomialFiltering.filters.controls.IJudge import IJudge
+from PolynomialFiltering.filters.controls.IMonitor import IMonitor
+from PolynomialFiltering.filters.controls.ConstantObservationErrorModel import ConstantObservationErrorModel
 
 
 class ManagedFilterBase(AbstractFilterWithCovariance, IManagedFilter):
@@ -40,13 +43,16 @@ class ManagedFilterBase(AbstractFilterWithCovariance, IManagedFilter):
         return self.worker.getStatus(self)
 
     def getN(self) -> int:
-        return self.worker.getN(self)
+        return self.worker.getN()
 
     def getTime(self) -> float:
-        return self.worker.getTime(self)
+        return self.worker.getTime()
 
     def getState(self) -> vector:
-        return self.worker.getState(self)
+        return self.worker.getState()
+    
+    def getWorker(self) -> AbstractRecursiveFilter:
+        return self.worker;
 
     def setObservationInverseR(self, inverseR:array) -> None:
         self.errorModel = ConstantObservationErrorModel(inverseR)
@@ -67,3 +73,8 @@ class ManagedFilterBase(AbstractFilterWithCovariance, IManagedFilter):
     @abstractmethod # pragma: no cover
     def getCovariance(self) -> array:
         pass
+
+    @abstractmethod # pragma: no cover 
+    def getGoodnessOfFit(self) -> float:
+        pass
+    

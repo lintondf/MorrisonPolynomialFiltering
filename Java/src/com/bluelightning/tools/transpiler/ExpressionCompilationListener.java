@@ -550,7 +550,7 @@ class ExpressionCompilationListener extends LcdPythonBaseListener {
 							}
 							break;
 						case ".":
-							String fieldName = trailer.getChild(i+1).getText();
+							String fieldName = trailer.getChild(i+1).getText(); 
 							Symbol field = transpiler.symbolTable.lookup(scope, fieldName);
 							if (field == null) {
 								if (parent.getLastChild() instanceof TranslationSymbolNode) {
@@ -567,16 +567,16 @@ class ExpressionCompilationListener extends LcdPythonBaseListener {
 										TranslationUnaryNode tun = (TranslationUnaryNode) parent.getLastChild();
 										Symbol s = tun.getRhsSymbol();
 										if (s != null) {
-											Symbol c = transpiler.symbolTable.lookup(scope, s.getType() );
-											if (c.isClass()) {
-												Scope refScope = s.getScope().getParent().getChild(Level.CLASS, s.getType());
+											Symbol c = transpiler.lookupClass(s.getType() );
+											if (c != null && c.isClass()) { 
+												Scope refScope = c.getScope().getChild(Level.CLASS, c.getName());
 												field = transpiler.symbolTable.lookup(refScope, fieldName );
 											}
 										}
 									}
 								}
 							}
-							if (field == null) { 
+							if (field == null) {  
 								transpiler.reportError( ctx, "Unknown member: " + fieldName + " at " + scope );
 //								transpiler.dumpChildren(ctx.getParent());
 							}

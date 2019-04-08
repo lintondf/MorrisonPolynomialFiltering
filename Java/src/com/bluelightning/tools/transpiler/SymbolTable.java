@@ -63,26 +63,25 @@ class SymbolTable {
 			return i;
 		}
 		
-		public Symbol lookupClass( Scope scope, String name ) {
+		public Symbol lookupClass( String name ) {
 			name = name.trim();
 			Map<String, Symbol> aliases = table.get(name);
 			if (aliases == null) {
 				return null;
 			}
-			Iterator<String> it = aliases.keySet().iterator();
-			String s = it.next();
+			Iterator<Symbol> it = aliases.values().iterator();
 			while (it.hasNext()) {
-				String t = it.next();
-				if (aliases.get(t).isClass() && t.length() < s.length())
-					s = t;
+				Symbol c = it.next();
+				if (! c.isInherited() ) {
+					if (c.isEnum())
+						return null;
+					if (c.isClass())
+						return c;
+					else
+						return null;					
+				}
 			}
-			Symbol c = aliases.get(s);
-			if (c.isEnum())
-				return null;
-			if (c.isClass())
-				return c;
-			else
-				return null;
+			return null;
 		}
 		
 		public Symbol lookup( Scope scope, String name ) {

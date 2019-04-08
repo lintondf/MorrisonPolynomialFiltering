@@ -140,7 +140,7 @@ class DeclarationsListener extends LcdPythonBaseListener {
 					}
 					Symbol p = declareSymbol( ctx.getStart(), declaration);
 					if (! p.getName().equals("self")) {
-						Symbol c = transpiler.lookupClass(currentScope, p.getType());
+						Symbol c = transpiler.lookupClass(p.getType());
 						if (c != null) {
 							p.setClassReference(true);
 							transpiler.addParameterClass(p.getType());
@@ -201,6 +201,9 @@ class DeclarationsListener extends LcdPythonBaseListener {
 		public void enterClassdef(LcdPythonParser.ClassdefContext ctx) {
 			Scope currentScope = scopeStack.peek();
 			String name = getChildText(ctx, 1);
+			if (name.equals(currentScope.getLast())) {
+				currentScope = currentScope.getParent();
+			}
 			Scope classScope = currentScope.getChild(Scope.Level.CLASS, name);
 			if (classScope == null) {
 				this.transpiler.reportError(ctx.start, "Invalid class scope");

@@ -85,6 +85,9 @@ public class Transpiler {
 		new Target(Paths.get("PolynomialFiltering/Components"), "FadingMemoryPolynomialFilter"),
 		new Target(Paths.get("PolynomialFiltering/Components"), "EmpFmpPair"),
 		new Target(Paths.get("PolynomialFiltering/filters"), "IManagedFilter", true),
+		new Target(Paths.get("PolynomialFiltering/filters/controls"), "IObservationErrorModel", true),
+		new Target(Paths.get("PolynomialFiltering/filters/controls"), "ConstantObservationErrorModel"),
+//		new Target(Paths.get("PolynomialFiltering/filters"), "ManagedFilterBase"),
 	};
 	
 	protected Logger logger;
@@ -160,8 +163,8 @@ public class Transpiler {
 		return symbolTable.lookup(scope, name);
 	}
 	
-	public Symbol lookupClass( Scope scope, String name ) {
-		return symbolTable.lookupClass(scope, name);
+	public Symbol lookupClass( String name ) {
+		return symbolTable.lookupClass(name);
 	}
 	
 

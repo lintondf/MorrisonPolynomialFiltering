@@ -84,7 +84,7 @@ public class Documenter {
 		while (c != null) {
 			if (c.getSuperClassInfo() == null || c.getSuperClassInfo().superClass.isEmpty())
 				return null;
-			c = Transpiler.instance().lookupClass(c.getScope(), c.getSuperClassInfo().superClass);
+			c = Transpiler.instance().lookupClass(c.getSuperClassInfo().superClass);
 			if (c == null)
 				return null;			
 			Symbol m = Transpiler.instance().lookup(c.getScope().getChild(Level.CLASS, c.getName()), scope.getLast() );

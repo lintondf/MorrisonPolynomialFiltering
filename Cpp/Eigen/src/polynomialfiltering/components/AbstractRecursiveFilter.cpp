@@ -30,7 +30,7 @@ namespace PolynomialFiltering {
                     throw ValueError("Polynomial orders < 0 or > 5 are not supported");
                 }
                 this->n = 0;
-                this->n0 = order + 1;
+                this->n0 = order + 2;
                 this->dtau = 0;
                 this->t0 = 0;
                 this->t = 0;
@@ -54,10 +54,7 @@ namespace PolynomialFiltering {
             RealVector AbstractRecursiveFilter::_conformState (const RealVector& state) {
                 RealVector Z;
                 int m;
-                Z = ArrayXd::Zero(this->order + 1);
-                m = min(this->order + 1, state.size());
-                Z.segment(0, m) = state.segment(0, m);
-                return Z;
+                return std::shared_ptr<AbstractFilter>(new AbstractFilter::conformState(this->order, state));
             }
 
             double AbstractRecursiveFilter::_normalizeTime (const double t) {
@@ -131,6 +128,14 @@ namespace PolynomialFiltering {
 
             RealVector AbstractRecursiveFilter::getState () {
                 return this->_denormalizeState(this->Z);
+            }
+
+            double AbstractRecursiveFilter::getFirstVRF () {
+                return this->getVRF(0, 0);
+            }
+
+            double AbstractRecursiveFilter::getLastVRF () {
+                return this->getVRF(this->order, this->order);
             }
 
             RealMatrix AbstractRecursiveFilter::getVRF () {

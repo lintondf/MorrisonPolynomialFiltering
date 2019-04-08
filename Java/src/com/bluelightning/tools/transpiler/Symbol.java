@@ -48,7 +48,7 @@ public class Symbol {
 	protected FunctionParametersInfo functionParametersInfo = null;
 	protected Symbol ancestor = null;
 	protected Integer[] dimensions;
-	protected boolean isClasRef = false;
+	protected boolean isClassRef = false;
 	protected boolean isInherited = false;
 	
 	public boolean isInherited() {
@@ -79,7 +79,7 @@ public class Symbol {
 			r += functionParametersInfo.toString();
 			r += ")";
 		}
-		r += "CR: " + this.isClasRef;
+		r += "; ClassRef: " + this.isClassRef;
 		return r;
 	}
 	
@@ -173,11 +173,11 @@ public class Symbol {
 	}
 
 	public boolean isClassReference() {
-		return this.isClasRef;
+		return this.isClassRef;
 	}
 	
 	public void setClassReference( boolean tf) {
-		this.isClasRef = tf;
+		this.isClassRef = tf;
 	}
 
 }
