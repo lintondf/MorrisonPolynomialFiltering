@@ -180,6 +180,24 @@ namespace PolynomialFiltering {
             ///  @return  Covariance matrix
             /// 
             virtual RealMatrix getCovariance() = 0;
+
+            ///// @brief Get the variance reduction factor for the 0th derivative
+            /// 
+            /// 
+            ///  @param		None
+            /// 
+            ///  @return  0th derivative input to output variance ratio
+            /// 
+            double getFirstVariance();
+
+            ///// @brief Get the variance reduction factor for the 'order'th derivative
+            /// 
+            /// 
+            ///  @param		None
+            /// 
+            ///  @return  'order'th derivative input to output variance ratio
+            /// 
+            double getLastVariance();
     }; // class AbstractFilterWithCovariance 
 
 }; // namespace PolynomialFiltering

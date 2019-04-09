@@ -93,6 +93,14 @@ namespace PolynomialFiltering {
             return AbstractFilterWithCovariance::transitionCovarianceMatrix(dt, V);
         }
 
+        double AbstractFilterWithCovariance::getFirstVariance () {
+            return this->getCovariance(0, 0);
+        }
+
+        double AbstractFilterWithCovariance::getLastVariance () {
+            return this->getCovariance( - 1,  - 1);
+        }
+
 }; // namespace PolynomialFiltering
 
 #pragma float_control(pop)

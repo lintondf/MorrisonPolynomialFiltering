@@ -129,7 +129,7 @@ class SymbolTable {
 		
 		public void report(Documenter documenter) {
 			System.out.println("--- SYMBOL TABLE ------------------");
-			System.out.println( table.size() );
+			System.out.println( "-- UNDOCUMENTED --\n" );
 			
 			TreeMap<String, Symbol> enums = new TreeMap<>();
 			TreeMap<String, Symbol> classes = new TreeMap<>();

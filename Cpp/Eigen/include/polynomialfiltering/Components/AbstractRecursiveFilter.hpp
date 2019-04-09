@@ -123,24 +123,6 @@ namespace PolynomialFiltering {
                 /// 
                 RealVector getState();
 
-                ///// @brief Get the variance reduction factor for the 0th derivative
-                /// 
-                /// 
-                ///  @param		None
-                /// 
-                ///  @return  0th derivative input to output variance ratio
-                /// 
-                double getFirstVRF();
-
-                ///// @brief Get the variance reduction factor for the 'order'th derivative
-                /// 
-                /// 
-                ///  @param		None
-                /// 
-                ///  @return  'order'th derivative input to output variance ratio
-                /// 
-                double getLastVRF();
-
                 ///// @brief Get the variance reduction factor matrix
                 /// 
                 /// 

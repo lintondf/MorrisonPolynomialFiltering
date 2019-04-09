@@ -89,22 +89,22 @@ class BaseVectorJudge(IJudge):
         return self.chi2 < self.editChi2;
 
     @virtual
-    def getChi2(self):
+    def getChi2(self) -> float:
         return self.chi2;
     
     @virtual
-    def getGOF(self):
+    def getGOF(self) -> float:
         return chi2Cdf(self.chi2Smoothed, self.df)
-
-    
-if __name__ == "__main__":
-    fmp = makeFMP(5, 0.99, 0.1);
-    threshold = BaseVectorJudge.probabilityToChi2(0.95, fmp.getOrder()+1);
-    print(threshold)
-    judge = BaseVectorJudge(fmp, threshold, 0.0)
-    i = zeros([6])
-    for e in range(0,10) :
-        chi2 = judge.scalarUpdate(e, eye(1));
-        j = judge.getGOF();
-        print(e, chi2, j)
-        
+# 
+#     
+# if __name__ == "__main__":
+#     fmp = makeFMP(5, 0.99, 0.1);
+#     threshold = BaseVectorJudge.probabilityToChi2(0.95, fmp.getOrder()+1);
+#     print(threshold)
+#     judge = BaseVectorJudge(fmp, threshold, 0.0)
+#     i = zeros([6])
+#     for e in range(0,10) :
+#         chi2 = judge.scalarUpdate(e, eye(1));
+#         j = judge.getGOF();
+#         print(e, chi2, j)
+#         

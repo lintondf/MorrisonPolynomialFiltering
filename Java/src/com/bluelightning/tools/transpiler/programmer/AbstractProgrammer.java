@@ -36,6 +36,8 @@ public abstract class AbstractProgrammer implements IProgrammer {
 		simpleRemaps.put("min", new Symbol(libraryScope, "min", "int")); //TODO generic
 		simpleRemaps.put("chi2Cdf", new Symbol(libraryScope, "chi2Cdf", "float"));
 		simpleRemaps.put("chi2Ppf", new Symbol(libraryScope, "chi2Ppf", "float"));
+		simpleRemaps.put("ftestCdf", new Symbol(libraryScope, "ftestCdf", "float"));
+		simpleRemaps.put("ftestPpf", new Symbol(libraryScope, "ftestPpf", "float"));
 			Map<String, Symbol> libraryNames = new HashMap<>();
 			libraryNames.put("array",  new Symbol(libraryScope, "identity", "array") ); 
 			libraryNames.put("vector", new Symbol(libraryScope, "???vector_eye???", "vector") ); //Eigen
@@ -80,10 +82,10 @@ public abstract class AbstractProgrammer implements IProgrammer {
 	@Override //General
 	public String remapType( Symbol symbol ) {
 		String type = symbol.getType();
-		if (type.startsWith("Tuple[")) {
+		if (type.startsWith("List[")) {
 			type = type.substring(6, type.length()-1).trim().replaceAll(" +", "");
 			String[] fields = type.split(",");
-			String tuple = "std::tuple<";
+			String tuple = "std::vector<";
 			for (String field : fields) {
 				String t = typeRemap.get(field);
 				if (t != null)
@@ -135,6 +137,8 @@ public abstract class AbstractProgrammer implements IProgrammer {
 			out.append("(*this)"); 
 		} else if (symbol.isClassReference()) {
 			out.append("(*" + symbol.getName() + ")" );
+		} else if (symbol.getName().equals("None")) {
+			out.append("nullptr");  // TODO symbolRemap
 		} else {
 			String name = symbol.getName(); 
 			out.append(name);

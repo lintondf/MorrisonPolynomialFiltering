@@ -130,14 +130,6 @@ namespace PolynomialFiltering {
                 return this->_denormalizeState(this->Z);
             }
 
-            double AbstractRecursiveFilter::getFirstVRF () {
-                return this->getVRF(0, 0);
-            }
-
-            double AbstractRecursiveFilter::getLastVRF () {
-                return this->getVRF(this->order, this->order);
-            }
-
             RealMatrix AbstractRecursiveFilter::getVRF () {
                 RealMatrix V;
                 V = this->_VRF();

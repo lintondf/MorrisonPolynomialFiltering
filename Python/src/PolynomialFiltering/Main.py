@@ -270,5 +270,29 @@ class AbstractFilterWithCovariance(AbstractFilter) :
         """
         pass
 
+    def getFirstVariance(self) -> float:
+        """
+        Get the variance reduction factor for the 0th derivative
+        
+        Arguments:
+            None
+        
+        Returns:
+            0th derivative input to output variance ratio
+        """
+        return self.getCovariance()[0,0]; # TODO more efficient
 
+    def getLastVariance(self) -> float:
+        """
+        Get the variance reduction factor for the 'order'th derivative
+        
+        Arguments:
+            None
+        
+        Returns:
+            'order'th derivative input to output variance ratio
+        """
+        return self.getCovariance()[-1, -1]; # TODO more efficient
+
+ 
 

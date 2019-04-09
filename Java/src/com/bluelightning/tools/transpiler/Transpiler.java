@@ -20,6 +20,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeSet;
 
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonToken;
@@ -50,6 +51,7 @@ import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import freemarker.template.TemplateExceptionHandler;
+import jdk.internal.joptsimple.internal.Strings;
 
 
 /**
@@ -86,8 +88,15 @@ public class Transpiler {
 		new Target(Paths.get("PolynomialFiltering/Components"), "EmpFmpPair"),
 		new Target(Paths.get("PolynomialFiltering/filters"), "IManagedFilter", true),
 		new Target(Paths.get("PolynomialFiltering/filters/controls"), "IObservationErrorModel", true),
+		new Target(Paths.get("PolynomialFiltering/filters/controls"), "IJudge", true),
+		new Target(Paths.get("PolynomialFiltering/filters/controls"), "IMonitor", true),
 		new Target(Paths.get("PolynomialFiltering/filters/controls"), "ConstantObservationErrorModel"),
-//		new Target(Paths.get("PolynomialFiltering/filters"), "ManagedFilterBase"),
+		new Target(Paths.get("PolynomialFiltering/filters/controls"), "BaseScalarJudge"),
+		//new Target(Paths.get("PolynomialFiltering/filters/controls"), "BaseVectorJudge"),
+		//new Target(Paths.get("PolynomialFiltering/filters/controls"), "NullMonitor"),
+		new Target(Paths.get("PolynomialFiltering/filters"), "ManagedFilterBase"),
+//		new Target(Paths.get("PolynomialFiltering/filters"), "ManagedScalarRecursiveFilter"),
+//		new Target(Paths.get("PolynomialFiltering/filters"), "ManagedScalarRecursiveFilterSet"),
 	};
 	
 	protected Logger logger;
@@ -466,6 +475,7 @@ public class Transpiler {
 		symbolTable.add( importScope, "len", "int" );
 		symbolTable.add( importScope, "max", "int" );  //TODO generic type
 		symbolTable.add( importScope, "min", "int" );  //TODO generic type
+		symbolTable.add( importScope, "None", "NULL");
 		symbolTable.add( importScope, "ones", "array");
 		symbolTable.add( importScope, "pow", "float");
 		symbolTable.add( importScope, "range", "range");
@@ -476,6 +486,12 @@ public class Transpiler {
 		symbolTable.add( importScope, "transpose", "array");
 		symbolTable.add( importScope, "zeros", "array");
 		symbolTable.add( importScope, "NotImplementedError", "exception");
+		symbolTable.add( importScope, "chi2Cdf", "float");
+		symbolTable.add( importScope, "chi2Ppf", "float");
+		symbolTable.add( importScope, "ftestCdf", "float");
+		symbolTable.add( importScope, "ftestPpf", "float");
+		symbolTable.add( importScope, "True", "bool");
+		symbolTable.add( importScope, "False", "bool");
 		
 		valueMap.put( TranslationUnaryNode.staticFieldReference, "::");
 
@@ -553,6 +569,21 @@ public class Transpiler {
 		compileGrammar( "data", "LcdPython.g4",
 		      "src/com/bluelightning/tools/transpiler/antlr4/" );		
 	}
+	
+	static TreeSet<String> srcs = new TreeSet<>();
+	
+	protected static void scan( File d ) {
+		for (File f : d.listFiles()) {
+			if (f.getName().startsWith(".") || f.getName().startsWith("__"))
+				continue;
+			if (f.isFile())
+				srcs.add(f.getPath().substring(14).replace(".py", ""));
+			if (f.isDirectory())
+				scan(f);
+		}		
+	}
+	
+
 	/**
 	 * @param args
 	 */
@@ -560,6 +591,10 @@ public class Transpiler {
 		Transpiler transpiler = new Transpiler();
 		
 		Path base = Paths.get("../Python/src");
+		Path dir = base.resolve("PolynomialFiltering");
+		File d = dir.toFile();
+		scan(d);
+		srcs.remove("PolynomialFiltering\\PythonUtilities"); // never do be transpiled
 		for (Target target : targets) {
 			Path where = base;
 			ArrayList<String> dottedModule = new ArrayList<>();
@@ -570,6 +605,8 @@ public class Transpiler {
 				}
 			}
 			dottedModule.add(target.module);
+			System.out.println(String.join("\\", dottedModule));
+			srcs.remove( String.join("\\", dottedModule) );
 			transpiler.compile( where, dottedModule, target.headerOnly);
 		}
 		System.out.printf("Compiled %d targets\n", targets.length);
@@ -577,6 +614,10 @@ public class Transpiler {
 		transpiler.symbolTable.report(transpiler.documenter);
 //		System.out.println();
 //		transpiler.documenter.report();
+		for (String missed : srcs) {
+			System.out.println("Missed: " + missed);
+		}
 	}
+	
 
 }
