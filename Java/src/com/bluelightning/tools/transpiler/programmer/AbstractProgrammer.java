@@ -243,7 +243,7 @@ public abstract class AbstractProgrammer implements IProgrammer {
 	 */
 	@Override //General
 	public void openBracket(Indent out) {
-		out.append("(");  // C++ libraries uses () for array references
+		out.append("[");  // C++ libraries uses () for array references
 	} 
 
 	/* (non-Javadoc)
@@ -251,7 +251,7 @@ public abstract class AbstractProgrammer implements IProgrammer {
 	 */
 	@Override //General
 	public void closeBracket(Indent out) {
-		out.append(")");
+		out.append("]");
 	}
 
 	/* (non-Javadoc)

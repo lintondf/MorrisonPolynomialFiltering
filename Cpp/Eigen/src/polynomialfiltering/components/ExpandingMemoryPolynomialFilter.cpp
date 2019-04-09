@@ -38,7 +38,7 @@ namespace PolynomialFiltering {
                 int n;
                 RealMatrix V;
                 n = this->n;
-                V = ArrayXXd::Zero(this->order + 1, this->order + 1);
+                V = ArrayXXd::Zero[this->order + 1, this->order + 1];
                 V(0, 0) = 1.0 / (n + 1);
                 return V;
             }
@@ -62,10 +62,10 @@ namespace PolynomialFiltering {
                 RealMatrix V;
                 n = this->n;
                 if (n < this->order) {
-                    return ArrayXXd::Zero(this->order + 1, this->order + 1);
+                    return ArrayXXd::Zero[this->order + 1, this->order + 1];
                 }
                 tau = this->tau;
-                V = ArrayXXd::Zero(this->order + 1, this->order + 1);
+                V = ArrayXXd::Zero[this->order + 1, this->order + 1];
                 V(0, 0) = 2 * (2 * n + 1) / (pow(n, 2) + 3 * n + 2);
                 V(0, 1) = 6 / (tau * (n + 1) * (n + 2));
                 V(1, 0) = V(0, 1);
@@ -94,10 +94,10 @@ namespace PolynomialFiltering {
                 RealMatrix V;
                 n = this->n;
                 if (n < this->order) {
-                    return ArrayXXd::Zero(this->order + 1, this->order + 1);
+                    return ArrayXXd::Zero[this->order + 1, this->order + 1];
                 }
                 tau = this->tau;
-                V = ArrayXXd::Zero(this->order + 1, this->order + 1);
+                V = ArrayXXd::Zero[this->order + 1, this->order + 1];
                 V(0, 0) = 3 * (3 * pow(n, 2) + 3 * n + 2) / (pow(n, 3) + 6 * pow(n, 2) + 11 * n + 6);
                 V(0, 1) = 18 * (2 * n + 1) / (tau * (n + 1) * (n + 2) * (n + 3));
                 V(1, 0) = V(0, 1);
@@ -133,10 +133,10 @@ namespace PolynomialFiltering {
                 RealMatrix V;
                 n = this->n;
                 if (n < this->order) {
-                    return ArrayXXd::Zero(this->order + 1, this->order + 1);
+                    return ArrayXXd::Zero[this->order + 1, this->order + 1];
                 }
                 tau = this->tau;
-                V = ArrayXXd::Zero(this->order + 1, this->order + 1);
+                V = ArrayXXd::Zero[this->order + 1, this->order + 1];
                 V(0, 0) = 8 * (2 * pow(n, 3) + 3 * pow(n, 2) + 7 * n + 3) / (pow(n, 4) + 10 * pow(n, 3) + 35 * pow(n, 2) + 50 * n + 24);
                 V(0, 1) = 20 * (6 * pow(n, 2) + 6 * n + 5) / (tau * (pow(n, 4) + 10 * pow(n, 3) + 35 * pow(n, 2) + 50 * n + 24));
                 V(1, 0) = V(0, 1);
@@ -181,10 +181,10 @@ namespace PolynomialFiltering {
                 RealMatrix V;
                 n = this->n;
                 if (n < this->order) {
-                    return ArrayXXd::Zero(this->order + 1, this->order + 1);
+                    return ArrayXXd::Zero[this->order + 1, this->order + 1];
                 }
                 tau = this->tau;
-                V = ArrayXXd::Zero(this->order + 1, this->order + 1);
+                V = ArrayXXd::Zero[this->order + 1, this->order + 1];
                 V(0, 0) = 5 * (5 * pow(n, 4) + 10 * pow(n, 3) + 55 * pow(n, 2) + 50 * n + 24) / (pow(n, 5) + 15 * pow(n, 4) + 85 * pow(n, 3) + 225 * pow(n, 2) + 274 * n + 120);
                 V(0, 1) = 50 * (6 * pow(n, 3) + 9 * pow(n, 2) + 23 * n + 10) / (tau * (pow(n, 5) + 15 * pow(n, 4) + 85 * pow(n, 3) + 225 * pow(n, 2) + 274 * n + 120));
                 V(1, 0) = V(0, 1);
@@ -238,10 +238,10 @@ namespace PolynomialFiltering {
                 RealMatrix V;
                 n = this->n;
                 if (n < this->order) {
-                    return ArrayXXd::Zero(this->order + 1, this->order + 1);
+                    return ArrayXXd::Zero[this->order + 1, this->order + 1];
                 }
                 tau = this->tau;
-                V = ArrayXXd::Zero(this->order + 1, this->order + 1);
+                V = ArrayXXd::Zero[this->order + 1, this->order + 1];
                 V(0, 0) = 6 * (6 * pow(n, 5) + 15 * pow(n, 4) + 160 * pow(n, 3) + 225 * pow(n, 2) + 314 * n + 120) / (pow(n, 6) + 21 * pow(n, 5) + 175 * pow(n, 4) + 735 * pow(n, 3) + 1624 * pow(n, 2) + 1764 * n + 720);
                 V(0, 1) = 126 * (5 * pow(n, 4) + 10 * pow(n, 3) + 55 * pow(n, 2) + 50 * n + 28) / (tau * (pow(n, 6) + 21 * pow(n, 5) + 175 * pow(n, 4) + 735 * pow(n, 3) + 1624 * pow(n, 2) + 1764 * n + 720));
                 V(1, 0) = V(0, 1);

@@ -34,9 +34,9 @@ namespace PolynomialFiltering {
                 this->dtau = 0;
                 this->t0 = 0;
                 this->t = 0;
-                this->Z = ArrayXd::Zero(this->order + 1);
+                this->Z = ArrayXd::Zero[this->order + 1];
                 this->tau = tau;
-                this->D = ArrayXd::Zero(this->order + 1);
+                this->D = ArrayXd::Zero[this->order + 1];
                 for (int d = 0; d < this->order + 1; d++) {
                     this->D(d) = pow(this->tau, d);
                 }

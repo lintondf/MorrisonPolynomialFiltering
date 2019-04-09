@@ -24,7 +24,7 @@ namespace PolynomialFiltering {
         RealVector AbstractFilter::conformState (const int order, const RealVector& state) {
             RealVector Z;
             int m;
-            Z = ArrayXd::Zero(order + 1);
+            Z = ArrayXd::Zero[order + 1];
             m = min(order + 1, state.size());
             Z.segment(0, m) = state.segment(0, m);
             return Z;

@@ -55,15 +55,15 @@ class BaseScalarJudge(IJudge):
         '''@iJ : int'''
         '''@dG : float'''
         for iJ in range(0, len(judges)) :
-            if (self.judges[iJ].getFilter().getLastVariance() < 1.0 and self.judges[iJ].getGOF() > self.gofThreshold) :
+            if (judges[iJ].getFilter().getLastVariance() < 1.0 and judges[iJ].getGOF() > self.gofThreshold) :
                 if (iBest < 0) :
                     iBest = iJ;
-                    bestGOF = self.judges[iJ].getGOF();
-                elif (self.judges[iJ].getGOF() < bestGOF) : # better; but significant?
-                    dG = bestGOF - self.judges[iJ].getGOF();
+                    bestGOF = judges[iJ].getGOF();
+                elif (judges[iJ].getGOF() < bestGOF) : # better; but significant?
+                    dG = bestGOF - judges[iJ].getGOF();
                     if (dG > chi2Ppf(pSwitch, 1)) :
                         iBest = iJ;
-                        bestGOF = self.judges[iJ].getGOF();
+                        bestGOF = judges[iJ].getGOF();
         return iBest;
     
     @virtual

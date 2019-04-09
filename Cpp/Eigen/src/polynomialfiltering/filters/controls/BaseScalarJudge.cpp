@@ -38,15 +38,15 @@ namespace PolynomialFiltering {
                     bestGOF = 0;
                     double dG;
                     for (int iJ = 0; iJ < judges.size(); iJ++) {
-                        if (this->judges(iJ).getFilter->getLastVariance() < 1.0 && this->judges(iJ).getGOF() > this->gofThreshold) {
+                        if (judges[iJ].getFilter->getLastVariance() < 1.0 && judges[iJ].getGOF() > this->gofThreshold) {
                             if (iBest < 0) {
                                 iBest = iJ;
-                                bestGOF = this->judges(iJ).getGOF();
-                            } else if (this->judges(iJ).getGOF() < bestGOF) {
-                                dG = bestGOF - this->judges(iJ).getGOF();
+                                bestGOF = judges[iJ].getGOF();
+                            } else if (judges[iJ].getGOF() < bestGOF) {
+                                dG = bestGOF - judges[iJ].getGOF();
                                 if (dG > chi2Ppf(pSwitch, 1)) {
                                     iBest = iJ;
-                                    bestGOF = this->judges(iJ).getGOF();
+                                    bestGOF = judges[iJ].getGOF();
                                 }
                             }
                         }

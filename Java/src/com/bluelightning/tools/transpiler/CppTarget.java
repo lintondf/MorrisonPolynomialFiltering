@@ -602,16 +602,34 @@ public class CppTarget extends AbstractLanguageTarget {
 					programmer.closeParenthesis( out );
 					return 0;
 				} else if (tln.getLeftSibling() != null) {  // non-slice access
+					boolean isListAccess = false;
+					if (tln.getLeftSibling() instanceof TranslationSymbolNode) {
+						Symbol source = ((TranslationSymbolNode) tln.getLeftSibling()).getSymbol();
+//						System.out.println("Symbol: " + source);
+						if (source != null && source.getType().startsWith("List["))
+							isListAccess = true;
+					} else if (tln.getLeftSibling() instanceof TranslationUnaryNode) {
+						Symbol source = ((TranslationUnaryNode) tln.getLeftSibling()).getRhsSymbol();
+//						System.out.println("Unary: " + source);
+						if (source != null && source.getType().startsWith("List["))
+							isListAccess = true;
+					}
 //					System.out.println( tln.getLeftSibling().toString() );
 //					System.out.println(tln.traverse(1)); ////@@
-					programmer.openParenthesis( out );
+					if (isListAccess)
+						programmer.openBracket(out);
+					else
+						programmer.openParenthesis( out );
 					for (int i = 0; i < tln.getChildCount(); i++) {
 						TranslationNode subscript = tln.getChild(i);
 						if (i != 0)
 							out.append(", "); //->programmer
 						emitChild(out, scope, tln.getChild(i));
 					}
-					programmer.closeParenthesis( out );
+					if (isListAccess)
+						programmer.closeBracket(out);
+					else
+						programmer.closeParenthesis( out ); 
 					return 0;
 				}
 			}

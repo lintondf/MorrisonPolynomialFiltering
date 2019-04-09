@@ -68,11 +68,11 @@ namespace PolynomialFiltering {
             }
 
             RealVector EmpFmpPair::_gamma (const double n) {
-                return ArrayXXd::Zero(this->order + 1, 1);
+                return ArrayXXd::Zero[this->order + 1, 1];
             }
 
             RealMatrix EmpFmpPair::_VRF () {
-                return ArrayXXd::Zero(this->order + 1, this->order + 1);
+                return ArrayXXd::Zero[this->order + 1, this->order + 1];
             }
 
     }; // namespace Components

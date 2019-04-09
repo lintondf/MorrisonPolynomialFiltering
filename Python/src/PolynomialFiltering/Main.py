@@ -73,8 +73,7 @@ class AbstractFilter(ABC):
             state(vector) - arbitrary length input state vector
         
         Returns:
-            conformed state vector with order+1 elements
-        
+            conformed state vector with order+1 elements        
         """
         '''@Z : vector'''
         '''@m : int'''

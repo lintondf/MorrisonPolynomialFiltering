@@ -21,7 +21,7 @@ public class Documenter {
 	protected HashMap<String, String> documentation = new HashMap<>();
 	protected File scratch = null;
 	
-	final static String pythonPath = "C:\\Users\\NOOK\\Anaconda3\\Scripts\\doxypypy.exe";
+	final static String pythonPath = System.getenv("HOMEPATH") + "\\Anaconda3\\Scripts\\doxypypy.exe";
 	
 	public static class DoxygenConfiguration {
 		String blockCommentStart = "///// ";
