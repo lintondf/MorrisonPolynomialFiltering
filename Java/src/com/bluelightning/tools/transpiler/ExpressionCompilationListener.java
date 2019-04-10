@@ -193,6 +193,20 @@ class ExpressionCompilationListener extends LcdPythonBaseListener {
 		public void enterFuncdef(LcdPythonParser.FuncdefContext ctx) {
 			//transpiler.dumpChildren(ctx);			
 			scope = this.transpiler.scopeMap.get(ctx.getPayload());
+			Symbol func = transpiler.lookup(scope.getParent(), scope.getLast());
+			if (func != null && func.hasDecorator("@ignore")) {
+				transpiler.dispatcher.setIgnoring(true);
+			} else {
+				if (! func.isConstructor() ) {
+					if (ctx.getChildCount() <= 5) {
+						this.transpiler.reportError(ctx.start, "Non-Constructor functions must have declared return type");
+					}
+				} else {
+					if (ctx.getChildCount() > 5) {
+						this.transpiler.reportError(ctx.start, "Constructor functions must NOT have declared return type");
+					}
+				}
+			}			
 //			System.out.println("function > " + scope);
 			transpiler.dispatcher.startMethod(scope);
 		}
@@ -207,6 +221,7 @@ class ExpressionCompilationListener extends LcdPythonBaseListener {
 			scope = scope.getParent();
 //			System.out.println("function < " + scope);
 			transpiler.dispatcher.finishMethod(scope);
+			transpiler.dispatcher.setIgnoring(false);
 		}
 		
 		@Override 
@@ -306,10 +321,12 @@ class ExpressionCompilationListener extends LcdPythonBaseListener {
 					// handle special case of returning new object
 					TranslationSymbolNode tsn = (TranslationSymbolNode) expressionRoot.getFirstChild();
 					if (tsn.getSymbol().isClass() && !tsn.getSymbol().isEnum()) {
-						transpiler.dispatcher.emitNewExpression(scope, tsn.getSymbol().getName(), expressionRoot);
-						transpiler.dispatcher.finishStatement();
-						expressionRoot = null;
-						return;
+						if (! (tsn.getRightSibling() instanceof TranslationUnaryNode)) {
+							transpiler.dispatcher.emitNewExpression(scope, tsn.getSymbol().getName(), expressionRoot);
+							transpiler.dispatcher.finishStatement();
+							expressionRoot = null;
+							return;
+						}
 					}
 				}
 				transpiler.dispatcher.emitSubExpression(scope, expressionRoot);
@@ -539,7 +556,7 @@ class ExpressionCompilationListener extends LcdPythonBaseListener {
 								for (int iList = 0; iList < list.getChildCount(); iList += 2) {
 									TranslationNode node = getOperandNode(ctx, tln, list.getChild(iList).getPayload());
 									if (node == null) {
-										transpiler.dumpChildren((RuleNode) list, 1);
+										//transpiler.dumpChildren((RuleNode) list, 1);
 										transpiler.reportError("Untranlated: " + list.getChild(iList).getText() + " " + list.getChild(iList).toStringTree(transpiler.parser) );
 										return;
 									}

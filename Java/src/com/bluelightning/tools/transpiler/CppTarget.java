@@ -94,14 +94,14 @@ public class CppTarget extends AbstractLanguageTarget {
 			}
 			programmer.closeParenthesis( out );
 		} else {
-			programmer.openBracket( out );
+			programmer.openParenthesis( out ); //programmer.openBracket( out );
 			for (int i = 0; i < child.getChildCount(); i++) {
 				if (i > 0) {
 					out.append(", "); //->programmer
 				}
 				i += emitChild( out, scope, child.getChild(i));
 			}
-			programmer.closeBracket( out );
+			programmer.closeParenthesis( out );// programmer.closeBracket( out );
 		}
 	}
 
@@ -255,10 +255,10 @@ public class CppTarget extends AbstractLanguageTarget {
 				String remappedType = programmer.remapType(symbol); 
 				Symbol outputClass = Transpiler.instance().lookup(scope, remappedType);
 				if (outputClass != null && outputClass.isClass() && !outputClass.isEnum()) { //if returning a class wrap in smart pointer
-					remappedType = String.format("shared_ptr<%s>", outputClass.getName() ); //->programmer
+					remappedType = String.format("std::shared_ptr<%s>", outputClass.getName() ); //->programmer
 				}
 				String type = remappedType + " ";
-				if (name.equals("__init__")) {
+				if (symbol.isConstructor()) {
 					name = currentClass;
 					type = "";
 				}
@@ -748,7 +748,7 @@ public class CppTarget extends AbstractLanguageTarget {
 			return;
 		Symbol type = Transpiler.instance().lookup(currentScope, cppType);
 		if (type != null && type.isClass() && !type.isEnum()) {
-			cppType = String.format("shared_ptr<%s>", cppType );
+			cppType = String.format("std::shared_ptr<%s>", cppType );
 		}
 		String declaration = String.format("%s %s", cppType, symbol.getName() );
 		String endLine = ";";

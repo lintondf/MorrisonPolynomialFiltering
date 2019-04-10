@@ -39,7 +39,7 @@ namespace PolynomialFiltering {
                 return this->worker->getState();
             }
 
-            shared_ptr<AbstractRecursiveFilter> ManagedFilterBase::getWorker () {
+            std::shared_ptr<AbstractRecursiveFilter> ManagedFilterBase::getWorker () {
                 return this->worker;
             }
 

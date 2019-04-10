@@ -128,9 +128,9 @@ namespace PolynomialFiltering {
                 /// 
                 RealMatrix getVRF();
             protected:
-                shared_ptr<EMPBase> emp;
-                shared_ptr<FMPBase> fmp;
-                shared_ptr<AbstractRecursiveFilter> current;
+                std::shared_ptr<EMPBase> emp;
+                std::shared_ptr<FMPBase> fmp;
+                std::shared_ptr<AbstractRecursiveFilter> current;
                 double _gammaParameter(const double t, const double dtau);
                 RealVector _gamma(const double n);
                 RealMatrix _VRF();

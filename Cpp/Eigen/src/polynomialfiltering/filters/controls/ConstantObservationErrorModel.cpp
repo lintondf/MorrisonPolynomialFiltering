@@ -17,6 +17,11 @@ namespace PolynomialFiltering {
         namespace controls {
             using namespace Eigen;
             
+                ConstantObservationErrorModel::ConstantObservationErrorModel (const RealMatrix& R) {
+                    this->R = R;
+                    this->iR = inv(R);
+                }
+
                 ConstantObservationErrorModel::ConstantObservationErrorModel (const RealMatrix& R, const RealMatrix& inverseR) {
                     this->R = R;
                     this->iR = inverseR;

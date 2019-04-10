@@ -116,6 +116,8 @@ public class Transpiler {
 	}
 	
 	public void reportError(String r) {
+		if (dispatcher.amIgnoring())
+			return;
 		System.out.println("!!!!!!!!!!!!!! " + r );
 		errorReport.append(r);
 		errorReport.append('\n');
@@ -221,6 +223,7 @@ public class Transpiler {
 	protected class TargetDispatcher implements ILanguageTarget {
 		
 		List<ILanguageTarget> targets = new ArrayList<>();
+		List<ILanguageTarget> ignoring = new ArrayList<>();
 		
 		public TargetDispatcher() {}
 		
@@ -228,7 +231,24 @@ public class Transpiler {
 			target.setId( targets.size() );
 			targets.add(target);
 		}
+		
+		public boolean amIgnoring() {
+			return ! ignoring.isEmpty();
+		}
 
+		public void setIgnoring(boolean b) {
+			if (b) {
+				ignoring.clear();
+				ignoring.addAll(targets);
+				targets.clear();
+			} else {
+				if (targets.isEmpty()) {
+					targets.addAll(ignoring);
+					ignoring.clear();
+				}
+			}
+		}
+		
 		@Override
 		public void startModule(Scope scope, boolean headerOnly) {
 			for (ILanguageTarget target : targets) {
@@ -376,7 +396,7 @@ public class Transpiler {
 				target.addParameterClass( className );
 			}
 		}
-		
+
 	}
 
 	protected TargetDispatcher dispatcher = new TargetDispatcher();

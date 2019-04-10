@@ -76,7 +76,7 @@ namespace PolynomialFiltering {
                     return this->chi2;
                 }
 
-                shared_ptr<AbstractFilterWithCovariance> BaseScalarJudge::getFilter () {
+                std::shared_ptr<AbstractFilterWithCovariance> BaseScalarJudge::getFilter () {
                     return this->f;
                 }
 

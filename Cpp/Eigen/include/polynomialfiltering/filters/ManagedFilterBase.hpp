@@ -32,7 +32,7 @@ namespace PolynomialFiltering {
                 int getN();
                 double getTime();
                 RealVector getState();
-                shared_ptr<AbstractRecursiveFilter> getWorker();
+                std::shared_ptr<AbstractRecursiveFilter> getWorker();
                 void setObservationInverseR(const RealMatrix& inverseR);
                 void setObservationErrorModel(const std::shared_ptr<IObservationErrorModel> errorModel);
                 void setJudge(const std::shared_ptr<IJudge> judge);
@@ -42,10 +42,10 @@ namespace PolynomialFiltering {
                 virtual double getGoodnessOfFit() = 0;
             protected:
                 double INITIAL_SSR; ///<  start point for smoothed SSR 
-                shared_ptr<AbstractRecursiveFilter> worker; ///<  that which is managed
-                shared_ptr<IObservationErrorModel> errorModel; ///<  observation covariance/precision matrix source
-                shared_ptr<IJudge> judge; ///<  residuals-based observation editing and goodness-of-fit evaluator
-                shared_ptr<IMonitor> monitor; ///<  filter state monitoring and control
+                std::shared_ptr<AbstractRecursiveFilter> worker; ///<  that which is managed
+                std::shared_ptr<IObservationErrorModel> errorModel; ///<  observation covariance/precision matrix source
+                std::shared_ptr<IJudge> judge; ///<  residuals-based observation editing and goodness-of-fit evaluator
+                std::shared_ptr<IMonitor> monitor; ///<  filter state monitoring and control
         }; // class ManagedFilterBase 
 
     }; // namespace filters

@@ -10,4 +10,6 @@
 	'''@t : float | time stamp'''
 2. Python docstrings using double quotes '"""' are copied/transliterated to the generated target sources
 3. Class and function docstrings must immediately follow the declaration with the exception of 'def __init__' docstrings which must follow any 'super' statement.
-4. References to .shape elements should be manually cast to integer
+4. References to .shape elements are generally transpiled to unsigned values in target languages.  Cast them using int() when using as int values.
+5. Python negative array references should not be used.
+	1. Instead of A[-1] use A[A.shape[0]-1] 

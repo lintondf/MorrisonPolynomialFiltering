@@ -366,7 +366,7 @@ namespace PolynomialFiltering {
         /// 
         ///  @return          expanding memory filter object
         /// 
-        shared_ptr<EMPBase> makeEMP(const int order, const double tau);
+        std::shared_ptr<EMPBase> makeEMP(const int order, const double tau);
     }; // namespace Components
 }; // namespace PolynomialFiltering
 

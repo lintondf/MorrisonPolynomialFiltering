@@ -24,7 +24,7 @@ namespace PolynomialFiltering {
         RealVector AbstractFilter::conformState (const int order, const RealVector& state) {
             RealVector Z;
             int m;
-            Z = ArrayXd::Zero[order + 1];
+            Z = ArrayXd::Zero(order + 1);
             m = min(order + 1, state.size());
             Z.segment(0, m) = state.segment(0, m);
             return Z;
@@ -94,11 +94,15 @@ namespace PolynomialFiltering {
         }
 
         double AbstractFilterWithCovariance::getFirstVariance () {
-            return this->getCovariance(0, 0);
+            RealMatrix V;
+            V = this->getCovariance();
+            return V(0, 0);
         }
 
         double AbstractFilterWithCovariance::getLastVariance () {
-            return this->getCovariance( - 1,  - 1);
+            RealMatrix V;
+            V = this->getCovariance();
+            return V(V.rows() - 1, V.cols() - 1);
         }
 
 }; // namespace PolynomialFiltering

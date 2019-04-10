@@ -279,7 +279,9 @@ class AbstractFilterWithCovariance(AbstractFilter) :
         Returns:
             0th derivative input to output variance ratio
         """
-        return self.getCovariance()[0,0]; # TODO more efficient
+        '''@V:array'''
+        V = self.getCovariance();
+        return V[0,0]; # TODO more efficient
 
     def getLastVariance(self) -> float:
         """
@@ -291,7 +293,9 @@ class AbstractFilterWithCovariance(AbstractFilter) :
         Returns:
             'order'th derivative input to output variance ratio
         """
-        return self.getCovariance()[-1, -1]; # TODO more efficient
+        '''@V:array'''
+        V = self.getCovariance();
+        return V[V.shape[0]-1, V.shape[1]-1]; # TODO more efficient
 
  
 

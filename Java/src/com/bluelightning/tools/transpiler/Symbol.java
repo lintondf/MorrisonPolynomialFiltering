@@ -179,5 +179,19 @@ public class Symbol {
 	public void setClassReference( boolean tf) {
 		this.isClassRef = tf;
 	}
+	
+	public boolean isConstructor() {
+		if (this.getName().equals("__init__"))
+			return true;
+		return this.hasDecorator("@constructor");
+	}
+
+	public boolean hasDecorator(String string) {
+		if (this.functionParametersInfo == null)
+			return false;
+		if (this.functionParametersInfo.decorators == null || this.functionParametersInfo.decorators.isEmpty())
+			return false;
+		return this.functionParametersInfo.decorators.contains(string);
+	}
 
 }

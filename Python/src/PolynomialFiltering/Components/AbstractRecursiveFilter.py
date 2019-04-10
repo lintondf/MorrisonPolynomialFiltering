@@ -100,7 +100,7 @@ class AbstractRecursiveFilter(AbstractFilter):
         '''@Z : vector'''
         '''@m : int'''
         
-        return AbstractFilter.conformState(self.order, state)
+        return AbstractRecursiveFilter.conformState(self.order, state)
         
     def _normalizeTime(self, t : float) -> float:
         """

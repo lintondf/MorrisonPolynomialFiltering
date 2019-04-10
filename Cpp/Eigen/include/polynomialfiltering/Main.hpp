@@ -60,7 +60,6 @@ namespace PolynomialFiltering {
             /// 
             ///  @return  conformed state vector with order+1 elements
             /// 
-            /// 
             static RealVector conformState(const int order, const RealVector& state);
 
             ///// @brief Return a state transition matrix of size N for time step dt

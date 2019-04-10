@@ -34,7 +34,7 @@ namespace PolynomialFiltering {
                     virtual bool scalarUpdate(const double e, const RealMatrix& iR) = 0;
                     virtual bool vectorUpdate(const RealVector& e, const RealMatrix& iR) = 0;
                     virtual double getChi2() = 0;
-                    virtual shared_ptr<AbstractFilterWithCovariance> getFilter() = 0;
+                    virtual std::shared_ptr<AbstractFilterWithCovariance> getFilter() = 0;
                     virtual double getGOF() = 0;
             }; // class IJudge 
 

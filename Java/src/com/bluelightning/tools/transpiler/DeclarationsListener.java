@@ -102,15 +102,6 @@ class DeclarationsListener extends LcdPythonBaseListener {
 //			transpiler.dumpChildren( ctx );
 			Scope currentScope = scopeStack.peek();
 			String name = getChildText(ctx, 1);
-			if (! name.startsWith("__init__")) {
-				if (ctx.getChildCount() <= 5) {
-					this.transpiler.reportError(ctx.start, "Non-init functions must have declared return type");
-				}
-			} else {
-				if (ctx.getChildCount() > 5) {
-					this.transpiler.reportError(ctx.start, "init functions must NOT have declared return type");
-				}
-			}
 			Scope functionScope = currentScope.getChild(Scope.Level.FUNCTION, name);
 			if (functionScope == null) {
 				this.transpiler.reportError(ctx.start, "Invalid function scope");
@@ -127,8 +118,12 @@ class DeclarationsListener extends LcdPythonBaseListener {
 				ParseTree parameters = parameterDeclaration.getChild(1);
 				for (int i = 0; i < parameters.getChildCount(); i++) {
 					String declaration = this.transpiler.valueMap.get(parameters.getChild(i).getPayload()).trim();
-					if (declaration.equals(","))
+					if (declaration.equals(",")) 
 						continue;
+					if (declaration.equals("*")) { // skip any unhandled varargs
+						i++;
+						continue;
+					}
 					if (declaration.equals("=")) {
 						String initialization = this.transpiler.valueMap.get(parameters.getChild(i+1).getPayload()).trim();
 						fpi.parameters.get(fpi.parameters.size()-1).setInitialization(initialization);
@@ -139,6 +134,8 @@ class DeclarationsListener extends LcdPythonBaseListener {
 						declaration += ":"+currentScope.getLast();
 					}
 					Symbol p = declareSymbol( ctx.getStart(), declaration);
+					if (p == null)
+						continue;
 					if (! p.getName().equals("self")) {
 						Symbol c = transpiler.lookupClass(p.getType());
 						if (c != null) {

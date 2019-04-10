@@ -34,11 +34,11 @@ namespace PolynomialFiltering {
                     virtual bool scalarUpdate(const double e, const RealMatrix& iR);
                     virtual bool vectorUpdate(const RealVector& e, const RealMatrix& iR);
                     virtual double getChi2();
-                    virtual shared_ptr<AbstractFilterWithCovariance> getFilter();
+                    virtual std::shared_ptr<AbstractFilterWithCovariance> getFilter();
                     virtual double getGOF();
                 protected:
                     RealMatrix chi2Starts; ///<  chi2 initialization values corresponding to 0.999999 Chi2 probability indexed by filter order
-                    shared_ptr<AbstractFilterWithCovariance> f; ///<  filter to judge
+                    std::shared_ptr<AbstractFilterWithCovariance> f; ///<  filter to judge
                     double chi2Smoothing; ///<  Chi2 smoothing factor for goodness-of-fit; 0 no smoothing; 1 ignore residuals completely
                     double chi2; ///<  Chi2 statistic for last update
                     double chi2Smoothed; ///<  Smoothed Chi2 statistic

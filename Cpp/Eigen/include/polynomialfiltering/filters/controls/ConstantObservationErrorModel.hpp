@@ -23,12 +23,13 @@ namespace PolynomialFiltering {
         namespace controls {
             class ConstantObservationErrorModel : public IObservationErrorModel {
                 public:
-                    ConstantObservationErrorModel(const RealMatrix& R, const RealMatrix& inverseR);
                     RealMatrix getPrecisionMatrix(const std::shared_ptr<AbstractFilterWithCovariance> f, const double t, const RealVector& y, const int observationId=-1);
                     RealMatrix getCovarianceMatrix(const std::shared_ptr<AbstractFilterWithCovariance> f, const double t, const RealVector& y, const int observationId=-1);
                 protected:
                     RealMatrix R; ///<  observation covariance matrix
                     RealMatrix iR; ///<  observation precision (inverse covariance) matrix
+                    ConstantObservationErrorModel(const RealMatrix& R);
+                    ConstantObservationErrorModel(const RealMatrix& R, const RealMatrix& inverseR);
             }; // class ConstantObservationErrorModel 
 
         }; // namespace controls

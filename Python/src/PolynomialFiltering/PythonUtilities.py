@@ -13,6 +13,12 @@ from scipy.stats import chi2, f;
 def virtual(funcobj):
     return funcobj;
 
+def constructor(funcobj):
+    return funcobj;
+
+def ignore(funcobj):
+    return funcobj;
+
 def chi2Cdf(x : float, df : int) -> float:
     return chi2.cdf(1e-9 + x, df)
 

@@ -286,7 +286,7 @@ namespace PolynomialFiltering {
         /// 
         ///  @return          fading memory filter object
         /// 
-        shared_ptr<FMPBase> makeFMP(const int order, const double theta, const double tau);
+        std::shared_ptr<FMPBase> makeFMP(const int order, const double theta, const double tau);
 
         ///// @brief     Compute the fading factor which give the target value
         /// 

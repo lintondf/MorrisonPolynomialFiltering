@@ -40,7 +40,7 @@ namespace PolynomialFiltering {
                 double t;
                 RealMatrix V;
                 t = this->theta;
-                V = ArrayXXd::Zero[this->order + 1, this->order + 1];
+                V = ArrayXXd::Zero(this->order + 1, this->order + 1);
                 V(0, 0) = ( - t + 1) / (t + 1);
                 return V;
             }
@@ -62,7 +62,7 @@ namespace PolynomialFiltering {
                 RealMatrix V;
                 t = this->theta;
                 u = this->tau;
-                V = ArrayXXd::Zero[this->order + 1, this->order + 1];
+                V = ArrayXXd::Zero(this->order + 1, this->order + 1);
                 V(0, 0) = ( - 5 * pow(t, 3) + pow(t, 2) + 3 * t + 1) / (pow(t, 3) + 3 * pow(t, 2) + 3 * t + 1);
                 V(0, 1) = pow((t - 1), 2) * (3 * t + 1) / (u * pow((t + 1), 3));
                 V(1, 0) = V(0, 1);
@@ -91,7 +91,7 @@ namespace PolynomialFiltering {
                 RealMatrix V;
                 t = this->theta;
                 u = this->tau;
-                V = ArrayXXd::Zero[this->order + 1, this->order + 1];
+                V = ArrayXXd::Zero(this->order + 1, this->order + 1);
                 V(0, 0) = ( - 19 * pow(t, 5) - 5 * pow(t, 4) + 8 * pow(t, 3) + 10 * pow(t, 2) + 5 * t + 1) / (pow(t, 5) + 5 * pow(t, 4) + 10 * pow(t, 3) + 10 * pow(t, 2) + 5 * t + 1);
                 V(0, 1) = (3.0 / 2.0) * (14 * pow(t, 5) - 13 * pow(t, 4) - 10 * pow(t, 3) + 4 * pow(t, 2) + 4 * t + 1) / (u * (pow(t, 5) + 5 * pow(t, 4) + 10 * pow(t, 3) + 10 * pow(t, 2) + 5 * t + 1));
                 V(1, 0) = V(0, 1);
@@ -129,7 +129,7 @@ namespace PolynomialFiltering {
                 RealMatrix V;
                 t = this->theta;
                 u = this->tau;
-                V = ArrayXXd::Zero[this->order + 1, this->order + 1];
+                V = ArrayXXd::Zero(this->order + 1, this->order + 1);
                 V(0, 0) = ( - 69 * pow(t, 7) - 35 * pow(t, 6) + 7 * pow(t, 5) + 33 * pow(t, 4) + 35 * pow(t, 3) + 21 * pow(t, 2) + 7 * t + 1) / (pow(t, 7) + 7 * pow(t, 6) + 21 * pow(t, 5) + 35 * pow(t, 4) + 35 * pow(t, 3) + 21 * pow(t, 2) + 7 * t + 1);
                 V(0, 1) = (1.0 / 6.0) * (625 * pow(t, 7) - 289 * pow(t, 6) - 541 * pow(t, 5) - 211 * pow(t, 4) + 167 * pow(t, 3) + 169 * pow(t, 2) + 69 * t + 11) / (u * (pow(t, 7) + 7 * pow(t, 6) + 21 * pow(t, 5) + 35 * pow(t, 4) + 35 * pow(t, 3) + 21 * pow(t, 2) + 7 * t + 1));
                 V(1, 0) = V(0, 1);
@@ -176,7 +176,7 @@ namespace PolynomialFiltering {
                 RealMatrix V;
                 t = this->theta;
                 u = this->tau;
-                V = ArrayXXd::Zero[this->order + 1, this->order + 1];
+                V = ArrayXXd::Zero(this->order + 1, this->order + 1);
                 V(0, 0) = ( - 251 * pow(t, 9) - 159 * pow(t, 8) - 36 * pow(t, 7) + 66 * pow(t, 6) + 124 * pow(t, 5) + 126 * pow(t, 4) + 84 * pow(t, 3) + 36 * pow(t, 2) + 9 * t + 1) / (pow(t, 9) + 9 * pow(t, 8) + 36 * pow(t, 7) + 84 * pow(t, 6) + 126 * pow(t, 5) + 126 * pow(t, 4) + 84 * pow(t, 3) + 36 * pow(t, 2) + 9 * t + 1);
                 V(0, 1) = (5.0 / 12.0) * (1100 * pow(t, 9) - 182 * pow(t, 8) - 816 * pow(t, 7) - 707 * pow(t, 6) - 170 * pow(t, 5) + 285 * pow(t, 4) + 292 * pow(t, 3) + 151 * pow(t, 2) + 42 * t + 5) / (u * (pow(t, 9) + 9 * pow(t, 8) + 36 * pow(t, 7) + 84 * pow(t, 6) + 126 * pow(t, 5) + 126 * pow(t, 4) + 84 * pow(t, 3) + 36 * pow(t, 2) + 9 * t + 1));
                 V(1, 0) = V(0, 1);
@@ -236,7 +236,7 @@ namespace PolynomialFiltering {
                 RealMatrix V;
                 t = this->theta;
                 u = this->tau;
-                V = ArrayXXd::Zero[this->order + 1, this->order + 1];
+                V = ArrayXXd::Zero(this->order + 1, this->order + 1);
                 V(0, 1) = (1.0 / 60.0) * (114954 * pow(t, 11) + 3126 * pow(t, 10) - 64785 * pow(t, 9) - 80515 * pow(t, 8) - 52688 * pow(t, 7) - 6184 * pow(t, 6) + 29342 * pow(t, 5) + 30370 * pow(t, 4) + 18110 * pow(t, 3) + 6698 * pow(t, 2) + 1435 * t + 137) / (u * (pow(t, 11) + 11 * pow(t, 10) + 55 * pow(t, 9) + 165 * pow(t, 8) + 330 * pow(t, 7) + 462 * pow(t, 6) + 462 * pow(t, 5) + 330 * pow(t, 4) + 165 * pow(t, 3) + 55 * pow(t, 2) + 11 * t + 1));
                 V(1, 0) = V(0, 1);
                 V(0, 2) = (1.0 / 4.0) * ( - 11102 * pow(t, 11) + 10142 * pow(t, 10) + 9739 * pow(t, 9) + 821 * pow(t, 8) - 6402 * pow(t, 7) - 6238 * pow(t, 6) - 420 * pow(t, 5) + 1380 * pow(t, 4) + 1320 * pow(t, 3) + 600 * pow(t, 2) + 145 * t + 15) / (pow(u, 2) * (pow(t, 11) + 11 * pow(t, 10) + 55 * pow(t, 9) + 165 * pow(t, 8) + 330 * pow(t, 7) + 462 * pow(t, 6) + 462 * pow(t, 5) + 330 * pow(t, 4) + 165 * pow(t, 3) + 55 * pow(t, 2) + 11 * t + 1));
@@ -275,7 +275,7 @@ namespace PolynomialFiltering {
                 return V;
             }
 
-        shared_ptr<FMPBase> makeFMP (const int order, const double theta, const double tau) {
+        std::shared_ptr<FMPBase> makeFMP (const int order, const double theta, const double tau) {
             if (order == 0) {
                 return std::shared_ptr<FMP0>(new FMP0(theta, tau));
             } else if (order == 1) {
