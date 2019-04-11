@@ -27,12 +27,12 @@ class ConstantObservationErrorModel(IObservationErrorModel):
             self._2_ConstantObservationErrorModel(args[0], args[1]);
         
     @constructor
-    def _1_ConstantObservationErrorModel(self, R : array):
+    def ConstantObservationErrorModel_1(self, R : array):
         self.R = R;
         self.iR = inv(R);
 
     @constructor
-    def _2_ConstantObservationErrorModel(self, R : array, inverseR : array):
+    def ConstantObservationErrorModel_2(self, R : array, inverseR : array):
         self.R = R;
         self.iR = inverseR;
 

@@ -7,7 +7,12 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Hashtable;
+
+//import org.cellprofiler.javabridge.CPython;
+//import org.cellprofiler.javabridge.CPython.WrappedException;
 
 import com.bluelightning.tools.Execute;
 import com.bluelightning.tools.transpiler.Scope.Level;
@@ -149,4 +154,64 @@ public class Documenter {
 		documentation.keySet().forEach(System.out::println);
 	}
 	
+//	public static void main(String[] args) {
+//		CPython cpython = new CPython();
+//        ArrayList<String> result = new ArrayList<String>();
+//        Hashtable locals = new Hashtable();
+//        locals.put("result", result);
+//        locals.put("root", "Hello");
+//        StringBuilder script = new StringBuilder();
+//        script.append("import os\n");
+//        script.append("import javabridge\n");
+//        script.append("root = javabridge.to_string(root)");
+//        script.append("result = javabridge.JWrapper(result)");
+//        script.append("for path, dirnames, filenames in os.walk(root):\n");
+//        script.append("  if 'waldo' in filenames:");
+//        script.append("     result.add(path)");
+//        try {
+//			cpython.exec(script.toString(), locals, null);
+//	        System.out.println(result);
+//		} catch (WrappedException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+////		ArrayList<String> result = new ArrayList<String>();
+////		String path = "C:\\Users\\NOOK\\GITHUB\\MorrisonPolynomialFiltering\\Python\\src\\DoxygenTest.py";
+////        Hashtable locals = new Hashtable();
+////        locals.put("result", result);
+////        locals.put("path", path);
+////        StringBuilder script = new StringBuilder();
+////        script.append("import sys\n");
+////        script.append("import javabridge\n");
+////        script.append("class NullDevice():\r\n" + 
+////        		"    def __init__(self, b):\r\n" + 
+////        		"        self.buffer = b;\r\n" + 
+////        		"    def write(self, s):\r\n" + 
+////        		"        self.buffer.add(s);\r\n" + 
+////        		"    \r\n" + 
+////        		"    def flush(self):\r\n" + 
+////        		"        pass\r\n" + 
+////        		"\r\n" + 
+////        		"\r\n" + 
+////        		"");
+////        script.append("path = javabridge.to_string(path)");
+////        script.append("result = javabridge.JWrapper(result)");
+////        script.append("runargs = [\"doxypypy\", \"-a\", \"");
+////        script.append( path );
+////        script.append("\"];\n");
+////        script.append("    sys.argv = runargs\r\n" + 
+////        		"    dev = NullDevice(result)  # redirect the real STDOUT\r\n" + 
+////        		"    sys.stdout = dev;\r\n" + 
+////        		"    doxypypy.main()\r\n" + 
+////        		"");
+////        script.append("    result = dev.buffer;");
+////        try {
+////			cpython.exec(script.toString(), locals, null);
+////			System.out.println(result.size());
+////		} catch (WrappedException e) {
+////			// TODO Auto-generated catch block
+////			e.printStackTrace();
+////		}
+//		
+//	}
 }

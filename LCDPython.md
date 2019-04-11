@@ -13,3 +13,17 @@
 4. References to .shape elements are generally transpiled to unsigned values in target languages.  Cast them using int() when using as int values.
 5. Python negative array references should not be used.
 	1. Instead of A[-1] use A[A.shape[0]-1] 
+
+
+# Installation @
+## Windows 10 / Visual Studio 2017 ##
+
+### javabridge ##
+
+WORK ON THIS LATER; EXAMPLE EXCEPTIONS
+
+run vcvars64.bat
+insure cl.exe in PATH
+set MSSdk=1
+set DISTUTILS_USE_SDK=1
+pip install javabridge

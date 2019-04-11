@@ -10,14 +10,34 @@
 from numpy import exp
 from scipy.stats import chi2, f;
 
+
+'''********************************************************************
+LcdPython Decorators
+'''
 def virtual(funcobj):
+    '''
+    @virtual marks a function as virtual.
+    
+    Some in target languages only explicitly marked function can be overloaded
+    '''
     return funcobj;
 
 def constructor(funcobj):
+    '''
+    @constructor marks a function as a class constructor
+    '''
     return funcobj;
 
 def ignore(funcobj):
+    '''
+    Function marked @ignore are not transpiled
+    '''
     return funcobj;
+
+
+'''********************************************************************
+Utility functions for transpiled code; 
+'''
 
 def chi2Cdf(x : float, df : int) -> float:
     return chi2.cdf(1e-9 + x, df)
@@ -30,6 +50,8 @@ def fdistCdf(x : float, df1 : int, df2 : int) -> float:
 
 def fdistPpf(p : float, df1 : int, df2 : int) -> float:
     return 1e-9 + f.ppf(p, df1, df2)
+
+
 
 if __name__ == '__main__':
     pass
