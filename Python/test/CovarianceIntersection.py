@@ -18,4 +18,4 @@ def covarianceIntersection( P1, P2 ):
     return P
 
 if __name__ == '__main__':
-    print(covarianceIntersection(eye(3), 2*eye(3)))
+    print(covarianceIntersection(eye(3), 200*eye(3)))

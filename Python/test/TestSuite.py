@@ -9,7 +9,7 @@ import coverage
 
 def testDataPath( filename : str) -> str:
     path = os.getcwd();
-    return path.replace("\\", "/").replace("Python/test", "testdata/") + filename;
+    return path.replace("\\", "/").replace("Python/test.*", "testdata") + filename;
 
 # .. call your code ..
 
@@ -19,7 +19,9 @@ def runAll():
         'Components.EMP_test',
         'Components.FixedMemoryFilter_test',
         'Components.FMP_test',
-        'Components.EmpFmpPair_test'
+        'Components.EmpFmpPair_test',
+        'filters.ManagedFilterBase_test',
+        'filters.controls.ConstantObservationErrorModel_test',
         ]
     
     suite = unittest.TestSuite()

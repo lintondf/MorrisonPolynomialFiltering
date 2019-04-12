@@ -91,28 +91,30 @@
 <p id="n22" class="pln"><a href="#n22">22</a></p>
 <p id="n23" class="pln"><a href="#n23">23</a></p>
 <p id="n24" class="pln"><a href="#n24">24</a></p>
-<p id="n25" class="stm run hide_run"><a href="#n25">25</a></p>
+<p id="n25" class="pln"><a href="#n25">25</a></p>
 <p id="n26" class="pln"><a href="#n26">26</a></p>
 <p id="n27" class="stm run hide_run"><a href="#n27">27</a></p>
-<p id="n28" class="stm run hide_run"><a href="#n28">28</a></p>
-<p id="n29" class="pln"><a href="#n29">29</a></p>
+<p id="n28" class="pln"><a href="#n28">28</a></p>
+<p id="n29" class="stm run hide_run"><a href="#n29">29</a></p>
 <p id="n30" class="stm run hide_run"><a href="#n30">30</a></p>
-<p id="n31" class="stm run hide_run"><a href="#n31">31</a></p>
-<p id="n32" class="stm mis"><a href="#n32">32</a></p>
+<p id="n31" class="pln"><a href="#n31">31</a></p>
+<p id="n32" class="stm run hide_run"><a href="#n32">32</a></p>
 <p id="n33" class="stm run hide_run"><a href="#n33">33</a></p>
-<p id="n34" class="pln"><a href="#n34">34</a></p>
+<p id="n34" class="stm mis"><a href="#n34">34</a></p>
 <p id="n35" class="stm run hide_run"><a href="#n35">35</a></p>
 <p id="n36" class="pln"><a href="#n36">36</a></p>
 <p id="n37" class="stm run hide_run"><a href="#n37">37</a></p>
 <p id="n38" class="pln"><a href="#n38">38</a></p>
 <p id="n39" class="stm run hide_run"><a href="#n39">39</a></p>
-<p id="n40" class="stm mis"><a href="#n40">40</a></p>
-<p id="n41" class="stm mis"><a href="#n41">41</a></p>
+<p id="n40" class="pln"><a href="#n40">40</a></p>
+<p id="n41" class="stm run hide_run"><a href="#n41">41</a></p>
 <p id="n42" class="stm mis"><a href="#n42">42</a></p>
 <p id="n43" class="stm mis"><a href="#n43">43</a></p>
 <p id="n44" class="stm mis"><a href="#n44">44</a></p>
 <p id="n45" class="stm mis"><a href="#n45">45</a></p>
-<p id="n46" class="pln"><a href="#n46">46</a></p>
+<p id="n46" class="stm mis"><a href="#n46">46</a></p>
+<p id="n47" class="stm mis"><a href="#n47">47</a></p>
+<p id="n48" class="pln"><a href="#n48">48</a></p>
 
             </td>
             <td class="text">
@@ -127,7 +129,7 @@
 <p id="t9" class="pln"><span class="strut">&nbsp;</span></p>
 <p id="t10" class="stm run hide_run"><span class="key">def</span> <span class="nam">testDataPath</span><span class="op">(</span> <span class="nam">filename</span> <span class="op">:</span> <span class="nam">str</span><span class="op">)</span> <span class="op">-></span> <span class="nam">str</span><span class="op">:</span><span class="strut">&nbsp;</span></p>
 <p id="t11" class="stm run hide_run">    <span class="nam">path</span> <span class="op">=</span> <span class="nam">os</span><span class="op">.</span><span class="nam">getcwd</span><span class="op">(</span><span class="op">)</span><span class="op">;</span><span class="strut">&nbsp;</span></p>
-<p id="t12" class="stm run hide_run">    <span class="key">return</span> <span class="nam">path</span><span class="op">.</span><span class="nam">replace</span><span class="op">(</span><span class="str">"\\"</span><span class="op">,</span> <span class="str">"/"</span><span class="op">)</span><span class="op">.</span><span class="nam">replace</span><span class="op">(</span><span class="str">"Python/test"</span><span class="op">,</span> <span class="str">"testdata/"</span><span class="op">)</span> <span class="op">+</span> <span class="nam">filename</span><span class="op">;</span><span class="strut">&nbsp;</span></p>
+<p id="t12" class="stm run hide_run">    <span class="key">return</span> <span class="nam">path</span><span class="op">.</span><span class="nam">replace</span><span class="op">(</span><span class="str">"\\"</span><span class="op">,</span> <span class="str">"/"</span><span class="op">)</span><span class="op">.</span><span class="nam">replace</span><span class="op">(</span><span class="str">"Python/test.*"</span><span class="op">,</span> <span class="str">"testdata"</span><span class="op">)</span> <span class="op">+</span> <span class="nam">filename</span><span class="op">;</span><span class="strut">&nbsp;</span></p>
 <p id="t13" class="pln"><span class="strut">&nbsp;</span></p>
 <p id="t14" class="pln"><span class="com"># .. call your code ..</span><span class="strut">&nbsp;</span></p>
 <p id="t15" class="pln"><span class="strut">&nbsp;</span></p>
@@ -137,31 +139,33 @@
 <p id="t19" class="pln">        <span class="str">'Components.EMP_test'</span><span class="op">,</span><span class="strut">&nbsp;</span></p>
 <p id="t20" class="pln">        <span class="str">'Components.FixedMemoryFilter_test'</span><span class="op">,</span><span class="strut">&nbsp;</span></p>
 <p id="t21" class="pln">        <span class="str">'Components.FMP_test'</span><span class="op">,</span><span class="strut">&nbsp;</span></p>
-<p id="t22" class="pln">        <span class="str">'Components.EmpFmpPair_test'</span><span class="strut">&nbsp;</span></p>
-<p id="t23" class="pln">        <span class="op">]</span><span class="strut">&nbsp;</span></p>
-<p id="t24" class="pln"><span class="strut">&nbsp;</span></p>
-<p id="t25" class="stm run hide_run">    <span class="nam">suite</span> <span class="op">=</span> <span class="nam">unittest</span><span class="op">.</span><span class="nam">TestSuite</span><span class="op">(</span><span class="op">)</span><span class="strut">&nbsp;</span></p>
+<p id="t22" class="pln">        <span class="str">'Components.EmpFmpPair_test'</span><span class="op">,</span><span class="strut">&nbsp;</span></p>
+<p id="t23" class="pln">        <span class="str">'filters.ManagedFilterBase_test'</span><span class="op">,</span><span class="strut">&nbsp;</span></p>
+<p id="t24" class="pln">        <span class="str">'filters.controls.ConstantObservationErrorModel_test'</span><span class="op">,</span><span class="strut">&nbsp;</span></p>
+<p id="t25" class="pln">        <span class="op">]</span><span class="strut">&nbsp;</span></p>
 <p id="t26" class="pln"><span class="strut">&nbsp;</span></p>
-<p id="t27" class="stm run hide_run">    <span class="key">for</span> <span class="nam">t</span> <span class="key">in</span> <span class="nam">testmodules</span><span class="op">:</span><span class="strut">&nbsp;</span></p>
-<p id="t28" class="stm run hide_run">        <span class="key">try</span><span class="op">:</span><span class="strut">&nbsp;</span></p>
-<p id="t29" class="pln">            <span class="com"># If the module defines a suite() function, call it to get the suite.</span><span class="strut">&nbsp;</span></p>
-<p id="t30" class="stm run hide_run">            <span class="nam">mod</span> <span class="op">=</span> <span class="nam">__import__</span><span class="op">(</span><span class="nam">t</span><span class="op">,</span> <span class="nam">globals</span><span class="op">(</span><span class="op">)</span><span class="op">,</span> <span class="nam">locals</span><span class="op">(</span><span class="op">)</span><span class="op">,</span> <span class="op">[</span><span class="str">'suite'</span><span class="op">]</span><span class="op">)</span><span class="strut">&nbsp;</span></p>
-<p id="t31" class="stm run hide_run">            <span class="nam">suitefn</span> <span class="op">=</span> <span class="nam">getattr</span><span class="op">(</span><span class="nam">mod</span><span class="op">,</span> <span class="str">'suite'</span><span class="op">)</span><span class="strut">&nbsp;</span></p>
-<p id="t32" class="stm mis">            <span class="nam">suite</span><span class="op">.</span><span class="nam">addTest</span><span class="op">(</span><span class="nam">suitefn</span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="strut">&nbsp;</span></p>
-<p id="t33" class="stm run hide_run">        <span class="key">except</span> <span class="op">(</span><span class="nam">ImportError</span><span class="op">,</span> <span class="nam">AttributeError</span><span class="op">)</span><span class="op">:</span><span class="strut">&nbsp;</span></p>
-<p id="t34" class="pln">            <span class="com"># else, just load all the test cases from the module.</span><span class="strut">&nbsp;</span></p>
-<p id="t35" class="stm run hide_run">            <span class="nam">suite</span><span class="op">.</span><span class="nam">addTest</span><span class="op">(</span><span class="nam">unittest</span><span class="op">.</span><span class="nam">defaultTestLoader</span><span class="op">.</span><span class="nam">loadTestsFromName</span><span class="op">(</span><span class="nam">t</span><span class="op">)</span><span class="op">)</span><span class="strut">&nbsp;</span></p>
-<p id="t36" class="pln"><span class="strut">&nbsp;</span></p>
-<p id="t37" class="stm run hide_run">    <span class="nam">unittest</span><span class="op">.</span><span class="nam">TextTestRunner</span><span class="op">(</span><span class="op">)</span><span class="op">.</span><span class="nam">run</span><span class="op">(</span><span class="nam">suite</span><span class="op">)</span><span class="strut">&nbsp;</span></p>
+<p id="t27" class="stm run hide_run">    <span class="nam">suite</span> <span class="op">=</span> <span class="nam">unittest</span><span class="op">.</span><span class="nam">TestSuite</span><span class="op">(</span><span class="op">)</span><span class="strut">&nbsp;</span></p>
+<p id="t28" class="pln"><span class="strut">&nbsp;</span></p>
+<p id="t29" class="stm run hide_run">    <span class="key">for</span> <span class="nam">t</span> <span class="key">in</span> <span class="nam">testmodules</span><span class="op">:</span><span class="strut">&nbsp;</span></p>
+<p id="t30" class="stm run hide_run">        <span class="key">try</span><span class="op">:</span><span class="strut">&nbsp;</span></p>
+<p id="t31" class="pln">            <span class="com"># If the module defines a suite() function, call it to get the suite.</span><span class="strut">&nbsp;</span></p>
+<p id="t32" class="stm run hide_run">            <span class="nam">mod</span> <span class="op">=</span> <span class="nam">__import__</span><span class="op">(</span><span class="nam">t</span><span class="op">,</span> <span class="nam">globals</span><span class="op">(</span><span class="op">)</span><span class="op">,</span> <span class="nam">locals</span><span class="op">(</span><span class="op">)</span><span class="op">,</span> <span class="op">[</span><span class="str">'suite'</span><span class="op">]</span><span class="op">)</span><span class="strut">&nbsp;</span></p>
+<p id="t33" class="stm run hide_run">            <span class="nam">suitefn</span> <span class="op">=</span> <span class="nam">getattr</span><span class="op">(</span><span class="nam">mod</span><span class="op">,</span> <span class="str">'suite'</span><span class="op">)</span><span class="strut">&nbsp;</span></p>
+<p id="t34" class="stm mis">            <span class="nam">suite</span><span class="op">.</span><span class="nam">addTest</span><span class="op">(</span><span class="nam">suitefn</span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="strut">&nbsp;</span></p>
+<p id="t35" class="stm run hide_run">        <span class="key">except</span> <span class="op">(</span><span class="nam">ImportError</span><span class="op">,</span> <span class="nam">AttributeError</span><span class="op">)</span><span class="op">:</span><span class="strut">&nbsp;</span></p>
+<p id="t36" class="pln">            <span class="com"># else, just load all the test cases from the module.</span><span class="strut">&nbsp;</span></p>
+<p id="t37" class="stm run hide_run">            <span class="nam">suite</span><span class="op">.</span><span class="nam">addTest</span><span class="op">(</span><span class="nam">unittest</span><span class="op">.</span><span class="nam">defaultTestLoader</span><span class="op">.</span><span class="nam">loadTestsFromName</span><span class="op">(</span><span class="nam">t</span><span class="op">)</span><span class="op">)</span><span class="strut">&nbsp;</span></p>
 <p id="t38" class="pln"><span class="strut">&nbsp;</span></p>
-<p id="t39" class="stm run hide_run"><span class="key">if</span> <span class="nam">__name__</span> <span class="op">==</span> <span class="str">'__main__'</span><span class="op">:</span><span class="strut">&nbsp;</span></p>
-<p id="t40" class="stm mis">    <span class="nam">cov</span> <span class="op">=</span> <span class="nam">coverage</span><span class="op">.</span><span class="nam">Coverage</span><span class="op">(</span><span class="op">)</span><span class="strut">&nbsp;</span></p>
-<p id="t41" class="stm mis">    <span class="nam">cov</span><span class="op">.</span><span class="nam">start</span><span class="op">(</span><span class="op">)</span><span class="strut">&nbsp;</span></p>
-<p id="t42" class="stm mis">    <span class="nam">runAll</span><span class="op">(</span><span class="op">)</span><span class="strut">&nbsp;</span></p>
-<p id="t43" class="stm mis">    <span class="nam">cov</span><span class="op">.</span><span class="nam">stop</span><span class="op">(</span><span class="op">)</span><span class="strut">&nbsp;</span></p>
-<p id="t44" class="stm mis">    <span class="nam">cov</span><span class="op">.</span><span class="nam">save</span><span class="op">(</span><span class="op">)</span><span class="strut">&nbsp;</span></p>
-<p id="t45" class="stm mis">    <span class="nam">cov</span><span class="op">.</span><span class="nam">html_report</span><span class="op">(</span><span class="op">)</span><span class="strut">&nbsp;</span></p>
-<p id="t46" class="pln"><span class="strut">&nbsp;</span></p>
+<p id="t39" class="stm run hide_run">    <span class="nam">unittest</span><span class="op">.</span><span class="nam">TextTestRunner</span><span class="op">(</span><span class="op">)</span><span class="op">.</span><span class="nam">run</span><span class="op">(</span><span class="nam">suite</span><span class="op">)</span><span class="strut">&nbsp;</span></p>
+<p id="t40" class="pln"><span class="strut">&nbsp;</span></p>
+<p id="t41" class="stm run hide_run"><span class="key">if</span> <span class="nam">__name__</span> <span class="op">==</span> <span class="str">'__main__'</span><span class="op">:</span><span class="strut">&nbsp;</span></p>
+<p id="t42" class="stm mis">    <span class="nam">cov</span> <span class="op">=</span> <span class="nam">coverage</span><span class="op">.</span><span class="nam">Coverage</span><span class="op">(</span><span class="op">)</span><span class="strut">&nbsp;</span></p>
+<p id="t43" class="stm mis">    <span class="nam">cov</span><span class="op">.</span><span class="nam">start</span><span class="op">(</span><span class="op">)</span><span class="strut">&nbsp;</span></p>
+<p id="t44" class="stm mis">    <span class="nam">runAll</span><span class="op">(</span><span class="op">)</span><span class="strut">&nbsp;</span></p>
+<p id="t45" class="stm mis">    <span class="nam">cov</span><span class="op">.</span><span class="nam">stop</span><span class="op">(</span><span class="op">)</span><span class="strut">&nbsp;</span></p>
+<p id="t46" class="stm mis">    <span class="nam">cov</span><span class="op">.</span><span class="nam">save</span><span class="op">(</span><span class="op">)</span><span class="strut">&nbsp;</span></p>
+<p id="t47" class="stm mis">    <span class="nam">cov</span><span class="op">.</span><span class="nam">html_report</span><span class="op">(</span><span class="op">)</span><span class="strut">&nbsp;</span></p>
+<p id="t48" class="pln"><span class="strut">&nbsp;</span></p>
 
             </td>
         </tr>
@@ -172,7 +176,7 @@
     <div class="content">
         <p>
             <a class="nav" href="index.html">&#xab; index</a> &nbsp; &nbsp; <a class="nav" href="https://coverage.readthedocs.io">coverage.py v4.5.3</a>,
-            created at 2019-04-06 15:45
+            created at 2019-04-11 13:29
         </p>
     </div>
 </div>

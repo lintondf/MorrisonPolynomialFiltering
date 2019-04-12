@@ -18,6 +18,5 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="src" path="resources"/>
-	<classpathentry kind="lib" path="C:/Users/NOOK/Anaconda3/Lib/site-packages/javabridge/jars/cpython.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

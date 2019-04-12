@@ -22,9 +22,14 @@ from PolynomialFiltering.Main import AbstractFilter
 def createTestGroup(cdf : Dataset, name : str ) -> Dataset:
     return cdf.createGroup(name);
 
+def readTestVariable( group : Dataset, name : str) -> array:
+    return group.variables[name];
+
 def writeTestVariable(group : Dataset, name : str, data : array) -> None:
     dims = data.shape;
-    if (len(dims) == 1) :
+    if (len(dims) == 0) :
+        dims = (1, 1);
+    elif (len(dims) == 1) :
         dims = (dims[0], 1);
     nDim = '%s_N' % name;
     mDim = '%s_M' % name;
