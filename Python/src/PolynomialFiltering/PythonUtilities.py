@@ -34,6 +34,12 @@ def ignore(funcobj):
     '''
     return funcobj;
 
+def testcase(funcobj):
+    '''
+    Function marked @testcase are transpiled into the test template when in test generation mode
+    '''
+    return funcobj;
+
 
 '''********************************************************************
 Utility functions for transpiled code; 

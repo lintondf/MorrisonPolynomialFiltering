@@ -3,6 +3,7 @@ Created on Feb 1, 2019
 
 @author: NOOK
 '''
+import os
 import csv
 
 from numpy import zeros, array, concatenate, arange, ones, diag, sqrt, transpose,\
@@ -25,6 +26,40 @@ from PolynomialFiltering.PythonUtilities import fdistCdf, fdistPpf, chi2Cdf,\
     chi2Ppf
 from numpy.matlib import randn
 from PolynomialFiltering.Main import AbstractFilter
+from netCDF4 import Dataset
+from typing import List;
+
+
+
+class TestData :
+    
+    def __init__(self, filename : str):
+        path = self.testDataPath(filename);
+        self.cdf = Dataset(path, "r", format="NETCDF4");
+       
+    
+    def testDataPath(self, filename : str) -> str:
+        path = os.getcwd();
+        return path.replace("\\", "/").replace("Python/test.*", "testdata") + filename;
+    
+    def getMatchingGroups(self, prefix : str) -> List[str]:
+        results = []
+        for group in self.cdf.groups :
+            if (group.startswith(prefix)) :
+                results.append(group)
+        return results;
+    
+    def getGroupVariable(self, groupName : str, variableName : str) -> array:
+        group = self.cdf.groups[groupName];
+        return group.variables[variableName][:];
+    
+    def close(self):
+        self.cdf.close()
+        
+    @classmethod
+    def make(cls, filename : str) -> 'TestData':
+        return TestData(filename);
+
 
 def readData(): 
     with open('../test/landing.csv', newline='') as csvfile:

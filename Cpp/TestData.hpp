@@ -42,6 +42,8 @@ public:
 		}
 	}
 
+	void close() {} // meet python interface; closed in destructor
+
 	~TestData() {
 		nc_close(ncid);
 	}
