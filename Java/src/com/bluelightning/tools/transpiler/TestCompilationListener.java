@@ -17,15 +17,6 @@ public class TestCompilationListener extends LcdPythonBaseListener {
 	 * 
 	 */
 	public TestCompilationListener() {
-		if (Transpiler.instance().lookupClass("TestData") == null) {
-			Scope scope = new Scope();
-			Transpiler.instance().symbolTable.add(scope, "TestData", "<CLASS>");
-			scope = scope.getChild(Level.CLASS, "TestData");
-			Transpiler.instance().symbolTable.add(scope, "testDataPath", "str");
-			Transpiler.instance().symbolTable.add(scope, "getMatchingGroups", "List[str]");
-			Transpiler.instance().symbolTable.add(scope, "getGroupVariable", "array");
-			Transpiler.instance().symbolTable.add(scope, "close", "None");
-		}
 	}
 
 	@Override
@@ -36,6 +27,9 @@ public class TestCompilationListener extends LcdPythonBaseListener {
 		if (func != null) {
 			if (func.hasDecorator("@testcase")) {
 				System.out.println("TESTCASE: " + func.toString() );
+				Symbol symbol = Transpiler.instance().symbolTable.add(scope, "testData", "TestData");
+				Symbol type = Transpiler.instance().lookup(new Scope(), "TestData");
+				Transpiler.instance().inheritClassMembers(func, symbol);
 				SourceCompilationListener source = new SourceCompilationListener(Transpiler.instance(), scope, ctx );
 				Transpiler.instance().walker.walk(source, ctx);
 			}

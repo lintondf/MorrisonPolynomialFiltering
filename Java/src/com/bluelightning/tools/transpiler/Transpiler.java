@@ -42,6 +42,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.bluelightning.tools.transpiler.Scope.Level;
 import com.bluelightning.tools.transpiler.antlr4.LcdPythonBaseListener;
 import com.bluelightning.tools.transpiler.antlr4.LcdPythonBaseVisitor;
 import com.bluelightning.tools.transpiler.antlr4.LcdPythonLexer;
@@ -59,7 +60,6 @@ import freemarker.template.TemplateException;
 import freemarker.template.TemplateExceptionHandler;
 
 /* TODO
- * 1. Persistent source checksum; compile only if changes
  * 2. this.transpiler -> Transpiler.instance()
  * 3. Persistent documentation map
  * 4. Declaration listener; allow import for tests
@@ -118,7 +118,7 @@ public class Transpiler {
 		new Target(Paths.get("PolynomialFiltering/filters"), "ManagedFilterBase"),
 //		new Target(Paths.get("PolynomialFiltering/filters"), "ManagedScalarRecursiveFilter"),
 //		new Target(Paths.get("PolynomialFiltering/filters"), "ManagedScalarRecursiveFilterSet"),
-//		new TestTarget(Paths.get("PolynomialFiltering/filters/controls"), "ConstantObservationErrorModel_test"),
+		new TestTarget(Paths.get("PolynomialFiltering/filters/controls"), "ConstantObservationErrorModel_test"),
 	};
 	
 	protected Logger logger;
@@ -198,6 +198,21 @@ public class Transpiler {
 	
 	public Symbol lookupClass( String name ) {
 		return symbolTable.lookupClass(name);
+	}
+	
+	public void inheritClassMembers( Symbol symbol, Symbol type ) {
+		List<Symbol> inheritance = symbolTable.atScope(type.getScope());
+		Scope inheritedScope = symbol.getScope().getChild(Level.CLASS, type.getName() );
+		for (Symbol i : inheritance ) {
+			if (i.getName().equals("__init__"))
+				continue;
+//			System.out.println("     " + i.isClass() + " " + i.getName() + " " + inheritedScope );
+			if (i.isClass() || i.isEnum()) {
+				symbolTable.inherit(i, inheritedScope.getChild(Level.CLASS, symbol.getName()) );
+			} else {
+				symbolTable.inherit(i, inheritedScope);
+			}
+		}
 	}
 	
 
@@ -544,6 +559,18 @@ public class Transpiler {
 	HashMap<String, Long> moduleChecksums = new HashMap<>();
 	
 	public void compile(Path where, List<String> dottedModule, boolean headerOnly, boolean isTest) {
+		if (isTest) {
+			if (Transpiler.instance().lookupClass("TestData") == null) {
+				Scope scope = new Scope();
+				Transpiler.instance().symbolTable.add(scope, "TestData", "<CLASS>");
+				scope = scope.getChild(Level.CLASS, "TestData");
+				Transpiler.instance().symbolTable.add(scope, "testDataPath", "str");
+				Transpiler.instance().symbolTable.add(scope, "getMatchingGroups", "List[str]");
+				Transpiler.instance().symbolTable.add(scope, "getGroupVariable", "array");
+				Transpiler.instance().symbolTable.add(scope, "close", "None");
+				Symbol make = Transpiler.instance().symbolTable.add(scope, "make", "TestData");
+			}			
+		}
 		
 		String module = dottedModule.get(dottedModule.size()-1);
 		Long checksumValue = null;
@@ -557,7 +584,7 @@ public class Transpiler {
 			checksumValue = checksum.getValue();
 			Long prior = moduleChecksums.get(pathString);
 			if (prior != null) {
-				if (checksumValue == prior) {
+				if (checksumValue.equals(prior)) {
 					System.out.println("Unchanged; skipping"); 
 					return;  // if no source change no need to transpile
 				}

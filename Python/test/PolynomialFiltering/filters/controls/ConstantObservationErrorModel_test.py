@@ -34,7 +34,7 @@ class TestConstantObservationErrorModel(unittest.TestCase):
     def tearDown(self):
         pass
 
-    def test0Generate(self):
+    def test0Generate(self) -> None:
         path = testDataPath('testConstantObservationErrorModel.nc');
         cdf = Dataset(path, "w", format="NETCDF4");
         
@@ -110,7 +110,7 @@ class TestConstantObservationErrorModel(unittest.TestCase):
         cdf.close();
 
     @testcase
-    def test1Scalar(self):
+    def test1Scalar(self) -> None:
         '''@testData : TestData'''
         '''@matches : List[str]'''
         '''@i : int'''
@@ -137,7 +137,7 @@ class TestConstantObservationErrorModel(unittest.TestCase):
         testData.close()
 
     @testcase
-    def test2Matrix(self):
+    def test2Matrix(self) -> None:
         testData = TestData.make('testConstantObservationErrorModel.nc')
         matches = testData.getMatchingGroups('testMatrix_')
         for i in range(0, len(matches)) :
@@ -153,7 +153,7 @@ class TestConstantObservationErrorModel(unittest.TestCase):
         testData.close()
 
     @testcase
-    def test3MatrixMatrix(self):
+    def test3MatrixMatrix(self) -> None:
         testData = TestData.make('testConstantObservationErrorModel.nc')
         matches = testData.getMatchingGroups('testMatrixMatrix_')
         for i in range(0, len(matches)) :

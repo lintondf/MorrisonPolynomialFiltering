@@ -43,7 +43,7 @@ public class Documenter {
 	protected HashMap<String, ObjectDocumentation> documentation = new HashMap<>();
 	protected File scratch = null;
 	
-	final static String pythonPath = System.getenv("HOMEPATH") + "\\Anaconda3\\Scripts\\doxypypy.exe";
+	protected String pythonPath;
 	
 	public static class DoxygenConfiguration {
 		String blockCommentStart = "///// ";
@@ -88,6 +88,12 @@ public class Documenter {
 	TreeMap<String, IGenerator> generators = new TreeMap<>();
 	
 	public Documenter() {
+		String home = System.getenv("HOMEPATH");
+		if (home != null) {
+			this.pythonPath = home + "\\Anaconda3\\Scripts\\doxypypy.exe";
+		} else {
+			this.pythonPath = System.getenv("HOME") + "/anaconda3/bin/bin/doxypypy";
+		}
 		try {
 			scratch = File.createTempFile("Documenter", ".py");
 			scratch.deleteOnExit();

@@ -59,7 +59,7 @@ class DeclarationsListener extends LcdPythonBaseListener {
 			}
 		}
 		
- 		protected Symbol declareSymbol( Token token, String declaration ) {
+		protected Symbol declareSymbol( Token token, String declaration ) {
 			declaration = declaration.trim().replaceAll(" +", " ");
 			String[] fields = declaration.split(":");
 			if (fields.length >= 2) {
@@ -73,18 +73,7 @@ class DeclarationsListener extends LcdPythonBaseListener {
 				if (type != null) {
 					if (type.isClass()) {
 //						System.out.println("declareSymbol: " + declaration + " " + type);
-						List<Symbol> inheritance = transpiler.symbolTable.atScope(type.getScope());
-						Scope inheritedScope = symbol.getScope().getChild(Level.CLASS, type.getName() );
-						for (Symbol i : inheritance ) {
-							if (i.getName().equals("__init__"))
-								continue;
-//							System.out.println("     " + i.isClass() + " " + i.getName() + " " + inheritedScope );
-							if (i.isClass() || i.isEnum()) {
-								transpiler.symbolTable.inherit(i, inheritedScope.getChild(Level.CLASS, symbol.getName()) );
-							} else {
-								transpiler.symbolTable.inherit(i, inheritedScope);
-							}
-						}
+						transpiler.inheritClassMembers(symbol, type);
 					}
 				}
 				if (fields.length > 2) {

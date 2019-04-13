@@ -589,14 +589,14 @@ class SourceCompilationListener extends LcdPythonBaseListener {
 							if (field == null) {
 								if (parent.getLastChild() instanceof TranslationSymbolNode) {
 									TranslationSymbolNode tsn = (TranslationSymbolNode) parent.getLastChild();
-									if (tsn.getSymbol().getType().equals("<ENUM>")) {
+									if (tsn.getSymbol().isEnum() || tsn.getSymbol().isClass()) {
 										Scope enumScope = tsn.getSymbol().getScope().getChild(Level.CLASS, tsn.getSymbol().getName());
 										field = transpiler.symbolTable.lookup(enumScope, trailer.getChild(i+1).getText() );
 										payload = TranslationUnaryNode.staticFieldReference;
 									}
 								}
 								if (field == null) {
-//									System.out.println(parent.getLastChild().getClass().getSimpleName() + " " +parent.getLastChild());
+									System.out.println(parent.getLastChild().getClass().getSimpleName() + " " +parent.getLastChild());
 									if (parent.getLastChild() instanceof TranslationUnaryNode) {
 										TranslationUnaryNode tun = (TranslationUnaryNode) parent.getLastChild();
 										Symbol s = tun.getRhsSymbol();
