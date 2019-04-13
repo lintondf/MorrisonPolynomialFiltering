@@ -35,14 +35,6 @@ class TestConstantObservationErrorModel(unittest.TestCase):
         pass
 
     def test0Generate(self):
-        '''@path : str'''
-        '''@cdf : Dataset'''
-        '''@iTest : int'''
-        '''@e : int'''
-        '''@group : Dataset'''
-        '''@inputCovariance : array'''
-        '''@inputInverse : array'''
-        '''@element : vector'''
         path = testDataPath('testConstantObservationErrorModel.nc');
         cdf = Dataset(path, "w", format="NETCDF4");
         
@@ -119,6 +111,16 @@ class TestConstantObservationErrorModel(unittest.TestCase):
 
     @testcase
     def test1Scalar(self):
+        '''@testData : TestData'''
+        '''@matches : List[str]'''
+        '''@i : int'''
+        '''@iE : int'''
+        '''@inputCovariance : array'''
+        '''@inputInverse : array'''
+        '''@element : vector'''
+        '''@x : float'''
+        '''@Q : array'''
+        
         testData = TestData.make('testConstantObservationErrorModel.nc')
         matches = testData.getMatchingGroups('testScalar_')
         for i in range(0, len(matches)) :

@@ -223,7 +223,7 @@ public abstract class CppTarget extends AbstractLanguageTarget {
 					body.append( parameter.getName() );
 					if (parameter.getInitialization() != null) {
 						String value = parameter.getInitialization();
-						TranslationConstantNode tcn = ExpressionCompilationListener.getConstantNode(null, value, value);
+						TranslationConstantNode tcn = SourceCompilationListener.getConstantNode(null, value, value);
 						header.append("=");
 						programmer.writeConstant(header, tcn);
 					}

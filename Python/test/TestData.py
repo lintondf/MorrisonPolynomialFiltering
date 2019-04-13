@@ -53,7 +53,7 @@ class TestData :
         group = self.cdf.groups[groupName];
         return group.variables[variableName][:];
     
-    def close(self):
+    def close(self) -> None:
         self.cdf.close()
         
     @classmethod

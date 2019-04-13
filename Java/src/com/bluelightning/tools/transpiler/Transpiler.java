@@ -7,8 +7,12 @@
 package com.bluelightning.tools.transpiler;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.Writer;
@@ -21,6 +25,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeSet;
+import java.util.zip.CRC32;
+import java.util.zip.Checksum;
 
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonToken;
@@ -52,7 +58,12 @@ import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import freemarker.template.TemplateExceptionHandler;
 
-
+/* TODO
+ * 1. Persistent source checksum; compile only if changes
+ * 2. this.transpiler -> Transpiler.instance()
+ * 3. Persistent documentation map
+ * 4. Declaration listener; allow import for tests
+ */
 /**
  * @author NOOK
  *
@@ -107,7 +118,7 @@ public class Transpiler {
 		new Target(Paths.get("PolynomialFiltering/filters"), "ManagedFilterBase"),
 //		new Target(Paths.get("PolynomialFiltering/filters"), "ManagedScalarRecursiveFilter"),
 //		new Target(Paths.get("PolynomialFiltering/filters"), "ManagedScalarRecursiveFilterSet"),
-		new TestTarget(Paths.get("PolynomialFiltering/filters/controls"), "ConstantObservationErrorModel_test"),
+//		new TestTarget(Paths.get("PolynomialFiltering/filters/controls"), "ConstantObservationErrorModel_test"),
 	};
 	
 	protected Logger logger;
@@ -530,11 +541,28 @@ public class Transpiler {
 
 	}
 	
+	HashMap<String, Long> moduleChecksums = new HashMap<>();
+	
 	public void compile(Path where, List<String> dottedModule, boolean headerOnly, boolean isTest) {
 		
 		String module = dottedModule.get(dottedModule.size()-1);
+		Long checksumValue = null;
+		String pathString = null;
 		try {
-			byte[] bytes = Files.readAllBytes(where.resolve(module + ".py"));
+			Path path = where.resolve(module + ".py");
+			pathString = path.toString();
+			byte[] bytes = Files.readAllBytes(path);
+			Checksum checksum = new CRC32();
+			checksum.update(bytes, 0, bytes.length);
+			checksumValue = checksum.getValue();
+			Long prior = moduleChecksums.get(pathString);
+			if (prior != null) {
+				if (checksumValue == prior) {
+					System.out.println("Unchanged; skipping"); 
+					return;  // if no source change no need to transpile
+				}
+
+			}
 			content = new String(bytes, "UTF-8");
 		} catch (Exception x) {
 			x.printStackTrace();
@@ -573,8 +601,13 @@ public class Transpiler {
 			x.printStackTrace();
 		}
 		
-		ExpressionCompilationListener expressionCompilationListener = new ExpressionCompilationListener(this, headerOnly);
-		walker.walk(expressionCompilationListener, tree);
+		LcdPythonBaseListener listener = null;
+		if (! isTest) {
+			listener = new SourceCompilationListener(this, headerOnly);
+		} else {
+			listener = new TestCompilationListener();
+		}
+		walker.walk(listener, tree);
 
 		dispatcher.finishModule();
 		
@@ -582,6 +615,7 @@ public class Transpiler {
 			System.err.println("\n\n!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n");
 			System.err.println(errorReport.toString());
 		} else {
+			moduleChecksums.put(pathString, checksumValue);
 			System.out.println("\nNO ERRORS\n\n");
 		}
 		
@@ -618,11 +652,42 @@ public class Transpiler {
 	}
 	
 
+	protected void saveModuleChecksums() {
+		File obj = new File("moduleChecksums.obj");
+		try {
+            FileOutputStream fos = new FileOutputStream("moduleChecksums.obj");
+            ObjectOutputStream oos = new ObjectOutputStream(fos);
+            oos.writeObject(moduleChecksums);
+            oos.close();
+            fos.close();
+		} catch (Exception x) {
+			obj.delete();
+		}
+	}
+
+	@SuppressWarnings("unchecked")
+	protected void loadModuleChecksums() {
+		File obj = new File("moduleChecksums.obj");
+		moduleChecksums = new HashMap<>();
+		try {
+			FileInputStream  fis = new FileInputStream (obj);
+			ObjectInputStream  ois = new ObjectInputStream (fis);
+			moduleChecksums = (HashMap<String, Long>) ois.readObject();
+            ois.close();
+            fis.close();
+		} catch (Exception x) {
+			moduleChecksums.clear();
+		}
+	}
+	
+
+
 	/**
 	 * @param args
 	 */
 	public static void main(String[] args) {
 		Transpiler transpiler = new Transpiler();
+		transpiler.loadModuleChecksums();
 		
 		Path base = Paths.get("../Python/src");
 		Path dir = base.resolve("PolynomialFiltering");
@@ -646,6 +711,8 @@ public class Transpiler {
 			srcs.remove( String.join("\\", dottedModule) );
 			transpiler.compile( (target.isTest) ? testWhere : srcWhere, dottedModule, target.headerOnly, target.isTest);
 		}
+		transpiler.saveModuleChecksums();
+
 		System.out.printf("Compiled %d targets\n", targets.length);
 		System.out.println();
 		transpiler.symbolTable.report(transpiler.documenter);
@@ -655,6 +722,4 @@ public class Transpiler {
 			System.out.println("Missed: " + missed);
 		}
 	}
-	
-
 }

@@ -23,7 +23,7 @@ import com.bluelightning.tools.transpiler.nodes.TranslationUnaryNode;
 import com.bluelightning.tools.transpiler.nodes.TranslationConstantNode.Kind;
 import com.bluelightning.tools.transpiler.nodes.TranslationExpressionNode;
 
-class ExpressionCompilationListener extends LcdPythonBaseListener {
+class SourceCompilationListener extends LcdPythonBaseListener {
 		
 		/**
 		 * 
@@ -46,12 +46,22 @@ class ExpressionCompilationListener extends LcdPythonBaseListener {
 		 * @param transpiler
 		 * @param headerOnly 
 		 */
-		ExpressionCompilationListener(Transpiler transpiler, boolean headerOnly) {
+		SourceCompilationListener(Transpiler transpiler, boolean headerOnly) {
 			this.transpiler = transpiler;
 			scope = this.transpiler.moduleScope;
 			this.headerOnly = headerOnly;
 			this.isTest = isTest;
 			transpiler.logger.info("module > " + scope);
+		}
+		
+		
+		SourceCompilationListener(Transpiler transpiler, Scope testScope, ParserRuleContext ctx) {
+			this.transpiler = transpiler;
+			scope = testScope;
+			this.headerOnly = false;
+			this.isTest = true;
+			transpiler.logger.info("module > " + scope);
+			translateMap = newTranslateMap();
 		}
 		
 		protected static final Pattern integerPattern = Pattern.compile("^(\\d+)$");
@@ -246,7 +256,7 @@ class ExpressionCompilationListener extends LcdPythonBaseListener {
 				return;
 			}
 
-			ExpressionCompilationListener subListener = new ExpressionCompilationListener(transpiler, this.headerOnly);
+			SourceCompilationListener subListener = new SourceCompilationListener(transpiler, this.headerOnly);
 			subListener.expressionRoot = new TranslationSubexpressionNode(ctx, null, "FOR_STMT");
 			subListener.translateMap = newTranslateMap();
 			subListener.scope = symbol.getScope();
@@ -267,7 +277,7 @@ class ExpressionCompilationListener extends LcdPythonBaseListener {
 //			System.out.println( ctx.getChild(1).getText());
 //			System.out.println( ctx.getChild(1).getChild(0).getChild(0).getText());
 			
-			ExpressionCompilationListener subListener = new ExpressionCompilationListener(transpiler, this.headerOnly);
+			SourceCompilationListener subListener = new SourceCompilationListener(transpiler, this.headerOnly);
 			subListener.expressionRoot = new TranslationExpressionNode(ctx, "IF_STMT");
 			subListener.translateMap = newTranslateMap();
 			subListener.scope = scope;
@@ -286,7 +296,7 @@ class ExpressionCompilationListener extends LcdPythonBaseListener {
 		
 		@Override public void enterElif_stmt(LcdPythonParser.Elif_stmtContext ctx) { 
 			transpiler.logger.info(StringUtils.left(ctx.getText(), 80));
-			ExpressionCompilationListener subListener = new ExpressionCompilationListener(transpiler, this.headerOnly);
+			SourceCompilationListener subListener = new SourceCompilationListener(transpiler, this.headerOnly);
 			subListener.expressionRoot = new TranslationExpressionNode(ctx, "IF_STMT");
 			subListener.translateMap = newTranslateMap();
 			subListener.scope = scope;
