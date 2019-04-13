@@ -118,7 +118,7 @@ public class Transpiler {
 		new Target(Paths.get("PolynomialFiltering/filters"), "ManagedFilterBase"),
 //		new Target(Paths.get("PolynomialFiltering/filters"), "ManagedScalarRecursiveFilter"),
 //		new Target(Paths.get("PolynomialFiltering/filters"), "ManagedScalarRecursiveFilterSet"),
-		new TestTarget(Paths.get("PolynomialFiltering/filters/controls"), "ConstantObservationErrorModel_test"),
+//		new TestTarget(Paths.get("PolynomialFiltering/filters/controls"), "ConstantObservationErrorModel_test"),
 	};
 	
 	protected Logger logger;
@@ -582,14 +582,6 @@ public class Transpiler {
 			Checksum checksum = new CRC32();
 			checksum.update(bytes, 0, bytes.length);
 			checksumValue = checksum.getValue();
-			Long prior = moduleChecksums.get(pathString);
-			if (prior != null) {
-				if (checksumValue.equals(prior)) {
-					System.out.println("Unchanged; skipping"); 
-					return;  // if no source change no need to transpile
-				}
-
-			}
 			content = new String(bytes, "UTF-8");
 		} catch (Exception x) {
 			x.printStackTrace();
@@ -616,7 +608,6 @@ public class Transpiler {
 		DeclarationsListener declarationsListener = new DeclarationsListener(this, moduleScope);
 		walker.walk(declarationsListener, tree);
 		
-		dispatcher.startModule(moduleScope, headerOnly, isTest);
 		try {
 			PrintWriter sym = new PrintWriter("out/symbols.txt");
 			sym.println("\n\n-------------------------------------");
@@ -628,21 +619,29 @@ public class Transpiler {
 			x.printStackTrace();
 		}
 		
-		LcdPythonBaseListener listener = null;
-		if (! isTest) {
-			listener = new SourceCompilationListener(this, headerOnly);
-		} else {
-			listener = new TestCompilationListener();
+		boolean skip = false;
+		Long prior = moduleChecksums.get(pathString);
+		if (prior != null) {
+			skip = checksumValue.equals(prior);
 		}
-		walker.walk(listener, tree);
-
-		dispatcher.finishModule();
+		if (! skip) {
+			dispatcher.startModule(moduleScope, headerOnly, isTest);
+			LcdPythonBaseListener listener = null;
+			if (! isTest) {
+				listener = new SourceCompilationListener(this, headerOnly);
+			} else {
+				listener = new TestCompilationListener();
+			}
+			walker.walk(listener, tree);
+			dispatcher.finishModule();			
+		}
 		
 		if (errorReport.length() > 0) {
 			System.err.println("\n\n!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n");
 			System.err.println(errorReport.toString());
 		} else {
-			moduleChecksums.put(pathString, checksumValue);
+			if (!skip)
+				moduleChecksums.put(pathString, checksumValue);
 			System.out.println("\nNO ERRORS\n\n");
 		}
 		

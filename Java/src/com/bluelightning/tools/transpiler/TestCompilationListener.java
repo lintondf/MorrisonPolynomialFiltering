@@ -13,6 +13,8 @@ import com.bluelightning.tools.transpiler.antlr4.LcdPythonParser;
  */
 public class TestCompilationListener extends LcdPythonBaseListener {
 
+	Scope scope;
+	
 	/**
 	 * 
 	 */
@@ -20,16 +22,30 @@ public class TestCompilationListener extends LcdPythonBaseListener {
 	}
 
 	@Override
+	public void enterClassdef(LcdPythonParser.ClassdefContext ctx) {
+		scope = Transpiler.instance().scopeMap.get(ctx.getPayload());
+//		System.out.println("class > " + scope);
+		Transpiler.instance().dispatcher.startClass(scope);
+	}
+	
+	@Override
+	public void exitClassdef(LcdPythonParser.ClassdefContext ctx) {
+		scope = scope.getParent();
+//		System.out.println("class < " + scope);
+		Transpiler.instance().dispatcher.finishClass(scope);
+	}
+	
+	@Override
 	public void enterFuncdef(LcdPythonParser.FuncdefContext ctx) {
 		//transpiler.dumpChildren(ctx);			
-		Scope scope = Transpiler.instance().scopeMap.get(ctx.getPayload());
+		scope = Transpiler.instance().scopeMap.get(ctx.getPayload());
 		Symbol func = Transpiler.instance().lookup(scope.getParent(), scope.getLast());
 		if (func != null) {
 			if (func.hasDecorator("@testcase")) {
 				System.out.println("TESTCASE: " + func.toString() );
-				Symbol symbol = Transpiler.instance().symbolTable.add(scope, "testData", "TestData");
-				Symbol type = Transpiler.instance().lookup(new Scope(), "TestData");
-				Transpiler.instance().inheritClassMembers(func, symbol);
+//				Symbol symbol = Transpiler.instance().symbolTable.add(scope, "testData", "TestData");
+//				Symbol type = Transpiler.instance().lookup(new Scope(), "TestData");
+//				Transpiler.instance().inheritClassMembers(func, symbol);
 				SourceCompilationListener source = new SourceCompilationListener(Transpiler.instance(), scope, ctx );
 				Transpiler.instance().walker.walk(source, ctx);
 			}

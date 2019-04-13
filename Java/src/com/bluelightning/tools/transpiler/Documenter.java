@@ -92,7 +92,7 @@ public class Documenter {
 		if (home != null) {
 			this.pythonPath = home + "\\Anaconda3\\Scripts\\doxypypy.exe";
 		} else {
-			this.pythonPath = System.getenv("HOME") + "/anaconda3/bin/bin/doxypypy";
+			this.pythonPath = "/anaconda3/bin/doxypypy";
 		}
 		try {
 			scratch = File.createTempFile("Documenter", ".py");
