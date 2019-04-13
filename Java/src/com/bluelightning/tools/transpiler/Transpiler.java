@@ -118,7 +118,7 @@ public class Transpiler {
 		new Target(Paths.get("PolynomialFiltering/filters"), "ManagedFilterBase"),
 //		new Target(Paths.get("PolynomialFiltering/filters"), "ManagedScalarRecursiveFilter"),
 //		new Target(Paths.get("PolynomialFiltering/filters"), "ManagedScalarRecursiveFilterSet"),
-//		new TestTarget(Paths.get("PolynomialFiltering/filters/controls"), "ConstantObservationErrorModel_test"),
+		new TestTarget(Paths.get("PolynomialFiltering/filters/controls"), "ConstantObservationErrorModel_test"),
 	};
 	
 	protected Logger logger;
@@ -624,7 +624,9 @@ public class Transpiler {
 		if (prior != null) {
 			skip = checksumValue.equals(prior);
 		}
-		if (! skip) {
+		if (skip) {
+			System.out.println("No source code changes; skipping..");
+		} else {
 			dispatcher.startModule(moduleScope, headerOnly, isTest);
 			LcdPythonBaseListener listener = null;
 			if (! isTest) {

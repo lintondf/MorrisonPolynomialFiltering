@@ -56,7 +56,9 @@ class SymbolTable {
 		}
 		
 		public Symbol inherit( Symbol base, Scope scope ) {
-			Symbol i = base.inhert(scope);
+//			System.out.println("inherit: " + base.toString());
+//			System.out.println("         " + scope.toString());
+			Symbol i = base.inherit(scope);
 			Map<String, Symbol> aliases = table.get(i.getName());
 			aliases.put( scope.toString(), i ); //TODO collisions
 			table.put(i.getName(),  aliases);

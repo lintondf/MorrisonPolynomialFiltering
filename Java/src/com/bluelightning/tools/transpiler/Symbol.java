@@ -59,7 +59,7 @@ public class Symbol {
 		this.isInherited = isInherited;
 	}
 
-	public Symbol inhert( Scope heir ) {
+	public Symbol inherit( Scope heir ) {
 		Symbol that = new Symbol( heir, this.name, this.type );
 		that.initialization = this.initialization;
 		that.superClassInfo = this.superClassInfo;
