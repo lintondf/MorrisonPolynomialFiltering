@@ -65,4 +65,11 @@ public class BoostProgrammer extends AbstractProgrammer {
 		return null;
 	}
 
+
+	@Override
+	public String getName() {
+		// TODO Auto-generated method stub
+		return "Boost";
+	}
+
 }

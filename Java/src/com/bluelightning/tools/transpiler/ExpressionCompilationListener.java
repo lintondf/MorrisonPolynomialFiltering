@@ -33,6 +33,7 @@ class ExpressionCompilationListener extends LcdPythonBaseListener {
 		TranslationNode expressionRoot = null;
 		HashMap<Object, TranslationNode> translateMap = null;
 		boolean headerOnly;
+		boolean isTest = false;
 		
 		protected HashMap<Object, TranslationNode> newTranslateMap() {
 			HashMap<Object, TranslationNode> map = new HashMap<>();
@@ -49,6 +50,7 @@ class ExpressionCompilationListener extends LcdPythonBaseListener {
 			this.transpiler = transpiler;
 			scope = this.transpiler.moduleScope;
 			this.headerOnly = headerOnly;
+			this.isTest = isTest;
 			transpiler.logger.info("module > " + scope);
 		}
 		
@@ -194,8 +196,12 @@ class ExpressionCompilationListener extends LcdPythonBaseListener {
 			//transpiler.dumpChildren(ctx);			
 			scope = this.transpiler.scopeMap.get(ctx.getPayload());
 			Symbol func = transpiler.lookup(scope.getParent(), scope.getLast());
-			if (func != null && func.hasDecorator("@ignore")) {
-				transpiler.dispatcher.setIgnoring(true);
+			if (func != null) {
+				if (this.isTest) {
+					transpiler.dispatcher.setIgnoring( ! func.hasDecorator("@testcase") );
+				} else if (func.hasDecorator("@ignore")) {
+					transpiler.dispatcher.setIgnoring(true);
+				}
 			} else {
 				if (! func.isConstructor() ) {
 					if (ctx.getChildCount() <= 5) {
@@ -397,6 +403,7 @@ class ExpressionCompilationListener extends LcdPythonBaseListener {
 
 		@Override
 		public void exitExpr_stmt(LcdPythonParser.Expr_stmtContext ctx) {
+//			transpiler.dumpChildren(ctx,1);
 			transpiler.logger.info(StringUtils.left(ctx.getText(), 80));
 			if (expressionRoot != null) {
 				TranslationNode expr = defaultOperandOperator( ctx, expressionRoot.getName() );
@@ -652,8 +659,10 @@ class ExpressionCompilationListener extends LcdPythonBaseListener {
 						node = getOperandNode(ctx, parent, payload);
 						translateMap.put( payload, node );
 					}
-					parent.adopt(node);
-					parent.setType( node.getType() );
+					if (node != null) {
+						parent.adopt(node);
+						parent.setType( node.getType() );
+					}
 				}
 				translateMap.put( ctx.getPayload(), parent );
 			}

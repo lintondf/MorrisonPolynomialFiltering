@@ -5,6 +5,8 @@ import com.bluelightning.tools.transpiler.nodes.TranslationNode;
 
 public interface IProgrammer {
 	
+	String getName();
+	
 	String getInclude();
 	
 	String[] getUsings();

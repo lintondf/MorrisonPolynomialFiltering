@@ -32,12 +32,13 @@ import freemarker.template.Template;
 import freemarker.template.TemplateException;
 
 
-public class CppTarget extends AbstractLanguageTarget {
+public abstract class CppTarget extends AbstractLanguageTarget {
 	
 	protected Configuration cfg;  // FreeMarker configuration
 	
 	Path includeDirectory;
 	Path srcDirectory;
+	Path testDirectory;
 
 	protected List<String> includeFiles = new ArrayList<>();
 
@@ -48,6 +49,7 @@ public class CppTarget extends AbstractLanguageTarget {
 	
 	Template hpp;
 	Template cpp;
+	Template test;
 	
 	Path     hppPath;
 	Path     cppPath;
@@ -62,15 +64,18 @@ public class CppTarget extends AbstractLanguageTarget {
 		super();
 		Path includeDirectory = baseDirectory.resolve("include");
 		Path srcDirectory = baseDirectory.resolve("src");
+		Path testDirectory = baseDirectory.resolve("test");
 		this.cfg = cfg;
 		this.includeDirectory = includeDirectory;	
 		this.srcDirectory = srcDirectory;
+		this.testDirectory = testDirectory;
 		this.programmer = programmer;
 		
 		try {
 			
 			hpp = cfg.getTemplate("Hpp.ftlh");
 			cpp = cfg.getTemplate("Cpp.ftlh");
+			test = cfg.getTemplate("Test.ftlh");
 			
 		} catch (IOException iox ) {
 			iox.printStackTrace();
@@ -106,72 +111,6 @@ public class CppTarget extends AbstractLanguageTarget {
 	}
 
 
-	@Override
-	public void startModule(Scope scope, boolean headerOnly) {
-		System.out.println("\nCppBoost " + scope.toString() );
-		this.headerOnly = headerOnly;
-		
-		currentScope = scope;
-		hppIndent = new Indent();
-		hppPrivate = new Indent();
-		cppIndent = new Indent();
-		String moduleName = scope.getLast();
-		hppPath = includeDirectory;
-		cppPath = srcDirectory;
-		StringBuilder moduleIncludeFile = new StringBuilder();
-		for (int i = 0; i < scope.getLevelCount()-1; i++) {
-			String level = scope.getLevel(i).toLowerCase();
-			if (i > 0) {
-				moduleIncludeFile.append(level);
-				moduleIncludeFile.append('/');
-			}
-			hppPath = hppPath.resolve(level);
-			cppPath = cppPath.resolve(level);
-		}
-		hppPath = hppPath.resolve( moduleName + ".hpp" );
-		cppPath = cppPath.resolve( moduleName + ".cpp" );
-		moduleIncludeFile.append( moduleName + ".hpp" );
-		System.out.println(hppPath.toString());
-		if (!headerOnly) {
-			System.out.println(cppPath.toString());
-		}
-		templateDataModel.put("scope", scope);
-		define = String.format("__%sHPP", scope.toString().replace("/", "_").toUpperCase());
-		templateDataModel.put("hppDefine", define);
-		templateDataModel.put("systemIncludes", "");
-		StringBuilder localIncludes = new StringBuilder();
-		//localIncludes.append("#include <polynomialfiltering/Main.hpp>\n");
-		for (String includeFile : includeFiles) {
-			localIncludes.append(String.format("#include <%s>\n", includeFile));
-		}
-		includeFiles.clear();
-		templateDataModel.put("localIncludes", localIncludes.toString());
-		templateDataModel.put("interfaceInclude", programmer.getInclude() + "\n");
-		
-		templateDataModel.put("moduleInclude", moduleIncludeFile.toString());
-		
-		StringBuilder systemIncludes = new StringBuilder();
-		systemIncludes.append("#include <math.h>\n");
-		
-		templateDataModel.put("systemIncludes", systemIncludes.toString());
-		templateDataModel.put("hppBody", "");
-		templateDataModel.put("cppBody", "");
-		
-		// start at 1 to skip import scope
-		for (int i = 1; i < scope.qualifiers.length-1; i++) {
-			hppIndent.write(String.format("namespace %s {\n", scope.qualifiers[i]));
-			cppIndent.write(String.format("namespace %s {\n", scope.qualifiers[i]));
-			namespaceStack.push(String.format("%s}; // namespace %s\n", hppIndent.toString(), scope.qualifiers[i]));
-			hppIndent.in();
-			cppIndent.in();
-		}
-		
-		for (String using : programmer.getUsings()) {
-			cppIndent.writeln(using);
-		}
-		cppIndent.writeln("");
-	}
-	
 	String currentClass = null;
 	boolean inEnum = false;
 	boolean isAbstract = false;
@@ -199,7 +138,7 @@ public class CppTarget extends AbstractLanguageTarget {
 		}
 		
 		String headerScope = currentScope.toString();
-		String headerComments = Transpiler.instance().getDocumenter().getDoxygenComments(headerScope, hppIndent.toString());
+		String headerComments = Transpiler.instance().getDocumenter().getComments("Doxygen/C++", headerScope, hppIndent.toString());
 		if (headerComments != null) {
 			headerComments = headerComments.replace("///// @brief", "///// @class " + currentClass + "\n" + hppIndent.toString() +"/// @brief");
 			hppIndent.append("\n");
@@ -296,7 +235,7 @@ public class CppTarget extends AbstractLanguageTarget {
 //					/System.out.printf("private %s %s %s\n", symbol.getName(), name, ""+symbol.isPrivate() );
 				}
 				String headerScope = symbol.getScope().toString() + symbol.getName() + "/";
-				String headerComments = Transpiler.instance().getDocumenter().getDoxygenComments(headerScope, where.toString());
+				String headerComments = Transpiler.instance().getDocumenter().getComments("Doxygen/C++", headerScope, where.toString());
 				if (headerComments != null) {
 					where.append("\n");
 					where.append(headerComments);
@@ -361,40 +300,6 @@ public class CppTarget extends AbstractLanguageTarget {
 		isAbstract = false;
 	}
 
-	@Override
-	public void finishModule() {
-		while (! namespaceStack.isEmpty() ) {
-			String close = namespaceStack.pop();
-			hppIndent.append( close );
-			cppIndent.append( close );
-			hppIndent.out();
-			cppIndent.out();
-		}
-		templateDataModel.put("hppBody", hppIndent.out.toString());
-		if (!headerOnly) {
-			templateDataModel.put("cppBody", cppIndent.out.toString().replaceAll("\\(\\*([^\\)]*)\\)\\.", "$1->")); //.replace("(*this).", "this->"));
-		}
-		try {
-//			try { Files.createDirectories(hppPath); } catch (Exception x) {}
-			Writer out = new OutputStreamWriter(new FileOutputStream(hppPath.toFile()));
-			//System.out.println(hppFile.toString());
-			hpp.process(templateDataModel, out);
-			out.close();
-			if (!headerOnly) {
-//				try { Files.createDirectories(cppPath); } catch (Exception x) {}
-				out = new OutputStreamWriter(new FileOutputStream(cppPath.toFile()));
-				cpp.process(templateDataModel, out);
-				out.close();
-			}
-		} catch (IOException iox ) {
-			iox.printStackTrace();
-		} catch (TemplateException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-	
-	
 	protected int emitChild(Indent out, Scope scope, TranslationNode child) {
 		if (child instanceof TranslationSymbolNode) {
 			Symbol symbol = ((TranslationSymbolNode) child).getSymbol();

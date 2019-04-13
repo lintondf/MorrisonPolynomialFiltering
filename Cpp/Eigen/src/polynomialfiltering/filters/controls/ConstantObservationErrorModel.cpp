@@ -17,6 +17,11 @@ namespace PolynomialFiltering {
         namespace controls {
             using namespace Eigen;
             
+                ConstantObservationErrorModel::ConstantObservationErrorModel (const double r) {
+                    this->R = Map<RowVectorXd>( new double[1] {r}, 1);
+                    this->iR = Map<RowVectorXd>( new double[1] {1.0 / r}, 1);
+                }
+
                 ConstantObservationErrorModel::ConstantObservationErrorModel (const RealMatrix& R) {
                     this->R = R;
                     this->iR = inv(R);

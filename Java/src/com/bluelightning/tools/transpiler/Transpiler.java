@@ -63,17 +63,28 @@ public class Transpiler {
 		public Path  dir;
 		public String module;
 		public boolean headerOnly;
+		public boolean isTest;
 		
 		public Target( Path dir, String module ) {
 			this.dir = dir;
 			this.module = module;
 			this.headerOnly = false;
+			this.isTest = false;
 		}
 
 		public Target( Path dir, String module, boolean headerOnly ) {
 			this.dir = dir;
 			this.module = module;
 			this.headerOnly = headerOnly;
+			this.isTest = false;
+		}
+	}
+	
+	public static class TestTarget extends Target {
+		public TestTarget( Path dir, String module ) {
+			super(dir, module);
+			this.isTest = true;
+			
 		}
 	}
 	
@@ -96,6 +107,7 @@ public class Transpiler {
 		new Target(Paths.get("PolynomialFiltering/filters"), "ManagedFilterBase"),
 //		new Target(Paths.get("PolynomialFiltering/filters"), "ManagedScalarRecursiveFilter"),
 //		new Target(Paths.get("PolynomialFiltering/filters"), "ManagedScalarRecursiveFilterSet"),
+		new TestTarget(Paths.get("PolynomialFiltering/filters/controls"), "ConstantObservationErrorModel_test"),
 	};
 	
 	protected Logger logger;
@@ -250,9 +262,9 @@ public class Transpiler {
 		}
 		
 		@Override
-		public void startModule(Scope scope, boolean headerOnly) {
+		public void startModule(Scope scope, boolean headerOnly, boolean isTest) {
 			for (ILanguageTarget target : targets) {
-				target.startModule(scope, headerOnly);
+				target.startModule(scope, headerOnly, isTest);
 			}
 		}
 
@@ -480,7 +492,9 @@ public class Transpiler {
 		
 //		dispatcher.addTarget( new CppTarget(new BoostProgrammer(), 
 //				cfg, Paths.get("../Cpp/Boost/") ) );
-		dispatcher.addTarget( new CppTarget(new EigenProgrammer(), 
+		dispatcher.addTarget( new CppSrcTarget(new EigenProgrammer(), 
+				cfg, Paths.get("../Cpp/Eigen/") ) );
+		dispatcher.addTarget( new CppTestTarget(new EigenProgrammer(), 
 				cfg, Paths.get("../Cpp/Eigen/") ) );
 
 		Scope importScope = new Scope();
@@ -516,7 +530,7 @@ public class Transpiler {
 
 	}
 	
-	public void compile(Path where, List<String> dottedModule, boolean headerOnly) {
+	public void compile(Path where, List<String> dottedModule, boolean headerOnly, boolean isTest) {
 		
 		String module = dottedModule.get(dottedModule.size()-1);
 		try {
@@ -546,7 +560,8 @@ public class Transpiler {
 		// PASS 2 - handle all imports, variable, function, and class declarations
 		DeclarationsListener declarationsListener = new DeclarationsListener(this, moduleScope);
 		walker.walk(declarationsListener, tree);
-		dispatcher.startModule(moduleScope, headerOnly);
+		
+		dispatcher.startModule(moduleScope, headerOnly, isTest);
 		try {
 			PrintWriter sym = new PrintWriter("out/symbols.txt");
 			sym.println("\n\n-------------------------------------");
@@ -614,19 +629,22 @@ public class Transpiler {
 		File d = dir.toFile();
 		scan(d);
 		srcs.remove("PolynomialFiltering\\PythonUtilities"); // never do be transpiled
+		Path testBase = Paths.get("../Python/test");
 		for (Target target : targets) {
-			Path where = base;
+			Path srcWhere = base;
+			Path testWhere = testBase;
 			ArrayList<String> dottedModule = new ArrayList<>();
 			for (int i = 0; i < target.dir.getNameCount(); i++) {
 				if (! target.dir.getName(i).toString().isEmpty()) {
 					dottedModule.add( target.dir.getName(i).toString());
-					where = where.resolve(target.dir.getName(i).toString());
+					srcWhere = srcWhere.resolve(target.dir.getName(i).toString());
+					testWhere = testWhere.resolve(target.dir.getName(i).toString());
 				}
 			}
 			dottedModule.add(target.module);
 			System.out.println(String.join("\\", dottedModule));
 			srcs.remove( String.join("\\", dottedModule) );
-			transpiler.compile( where, dottedModule, target.headerOnly);
+			transpiler.compile( (target.isTest) ? testWhere : srcWhere, dottedModule, target.headerOnly, target.isTest);
 		}
 		System.out.printf("Compiled %d targets\n", targets.length);
 		System.out.println();

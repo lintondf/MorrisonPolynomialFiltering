@@ -16,15 +16,15 @@ from PolynomialFiltering.PythonUtilities import ignore, testcase
 from TestData import TestData
 
 class TestConstantObservationErrorModel(unittest.TestCase):
-
+    '''@cdf : Dataset'''
     cdf = None;
 
     @classmethod
-    def setUpClass(cls):
+    def setUpClass(self):
         pass
     
     @classmethod
-    def tearDownClass(cls):
+    def tearDownClass(self):
         pass
     
     def setUp(self):
@@ -35,6 +35,14 @@ class TestConstantObservationErrorModel(unittest.TestCase):
         pass
 
     def test0Generate(self):
+        '''@path : str'''
+        '''@cdf : Dataset'''
+        '''@iTest : int'''
+        '''@e : int'''
+        '''@group : Dataset'''
+        '''@inputCovariance : array'''
+        '''@inputInverse : array'''
+        '''@element : vector'''
         path = testDataPath('testConstantObservationErrorModel.nc');
         cdf = Dataset(path, "w", format="NETCDF4");
         

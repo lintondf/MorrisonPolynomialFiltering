@@ -1,0 +1,119 @@
+package com.bluelightning.tools.transpiler;
+
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
+import java.nio.file.Path;
+
+import freemarker.template.Configuration;
+import freemarker.template.TemplateException;
+
+public class CppTestTarget extends CppTarget {
+
+	public CppTestTarget(IProgrammer programmer, Configuration cfg, Path baseDirectory) {
+		super(programmer, cfg, baseDirectory);
+		// TODO Auto-generated constructor stub
+	}
+
+	boolean inTest = false;
+
+	@Override
+	public void startModule(Scope scope, boolean headerOnly, boolean isTest) {
+		if (! isTest) {
+			return;
+		}
+		inTest = true;
+		System.out.println(String.format("\nC++/%s test: ", programmer.getName()) + scope.toString() );
+		this.headerOnly = headerOnly;
+		
+		currentScope = scope;
+		hppIndent = new Indent();
+		hppPrivate = new Indent();
+		cppIndent = new Indent();
+		String moduleName = scope.getLast();
+		hppPath = testDirectory;
+		cppPath = testDirectory;
+		StringBuilder moduleIncludeFile = new StringBuilder();
+		for (int i = 0; i < scope.getLevelCount()-1; i++) {
+			String level = scope.getLevel(i).toLowerCase();
+			if (i > 0) {
+				moduleIncludeFile.append(level);
+				moduleIncludeFile.append('/');
+			}
+			hppPath = hppPath.resolve(level);
+			cppPath = cppPath.resolve(level);
+		}
+		hppPath = hppPath.resolve( moduleName + ".hpp" );
+		cppPath = cppPath.resolve( moduleName + ".cpp" );
+		moduleIncludeFile.append( moduleName + ".hpp" );
+		System.out.println(hppPath.toString());
+		if (!headerOnly) {
+			System.out.println(cppPath.toString());
+		}
+		templateDataModel.put("scope", scope);
+		define = String.format("__%sHPP", scope.toString().replace("/", "_").toUpperCase());
+		templateDataModel.put("hppDefine", define);
+		templateDataModel.put("systemIncludes", "");
+		StringBuilder localIncludes = new StringBuilder();
+		//localIncludes.append("#include <polynomialfiltering/Main.hpp>\n");
+		for (String includeFile : includeFiles) {
+			localIncludes.append(String.format("#include <%s>\n", includeFile));
+		}
+		includeFiles.clear();
+		templateDataModel.put("localIncludes", localIncludes.toString());
+		templateDataModel.put("interfaceInclude", programmer.getInclude() + "\n");
+		
+		templateDataModel.put("moduleInclude", moduleIncludeFile.toString());
+		
+		StringBuilder systemIncludes = new StringBuilder();
+		systemIncludes.append("#include <math.h>\n");
+		
+		templateDataModel.put("systemIncludes", systemIncludes.toString());
+		templateDataModel.put("hppBody", "");
+		templateDataModel.put("cppBody", "");
+		
+		// start at 1 to skip import scope
+		for (int i = 1; i < scope.qualifiers.length-1; i++) {
+			hppIndent.write(String.format("namespace %s {\n", scope.qualifiers[i]));
+			cppIndent.write(String.format("namespace %s {\n", scope.qualifiers[i]));
+			namespaceStack.push(String.format("%s}; // namespace %s\n", hppIndent.toString(), scope.qualifiers[i]));
+			hppIndent.in();
+			cppIndent.in();
+		}
+		
+		for (String using : programmer.getUsings()) {
+			cppIndent.writeln(using);
+		}
+		cppIndent.writeln("");
+	}
+	
+	@Override
+	public void finishModule() {
+		if (! inTest) {
+			namespaceStack.clear();
+			return;
+		}
+		while (! namespaceStack.isEmpty() ) {
+			String close = namespaceStack.pop();
+			hppIndent.append( close );
+			cppIndent.append( close );
+			hppIndent.out();
+			cppIndent.out();
+		}
+		templateDataModel.put("cppBody", cppIndent.out.toString().replaceAll("\\(\\*([^\\)]*)\\)\\.", "$1->")); //.replace("(*this).", "this->"));
+		try {
+			cppPath.toFile().getParentFile().mkdirs();
+			OutputStreamWriter out = new OutputStreamWriter(new FileOutputStream(cppPath.toFile()));
+			cpp.process(templateDataModel, out);
+			out.close();
+		} catch (IOException iox ) {
+			iox.printStackTrace();
+		} catch (TemplateException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		inTest = false;
+	}
+	
+}

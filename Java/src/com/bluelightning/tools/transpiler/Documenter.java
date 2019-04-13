@@ -10,6 +10,7 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.TreeMap;
 
 //import org.cellprofiler.javabridge.CPython;
 //import org.cellprofiler.javabridge.CPython.WrappedException;
@@ -23,7 +24,23 @@ import com.bluelightning.tools.transpiler.Scope.Level;
  */
 public class Documenter {
 	
-	protected HashMap<String, String> documentation = new HashMap<>();
+	public interface IGenerator {
+		public String generate( String indent, String pyDoxygen );
+	}
+	
+	public static class ObjectDocumentation {
+		String  docstring;  // python docstring contents
+		String  pyDoxygen;  // doxypypy converted docstring
+		
+		public static ObjectDocumentation none() {
+			ObjectDocumentation doc = new ObjectDocumentation();
+			doc.docstring = "";
+			doc.pyDoxygen = "";
+			return doc;
+		}
+	}
+	
+	protected HashMap<String, ObjectDocumentation> documentation = new HashMap<>();
 	protected File scratch = null;
 	
 	final static String pythonPath = System.getenv("HOMEPATH") + "\\Anaconda3\\Scripts\\doxypypy.exe";
@@ -33,7 +50,7 @@ public class Documenter {
 		String blockComment = "/// ";
 	}
 	
-	protected class DoxygenGenerator {
+	protected class DoxygenGenerator implements IGenerator {
 		
 		protected DoxygenConfiguration configuration = new DoxygenConfiguration();
 		
@@ -66,20 +83,22 @@ public class Documenter {
 	}
 	
 	
-	protected DoxygenGenerator doxygenGenerator = new DoxygenGenerator();
+//	protected DoxygenGenerator doxygenGenerator = new DoxygenGenerator();
+	
+	TreeMap<String, IGenerator> generators = new TreeMap<>();
 	
 	public Documenter() {
 		try {
 			scratch = File.createTempFile("Documenter", ".py");
 			scratch.deleteOnExit();
-			//scratch = new File("C:\\Users\\NOOK\\GITHUB\\MorrisonPolynomialFiltering\\Python\\src\\DoxygenTest.py");
+			generators.put("Doxygen/C++", new DoxygenGenerator() );
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 	
-	protected String findSuperDocumentation( Scope scope ) {
-		String doc = null;
+	protected ObjectDocumentation findSuperDocumentation( Scope scope ) {
+		ObjectDocumentation doc = null;
 		if (scope.getLevel() != Level.MEMBER)
 			return null;
 		Scope s = scope.getParent();
@@ -104,14 +123,22 @@ public class Documenter {
 	
 	public void putDocumentation( Scope scope, String doc ) {
 		if (doc.startsWith("\"\"\"@super")) {
-			doc = findSuperDocumentation( scope );
-			if (doc == null)
+			ObjectDocumentation docObj = findSuperDocumentation( scope );
+			if (docObj == null)
 				return;
-			documentation.put(scope.toString(), doc);			
+			documentation.put(scope.toString(), docObj);			
 			return;
 		} else if (doc.startsWith("\"\"\"@none")) {
-			documentation.put(scope.toString(), "");
+			documentation.put(scope.toString(), ObjectDocumentation.none());
 			return;
+		}
+		ObjectDocumentation docObj = documentation.get(scope.toString());
+		if (docObj != null) {
+			if (doc.equals(docObj.docstring)) 
+				return;  // already have and up to date
+		} else {
+			docObj = new ObjectDocumentation();
+			docObj.docstring = doc;
 		}
 		try {
 			PrintWriter w = new PrintWriter(scratch);
@@ -123,7 +150,8 @@ public class Documenter {
 			String[] args = new String[] {pythonPath, "-a", scratch.getAbsolutePath() };
 			String pyDoxygen = Execute.run(args);
 			pyDoxygen = pyDoxygen.replace("# @return\n#", "# @return  ");  //doxypypy inserts a line break contra doxygen examples
-			documentation.put(scope.toString(), pyDoxygen);
+			docObj.pyDoxygen = pyDoxygen;
+			documentation.put(scope.toString(), docObj);
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
@@ -133,18 +161,13 @@ public class Documenter {
 		return documentation.containsKey(scope.toString());
 	}
 	
-	public void configureDoxygen(DoxygenConfiguration c) {
-		doxygenGenerator.configure(c);
-	}
-	
-	public String getDoxygenComments( String scope, String indent ) {
+	public String getComments( String key, String scope, String indent ) {
 		if (documentation.containsKey(scope)) {
-			String doc = documentation.get(scope);
-			if (doc == null || doc.isEmpty())
+			ObjectDocumentation doc = documentation.get(scope);
+			if (doc == null || doc.pyDoxygen.isEmpty())
 				return null;
-			return doxygenGenerator.generate(indent, doc);
+			return generators.get(key).generate(indent, doc.pyDoxygen);
 		}
-//		System.out.println("NO COMMENT: " + scope.toString());
 		return null;
 	}
 	

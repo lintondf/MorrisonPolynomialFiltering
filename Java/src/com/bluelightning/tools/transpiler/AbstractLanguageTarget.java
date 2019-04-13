@@ -108,7 +108,7 @@ public abstract class AbstractLanguageTarget implements ILanguageTarget {
 	 * @see com.bluelightning.tools.transpiler.ILanguageTarget#startModule(com.bluelightning.tools.transpiler.Scope)
 	 */
 	@Override
-	public void startModule(Scope scope, boolean headerOnly) {
+	public void startModule(Scope scope, boolean headerOnly, boolean isTest) {
 		// TODO Auto-generated method stub
 
 	}
