@@ -589,14 +589,22 @@ class SourceCompilationListener extends LcdPythonBaseListener {
 							if (field == null) {
 								if (parent.getLastChild() instanceof TranslationSymbolNode) {
 									TranslationSymbolNode tsn = (TranslationSymbolNode) parent.getLastChild();
-									if (tsn.getSymbol().isEnum() || tsn.getSymbol().isClass()) {
+									Symbol typeClass = transpiler.lookupClass(tsn.getSymbol().getType());
+									if (tsn.getSymbol().isEnum()) {
 										Scope enumScope = tsn.getSymbol().getScope().getChild(Level.CLASS, tsn.getSymbol().getName());
 										field = transpiler.symbolTable.lookup(enumScope, trailer.getChild(i+1).getText() );
 										payload = TranslationUnaryNode.staticFieldReference;
+									} else if (typeClass != null) {
+										Scope objectScope = typeClass.getScope().getChild(Level.CLASS, typeClass.getName());
+										field = transpiler.symbolTable.lookup(objectScope, fieldName );
+									} else if (tsn.getSymbol().isClass()) {
+										Scope classScope = tsn.getSymbol().getScope().getChild(Level.CLASS, tsn.getSymbol().getName());
+										field = transpiler.symbolTable.lookup(classScope, trailer.getChild(i+1).getText() );
+										payload = TranslationUnaryNode.staticFieldReference;										
 									}
 								}
 								if (field == null) {
-									System.out.println(parent.getLastChild().getClass().getSimpleName() + " " +parent.getLastChild());
+//									System.out.println(parent.getLastChild().getClass().getSimpleName() + " " +parent.getLastChild());
 									if (parent.getLastChild() instanceof TranslationUnaryNode) {
 										TranslationUnaryNode tun = (TranslationUnaryNode) parent.getLastChild();
 										Symbol s = tun.getRhsSymbol();
@@ -610,9 +618,9 @@ class SourceCompilationListener extends LcdPythonBaseListener {
 									}
 								}
 							}
-							if (field == null) {  
+							if (field == null) {
 								transpiler.reportError( ctx, "Unknown member: " + fieldName + " at " + scope );
-//								transpiler.dumpChildren(ctx.getParent());
+								transpiler.dumpChildren(ctx.getParent());
 							}
 							new TranslationUnaryNode(ctx,  parent, (CommonToken) payload, field );
 							

@@ -24,11 +24,13 @@ class DeclarationsListener extends LcdPythonBaseListener {
 		private final Transpiler transpiler;
 		protected Scope moduleScope;
 		Stack<Scope> scopeStack = new Stack<>();
+		boolean isTest = false;
 
-		public DeclarationsListener(Transpiler transpiler, Scope moduleScope) {
+		public DeclarationsListener(Transpiler transpiler, Scope moduleScope, boolean isTest) {
 			super();
 			this.transpiler = transpiler;
 			this.moduleScope = moduleScope;
+			this.isTest = isTest;
 			scopeStack.push(moduleScope);
 		}
 		
@@ -61,6 +63,8 @@ class DeclarationsListener extends LcdPythonBaseListener {
 		
 		protected Symbol declareSymbol( Token token, String declaration ) {
 			declaration = declaration.trim().replaceAll(" +", " ");
+//			if (declaration.contains("testData"))
+//				System.out.println(declaration); //TODO
 			String[] fields = declaration.split(":");
 			if (fields.length >= 2) {
 				Scope currentScope = scopeStack.peek();
@@ -68,17 +72,23 @@ class DeclarationsListener extends LcdPythonBaseListener {
 					fields[1] = fields[1].substring(1, fields[1].length()-1);
 					declaration = declaration.replace("'", "");
 				}
-				Symbol symbol = transpiler.symbolTable.add(currentScope, fields[0], fields[1]);
-				Symbol type = transpiler.symbolTable.lookup(currentScope, fields[1]);
+				Symbol symbol = transpiler.symbolTable.add(currentScope, fields[0].trim(), fields[1].trim());
+				Symbol type = transpiler.symbolTable.lookup(currentScope, fields[1].trim());
 				if (type != null) {
 					if (type.isClass()) {
-//						System.out.println("declareSymbol: " + declaration + " " + type);
+//						if (declaration.contains("testData") || fields[0].trim().equals("fmp")) {
+//							System.out.println("declareSymbol: " + declaration + " @ " + currentScope.toString());
+//							System.out.println("               " + symbol );
+//							System.out.println("               " + type );
+//						}
 						transpiler.inheritClassMembers(symbol, type);
 					}
 				}
 				if (fields.length > 2) {
 					addSymbolDimensions( symbol, fields );
 				}
+//				if (declaration.contains("testData"))
+//					System.out.println(symbol.toString());
 				return symbol;
 			} else {
 				this.transpiler.reportError(token, "Ill-formed declaration: " + declaration );
@@ -194,8 +204,16 @@ class DeclarationsListener extends LcdPythonBaseListener {
 			if (classScope == null) {
 				this.transpiler.reportError(ctx.start, "Invalid class scope");
 			}
-			scopeStack.push( classScope );
 			Symbol symbol = transpiler.symbolTable.add(currentScope, name, "<CLASS>"); 
+			if (this.isTest) { 
+				Symbol testData = transpiler.lookupClass("TestData");
+//				System.out.println("ClassDef       " + symbol );
+//				System.out.println("               " + testData );
+				transpiler.inheritClassMembers(symbol, testData);
+			}
+
+			scopeStack.push( classScope );
+			
 			Symbol.SuperClassInfo sci = new Symbol.SuperClassInfo();
 			sci.superClass = null;
 			if (ctx.getChildCount() >= 5) {
@@ -204,7 +222,7 @@ class DeclarationsListener extends LcdPythonBaseListener {
 			symbol.setSuperClassInfo(sci);
 			this.transpiler.scopeMap.put( ctx.getPayload(), classScope );
 			
-			inheritDeclarations( classScope, symbol );
+			inheritDeclarations( classScope, symbol );			
 		}
 
 		@Override
@@ -217,7 +235,8 @@ class DeclarationsListener extends LcdPythonBaseListener {
 		@Override 
 		public void enterImport_name(LcdPythonParser.Import_nameContext ctx) { 
 //			dumpChildren( ctx );
-			this.transpiler.reportError(ctx.start, "Full package imports are not allowed");
+			if (!isTest)
+				this.transpiler.reportError(ctx.start, "Full package imports are not allowed");
 		}
 		
 		@Override 
@@ -231,6 +250,8 @@ class DeclarationsListener extends LcdPythonBaseListener {
 				transpiler.dispatcher.addImport(packageScope);
 				String[] imports = Transpiler.deblank(ctx.getChild(3).getText()).split(",");
 				for (String name : imports) {
+					if (name.equals("TestData")) // ignore TestData imports
+						continue;
 					Symbol symbol = transpiler.lookup(packageScope, name);
 					Scope membersScope = symbol.getScope().getChild(Level.CLASS, name );
 					List<Symbol> inheritance = transpiler.symbolTable.atScope(membersScope);

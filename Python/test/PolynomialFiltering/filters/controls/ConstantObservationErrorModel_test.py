@@ -120,6 +120,7 @@ class TestConstantObservationErrorModel(unittest.TestCase):
         '''@element : vector'''
         '''@x : float'''
         '''@Q : array'''
+        '''@model : ConstantObservationErrorModel'''
         
         testData = TestData.make('testConstantObservationErrorModel.nc')
         matches = testData.getMatchingGroups('testScalar_')
@@ -138,6 +139,17 @@ class TestConstantObservationErrorModel(unittest.TestCase):
 
     @testcase
     def test2Matrix(self) -> None:
+        '''@testData : TestData'''
+        '''@matches : List[str]'''
+        '''@i : int'''
+        '''@iE : int'''
+        '''@inputCovariance : array'''
+        '''@inputInverse : array'''
+        '''@element : vector'''
+        '''@x : float'''
+        '''@Q : array'''
+        '''@model : ConstantObservationErrorModel'''
+        
         testData = TestData.make('testConstantObservationErrorModel.nc')
         matches = testData.getMatchingGroups('testMatrix_')
         for i in range(0, len(matches)) :
@@ -154,6 +166,17 @@ class TestConstantObservationErrorModel(unittest.TestCase):
 
     @testcase
     def test3MatrixMatrix(self) -> None:
+        '''@testData : TestData'''
+        '''@matches : List[str]'''
+        '''@i : int'''
+        '''@iE : int'''
+        '''@inputCovariance : array'''
+        '''@inputInverse : array'''
+        '''@element : vector'''
+        '''@x : float'''
+        '''@Q : array'''
+        '''@model : ConstantObservationErrorModel'''
+        
         testData = TestData.make('testConstantObservationErrorModel.nc')
         matches = testData.getMatchingGroups('testMatrixMatrix_')
         for i in range(0, len(matches)) :

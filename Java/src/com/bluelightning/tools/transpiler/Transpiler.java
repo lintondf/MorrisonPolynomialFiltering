@@ -61,7 +61,6 @@ import freemarker.template.TemplateExceptionHandler;
 
 /* TODO
  * 2. this.transpiler -> Transpiler.instance()
- * 3. Persistent documentation map
  * 4. Declaration listener; allow import for tests
  */
 /**
@@ -201,12 +200,18 @@ public class Transpiler {
 	}
 	
 	public void inheritClassMembers( Symbol symbol, Symbol type ) {
-		List<Symbol> inheritance = symbolTable.atScope(type.getScope());
+		Scope s = type.getScope().getChild(Level.CLASS, type.getName());
+		List<Symbol> inheritance = symbolTable.atScope(s);
+		Symbol c = this.lookup(symbol.getScope(), type.getName());
+		if (c == null) {
+			symbolTable.add(symbol.getScope(), type.getName(), "<CLASS>");
+		}
 		Scope inheritedScope = symbol.getScope().getChild(Level.CLASS, type.getName() );
 		for (Symbol i : inheritance ) {
 			if (i.getName().equals("__init__"))
 				continue;
-//			System.out.println("     " + i.isClass() + " " + i.getName() + " " + inheritedScope );
+//			if (type.getName().equals("TestData") || symbol.getName().equals("testData") || symbol.getName().equals("fmp"))
+//				System.out.println("     " + symbol.getName() + "  " + i.isClass() + " " + i.getName() + " " + inheritedScope + " "  + s );
 			if (i.isClass() || i.isEnum()) {
 				symbolTable.inherit(i, inheritedScope.getChild(Level.CLASS, symbol.getName()) );
 			} else {
@@ -551,6 +556,7 @@ public class Transpiler {
 		symbolTable.add( importScope, "ftestPpf", "float");
 		symbolTable.add( importScope, "True", "bool");
 		symbolTable.add( importScope, "False", "bool");
+		symbolTable.add( importScope, "assert_almost_equal", "None");
 		
 		valueMap.put( TranslationUnaryNode.staticFieldReference, "::");
 
@@ -605,7 +611,7 @@ public class Transpiler {
 		walker.walk(populateListener, tree);
 		
 		// PASS 2 - handle all imports, variable, function, and class declarations
-		DeclarationsListener declarationsListener = new DeclarationsListener(this, moduleScope);
+		DeclarationsListener declarationsListener = new DeclarationsListener(this, moduleScope, isTest);
 		walker.walk(declarationsListener, tree);
 		
 		try {
@@ -623,9 +629,11 @@ public class Transpiler {
 		Long prior = moduleChecksums.get(pathString);
 		if (prior != null) {
 			skip = checksumValue.equals(prior);
+			if (pathString.contains("EmpFmpPair"))
+				skip = false;  // TODO
 		}
 		if (skip) {
-			System.out.println("No source code changes; skipping..");
+			System.out.println("No source code changes; skipping code generation..");
 		} else {
 			dispatcher.startModule(moduleScope, headerOnly, isTest);
 			LcdPythonBaseListener listener = null;
@@ -683,7 +691,7 @@ public class Transpiler {
 	protected void saveModuleChecksums() {
 		File obj = new File("moduleChecksums.obj");
 		try {
-            FileOutputStream fos = new FileOutputStream("moduleChecksums.obj");
+            FileOutputStream fos = new FileOutputStream(obj);
             ObjectOutputStream oos = new ObjectOutputStream(fos);
             oos.writeObject(moduleChecksums);
             oos.close();
@@ -740,6 +748,7 @@ public class Transpiler {
 			transpiler.compile( (target.isTest) ? testWhere : srcWhere, dottedModule, target.headerOnly, target.isTest);
 		}
 		transpiler.saveModuleChecksums();
+		transpiler.documenter.close();
 
 		System.out.printf("Compiled %d targets\n", targets.length);
 		System.out.println();

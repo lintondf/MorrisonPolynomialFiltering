@@ -4,9 +4,14 @@
 package com.bluelightning.tools.transpiler;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.PrintWriter;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Hashtable;
@@ -28,7 +33,7 @@ public class Documenter {
 		public String generate( String indent, String pyDoxygen );
 	}
 	
-	public static class ObjectDocumentation {
+	public static class ObjectDocumentation implements Serializable {
 		String  docstring;  // python docstring contents
 		String  pyDoxygen;  // doxypypy converted docstring
 		
@@ -100,6 +105,33 @@ public class Documenter {
 			generators.put("Doxygen/C++", new DoxygenGenerator() );
 		} catch (IOException e) {
 			e.printStackTrace();
+		}
+		File obj = new File("documentation.obj");
+		try {
+			FileInputStream  fis = new FileInputStream (obj);
+			ObjectInputStream  ois = new ObjectInputStream (fis);
+			documentation = (HashMap<String, ObjectDocumentation>) ois.readObject();
+            ois.close();
+            fis.close();
+		} catch (Exception x) {
+			documentation.clear();
+		}
+	}
+	
+	public void close() {
+		try {
+			File obj = new File("documentation.obj");
+			try {
+	            FileOutputStream fos = new FileOutputStream(obj);
+	            ObjectOutputStream oos = new ObjectOutputStream(fos);
+	            oos.writeObject(documentation);
+	            oos.close();
+	            fos.close();
+			} catch (Exception x) {
+				obj.delete();
+			}			
+		} catch (Exception x) {
+			x.printStackTrace();
 		}
 	}
 	
