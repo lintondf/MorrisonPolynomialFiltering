@@ -2,6 +2,7 @@ package com.bluelightning.tools.transpiler;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Stack;
 
 
 public class Scope {
@@ -12,133 +13,100 @@ public class Scope {
 			return scopeMap.get(qString);
 		}
 		
-		protected String[] qualifiers; // e.g. com.bluelightning.Filtering
+//		protected String[] qualifiers; // e.g. com.bluelightning.Filtering
 		public enum Level {
 			IMPORT, MODULE, FUNCTION, CLASS, MEMBER,
 		};
-		protected Level  level;
+		protected Stack<String> qualifiers = new Stack<>();
+		protected Stack<Level>  levels = new Stack<>();
 		protected String qString;
 		
+		protected String getScopeString() {
+			StringBuilder sb = new StringBuilder();
+			sb.append('/');
+			for (int i = 0; i < qualifiers.size(); i++) {
+				sb.append( qualifiers.get(i) );
+				sb.append('/');
+			}
+			return sb.toString();
+		}
+		
+		public Stack<String> getQualifiers() {
+			return qualifiers;
+		}
+		
 		public Scope() {
-			level = Level.IMPORT;
-			this.qualifiers = new String[] {""};
-			this.qString = "/";
+			levels.push( Level.IMPORT );
+//			qualifiers.push("");
+			this.qString = getScopeString();
 			scopeMap.put(this.qString, this);
 		}
 		
-		public Scope( Scope.Level level, List<String> qualifiers) {
-			this.level = level;
-			this.qualifiers = qualifiers.toArray( new String[qualifiers.size()] );
-			StringBuffer sb = new StringBuffer();
-			for (String name : qualifiers) {
-				sb.append(name);
-				sb.append('/');
+//		public Scope( Scope.Level level, List<String> qualifiers) {
+//			this.level = level;
+//			this.qualifiers = qualifiers.toArray( new String[qualifiers.size()] );
+//			StringBuffer sb = new StringBuffer();
+//			for (String name : qualifiers) {
+//				sb.append(name);
+//				sb.append('/');
+//			}
+//			qString = sb.toString();			
+//			scopeMap.put(this.qString, this);
+//		}
+		
+		private Scope( Scope that, boolean copy ) {
+			if (copy) {
+				this.levels.addAll( that.levels );
+				this.qualifiers.addAll( that.qualifiers );
+			} else {
+				levels.push( Level.IMPORT );				
 			}
-			qString = sb.toString();			
-			scopeMap.put(this.qString, this);
+			this.qString = this.getScopeString();
 		}
 		
 		public String getLast() {
-			return qualifiers[ qualifiers.length-1 ];
+			if (qualifiers.isEmpty())
+				return "";
+			return qualifiers.peek();
 		}
 		
 		public Scope getAtLevel(int level, Level last) {
-			Scope scope = new Scope();
+			Scope scope = new Scope(this, false);
 			for (int i = 1; i <= level; i++) {
-				scope = scope.getChild(last, this.qualifiers[i]);
+				scope.qualifiers.push(this.qualifiers.get(i));
+				scope.levels.push(this.levels.get(i));
 			}
+			scope.qString = scope.getScopeString();
+			scopeMap.put(scope.qString, scope);
 			return scope;
 		}
 		
 		public Scope getChild( Scope.Level childLevel, String childName ) {
 //			System.out.println( this.toString() );
-			Scope scope = new Scope();
-			switch (level) {
-			case IMPORT:
-				switch (childLevel) {
-				case MODULE:
-					scope.level = childLevel;
-					break;
-				case CLASS:
-					scope.level = childLevel;
-					break;
-				default:
-					return null;
+			if (levels.peek() == Level.CLASS) {
+				if (childLevel == Level.FUNCTION) {
+					childLevel = Level.MEMBER;
+				} else {
+					childLevel = Level.CLASS;
 				}
-				break; 
-				
-			case MODULE: 
-				switch (childLevel) {
-				case MODULE: 
-				case FUNCTION:
-				case CLASS:
-					scope.level = childLevel;
-					break;
-				default:
-					return null;
-				}
-				break; 
-			case FUNCTION:
-				return null;
-			case CLASS:
-				if (childLevel == Level.FUNCTION)
-					scope.level = Level.MEMBER;
-				else
-					scope.level = Level.CLASS;
-				break;
-			case MEMBER:
-				scope.level = Level.CLASS;
-			}	
-//			if (childName.equals(qualifiers[qualifiers.length-1])) {
-//				System.err.println("Double Qualifiers: " + this.toString() + " + " + childName );
-//			}
-			int n = qualifiers.length;
-			if (qualifiers[n-1].equals(childName)) {
-				n--;
+			} else if (levels.peek() == Level.MEMBER) {
+				childLevel = Level.CLASS;
 			}
-			scope.qualifiers = new String[n+1];
-			StringBuffer sb = new StringBuffer();
-			for (int i = 0; i < n; i++) {
-				sb.append(qualifiers[i]);
-				sb.append('/');
-				scope.qualifiers[i] = qualifiers[i];
-			}
-			sb.append(childName);
-			sb.append('/');
-			scope.qualifiers[n] = childName;
-			scope.qString = sb.toString();			
+			Scope scope = new Scope(this, true);
+			scope.levels.push(childLevel);
+			scope.qualifiers.push(childName);
+			scope.qString = scope.getScopeString();
 			scopeMap.put(scope.qString, scope);
 			return scope;
 		}
 		
 		public Scope getParent() {
-			Scope scope = new Scope();
-			switch (level) {
-			case IMPORT:
+			if (this.qualifiers.isEmpty())
 				return null;
-			case MODULE:
-				scope.level = Level.MODULE;
-				break;
-			case FUNCTION:
-				scope.level = Level.MODULE;
-				break;
-			case CLASS:
-				scope.level = Level.MODULE;
-				break;
-			case MEMBER:
-				scope.level = Level.CLASS;
-				break;
-			}
-			if (this.qualifiers.length == 0)
-				return null;
-			scope.qualifiers = new String[this.qualifiers.length-1];
-			StringBuffer sb = new StringBuffer();
-			for (int i = 0; i < scope.qualifiers.length; i++) {
-				sb.append(qualifiers[i]);
-				sb.append('/');
-				scope.qualifiers[i] = qualifiers[i];
-			}
-			scope.qString = sb.toString();			
+			Scope scope = new Scope(this, true);
+			scope.levels.pop();
+			scope.qualifiers.pop();
+			scope.qString = scope.getScopeString();
 			scopeMap.put(scope.qString, scope);
 			return scope;
 		}
@@ -149,15 +117,15 @@ public class Scope {
 		}
 
 		public Scope.Level getLevel() {
-			return level;
+			return levels.peek();
 		}
 
 		public int getLevelCount() {
-			return qualifiers.length;
+			return qualifiers.size();
 		}
 		
 		public String getLevel(int level) {
-			return qualifiers[level];
+			return qualifiers.get(level);
 		}
 		
 	}

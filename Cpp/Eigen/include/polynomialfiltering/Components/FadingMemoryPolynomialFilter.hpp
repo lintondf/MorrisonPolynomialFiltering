@@ -21,9 +21,12 @@ namespace PolynomialFiltering {
     namespace Components {
 
         ///// @class FMPBase
-        /// @brief     Base class for the fading memory polynomial filters.
+        /// @brief         Return the fading factor for the filter
         /// 
-        ///     This class implements the 'current-estimate' form of the fading memory polynomial filter.
+        /// 
+        ///  @param		            None
+        /// 
+        ///  @return              fading factor
         /// 
         class FMPBase : public AbstractRecursiveFilter {
             public:
@@ -62,7 +65,11 @@ namespace PolynomialFiltering {
 
 
         ///// @class FMP0
-        /// @brief     Class for the 0th order fading memory polynomial filter.
+        /// @brief         Constructor
+        /// 
+        /// 
+        ///  @param		theta	fading factor
+        ///  @param		tau	nominal time step
         /// 
         class FMP0 : public FMPBase {
             public:
@@ -98,7 +105,11 @@ namespace PolynomialFiltering {
 
 
         ///// @class FMP1
-        /// @brief     Class for the 1st order fading memory polynomial filter.
+        /// @brief         Constructor
+        /// 
+        /// 
+        ///  @param		theta	fading factor
+        ///  @param		tau	nominal time step
         /// 
         class FMP1 : public FMPBase {
             public:
@@ -134,7 +145,11 @@ namespace PolynomialFiltering {
 
 
         ///// @class FMP2
-        /// @brief     Class for the 2nd order fading memory polynomial filter.
+        /// @brief         Constructor
+        /// 
+        /// 
+        ///  @param		theta	fading factor
+        ///  @param		tau	nominal time step
         /// 
         class FMP2 : public FMPBase {
             public:
@@ -170,7 +185,11 @@ namespace PolynomialFiltering {
 
 
         ///// @class FMP3
-        /// @brief     Class for the 3rd order fading memory polynomial filter.
+        /// @brief         Constructor
+        /// 
+        /// 
+        ///  @param		theta	fading factor
+        ///  @param		tau	nominal time step
         /// 
         class FMP3 : public FMPBase {
             public:
@@ -206,7 +225,11 @@ namespace PolynomialFiltering {
 
 
         ///// @class FMP4
-        /// @brief     Class for the 4th order fading memory polynomial filter.
+        /// @brief         Constructor
+        /// 
+        /// 
+        ///  @param		theta	fading factor
+        ///  @param		tau	nominal time step
         /// 
         class FMP4 : public FMPBase {
             public:
@@ -242,7 +265,11 @@ namespace PolynomialFiltering {
 
 
         ///// @class FMP5
-        /// @brief     Class for the 5th order fading memory polynomial filter.
+        /// @brief         Constructor
+        /// 
+        /// 
+        ///  @param		theta	fading factor
+        ///  @param		tau	nominal time step
         /// 
         class FMP5 : public FMPBase {
             public:

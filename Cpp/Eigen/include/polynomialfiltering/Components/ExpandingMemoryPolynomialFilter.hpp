@@ -21,9 +21,17 @@ namespace PolynomialFiltering {
     namespace Components {
 
         ///// @class EMPBase
-        /// @brief     Base class for expanding memory polynomial filters.
+        /// @brief         Compute the observation count to switch from EMP to FMP
         /// 
-        ///     This class implements the 'current-estimate' form of the expanding memory polynomial filter.
+        ///         The 0th element of the EMP VRF declines as the number of observations
+        ///         increases.  For the FMP the VRF is constant.  This function returns the
+        ///         observation number at which these elements match
+        /// 
+        /// 
+        ///  @param		theta	fading factor at which to switch
+        /// 
+        ///  @return              matching observation count
+        /// 
         /// 
         class EMPBase : public AbstractRecursiveFilter {
             public:
@@ -65,7 +73,10 @@ namespace PolynomialFiltering {
 
 
         ///// @class EMP0
-        /// @brief     Class for the 0th order expanding memory polynomial filter.
+        /// @brief         Constructor
+        /// 
+        /// 
+        ///  @param		tau	nominal time step
         /// 
         class EMP0 : public EMPBase {
             public:
@@ -114,7 +125,10 @@ namespace PolynomialFiltering {
 
 
         ///// @class EMP1
-        /// @brief     Class for the 1st order expanding memory polynomial filter.
+        /// @brief         Constructor
+        /// 
+        /// 
+        ///  @param		tau	nominal time step
         /// 
         class EMP1 : public EMPBase {
             public:
@@ -163,7 +177,10 @@ namespace PolynomialFiltering {
 
 
         ///// @class EMP2
-        /// @brief     Class for the 2nd order expanding memory polynomial filter.
+        /// @brief         Constructor
+        /// 
+        /// 
+        ///  @param		tau	nominal time step
         /// 
         class EMP2 : public EMPBase {
             public:
@@ -212,7 +229,10 @@ namespace PolynomialFiltering {
 
 
         ///// @class EMP3
-        /// @brief     Class for the 3rd order expanding memory polynomial filter.
+        /// @brief         Constructor
+        /// 
+        /// 
+        ///  @param		tau	nominal time step
         /// 
         class EMP3 : public EMPBase {
             public:
@@ -261,7 +281,10 @@ namespace PolynomialFiltering {
 
 
         ///// @class EMP4
-        /// @brief     Class for the 4th order expanding memory polynomial filter.
+        /// @brief         Constructor
+        /// 
+        /// 
+        ///  @param		tau	nominal time step
         /// 
         class EMP4 : public EMPBase {
             public:
@@ -310,7 +333,10 @@ namespace PolynomialFiltering {
 
 
         ///// @class EMP5
-        /// @brief     Class for the 5th order expanding memory polynomial filter.
+        /// @brief         Constructor
+        /// 
+        /// 
+        ///  @param		tau	nominal time step
         /// 
         class EMP5 : public EMPBase {
             public:

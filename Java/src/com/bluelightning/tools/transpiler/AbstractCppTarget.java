@@ -752,13 +752,17 @@ public abstract class AbstractCppTarget extends AbstractLanguageTarget {
 		StringBuilder includeFile = new StringBuilder();
 		for (int i = 0; i < scope.getLevelCount()-1; i++) {
 			String level = scope.getLevel(i).toLowerCase();
-			if (i > 0) {
+//			if (i > 0) {
 				includeFile.append(level);
 				includeFile.append('/');
-			}
+//			}
 		}
-		includeFile.append( scope.getLast() + ".hpp" );
 		String file = includeFile.toString();
+		if (file.toLowerCase().endsWith("/Main/")) {
+			file = file.replace("/Main/", "/Main.hpp");
+		} else {
+			file += scope.getLast() + ".hpp";
+		};
 		for (String f : includeFiles) {
 			if (f.equals(file))
 				return;

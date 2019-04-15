@@ -69,6 +69,8 @@ import freemarker.template.TemplateExceptionHandler;
  */
 public class Transpiler {
 	
+	static boolean skipUnchanged = false;
+	
 	public static class Target {
 		public Path  dir;
 		public String module;
@@ -119,7 +121,7 @@ public class Transpiler {
 		new Target(Paths.get("PolynomialFiltering/filters"), "ManagedFilterBase"),
 //		new Target(Paths.get("PolynomialFiltering/filters"), "ManagedScalarRecursiveFilter"),
 //		new Target(Paths.get("PolynomialFiltering/filters"), "ManagedScalarRecursiveFilterSet"),
-		new TestTarget(Paths.get("PolynomialFiltering/filters/controls"), "ConstantObservationErrorModel_test"),
+//		new TestTarget(Paths.get("PolynomialFiltering/filters/controls"), "ConstantObservationErrorModel_test"),
 	};
 	
 	protected Logger logger;
@@ -634,9 +636,10 @@ public class Transpiler {
 			if (pathString.contains("_test"))
 				skip = false;  // TODO
 		}
-		if (skip) {
+		if (skip && skipUnchanged) {
 			System.out.println("No source code changes; skipping code generation..");
 		} else {
+			skipUnchanged = false;  // compile after first change detected
 			dispatcher.startModule(moduleScope, headerOnly, isTest);
 			LcdPythonBaseListener listener = null;
 			if (! isTest) {

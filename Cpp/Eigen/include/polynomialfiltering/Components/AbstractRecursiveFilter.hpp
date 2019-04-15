@@ -21,7 +21,13 @@ namespace PolynomialFiltering {
     namespace Components {
 
         ///// @class AbstractRecursiveFilter
-        /// @brief Base class for both expanding and fading polynomial filter and their combinations.
+        /// @brief Get the variance reduction matrix
+        /// 
+        /// 
+        ///  @param		None
+        /// 
+        ///  @return  Square matrix (order+1) of input to output variance ratios
+        /// 
         /// 
         class AbstractRecursiveFilter : public AbstractFilter {
             public:

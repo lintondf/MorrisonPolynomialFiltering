@@ -24,6 +24,7 @@ public class CppTestTarget extends AbstractCppTarget {
 	@Override
 	public void startModule(Scope scope, boolean headerOnly, boolean isTest) {
 		if (! isTest) {
+			includeFiles.clear();
 			return;
 		}
 		inTest = true;
@@ -42,10 +43,10 @@ public class CppTestTarget extends AbstractCppTarget {
 //		StringBuilder moduleIncludeFile = new StringBuilder();
 		for (int i = 0; i < scope.getLevelCount()-1; i++) {
 			String level = scope.getLevel(i).toLowerCase();
-			if (i > 0) {
+//			if (i > 0) {
 //				moduleIncludeFile.append(level);
 //				moduleIncludeFile.append('/');
-			}
+//			}
 			hppPath = hppPath.resolve(level);
 			cppPath = cppPath.resolve(level);
 		}
@@ -65,7 +66,6 @@ public class CppTestTarget extends AbstractCppTarget {
 		for (String includeFile : includeFiles) {
 			localIncludes.append(String.format("#include <%s>\n", includeFile));
 		}
-		includeFiles.clear();
 		templateDataModel.put("localIncludes", localIncludes.toString());
 		templateDataModel.put("interfaceInclude", programmer.getInclude() + "\n");
 		
@@ -78,11 +78,9 @@ public class CppTestTarget extends AbstractCppTarget {
 		templateDataModel.put("hppBody", "");
 		templateDataModel.put("cppBody", "");
 		
-		// start at 1 to skip import scope
-		for (int i = 1; i < scope.qualifiers.length-1; i++) {
-//			hppIndent.write(String.format("namespace %s {\n", scope.qualifiers[i]));
-			cppIndent.write(String.format("namespace %s {\n", scope.qualifiers[i]));
-			namespaceStack.push(String.format("%s}; // namespace %s\n", hppIndent.toString(), scope.qualifiers[i]));
+		for (int i = 0; i < scope.getQualifiers().size()-1; i++) {
+			cppIndent.write(String.format("namespace %s {\n", scope.getQualifiers().get(i)));
+			namespaceStack.push(String.format("%s}; // namespace %s\n", hppIndent.toString(), scope.getQualifiers().get(i)));
 			hppIndent.in();
 			cppIndent.in();
 		}

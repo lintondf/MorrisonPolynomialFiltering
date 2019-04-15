@@ -22,14 +22,15 @@ namespace PolynomialFiltering {
         namespace controls {
 
             ///// @class IObservationErrorModel
-            /// @brief Interface for all observation error models.
+            /// @brief Get the covariance matrix for an observation
             /// 
-            /// Observation error models provide filters with (potentially varying)
-            /// covariance matrices characterising the random errors in observation
-            /// elements.  The inverse of the covariance matrix ('precision' matrix)
-            /// is more frequently required during filter processing.  Error models
-            /// generally can compute this inverse more efficiently than by naive
-            /// inverse of the covariance matrix.
+            /// 
+            ///  @param		f	the filter using this model (models can serve multiple filters)
+            ///  @param		t	the time of the observation
+            ///  @param		y	the observation vector
+            ///  @param		observationId	the element of y being used, -1 for all elements
+            /// 
+            ///  @return  Covariance matrix (1x1 if observationId >= 0)
             /// 
             class IObservationErrorModel {
                 public:

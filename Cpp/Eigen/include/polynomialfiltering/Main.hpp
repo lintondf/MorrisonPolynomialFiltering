@@ -37,7 +37,9 @@ namespace PolynomialFiltering {
 
 
     ///// @class AbstractFilter
-    /// @brief The base class for all of the filters and components in this package.
+    /// @brief Returns the current filter state vector
+    /// 
+    ///  @return  State vector (order+1 elements)
     /// 
     class AbstractFilter {
         public:
@@ -142,7 +144,12 @@ namespace PolynomialFiltering {
 
 
     ///// @class AbstractFilterWithCovariance
-    /// @brief Extends AbstractFilter to support state vector covariance methods.
+    /// @brief Get the variance reduction factor for the 'order'th derivative
+    /// 
+    /// 
+    ///  @param		None
+    /// 
+    ///  @return  'order'th derivative input to output variance ratio
     /// 
     class AbstractFilterWithCovariance : public AbstractFilter {
         public:

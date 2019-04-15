@@ -246,7 +246,8 @@ class DeclarationsListener extends LcdPythonBaseListener {
 			dotted = "/" + dotted.replace(".", "/") + "/";
 			Scope packageScope = Scope.getExistingScope(dotted);
 			if (packageScope != null) {
-//				System.out.println("import from " + packageScope.toString() );
+				System.out.println("import from " + packageScope.toString() + " -> " + packageScope.getLevelCount() + " " + packageScope.getLast() );
+				System.out.println(dotted);
 				transpiler.dispatcher.addImport(packageScope);
 				String[] imports = Transpiler.deblank(ctx.getChild(3).getText()).split(",");
 				for (String name : imports) {

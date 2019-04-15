@@ -23,7 +23,11 @@ namespace PolynomialFiltering {
         namespace controls {
 
             ///// @class ConstantObservationErrorModel
-            /// @brief This model is used when the random errors in observations are constant.
+            /// @brief Constructor
+            /// 
+            /// 
+            ///  @param		R	constant covariance matrix of a vector observation
+            ///  @param		inverseR	inverse of the R matrix; used when inverseR is easily computed.
             /// 
             class ConstantObservationErrorModel : public IObservationErrorModel {
                 public:
