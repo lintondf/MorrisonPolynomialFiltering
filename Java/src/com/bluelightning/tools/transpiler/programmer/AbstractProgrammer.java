@@ -174,7 +174,6 @@ public abstract class AbstractProgrammer implements IProgrammer {
 	 */
 	@Override
 	public String getInclude() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -183,7 +182,6 @@ public abstract class AbstractProgrammer implements IProgrammer {
 	 */
 	@Override
 	public String[] getUsings() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -229,8 +227,6 @@ public abstract class AbstractProgrammer implements IProgrammer {
 	 */
 	@Override
 	public void writeSpecialTerm(Indent out, String operator, Indent lhs, Indent rhs) {
-		// TODO Auto-generated method stub
-
 	}
 
 	/* (non-Javadoc)
@@ -305,7 +301,6 @@ public abstract class AbstractProgrammer implements IProgrammer {
 	 */
 	@Override
 	public Symbol getDimensionSymbol(String type, String value) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -314,7 +309,6 @@ public abstract class AbstractProgrammer implements IProgrammer {
 	 */
 	@Override
 	public Symbol getRowColSymbol(String value) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -323,7 +317,6 @@ public abstract class AbstractProgrammer implements IProgrammer {
 	 */
 	@Override
 	public Symbol getSliceSymbol(String type) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 

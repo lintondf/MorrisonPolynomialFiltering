@@ -119,7 +119,6 @@ public class CppSrcTarget extends AbstractCppTarget {
 		} catch (IOException iox ) {
 			iox.printStackTrace();
 		} catch (TemplateException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

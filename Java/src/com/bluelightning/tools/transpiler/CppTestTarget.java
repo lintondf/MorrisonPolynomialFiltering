@@ -14,7 +14,6 @@ public class CppTestTarget extends AbstractCppTarget {
 
 	public CppTestTarget(IProgrammer programmer, Configuration cfg, Path baseDirectory) {
 		super(programmer, cfg, baseDirectory);
-		// TODO Auto-generated constructor stub
 	}
 
 	boolean inTest = false;
@@ -131,7 +130,6 @@ public class CppTestTarget extends AbstractCppTarget {
 		} catch (IOException iox ) {
 			iox.printStackTrace();
 		} catch (TemplateException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		inTest = false;

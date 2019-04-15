@@ -68,12 +68,14 @@ class DeclarationsListener extends LcdPythonBaseListener {
 			String[] fields = declaration.split(":");
 			if (fields.length >= 2) {
 				Scope currentScope = scopeStack.peek();
+				fields[0] = fields[0].trim();
+				fields[1] = fields[1].trim();
 				if (fields[1].startsWith("'")) { 
 					fields[1] = fields[1].substring(1, fields[1].length()-1);
 					declaration = declaration.replace("'", "");
 				}
-				Symbol symbol = transpiler.symbolTable.add(currentScope, fields[0].trim(), fields[1].trim());
-				Symbol type = transpiler.symbolTable.lookup(currentScope, fields[1].trim());
+				Symbol symbol = transpiler.symbolTable.add(currentScope, fields[0], fields[1]);
+				Symbol type = transpiler.symbolTable.lookup(currentScope, fields[1]);
 				if (type != null) {
 					if (type.isClass()) {
 //						if (declaration.contains("testData") || fields[0].trim().equals("fmp")) {

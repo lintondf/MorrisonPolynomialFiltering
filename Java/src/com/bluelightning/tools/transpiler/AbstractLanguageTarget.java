@@ -100,8 +100,6 @@ public abstract class AbstractLanguageTarget implements ILanguageTarget {
 	 */
 	@Override
 	public void addImport(Scope scope) {
-		// TODO Auto-generated method stub
-
 	}
 
 	/* (non-Javadoc)
@@ -109,8 +107,6 @@ public abstract class AbstractLanguageTarget implements ILanguageTarget {
 	 */
 	@Override
 	public void startModule(Scope scope, boolean headerOnly, boolean isTest) {
-		// TODO Auto-generated method stub
-
 	}
 
 	/* (non-Javadoc)
@@ -118,8 +114,6 @@ public abstract class AbstractLanguageTarget implements ILanguageTarget {
 	 */
 	@Override
 	public void finishModule() {
-		// TODO Auto-generated method stub
-
 	}
 
 	/* (non-Javadoc)
@@ -127,8 +121,6 @@ public abstract class AbstractLanguageTarget implements ILanguageTarget {
 	 */
 	@Override
 	public void startClass(Scope scope) {
-		// TODO Auto-generated method stub
-
 	}
 
 	/* (non-Javadoc)
@@ -136,8 +128,6 @@ public abstract class AbstractLanguageTarget implements ILanguageTarget {
 	 */
 	@Override
 	public void finishClass(Scope scope) {
-		// TODO Auto-generated method stub
-
 	}
 
 	/* (non-Javadoc)
@@ -145,8 +135,6 @@ public abstract class AbstractLanguageTarget implements ILanguageTarget {
 	 */
 	@Override
 	public void startMethod(Scope scope) {
-		// TODO Auto-generated method stub
-
 	}
 
 	/* (non-Javadoc)
@@ -154,8 +142,6 @@ public abstract class AbstractLanguageTarget implements ILanguageTarget {
 	 */
 	@Override
 	public void finishMethod(Scope scope) {
-		// TODO Auto-generated method stub
-
 	}
 
 	/* (non-Javadoc)
@@ -163,8 +149,6 @@ public abstract class AbstractLanguageTarget implements ILanguageTarget {
 	 */
 	@Override
 	public void emitSymbolDeclaration(Symbol symbol, String comment) {
-		// TODO Auto-generated method stub
-
 	}
 
 	/* (non-Javadoc)
@@ -172,8 +156,6 @@ public abstract class AbstractLanguageTarget implements ILanguageTarget {
 	 */
 	@Override
 	public void emitElifStatement(Scope scope, TranslationNode expressionRoot) {
-		// TODO Auto-generated method stub
-
 	}
 
 	/* (non-Javadoc)
@@ -181,8 +163,6 @@ public abstract class AbstractLanguageTarget implements ILanguageTarget {
 	 */
 	@Override
 	public void emitElseStatement() {
-		// TODO Auto-generated method stub
-
 	}
 
 	/* (non-Javadoc)
@@ -190,8 +170,6 @@ public abstract class AbstractLanguageTarget implements ILanguageTarget {
 	 */
 	@Override
 	public void emitExpressionStatement(Scope scope, TranslationNode root) {
-		// TODO Auto-generated method stub
-
 	}
 
 	/* (non-Javadoc)
@@ -199,8 +177,6 @@ public abstract class AbstractLanguageTarget implements ILanguageTarget {
 	 */
 	@Override
 	public void emitIfStatement(Scope scope, TranslationNode expressionRoot) {
-		// TODO Auto-generated method stub
-
 	}
 
 	/* (non-Javadoc)
@@ -208,8 +184,6 @@ public abstract class AbstractLanguageTarget implements ILanguageTarget {
 	 */
 	@Override
 	public void emitForStatement(Symbol symbol, TranslationNode expressionRoot) {
-		// TODO Auto-generated method stub
-
 	}
 
 	/* (non-Javadoc)
@@ -217,8 +191,6 @@ public abstract class AbstractLanguageTarget implements ILanguageTarget {
 	 */
 	@Override
 	public void emitNewExpression(Scope scope, String className, TranslationNode root) {
-		// TODO Auto-generated method stub
-
 	}
 
 	/* (non-Javadoc)
@@ -226,8 +198,6 @@ public abstract class AbstractLanguageTarget implements ILanguageTarget {
 	 */
 	@Override
 	public void emitRaiseStatement(String exception) {
-		// TODO Auto-generated method stub
-
 	}
 
 	/* (non-Javadoc)
@@ -235,8 +205,6 @@ public abstract class AbstractLanguageTarget implements ILanguageTarget {
 	 */
 	@Override
 	public void emitReturnStatement() {
-		// TODO Auto-generated method stub
-
 	}
 
 	/* (non-Javadoc)
@@ -244,8 +212,6 @@ public abstract class AbstractLanguageTarget implements ILanguageTarget {
 	 */
 	@Override
 	public void emitSubExpression(Scope scope, TranslationNode root) {
-		// TODO Auto-generated method stub
-
 	}
 
 	/* (non-Javadoc)
@@ -253,8 +219,6 @@ public abstract class AbstractLanguageTarget implements ILanguageTarget {
 	 */
 	@Override
 	public void finishStatement() {
-		// TODO Auto-generated method stub
-
 	}
 
 	/* (non-Javadoc)
@@ -262,8 +226,6 @@ public abstract class AbstractLanguageTarget implements ILanguageTarget {
 	 */
 	@Override
 	public void closeBlock() {
-		// TODO Auto-generated method stub
-
 	}
 
 }
