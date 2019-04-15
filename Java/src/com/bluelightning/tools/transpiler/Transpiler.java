@@ -74,6 +74,8 @@ public class Transpiler {
 		public String module;
 		public boolean headerOnly;
 		public boolean isTest;
+		public Path   where;
+		public ArrayList<String> dottedModule;
 		
 		public Target( Path dir, String module ) {
 			this.dir = dir;
@@ -106,7 +108,6 @@ public class Transpiler {
 		new Target(Paths.get("PolynomialFiltering/Components"), "ExpandingMemoryPolynomialFilter"),
 		new Target(Paths.get("PolynomialFiltering/Components"), "FadingMemoryPolynomialFilter"),
 		new Target(Paths.get("PolynomialFiltering/Components"), "EmpFmpPair"),
-		new Target(Paths.get("PolynomialFiltering/filters"), "IManagedFilter", true),
 		new Target(Paths.get("PolynomialFiltering/filters/controls"), "IObservationErrorModel", true),
 		new Target(Paths.get("PolynomialFiltering/filters/controls"), "IJudge", true),
 		new Target(Paths.get("PolynomialFiltering/filters/controls"), "IMonitor", true),
@@ -114,6 +115,7 @@ public class Transpiler {
 		new Target(Paths.get("PolynomialFiltering/filters/controls"), "BaseScalarJudge"),
 		//new Target(Paths.get("PolynomialFiltering/filters/controls"), "BaseVectorJudge"),
 		//new Target(Paths.get("PolynomialFiltering/filters/controls"), "NullMonitor"),
+		new Target(Paths.get("PolynomialFiltering/filters"), "IManagedFilter", true),
 		new Target(Paths.get("PolynomialFiltering/filters"), "ManagedFilterBase"),
 //		new Target(Paths.get("PolynomialFiltering/filters"), "ManagedScalarRecursiveFilter"),
 //		new Target(Paths.get("PolynomialFiltering/filters"), "ManagedScalarRecursiveFilterSet"),
@@ -629,7 +631,7 @@ public class Transpiler {
 		Long prior = moduleChecksums.get(pathString);
 		if (prior != null) {
 			skip = checksumValue.equals(prior);
-			if (pathString.contains("EmpFmpPair"))
+			if (pathString.contains("_test"))
 				skip = false;  // TODO
 		}
 		if (skip) {
@@ -745,7 +747,9 @@ public class Transpiler {
 			dottedModule.add(target.module);
 			System.out.println(String.join("\\", dottedModule));
 			srcs.remove( String.join("\\", dottedModule) );
-			transpiler.compile( (target.isTest) ? testWhere : srcWhere, dottedModule, target.headerOnly, target.isTest);
+			target.where = (target.isTest) ? testWhere : srcWhere;
+			target.dottedModule = dottedModule;
+			transpiler.compile( target.where, target.dottedModule, target.headerOnly, target.isTest);
 		}
 		transpiler.saveModuleChecksums();
 		transpiler.documenter.close();

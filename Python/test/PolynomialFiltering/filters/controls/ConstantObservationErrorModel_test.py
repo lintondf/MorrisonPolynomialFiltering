@@ -197,6 +197,6 @@ class TestConstantObservationErrorModel(unittest.TestCase):
                 assert_almost_equal(inputInverse[iE, iE], Q)        
         testData.close()
 
-if __name__ == "__main__":
+if __name__ == "__main__": 
     #import sys;sys.argv = ['', 'Test.testConstantObservationErrorModel']
     unittest.main()

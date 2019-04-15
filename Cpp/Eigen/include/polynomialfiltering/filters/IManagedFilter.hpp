@@ -15,6 +15,7 @@
 #include <polynomialfiltering/PolynomialFilteringEigen.hpp>
 
 #include <polynomialfiltering/Main.hpp>
+#include <polynomialfiltering/filters/controls/IObservationErrorModel.hpp>
 
 
 namespace PolynomialFiltering {
@@ -25,7 +26,7 @@ namespace PolynomialFiltering {
                 virtual double getGoodnessOfFit() = 0;
                 virtual bool add(const double t, const RealVector& y, const int observationId=0) = 0;
                 virtual void setObservationInverseR(const RealMatrix& inverseR) = 0;
-                virtual void setObservationErrorModel(const IObservationErrorModel errorModel) = 0;
+                virtual void setObservationErrorModel(const std::shared_ptr<IObservationErrorModel> errorModel) = 0;
         }; // class IManagedFilter 
 
     }; // namespace filters

@@ -9,7 +9,7 @@ import java.nio.file.Path;
 import freemarker.template.Configuration;
 import freemarker.template.TemplateException;
 
-public class CppSrcTarget extends CppTarget {
+public class CppSrcTarget extends AbstractCppTarget {
 
 	public CppSrcTarget(IProgrammer programmer, Configuration cfg, Path baseDirectory) {
 		super(programmer, cfg, baseDirectory);

@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
 
-import com.bluelightning.tools.transpiler.CppTarget;
+import com.bluelightning.tools.transpiler.AbstractCppTarget;
 import com.bluelightning.tools.transpiler.IProgrammer;
 import com.bluelightning.tools.transpiler.Indent;
 import com.bluelightning.tools.transpiler.Scope;
@@ -70,6 +70,13 @@ public class BoostProgrammer extends AbstractProgrammer {
 	public String getName() {
 		// TODO Auto-generated method stub
 		return "Boost";
+	}
+
+
+	@Override
+	public String remapSymbolUsages(Scope currentScope, Symbol symbol) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

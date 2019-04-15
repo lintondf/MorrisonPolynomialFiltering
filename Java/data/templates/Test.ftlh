@@ -5,12 +5,25 @@
  * SPDX-License-Identifier: MIT
  * See separate LICENSE file for full text
  *
- * AUTO-GENERATED C++
+ * AUTO-GENERATED C++ TEST
  */
 
-#include "${moduleInclude}"
+#include <iostream>
+#include <vector>
+#include <cmath>
+#include <netcdf.h>
+
+#include <doctest.h>
+
+${systemIncludes}
+${interfaceInclude}
+${localIncludes}
+
+
 
 #pragma float_control(push)
 #pragma float_control(precise, off)
 ${cppBody}
 #pragma float_control(pop)
+
+${doctest}

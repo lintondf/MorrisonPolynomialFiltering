@@ -42,8 +42,8 @@ public class TestCompilationListener extends LcdPythonBaseListener {
 		Symbol func = Transpiler.instance().lookup(scope.getParent(), scope.getLast());
 		if (func != null) {
 			if (func.hasDecorator("@testcase")) {
-				System.out.println("TESTCASE: " + func.toString() );
-				System.out.println("          " + scope.toString());
+//				System.out.println("TESTCASE: " + func.toString() );
+//				System.out.println("          " + scope.toString());
 //				Symbol symbol = Transpiler.instance().symbolTable.add(scope, "testData", "TestData");
 //				Symbol type = Transpiler.instance().lookup(new Scope(), "TestData");
 //				Transpiler.instance().inheritClassMembers(func, symbol);

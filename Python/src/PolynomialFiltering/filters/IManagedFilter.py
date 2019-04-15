@@ -12,7 +12,7 @@ from numpy import array
 from numpy import array as vector;
 
 from PolynomialFiltering.Main import AbstractFilterWithCovariance
-from PolynomialFiltering.filters.controls import IObservationErrorModel;
+from PolynomialFiltering.filters.controls.IObservationErrorModel import IObservationErrorModel
 
 
 class IManagedFilter(ABC):

@@ -11,6 +11,7 @@ import com.bluelightning.tools.transpiler.IProgrammer;
 import com.bluelightning.tools.transpiler.Indent;
 import com.bluelightning.tools.transpiler.Scope;
 import com.bluelightning.tools.transpiler.Symbol;
+import com.bluelightning.tools.transpiler.Transpiler;
 import com.bluelightning.tools.transpiler.nodes.TranslationConstantNode;
 
 /**
@@ -28,8 +29,8 @@ public abstract class AbstractProgrammer implements IProgrammer {
 		typeRemap.put("str", "std::string");	
 		
 		// try to avoid copies of matrix/vector parameters
-		parameterRemap.put("RealVector", "RealVector&");
-		parameterRemap.put("RealMatrix", "RealMatrix&");
+		parameterTypeRemap.put("RealVector", "RealVector&");
+		parameterTypeRemap.put("RealMatrix", "RealMatrix&");
 		
 		simpleRemaps.put("int", new Symbol(libraryScope, "int", "int")); //TODO generic
 		simpleRemaps.put("max", new Symbol(libraryScope, "max", "int")); //TODO generic
@@ -47,7 +48,7 @@ public abstract class AbstractProgrammer implements IProgrammer {
 
 	Scope libraryScope = new Scope();
 	Map<String, String> typeRemap = new HashMap<>();
-	Map<String, String> parameterRemap = new HashMap<>();
+	Map<String, String> parameterTypeRemap = new HashMap<>();
 	
 	// index by function-name yields map indexed by type yields library name
 	protected Map<String, Map<String,Symbol>> functionRewrites = new HashMap<>();
@@ -80,26 +81,36 @@ public abstract class AbstractProgrammer implements IProgrammer {
 	 * @see com.bluelightning.tools.transpiler.IProgrammer#remapType(java.lang.String)
 	 */
 	@Override //General
-	public String remapType( Symbol symbol ) {
+	public String remapType( Scope currentScope, Symbol symbol ) {
 		String type = symbol.getType();
 		if (type.startsWith("List[")) {
 			type = type.substring(6, type.length()-1).trim().replaceAll(" +", "");
 			String[] fields = type.split(",");
 			String tuple = "std::vector<";
 			for (String field : fields) {
-				String t = typeRemap.get(field);
-				if (t != null)
-					field = t;
+				field = remapType(currentScope, field);
 				tuple += field;
 				tuple += ", ";
 			}
-			tuple = tuple.substring(0, tuple.length()-2) + ">";
+			tuple = tuple.substring(0, tuple.length()-2) + ">"; // drop last ', ' close bracket
 			return tuple;
 		}
-		String t = typeRemap.get(type);
-		if (t != null)
-			return t;
-		return type;
+		return remapType( currentScope, type );
+	}
+	
+	protected String remapType( Scope currentScope, String typeName) {
+		Symbol c = Transpiler.instance().lookupClass(typeName);
+		if (c != null) {
+			String t = typeRemap.get(typeName);
+			if (t != null)
+				return t;
+			return typeName;			
+		} else {
+			String t = typeRemap.get(typeName);
+			if (t != null)
+				return t;
+			return typeName;
+		}
 	}
 	
 	/* (non-Javadoc)
@@ -317,18 +328,24 @@ public abstract class AbstractProgrammer implements IProgrammer {
 	}
 
 	@Override
-	public String remapParameter(String remappedType) {
-		if (parameterRemap.containsKey(remappedType)) {
-			remappedType = parameterRemap.get(remappedType);
+	public String remapTypeParameter(String remappedType) {
+		if (parameterTypeRemap.containsKey(remappedType)) {
+			remappedType = parameterTypeRemap.get(remappedType);
 		}
 		return remappedType;
 	}
 
 	@Override
 	public void addParameterClass(String className) {
-		if (! parameterRemap.containsKey(className)) {
-			parameterRemap.put(className, "std::shared_ptr<" + className + ">");
+		if (! parameterTypeRemap.containsKey(className)) {
+			parameterTypeRemap.put(className, "std::shared_ptr<" + className + ">");
 		}
 	}
 
+	@Override
+	public String remapSymbolUsages(Scope currentScope, Symbol symbol) {
+		return symbol.getName();
+	}
+
+	
 }

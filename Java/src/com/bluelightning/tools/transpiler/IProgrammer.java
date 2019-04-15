@@ -13,10 +13,6 @@ public interface IProgrammer {
 	
 	void addParameterClass( String className );
 
-	Symbol remapFunctionName(String functionName, String type);
-
-	String remapType(Symbol symbol);
-
 	void startExpression(Indent out);
 
 	void writeAssignmentTarget(Indent out, Symbol symbol);
@@ -49,6 +45,12 @@ public interface IProgrammer {
 
 	Symbol getSliceSymbol(String type);
 
-	String remapParameter(String remappedType);
+	Symbol remapFunctionName(String functionName, String type);
+
+	String remapType(Scope currentScope, Symbol symbol);
+
+	String remapTypeParameter(String remappedType);
+	
+	String remapSymbolUsages( Scope currentScope, Symbol symbol);
 
 }

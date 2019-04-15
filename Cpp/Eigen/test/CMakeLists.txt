@@ -21,9 +21,9 @@ include_directories(eigen
 enable_testing()
 
 FILE(GLOB MAIN_SRC ../src/polynomialfiltering/*.cpp)
-FILE(GLOB COMPONENTS_SRC ../src/polynomialfiltering/components/*.cpp)
+FILE(GLOB_RECURSE COMPONENTS_SRC ../src/polynomialfiltering/components/*.cpp)
 
-FILE(GLOB TEST_SRC ../test/*_test.cpp)
+FILE(GLOB_RECURSE TEST_SRC ../test/*_test.cpp)
 
 
 set(SOURCES  ${MAIN_SRC}

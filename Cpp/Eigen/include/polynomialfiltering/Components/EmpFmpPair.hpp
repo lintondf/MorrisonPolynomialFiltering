@@ -14,10 +14,6 @@
 
 #include <polynomialfiltering/PolynomialFilteringEigen.hpp>
 
-#include <polynomialfiltering/Main.hpp>
-#include <polynomialfiltering/Main.hpp>
-#include <polynomialfiltering/components/AbstractRecursiveFilter.hpp>
-#include <polynomialfiltering/components/AbstractRecursiveFilter.hpp>
 #include <polynomialfiltering/components/AbstractRecursiveFilter.hpp>
 #include <polynomialfiltering/components/ExpandingMemoryPolynomialFilter.hpp>
 #include <polynomialfiltering/components/FadingMemoryPolynomialFilter.hpp>

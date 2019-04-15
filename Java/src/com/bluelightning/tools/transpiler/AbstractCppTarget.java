@@ -32,7 +32,7 @@ import freemarker.template.Template;
 import freemarker.template.TemplateException;
 
 
-public abstract class CppTarget extends AbstractLanguageTarget {
+public abstract class AbstractCppTarget extends AbstractLanguageTarget {
 	
 	protected Configuration cfg;  // FreeMarker configuration
 	
@@ -60,7 +60,7 @@ public abstract class CppTarget extends AbstractLanguageTarget {
 	
 	protected Scope currentScope = null;
 	
-	public CppTarget( IProgrammer programmer, Configuration cfg, Path baseDirectory ) {
+	public AbstractCppTarget( IProgrammer programmer, Configuration cfg, Path baseDirectory ) {
 		super();
 		Path includeDirectory = baseDirectory.resolve("include");
 		Path srcDirectory = baseDirectory.resolve("src");
@@ -191,7 +191,7 @@ public abstract class CppTarget extends AbstractLanguageTarget {
 		Symbol.FunctionParametersInfo fpi = symbol.getFunctionParametersInfo();
 		if (symbol != null && fpi != null) {
 				String name = symbol.getName();
-				String remappedType = programmer.remapType(symbol); 
+				String remappedType = programmer.remapType(currentScope, symbol); 
 				Symbol outputClass = Transpiler.instance().lookup(scope, remappedType);
 				if (outputClass != null && outputClass.isClass() && !outputClass.isEnum()) { //if returning a class wrap in smart pointer
 					remappedType = String.format("std::shared_ptr<%s>", outputClass.getName() ); //->programmer
@@ -212,8 +212,8 @@ public abstract class CppTarget extends AbstractLanguageTarget {
 						body.append(", ");
 					}
 					header.append("const ");
-					remappedType = programmer.remapType(parameter);
-					remappedType = programmer.remapParameter(remappedType);
+					remappedType = programmer.remapType(currentScope, parameter);
+					remappedType = programmer.remapTypeParameter(remappedType);
 					header.append(remappedType);
 					header.append(" ");
 					header.append( parameter.getName() );
@@ -258,10 +258,8 @@ public abstract class CppTarget extends AbstractLanguageTarget {
 				where.append(";\n");
 				
 				if (! fpi.decorators.contains("@abstractmethod")) {
-					if (currentClass == null) {
-						decl = String.format("%s%s (%s)", type, name, body.out.toString() );						
-					} else {
-						decl = String.format("%s%s::%s (%s)", type, currentClass, name, body.out.toString() );
+					decl = generateBodyDeclaration( type, currentClass, name, body.out.toString() );
+					if (currentClass != null) {
 						if (fpi.decorators.contains("@superClassConstructor")) {
 							String className = symbol.getScope().getLast();
 							Scope superScope = symbol.getScope().getParent();
@@ -287,6 +285,13 @@ public abstract class CppTarget extends AbstractLanguageTarget {
 		}
 		hppIndent.in();
 		cppIndent.in();
+	}
+	
+	protected String generateBodyDeclaration( String type, String currentClass, String name, String parameters ) {
+		if (currentClass != null) {
+			name = currentClass + "::" + name;
+		}
+		return String.format("%s%s (%s)", type, name, parameters );
 	}
 
 	@Override
@@ -645,7 +650,7 @@ public abstract class CppTarget extends AbstractLanguageTarget {
 	public void emitSymbolDeclaration(Symbol symbol, String comment) {
 		if ( symbol.isForVariable() )
 			return;
-		String cppType = programmer.remapType(symbol);
+		String cppType = programmer.remapType(currentScope, symbol);
 		if (cppType == null) {
 			cppType = symbol.getType();
 		}
@@ -727,7 +732,7 @@ public abstract class CppTarget extends AbstractLanguageTarget {
 		TranslationSymbolNode tsn = (TranslationSymbolNode) atomExpr.getChild(0); // range
 		TranslationListNode tln = (TranslationListNode) atomExpr.getChild(1);
 		cppIndent.write( String.format("for (%s %s = ", 
-				programmer.remapType( symbol ), 
+				programmer.remapType( currentScope, symbol ), 
 				symbol.getName()));
 		emitSubExpression( symbol.getScope(), tln.getChild(0) );
 		cppIndent.append( String.format("; %s < ", symbol.getName()));
@@ -753,7 +758,12 @@ public abstract class CppTarget extends AbstractLanguageTarget {
 			}
 		}
 		includeFile.append( scope.getLast() + ".hpp" );
-		includeFiles.add(includeFile.toString());
+		String file = includeFile.toString();
+		for (String f : includeFiles) {
+			if (f.equals(file))
+				return;
+		}
+		includeFiles.add(file);
 	}
 
 
