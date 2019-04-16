@@ -99,7 +99,7 @@ public class CppTestTarget extends AbstractCppTarget {
 		if (! inTest) {
 			return;
 		}
-		String qualifier = currentScope.toString().substring(1).replace("/", "::");
+		String qualifier = currentScope.getParent().toString().substring(1).replace("/", "::");
 		while (! namespaceStack.isEmpty() ) {
 			String close = namespaceStack.pop();
 			hppIndent.append( close );

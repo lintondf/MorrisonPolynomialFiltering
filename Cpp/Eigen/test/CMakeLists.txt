@@ -20,14 +20,13 @@ include_directories(eigen
 
 enable_testing()
 
-FILE(GLOB MAIN_SRC ../src/polynomialfiltering/*.cpp)
-FILE(GLOB_RECURSE COMPONENTS_SRC ../src/polynomialfiltering/components/*.cpp  ../src/polynomialfiltering/components/filters/*.cpp)
+FILE(GLOB_RECURSE MAIN_SRC ../src/polynomialfiltering/*.cpp)
+# FILE(GLOB_RECURSE COMPONENTS_SRC ../src/polynomialfiltering/components/*.cpp  ../src/polynomialfiltering/components/filters/*.cpp)
 
 FILE(GLOB_RECURSE TEST_SRC ../test/*_test.cpp)
 
 
 set(SOURCES  ${MAIN_SRC}
-	${COMPONENTS_SRC}
 	${TEST_SRC}
 	testMain.cpp)
 add_executable(FilteringEigenTest ${SOURCES})

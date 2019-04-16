@@ -17,14 +17,14 @@ namespace PolynomialFiltering {
         using namespace Eigen;
         
             ManagedFilterBase::ManagedFilterBase (const std::shared_ptr<AbstractRecursiveFilter> worker) {
-                this->(*worker) = (*worker);
+                this->worker = worker;
                 this->errorModel = ConstantObservationErrorModel(eye(1), eye(1));
                 this->judge = nullptr;
                 this->monitor = nullptr;
             }
 
             FilterStatus ManagedFilterBase::getStatus () {
-                return this->worker->getStatus((*this));
+                return this->worker->getStatus(this);
             }
 
             int ManagedFilterBase::getN () {
@@ -48,15 +48,15 @@ namespace PolynomialFiltering {
             }
 
             void ManagedFilterBase::setObservationErrorModel (const std::shared_ptr<IObservationErrorModel> errorModel) {
-                this->(*errorModel) = (*errorModel);
+                this->errorModel = errorModel;
             }
 
             void ManagedFilterBase::setJudge (const std::shared_ptr<IJudge> judge) {
-                this->(*judge) = (*judge);
+                this->judge = judge;
             }
 
             void ManagedFilterBase::setMonitor (const std::shared_ptr<IMonitor> monitor) {
-                this->(*monitor) = (*monitor);
+                this->monitor = monitor;
             }
 
     }; // namespace filters

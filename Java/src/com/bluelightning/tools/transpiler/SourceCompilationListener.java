@@ -413,7 +413,8 @@ class SourceCompilationListener extends LcdPythonBaseListener {
 
 		@Override
 		public void exitExpr_stmt(LcdPythonParser.Expr_stmtContext ctx) {
-//			transpiler.dumpChildren(ctx,1);
+			if (ctx.getStart().getLine() == 165)
+				transpiler.dumpChildren(ctx,1);
 			transpiler.logger.info(StringUtils.left(ctx.getText(), 80));
 			if (expressionRoot != null) {
 				TranslationNode expr = defaultOperandOperator( ctx, expressionRoot.getName() );
@@ -429,7 +430,38 @@ class SourceCompilationListener extends LcdPythonBaseListener {
 				if (ctx.getText().trim().startsWith("super().__init__")) {
 					// ignore
 				} else if ( ! transpiler.valueMap.get(ctx.getPayload()).startsWith("'''@")) {
-//					System.out.println( expr.traverse(1));
+					if (ctx.getStart().getLine() == 165)
+						System.out.println( expressionRoot.traverse(1));
+					if (expressionRoot.getChildCount() > 2) {
+						if (expressionRoot.getChild(1) instanceof TranslationOperatorNode) {
+							TranslationOperatorNode ton = (TranslationOperatorNode) expressionRoot.getChild(1);
+							if (ton.getOperator().equals("=")) {
+								if (expressionRoot.getChild(0) instanceof TranslationSymbolNode) {
+									TranslationSymbolNode tsn = (TranslationSymbolNode) expressionRoot.getChild(0);
+									Symbol c = transpiler.lookupClass( tsn.getSymbol().getType() );
+									if (c != null) {
+										transpiler.dispatcher.startStatement();
+										transpiler.dispatcher.emitSubExpression(scope, expressionRoot.getChild(0));
+										transpiler.dispatcher.emitSubExpression(scope, expressionRoot.getChild(1));
+										boolean newExpression = true;
+										if (expressionRoot.getChild(2).getChildCount() >= 2) {
+											if (expressionRoot.getChild(2).getChild(1) instanceof TranslationUnaryNode) {
+												newExpression = false;
+											}
+										}
+										if (newExpression) {
+											transpiler.dispatcher.emitNewExpression(scope, tsn.getSymbol().getType(), expressionRoot.getChild(2));
+										} else {
+											transpiler.dispatcher.emitSubExpression(scope, expressionRoot.getChild(2));
+										}
+										transpiler.dispatcher.finishStatement();
+										expressionRoot = null;
+										return;
+									}
+								}
+							}
+						}
+					}
 					transpiler.dispatcher.emitExpressionStatement(scope, expressionRoot);
 				}
 			}
@@ -566,7 +598,7 @@ class SourceCompilationListener extends LcdPythonBaseListener {
 						case "[":
 //							System.out.println("Compiling LIST " + trailer.getChild(i).getText() );
 							//transpiler.dumpChildren(ctx, 1);
-							if (trailer.getChildCount() > 2) {
+							if (trailer.getChildCount() >= 2) {
 								TranslationListNode tln = new TranslationListNode(ctx, parent, unary );
 								ParseTree list = trailer.getChild(1);
 //								System.out.println(list.toStringTree(transpiler.parser));
@@ -587,8 +619,12 @@ class SourceCompilationListener extends LcdPythonBaseListener {
 							String fieldName = trailer.getChild(i+1).getText(); 
 							Symbol field = transpiler.symbolTable.lookup(scope, fieldName);
 							if (field == null) {
-								if (parent.getLastChild() instanceof TranslationSymbolNode) {
-									TranslationSymbolNode tsn = (TranslationSymbolNode) parent.getLastChild();
+								TranslationNode prior = parent.getLastChild();
+								if (prior instanceof TranslationListNode) {
+									prior = prior.getLeftSibling();
+								}
+								if (prior instanceof TranslationSymbolNode) {
+									TranslationSymbolNode tsn = (TranslationSymbolNode) prior;
 									Symbol typeClass = transpiler.lookupClass(tsn.getSymbol().getType());
 									if (tsn.getSymbol().isEnum()) {
 										Scope enumScope = tsn.getSymbol().getScope().getChild(Level.CLASS, tsn.getSymbol().getName());
@@ -604,9 +640,9 @@ class SourceCompilationListener extends LcdPythonBaseListener {
 									}
 								}
 								if (field == null) {
-//									System.out.println(parent.getLastChild().getClass().getSimpleName() + " " +parent.getLastChild());
-									if (parent.getLastChild() instanceof TranslationUnaryNode) {
-										TranslationUnaryNode tun = (TranslationUnaryNode) parent.getLastChild();
+//									System.out.println(prior.getClass().getSimpleName() + " " +prior);
+									if (prior instanceof TranslationUnaryNode) {
+										TranslationUnaryNode tun = (TranslationUnaryNode) prior;
 										Symbol s = tun.getRhsSymbol();
 										if (s != null) {
 											Symbol c = transpiler.lookupClass(s.getType() );

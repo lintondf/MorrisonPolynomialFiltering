@@ -67,6 +67,9 @@ public class CppSrcTarget extends AbstractCppTarget {
 		
 		StringBuilder systemIncludes = new StringBuilder();
 		systemIncludes.append("#include <math.h>\n");
+		systemIncludes.append("#include <vector>\n");
+		systemIncludes.append("#include <string>\n");
+		systemIncludes.append("#include <memory>\n");
 		
 		templateDataModel.put("systemIncludes", systemIncludes.toString());
 		templateDataModel.put("hppBody", "");
@@ -122,6 +125,5 @@ public class CppSrcTarget extends AbstractCppTarget {
 			e.printStackTrace();
 		}
 	}
-	
-	
+
 }

@@ -53,7 +53,6 @@ namespace PolynomialFiltering {
 
             RealVector AbstractRecursiveFilter::_conformState (const RealVector& state) {
                 RealVector Z;
-                int m;
                 return AbstractRecursiveFilter::conformState(this->order, state);
             }
 

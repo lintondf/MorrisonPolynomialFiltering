@@ -19,10 +19,10 @@ namespace PolynomialFiltering {
             
                 BaseScalarJudge::BaseScalarJudge (const std::shared_ptr<AbstractFilterWithCovariance> f, const double editChi2, const double chi2Smoothing, const double gofThreshold) {
                     this->chi2Starts = Map<RowVectorXd>( new double[6] {23.92812697687947, 27.631021115871036, 30.664849706154268, 33.37684158165888, 35.88818687961042, 38.258336377145845}, 6);
-                    this->(*f) = (*f);
+                    this->f = f;
                     this->editChi2 = editChi2;
                     this->chi2Smoothing = chi2Smoothing;
-                    this->chi2 = this->chi2Starts(this->(*f)->getOrder());
+                    this->chi2 = this->chi2Starts(this->f->getOrder());
                     this->chi2Smoothed = this->chi2;
                     this->gofThreshold = chi2Ppf(gofThreshold, 1);
                 }
@@ -31,14 +31,14 @@ namespace PolynomialFiltering {
                     return chi2Ppf(p, df);
                 }
 
-                int BaseScalarJudge::best (const double pSwitch, const std::vector<Judge> judges) {
+                int BaseScalarJudge::best (const double pSwitch, const std::vector<IJudge> judges) {
                     int iBest;
                     double bestGOF;
                     iBest =  - 1;
                     bestGOF = 0;
                     double dG;
                     for (int iJ = 0; iJ < judges.size(); iJ++) {
-                        if (judges[iJ].getFilter->getLastVariance() < 1.0 && judges[iJ].getGOF() > this->gofThreshold) {
+                        if (judges[iJ].getFilter().getLastVariance() < 1.0 && judges[iJ].getGOF() > this->gofThreshold) {
                             if (iBest < 0) {
                                 iBest = iJ;
                                 bestGOF = judges[iJ].getGOF();

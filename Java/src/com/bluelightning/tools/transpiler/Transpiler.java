@@ -121,7 +121,7 @@ public class Transpiler {
 		new Target(Paths.get("PolynomialFiltering/filters"), "ManagedFilterBase"),
 //		new Target(Paths.get("PolynomialFiltering/filters"), "ManagedScalarRecursiveFilter"),
 //		new Target(Paths.get("PolynomialFiltering/filters"), "ManagedScalarRecursiveFilterSet"),
-//		new TestTarget(Paths.get("PolynomialFiltering/filters/controls"), "ConstantObservationErrorModel_test"),
+		new TestTarget(Paths.get("PolynomialFiltering/filters/controls"), "ConstantObservationErrorModel_test"),
 	};
 	
 	protected Logger logger;
@@ -371,6 +371,13 @@ public class Transpiler {
 		public void emitSubExpression(Scope scope, TranslationNode root) {
 			for (ILanguageTarget target : targets) {
 				target.emitSubExpression(scope, root);
+			}
+		}
+
+		@Override
+		public void startStatement() {
+			for (ILanguageTarget target : targets) {
+				target.startStatement();
 			}
 		}
 

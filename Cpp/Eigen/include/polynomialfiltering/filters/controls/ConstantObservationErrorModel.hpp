@@ -11,6 +11,9 @@
 #define ___POLYNOMIALFILTERING_FILTERS_CONTROLS_CONSTANTOBSERVATIONERRORMODEL_HPP
 
 #include <math.h>
+#include <vector>
+#include <string>
+#include <memory>
 
 #include <polynomialfiltering/PolynomialFilteringEigen.hpp>
 

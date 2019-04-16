@@ -84,7 +84,7 @@ public abstract class AbstractProgrammer implements IProgrammer {
 	public String remapType( Scope currentScope, Symbol symbol ) {
 		String type = symbol.getType();
 		if (type.startsWith("List[")) {
-			type = type.substring(6, type.length()-1).trim().replaceAll(" +", "");
+			type = type.substring(5, type.length()-1).trim().replaceAll(" +", "");
 			String[] fields = type.split(",");
 			String tuple = "std::vector<";
 			for (String field : fields) {
@@ -145,10 +145,12 @@ public abstract class AbstractProgrammer implements IProgrammer {
 	@Override //General
 	public void writeSymbol(Indent out, Symbol symbol) {
 		if (symbol.getName().equals("self")) {
-			out.append("(*this)"); 
+			out.append("this");
+		} else 
+			/*out.append("(*this)"); 
 		} else if (symbol.isClassReference()) {
 			out.append("(*" + symbol.getName() + ")" );
-		} else if (symbol.getName().equals("None")) {
+		} else*/ if (symbol.getName().equals("None")) {
 			out.append("nullptr");  // TODO symbolRemap
 		} else {
 			String name = symbol.getName(); 

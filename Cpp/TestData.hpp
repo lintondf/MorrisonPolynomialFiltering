@@ -10,10 +10,20 @@
 #include <netcdf.h>
 #include <Eigen/Dense>
 
+#include <doctest.h>
+
 #include <polynomialfiltering/PolynomialFilteringEigen.hpp>
 
 using namespace Eigen;
 using namespace PolynomialFiltering;
+
+void assert_almost_equal(RealMatrix& A, RealMatrix& B);
+
+void assert_almost_equal(RealMatrix& A, double B);
+
+void assert_almost_equal(double B, RealMatrix& A);
+
+void assert_almost_equal(double A, double B);
 
 
 class TestData {

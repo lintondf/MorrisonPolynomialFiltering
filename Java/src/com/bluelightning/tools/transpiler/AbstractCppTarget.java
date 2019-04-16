@@ -305,7 +305,7 @@ public abstract class AbstractCppTarget extends AbstractLanguageTarget {
 		isAbstract = false;
 	}
 
-	protected int emitChild(Indent out, Scope scope, TranslationNode child) {
+	protected int emitChild(Indent out, Scope scope, TranslationNode child) { // TODO break up;too long
 		if (child instanceof TranslationSymbolNode) {
 			Symbol symbol = ((TranslationSymbolNode) child).getSymbol();
 			if (symbol.getScope().getLevel() == Scope.Level.IMPORT) {
@@ -375,7 +375,17 @@ public abstract class AbstractCppTarget extends AbstractLanguageTarget {
 							Symbol type = Transpiler.instance().lookup(currentScope, u.getRhsSymbol().getType());
 							if (type != null && type.isClass() && !type.isEnum()) {
 								programmer.writeOperator( out, "->" );
+							} else {
+								programmer.writeOperator( out, unary.getLhsValue() );
 							}
+						}
+					} else if (child.getLeftSibling() != null && child.getLeftSibling() instanceof TranslationSymbolNode) {
+						TranslationSymbolNode s = (TranslationSymbolNode) child.getLeftSibling();
+						Symbol type = Transpiler.instance().lookup(currentScope, s.getType());
+						if (/*!s.getSymbol().getName().equals("self") &&*/ type != null && type.isClass() && !type.isEnum()) {
+							programmer.writeOperator( out, "->" );
+						} else {
+							programmer.writeOperator( out, unary.getLhsValue() );
 						}
 					} else {
 						programmer.writeOperator( out, unary.getLhsValue() );
@@ -697,6 +707,12 @@ public abstract class AbstractCppTarget extends AbstractLanguageTarget {
 //		System.out.println("return<"+cppIndent.out.toString() +">");
 	}
 
+	@Override
+	public void startStatement() {
+		cppIndent.write("");
+	}
+	
+	
 	@Override
 	public void finishStatement() {
 		cppIndent.append(";\n");

@@ -11,6 +11,9 @@
 #define ___POLYNOMIALFILTERING_FILTERS_CONTROLS_BASESCALARJUDGE_HPP
 
 #include <math.h>
+#include <vector>
+#include <string>
+#include <memory>
 
 #include <polynomialfiltering/PolynomialFilteringEigen.hpp>
 
@@ -30,7 +33,7 @@ namespace PolynomialFiltering {
                 public:
                     BaseScalarJudge(const std::shared_ptr<AbstractFilterWithCovariance> f, const double editChi2=3.0, const double chi2Smoothing=0.9, const double gofThreshold=0.5);
                     static double probabilityToChi2(const double p, const int df);
-                    static int best(const double pSwitch, const std::vector<Judge> judges);
+                    static int best(const double pSwitch, const std::vector<IJudge> judges);
                     virtual bool scalarUpdate(const double e, const RealMatrix& iR);
                     virtual bool vectorUpdate(const RealVector& e, const RealMatrix& iR);
                     virtual double getChi2();

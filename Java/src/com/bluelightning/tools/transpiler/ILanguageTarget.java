@@ -32,6 +32,10 @@ public interface ILanguageTarget {
 	
 	public void finishMethod( Scope scope );
 	
+	public void startStatement();
+	
+	public void finishStatement();
+	
 	public void emitSymbolDeclaration( Symbol symbol, String comment );
 	
 	public void emitElifStatement(Scope scope, TranslationNode expressionRoot);
@@ -52,7 +56,5 @@ public interface ILanguageTarget {
 	
 	public void emitSubExpression( Scope scope, TranslationNode root );
 	
-	public void finishStatement();
-
 	public void closeBlock();
 }

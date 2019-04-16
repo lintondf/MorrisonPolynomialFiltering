@@ -110,7 +110,7 @@ class TestConstantObservationErrorModel(unittest.TestCase):
         cdf.close();
 
     @testcase
-    def test1Scalar(self) -> None:
+    def test1Scalar(self) -> None: 
         '''@testData : TestData'''
         '''@matches : List[str]'''
         '''@i : int'''
@@ -122,7 +122,7 @@ class TestConstantObservationErrorModel(unittest.TestCase):
         '''@Q : array'''
         '''@model : ConstantObservationErrorModel'''
         
-        testData = TestData.make('testConstantObservationErrorModel.nc')
+        testData = TestData('testConstantObservationErrorModel.nc')
         matches = testData.getMatchingGroups('testScalar_')
         for i in range(0, len(matches)) :
             element = testData.getGroupVariable(matches[i], 'element')
@@ -146,7 +146,6 @@ class TestConstantObservationErrorModel(unittest.TestCase):
         '''@inputCovariance : array'''
         '''@inputInverse : array'''
         '''@element : vector'''
-        '''@x : float'''
         '''@Q : array'''
         '''@model : ConstantObservationErrorModel'''
         
@@ -173,7 +172,6 @@ class TestConstantObservationErrorModel(unittest.TestCase):
         '''@inputCovariance : array'''
         '''@inputInverse : array'''
         '''@element : vector'''
-        '''@x : float'''
         '''@Q : array'''
         '''@model : ConstantObservationErrorModel'''
         

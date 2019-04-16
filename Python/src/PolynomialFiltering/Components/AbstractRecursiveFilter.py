@@ -98,7 +98,6 @@ class AbstractRecursiveFilter(AbstractFilter):
         
         """
         '''@Z : vector'''
-        '''@m : int'''
         
         return AbstractRecursiveFilter.conformState(self.order, state)
         
