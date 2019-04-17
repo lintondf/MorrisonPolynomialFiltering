@@ -1,4 +1,4 @@
-/***** /PolynomialFiltering/Components/AbstractRecursiveFilter/
+/***** /polynomialfiltering/components/AbstractRecursiveFilter/
  * (C) Copyright 2019 - Blue Lightning Development, LLC.
  * D. F. Linton. support@BlueLightningDevelopment.com
  *
@@ -12,8 +12,8 @@
 
 #pragma float_control(push)
 #pragma float_control(precise, off)
-namespace PolynomialFiltering {
-    namespace Components {
+namespace polynomialfiltering {
+    namespace components {
         using namespace Eigen;
         
             double AbstractRecursiveFilter::effectiveTheta (const int order, const double n) {
@@ -135,7 +135,7 @@ namespace PolynomialFiltering {
                 return V;
             }
 
-    }; // namespace Components
-}; // namespace PolynomialFiltering
+    }; // namespace components
+}; // namespace polynomialfiltering
 
 #pragma float_control(pop)

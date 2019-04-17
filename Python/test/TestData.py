@@ -13,19 +13,19 @@ from numpy.linalg import cholesky, inv, LinAlgError, det
 from scipy.interpolate import PchipInterpolator
 import pymap3d
 import xml.etree.ElementTree as ET 
-from PolynomialFiltering.Main import FilterStatus, AbstractFilter
-from PolynomialFiltering.Components.ExpandingMemoryPolynomialFilter import makeEMP
-from PolynomialFiltering.Components.FadingMemoryPolynomialFilter import makeFMP
+from polynomialfiltering.Main import FilterStatus, AbstractFilter
+from polynomialfiltering.components.ExpandingMemoryPolynomialFilter import makeEMP
+from polynomialfiltering.components.FadingMemoryPolynomialFilter import makeFMP
 from TestUtilities import A2S, scaleVRFEMP, covarianceToCorrelation, correlationToCovariance, generateTestData, hellingerDistance
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 from numpy.random.mtrand import seed
 from numpy.random import multivariate_normal
 
-from PolynomialFiltering.PythonUtilities import fdistCdf, fdistPpf, chi2Cdf,\
+from polynomialfiltering.PythonUtilities import fdistCdf, fdistPpf, chi2Cdf,\
     chi2Ppf
 from numpy.matlib import randn
-from PolynomialFiltering.Main import AbstractFilter
+from polynomialfiltering.Main import AbstractFilter
 from netCDF4 import Dataset
 from typing import List;
 

@@ -1,4 +1,4 @@
-/***** /PolynomialFiltering/filters/ManagedFilterBase/
+/***** /polynomialfiltering/filters/ManagedFilterBase/
  * (C) Copyright 2019 - Blue Lightning Development, LLC.
  * D. F. Linton. support@BlueLightningDevelopment.com
  *
@@ -26,16 +26,16 @@
 #include <polynomialfiltering/filters/controls/ConstantObservationErrorModel.hpp>
 
 
-namespace PolynomialFiltering {
+namespace polynomialfiltering {
     namespace filters {
         class ManagedFilterBase : public AbstractFilterWithCovariance,IManagedFilter {
             public:
-                ManagedFilterBase(const std::shared_ptr<Components::AbstractRecursiveFilter> worker);
+                ManagedFilterBase(const int order, const std::shared_ptr<components::AbstractRecursiveFilter> worker);
                 FilterStatus getStatus();
                 int getN();
                 double getTime();
                 RealVector getState();
-                std::shared_ptr<Components::AbstractRecursiveFilter> getWorker();
+                std::shared_ptr<components::AbstractRecursiveFilter> getWorker();
                 void setObservationInverseR(const RealMatrix& inverseR);
                 void setObservationErrorModel(const std::shared_ptr<controls::IObservationErrorModel> errorModel);
                 void setJudge(const std::shared_ptr<controls::IJudge> judge);
@@ -45,14 +45,14 @@ namespace PolynomialFiltering {
                 virtual double getGoodnessOfFit() = 0;
             protected:
                 double INITIAL_SSR; ///<  start point for smoothed SSR 
-                std::shared_ptr<Components::AbstractRecursiveFilter> worker; ///<  that which is managed
+                std::shared_ptr<components::AbstractRecursiveFilter> worker; ///<  that which is managed
                 std::shared_ptr<controls::IObservationErrorModel> errorModel; ///<  observation covariance/precision matrix source
                 std::shared_ptr<controls::IJudge> judge; ///<  residuals-based observation editing and goodness-of-fit evaluator
                 std::shared_ptr<controls::IMonitor> monitor; ///<  filter state monitoring and control
         }; // class ManagedFilterBase 
 
     }; // namespace filters
-}; // namespace PolynomialFiltering
+}; // namespace polynomialfiltering
 
 
 #endif // ___POLYNOMIALFILTERING_FILTERS_MANAGEDFILTERBASE_HPP

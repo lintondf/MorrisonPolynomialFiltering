@@ -1,4 +1,4 @@
-/***** /PolynomialFiltering/Components/FadingMemoryPolynomialFilter/
+/***** /polynomialfiltering/components/FadingMemoryPolynomialFilter/
  * (C) Copyright 2019 - Blue Lightning Development, LLC.
  * D. F. Linton. support@BlueLightningDevelopment.com
  *
@@ -12,8 +12,8 @@
 
 #pragma float_control(push)
 #pragma float_control(precise, off)
-namespace PolynomialFiltering {
-    namespace Components {
+namespace polynomialfiltering {
+    namespace components {
         using namespace Eigen;
         
             FMPBase::FMPBase (const int order, const double theta, const double tau) : AbstractRecursiveFilter(order,tau) {
@@ -319,7 +319,7 @@ namespace PolynomialFiltering {
             }
         }
 
-    }; // namespace Components
-}; // namespace PolynomialFiltering
+    }; // namespace components
+}; // namespace polynomialfiltering
 
 #pragma float_control(pop)

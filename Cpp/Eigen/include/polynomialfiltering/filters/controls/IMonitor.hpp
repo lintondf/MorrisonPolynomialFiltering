@@ -1,4 +1,4 @@
-/***** /PolynomialFiltering/filters/controls/IMonitor/
+/***** /polynomialfiltering/filters/controls/IMonitor/
  * (C) Copyright 2019 - Blue Lightning Development, LLC.
  * D. F. Linton. support@BlueLightningDevelopment.com
  *
@@ -20,7 +20,7 @@
 #include <polynomialfiltering/Main.hpp>
 
 
-namespace PolynomialFiltering {
+namespace polynomialfiltering {
     namespace filters {
         namespace controls {
             class IMonitor {
@@ -32,7 +32,7 @@ namespace PolynomialFiltering {
 
         }; // namespace controls
     }; // namespace filters
-}; // namespace PolynomialFiltering
+}; // namespace polynomialfiltering
 
 
 #endif // ___POLYNOMIALFILTERING_FILTERS_CONTROLS_IMONITOR_HPP

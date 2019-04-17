@@ -73,11 +73,11 @@ class ConstantObservationErrorModel(IObservationErrorModel):
         if (observationId == -1) :
             return self.iR;
         else :
-            return self.iR[observationId:observationId+1,observationId:observationId+1]; # TODO not translated properly
+            return self.iR[observationId:observationId+1,observationId:observationId+1]; 
 
     def getCovarianceMatrix(self, f : AbstractFilterWithCovariance, t : float, y : vector, observationId : int = -1) -> array:
         """@super"""
         if (observationId == -1) :
             return self.R;
         else :
-            return self.R[observationId:observationId+1,observationId:observationId+1]; # TODO not translated properly
+            return self.R[observationId:observationId+1,observationId:observationId+1]; 

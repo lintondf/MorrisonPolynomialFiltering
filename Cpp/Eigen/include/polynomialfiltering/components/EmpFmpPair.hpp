@@ -1,4 +1,4 @@
-/***** /PolynomialFiltering/Components/EmpFmpPair/
+/***** /polynomialfiltering/components/EmpFmpPair/
  * (C) Copyright 2019 - Blue Lightning Development, LLC.
  * D. F. Linton. support@BlueLightningDevelopment.com
  *
@@ -22,8 +22,8 @@
 #include <polynomialfiltering/components/FadingMemoryPolynomialFilter.hpp>
 
 
-namespace PolynomialFiltering {
-    namespace Components {
+namespace polynomialfiltering {
+    namespace components {
 
         ///// @class EmpFmpPair
         /// @brief Filter composed of an expanding memory and a fading memory filter of the same order.
@@ -131,16 +131,16 @@ namespace PolynomialFiltering {
                 /// 
                 RealMatrix getVRF();
             protected:
-                std::shared_ptr<ExpandingMemoryPolynomialFilter::EMPBase> emp;
-                std::shared_ptr<FadingMemoryPolynomialFilter::FMPBase> fmp;
+                std::shared_ptr<EMPBase> emp;
+                std::shared_ptr<FMPBase> fmp;
                 std::shared_ptr<AbstractRecursiveFilter> current;
                 double _gammaParameter(const double t, const double dtau);
                 RealVector _gamma(const double n);
                 RealMatrix _VRF();
         }; // class EmpFmpPair 
 
-    }; // namespace Components
-}; // namespace PolynomialFiltering
+    }; // namespace components
+}; // namespace polynomialfiltering
 
 
 #endif // ___POLYNOMIALFILTERING_COMPONENTS_EMPFMPPAIR_HPP

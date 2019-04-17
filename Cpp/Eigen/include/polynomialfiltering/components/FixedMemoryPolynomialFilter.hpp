@@ -1,4 +1,4 @@
-/***** /PolynomialFiltering/Components/FixedMemoryPolynomialFilter/
+/***** /polynomialfiltering/components/FixedMemoryPolynomialFilter/
  * (C) Copyright 2019 - Blue Lightning Development, LLC.
  * D. F. Linton. support@BlueLightningDevelopment.com
  *
@@ -20,8 +20,8 @@
 #include <polynomialfiltering/Main.hpp>
 
 
-namespace PolynomialFiltering {
-    namespace Components {
+namespace polynomialfiltering {
+    namespace components {
 
         ///// @class FixedMemoryFilter
         /// @brief Equally-weighted, fixed memory size, irregularly spaced data filter
@@ -53,8 +53,8 @@ namespace PolynomialFiltering {
                 RealMatrix _getTn(const RealVector& dt);
         }; // class FixedMemoryFilter 
 
-    }; // namespace Components
-}; // namespace PolynomialFiltering
+    }; // namespace components
+}; // namespace polynomialfiltering
 
 
 #endif // ___POLYNOMIALFILTERING_COMPONENTS_FIXEDMEMORYPOLYNOMIALFILTER_HPP

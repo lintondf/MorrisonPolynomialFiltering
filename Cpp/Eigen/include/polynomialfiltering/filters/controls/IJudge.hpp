@@ -1,4 +1,4 @@
-/***** /PolynomialFiltering/filters/controls/IJudge/
+/***** /polynomialfiltering/filters/controls/IJudge/
  * (C) Copyright 2019 - Blue Lightning Development, LLC.
  * D. F. Linton. support@BlueLightningDevelopment.com
  *
@@ -21,7 +21,7 @@
 #include <polynomialfiltering/components/FadingMemoryPolynomialFilter.hpp>
 
 
-namespace PolynomialFiltering {
+namespace polynomialfiltering {
     namespace filters {
         namespace controls {
 
@@ -43,7 +43,7 @@ namespace PolynomialFiltering {
 
         }; // namespace controls
     }; // namespace filters
-}; // namespace PolynomialFiltering
+}; // namespace polynomialfiltering
 
 
 #endif // ___POLYNOMIALFILTERING_FILTERS_CONTROLS_IJUDGE_HPP

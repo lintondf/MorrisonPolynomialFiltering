@@ -1,4 +1,4 @@
-/***** /PolynomialFiltering/Components/AbstractRecursiveFilter/
+/***** /polynomialfiltering/components/AbstractRecursiveFilter/
  * (C) Copyright 2019 - Blue Lightning Development, LLC.
  * D. F. Linton. support@BlueLightningDevelopment.com
  *
@@ -20,17 +20,11 @@
 #include <polynomialfiltering/Main.hpp>
 
 
-namespace PolynomialFiltering {
-    namespace Components {
+namespace polynomialfiltering {
+    namespace components {
 
         ///// @class AbstractRecursiveFilter
-        /// @brief Get the variance reduction matrix
-        /// 
-        /// 
-        ///  @param		None
-        /// 
-        ///  @return  Square matrix (order+1) of input to output variance ratios
-        /// 
+        /// @brief Base class for both expanding and fading polynomial filter and their combinations.
         /// 
         class AbstractRecursiveFilter : public AbstractFilter {
             public:
@@ -238,8 +232,8 @@ namespace PolynomialFiltering {
                 virtual RealMatrix _VRF() = 0;
         }; // class AbstractRecursiveFilter 
 
-    }; // namespace Components
-}; // namespace PolynomialFiltering
+    }; // namespace components
+}; // namespace polynomialfiltering
 
 
 #endif // ___POLYNOMIALFILTERING_COMPONENTS_ABSTRACTRECURSIVEFILTER_HPP

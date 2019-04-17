@@ -1,4 +1,4 @@
-/***** /PolynomialFiltering/Components/FixedMemoryPolynomialFilter/
+/***** /polynomialfiltering/components/FixedMemoryPolynomialFilter/
  * (C) Copyright 2019 - Blue Lightning Development, LLC.
  * D. F. Linton. support@BlueLightningDevelopment.com
  *
@@ -12,8 +12,8 @@
 
 #pragma float_control(push)
 #pragma float_control(precise, off)
-namespace PolynomialFiltering {
-    namespace Components {
+namespace polynomialfiltering {
+    namespace components {
         using namespace Eigen;
         
             FixedMemoryFilter::FixedMemoryFilter (const int order, const int memorySize) : AbstractFilterWithCovariance(order) {
@@ -97,7 +97,7 @@ namespace PolynomialFiltering {
                 return Tn;
             }
 
-    }; // namespace Components
-}; // namespace PolynomialFiltering
+    }; // namespace components
+}; // namespace polynomialfiltering
 
 #pragma float_control(pop)

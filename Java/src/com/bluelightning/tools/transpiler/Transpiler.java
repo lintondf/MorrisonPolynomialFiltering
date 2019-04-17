@@ -62,7 +62,6 @@ import freemarker.template.TemplateExceptionHandler;
 /* TODO
  * -- this.transpiler -> Transpiler.instance()
  * -- Check for changes before writing sources
- * -- Package capitalization
  */
 /**
  * @author NOOK
@@ -104,25 +103,25 @@ public class Transpiler {
 	}
 	
 	static Target[] targets = {
-		//new Target(Paths.get(""), "TranspilerTest"),
-		new Target(Paths.get("PolynomialFiltering"), "Main"),
-		new Target(Paths.get("PolynomialFiltering/Components"), "FixedMemoryPolynomialFilter"),
-		new Target(Paths.get("PolynomialFiltering/Components"), "AbstractRecursiveFilter"),
-		new Target(Paths.get("PolynomialFiltering/Components"), "ExpandingMemoryPolynomialFilter"),
-		new Target(Paths.get("PolynomialFiltering/Components"), "FadingMemoryPolynomialFilter"),
-		new Target(Paths.get("PolynomialFiltering/Components"), "EmpFmpPair"),
-		new Target(Paths.get("PolynomialFiltering/filters/controls"), "IObservationErrorModel", true),
-		new Target(Paths.get("PolynomialFiltering/filters/controls"), "IJudge", true),
-		new Target(Paths.get("PolynomialFiltering/filters/controls"), "IMonitor", true),
-		new Target(Paths.get("PolynomialFiltering/filters/controls"), "ConstantObservationErrorModel"),
-		new Target(Paths.get("PolynomialFiltering/filters/controls"), "BaseScalarJudge"),
-		//new Target(Paths.get("PolynomialFiltering/filters/controls"), "BaseVectorJudge"),
-		//new Target(Paths.get("PolynomialFiltering/filters/controls"), "NullMonitor"),
-		new Target(Paths.get("PolynomialFiltering/filters"), "IManagedFilter", true),
-		new Target(Paths.get("PolynomialFiltering/filters"), "ManagedFilterBase"),
-//		new Target(Paths.get("PolynomialFiltering/filters"), "ManagedScalarRecursiveFilter"),
-//		new Target(Paths.get("PolynomialFiltering/filters"), "ManagedScalarRecursiveFilterSet"),
-		new TestTarget(Paths.get("PolynomialFiltering/filters/controls"), "ConstantObservationErrorModel_test"),
+//		new Target(Paths.get(""), "TranspilerTest"),
+		new Target(Paths.get("polynomialfiltering"), "Main"),
+		new Target(Paths.get("polynomialfiltering/components"), "FixedMemoryPolynomialFilter"),
+		new Target(Paths.get("polynomialfiltering/components"), "AbstractRecursiveFilter"),
+		new Target(Paths.get("polynomialfiltering/components"), "ExpandingMemoryPolynomialFilter"),
+		new Target(Paths.get("polynomialfiltering/components"), "FadingMemoryPolynomialFilter"),
+		new Target(Paths.get("polynomialfiltering/components"), "EmpFmpPair"),
+		new Target(Paths.get("polynomialfiltering/filters/controls"), "IObservationErrorModel", true),
+		new Target(Paths.get("polynomialfiltering/filters/controls"), "IJudge", true),
+		new Target(Paths.get("polynomialfiltering/filters/controls"), "IMonitor", true),
+		new Target(Paths.get("polynomialfiltering/filters/controls"), "ConstantObservationErrorModel"),
+		new Target(Paths.get("polynomialfiltering/filters/controls"), "BaseScalarJudge"),
+		//new Target(Paths.get("polynomialfiltering/filters/controls"), "BaseVectorJudge"),
+		//new Target(Paths.get("polynomialfiltering/filters/controls"), "NullMonitor"),
+		new Target(Paths.get("polynomialfiltering/filters"), "IManagedFilter", true),
+		new Target(Paths.get("polynomialfiltering/filters"), "ManagedFilterBase"),
+//		new Target(Paths.get("polynomialfiltering/filters"), "ManagedScalarRecursiveFilter"),
+//		new Target(Paths.get("polynomialfiltering/filters"), "ManagedScalarRecursiveFilterSet"),
+		new TestTarget(Paths.get("filters/controls"), "ConstantObservationErrorModel_test"),
 	};
 	
 	protected Logger logger;
@@ -413,7 +412,7 @@ public class Transpiler {
 		@Override
 		public void emitIfStatement(Scope scope, TranslationNode expressionRoot) {
 			for (ILanguageTarget target : targets) {
-				target.emitIfStatement( null, expressionRoot );
+				target.emitIfStatement( scope, expressionRoot );
 			}
 		}
 
@@ -434,7 +433,7 @@ public class Transpiler {
 		@Override
 		public void emitElifStatement(Scope scope, TranslationNode expressionRoot) {
 			for (ILanguageTarget target : targets) {
-				target.emitElifStatement( null, expressionRoot );
+				target.emitElifStatement( scope, expressionRoot );
 			}
 		}
 
@@ -739,10 +738,10 @@ public class Transpiler {
 		transpiler.loadModuleChecksums();
 		
 		Path base = Paths.get("../Python/src");
-		Path dir = base.resolve("PolynomialFiltering");
+		Path dir = base.resolve("polynomialfiltering");
 		File d = dir.toFile();
 		scan(d);
-		srcs.remove("PolynomialFiltering\\PythonUtilities"); // never do be transpiled
+		srcs.remove("polynomialfiltering\\PythonUtilities"); // never do be transpiled
 		Path testBase = Paths.get("../Python/test");
 		for (Target target : targets) {
 			Path srcWhere = base;

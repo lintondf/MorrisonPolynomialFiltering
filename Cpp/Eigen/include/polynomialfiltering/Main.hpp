@@ -1,4 +1,4 @@
-/***** /PolynomialFiltering/Main/
+/***** /polynomialfiltering/Main/
  * (C) Copyright 2019 - Blue Lightning Development, LLC.
  * D. F. Linton. support@BlueLightningDevelopment.com
  *
@@ -19,7 +19,7 @@
 
 
 
-namespace PolynomialFiltering {
+namespace polynomialfiltering {
 
     ///// @class FilterStatus
     /// @brief The FilterStats enumeration defines the possible states of a filter.
@@ -40,9 +40,7 @@ namespace PolynomialFiltering {
 
 
     ///// @class AbstractFilter
-    /// @brief Returns the current filter state vector
-    /// 
-    ///  @return  State vector (order+1 elements)
+    /// @brief The base class for all of the filters and components in this package.
     /// 
     class AbstractFilter {
         public:
@@ -147,12 +145,7 @@ namespace PolynomialFiltering {
 
 
     ///// @class AbstractFilterWithCovariance
-    /// @brief Get the variance reduction factor for the 'order'th derivative
-    /// 
-    /// 
-    ///  @param		None
-    /// 
-    ///  @return  'order'th derivative input to output variance ratio
+    /// @brief Extends AbstractFilter to support state vector covariance methods.
     /// 
     class AbstractFilterWithCovariance : public AbstractFilter {
         public:
@@ -209,7 +202,7 @@ namespace PolynomialFiltering {
             double getLastVariance();
     }; // class AbstractFilterWithCovariance 
 
-}; // namespace PolynomialFiltering
+}; // namespace polynomialfiltering
 
 
 #endif // ___POLYNOMIALFILTERING_MAIN_HPP

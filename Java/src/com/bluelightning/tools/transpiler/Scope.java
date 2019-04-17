@@ -21,6 +21,19 @@ public class Scope {
 		protected Stack<Level>  levels = new Stack<>();
 		protected String qString;
 		
+		public String toAnnotatedString() {
+			StringBuilder sb = new StringBuilder();
+			sb.append('/');
+			for (int i = 0; i < qualifiers.size(); i++) {
+				sb.append( levels.get(i+1).toString() );
+				sb.append(':');
+				sb.append( qualifiers.get(i) );
+				sb.append('/');
+			}
+			return sb.toString();
+			
+		}
+		
 		protected String getScopeString() {
 			StringBuilder sb = new StringBuilder();
 			sb.append('/');
@@ -133,7 +146,9 @@ public class Scope {
 			for (int i = 0; i < qualifiers.size(); i++) {
 				if (i >= currentScope.qualifiers.size()) {
 					for (int j = i; j < qualifiers.size(); j++) {
-						if (qualifiers.get(j).equals("Main"))
+						if (qualifiers.get(j).equals("Main") ||
+							qualifiers.get(j).equals("ExpandingMemoryPolynomialFilter") ||
+							qualifiers.get(j).equals("FadingMemoryPolynomialFilter") )
 							continue;
 						sb.append(qualifiers.get(j));
 						sb.append("/");
@@ -142,7 +157,9 @@ public class Scope {
 				} if (levels.get(i+1) != currentScope.levels.get(i+1) || 
 					  !qualifiers.get(i).equals(currentScope.qualifiers.get(i))) {
 					for (int j = i; j < qualifiers.size(); j++) {
-						if (qualifiers.get(j).equals("Main"))
+						if (qualifiers.get(j).equals("Main") ||
+							qualifiers.get(j).equals("ExpandingMemoryPolynomialFilter") ||
+							qualifiers.get(j).equals("FadingMemoryPolynomialFilter") )
 							continue;
 						sb.append(qualifiers.get(j));
 						sb.append("/");

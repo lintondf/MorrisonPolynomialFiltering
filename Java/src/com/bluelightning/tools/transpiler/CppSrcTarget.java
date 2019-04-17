@@ -23,7 +23,7 @@ public class CppSrcTarget extends AbstractCppTarget {
 			inTest = true;
 			return;
 		}
-		System.out.println(String.format("\nC++/%s src: ", programmer.getName()) + scope.toString() );
+		System.out.println(String.format("\nC++/%s src: ", programmer.getName()) + scope.toAnnotatedString() );
 		this.headerOnly = headerOnly;
 		
 		currentScope = scope;

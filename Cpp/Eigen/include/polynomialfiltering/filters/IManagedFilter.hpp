@@ -1,4 +1,4 @@
-/***** /PolynomialFiltering/filters/IManagedFilter/
+/***** /polynomialfiltering/filters/IManagedFilter/
  * (C) Copyright 2019 - Blue Lightning Development, LLC.
  * D. F. Linton. support@BlueLightningDevelopment.com
  *
@@ -21,7 +21,7 @@
 #include <polynomialfiltering/filters/controls/IObservationErrorModel.hpp>
 
 
-namespace PolynomialFiltering {
+namespace polynomialfiltering {
     namespace filters {
         class IManagedFilter {
             public:
@@ -33,7 +33,7 @@ namespace PolynomialFiltering {
         }; // class IManagedFilter 
 
     }; // namespace filters
-}; // namespace PolynomialFiltering
+}; // namespace polynomialfiltering
 
 
 #endif // ___POLYNOMIALFILTERING_FILTERS_IMANAGEDFILTER_HPP

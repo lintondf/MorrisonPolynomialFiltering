@@ -1,4 +1,4 @@
-/***** /PolynomialFiltering/filters/ManagedFilterBase/
+/***** /polynomialfiltering/filters/ManagedFilterBase/
  * (C) Copyright 2019 - Blue Lightning Development, LLC.
  * D. F. Linton. support@BlueLightningDevelopment.com
  *
@@ -12,19 +12,19 @@
 
 #pragma float_control(push)
 #pragma float_control(precise, off)
-namespace PolynomialFiltering {
+namespace polynomialfiltering {
     namespace filters {
         using namespace Eigen;
         
-            ManagedFilterBase::ManagedFilterBase (const std::shared_ptr<Components::AbstractRecursiveFilter> worker) {
+            ManagedFilterBase::ManagedFilterBase (const int order, const std::shared_ptr<components::AbstractRecursiveFilter> worker) : AbstractFilterWithCovariance,IManagedFilter(order) {
                 this->worker = worker;
-                this->errorModel = ConstantObservationErrorModel(eye(1), eye(1));
+                this->errorModel = ConstantObservationErrorModel(1.0);
                 this->judge = nullptr;
                 this->monitor = nullptr;
             }
 
             FilterStatus ManagedFilterBase::getStatus () {
-                return this->worker->getStatus(this);
+                return this->worker->getStatus();
             }
 
             int ManagedFilterBase::getN () {
@@ -39,7 +39,7 @@ namespace PolynomialFiltering {
                 return this->worker->getState();
             }
 
-            std::shared_ptr<Components::AbstractRecursiveFilter> ManagedFilterBase::getWorker () {
+            std::shared_ptr<components::AbstractRecursiveFilter> ManagedFilterBase::getWorker () {
                 return this->worker;
             }
 
@@ -60,6 +60,6 @@ namespace PolynomialFiltering {
             }
 
     }; // namespace filters
-}; // namespace PolynomialFiltering
+}; // namespace polynomialfiltering
 
 #pragma float_control(pop)

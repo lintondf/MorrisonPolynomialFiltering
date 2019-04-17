@@ -30,17 +30,18 @@ class ManagedFilterBase(AbstractFilterWithCovariance, IManagedFilter):
     '''@ judge : IJudge | residuals-based observation editing and goodness-of-fit evaluator'''
     '''@ monitor : IMonitor | filter state monitoring and control'''
     
-    def __init__(self, worker : AbstractRecursiveFilter):
+    def __init__(self, order : int, worker : AbstractRecursiveFilter):
+        super().__init__(order);
         '''
         Constructor
         '''
         self.worker = worker;
-        self.errorModel = ConstantObservationErrorModel(eye(1), eye(1))
+        self.errorModel = ConstantObservationErrorModel(1.0)
         self.judge = None;
         self.monitor = None;
 
     def getStatus(self) -> FilterStatus:
-        return self.worker.getStatus(self)
+        return self.worker.getStatus()
 
     def getN(self) -> int:
         return self.worker.getN()

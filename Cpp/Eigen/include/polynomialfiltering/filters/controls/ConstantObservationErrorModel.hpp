@@ -1,4 +1,4 @@
-/***** /PolynomialFiltering/filters/controls/ConstantObservationErrorModel/
+/***** /polynomialfiltering/filters/controls/ConstantObservationErrorModel/
  * (C) Copyright 2019 - Blue Lightning Development, LLC.
  * D. F. Linton. support@BlueLightningDevelopment.com
  *
@@ -21,16 +21,12 @@
 #include <polynomialfiltering/filters/controls/IObservationErrorModel.hpp>
 
 
-namespace PolynomialFiltering {
+namespace polynomialfiltering {
     namespace filters {
         namespace controls {
 
             ///// @class ConstantObservationErrorModel
-            /// @brief Constructor
-            /// 
-            /// 
-            ///  @param		R	constant covariance matrix of a vector observation
-            ///  @param		inverseR	inverse of the R matrix; used when inverseR is easily computed.
+            /// @brief This model is used when the random errors in observations are constant.
             /// 
             class ConstantObservationErrorModel : public IObservationErrorModel {
                 public:
@@ -87,7 +83,7 @@ namespace PolynomialFiltering {
 
         }; // namespace controls
     }; // namespace filters
-}; // namespace PolynomialFiltering
+}; // namespace polynomialfiltering
 
 
 #endif // ___POLYNOMIALFILTERING_FILTERS_CONTROLS_CONSTANTOBSERVATIONERRORMODEL_HPP

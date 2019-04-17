@@ -30,7 +30,6 @@ def runAll():
     
     path = os.getcwd();
     print(path)
-    os.chdir(path + "/polynomialfiltering");
     for t in testmodules:
         try:
             # If the module defines a suite() function, call it to get the suite.
@@ -42,7 +41,6 @@ def runAll():
             suite.addTest(unittest.defaultTestLoader.loadTestsFromName(t))
     
     unittest.TextTestRunner().run(suite)    
-    os.chdir(path);
 
 if __name__ == '__main__':
     cov = coverage.Coverage()

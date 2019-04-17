@@ -1,4 +1,4 @@
-/***** /PolynomialFiltering/filters/controls/ConstantObservationErrorModel/
+/***** /polynomialfiltering/filters/controls/ConstantObservationErrorModel/
  * (C) Copyright 2019 - Blue Lightning Development, LLC.
  * D. F. Linton. support@BlueLightningDevelopment.com
  *
@@ -12,7 +12,7 @@
 
 #pragma float_control(push)
 #pragma float_control(precise, off)
-namespace PolynomialFiltering {
+namespace polynomialfiltering {
     namespace filters {
         namespace controls {
             using namespace Eigen;
@@ -36,7 +36,7 @@ namespace PolynomialFiltering {
                     if (observationId ==  - 1) {
                         return this->iR;
                     } else {
-                        return this->iR.);
+                        return this->iR.block(observationId, observationId, observationId + 1 - observationId, observationId + 1 - observationId);
                     }
                 }
 
@@ -44,12 +44,12 @@ namespace PolynomialFiltering {
                     if (observationId ==  - 1) {
                         return this->R;
                     } else {
-                        return this->R.);
+                        return this->R.block(observationId, observationId, observationId + 1 - observationId, observationId + 1 - observationId);
                     }
                 }
 
         }; // namespace controls
     }; // namespace filters
-}; // namespace PolynomialFiltering
+}; // namespace polynomialfiltering
 
 #pragma float_control(pop)

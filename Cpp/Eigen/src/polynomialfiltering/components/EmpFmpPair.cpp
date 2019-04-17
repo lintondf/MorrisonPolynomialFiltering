@@ -1,4 +1,4 @@
-/***** /PolynomialFiltering/Components/EmpFmpPair/
+/***** /polynomialfiltering/components/EmpFmpPair/
  * (C) Copyright 2019 - Blue Lightning Development, LLC.
  * D. F. Linton. support@BlueLightningDevelopment.com
  *
@@ -12,8 +12,8 @@
 
 #pragma float_control(push)
 #pragma float_control(precise, off)
-namespace PolynomialFiltering {
-    namespace Components {
+namespace polynomialfiltering {
+    namespace components {
         using namespace Eigen;
         
             EmpFmpPair::EmpFmpPair (const int order, const double theta, const double tau) : AbstractRecursiveFilter(order,tau) {
@@ -75,7 +75,7 @@ namespace PolynomialFiltering {
                 return ArrayXXd::Zero(this->order + 1, this->order + 1);
             }
 
-    }; // namespace Components
-}; // namespace PolynomialFiltering
+    }; // namespace components
+}; // namespace polynomialfiltering
 
 #pragma float_control(pop)

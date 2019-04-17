@@ -1,4 +1,4 @@
-/***** /PolynomialFiltering/filters/controls/IObservationErrorModel/
+/***** /polynomialfiltering/filters/controls/IObservationErrorModel/
  * (C) Copyright 2019 - Blue Lightning Development, LLC.
  * D. F. Linton. support@BlueLightningDevelopment.com
  *
@@ -20,20 +20,19 @@
 #include <polynomialfiltering/Main.hpp>
 
 
-namespace PolynomialFiltering {
+namespace polynomialfiltering {
     namespace filters {
         namespace controls {
 
             ///// @class IObservationErrorModel
-            /// @brief Get the covariance matrix for an observation
+            /// @brief Interface for all observation error models.
             /// 
-            /// 
-            ///  @param		f	the filter using this model (models can serve multiple filters)
-            ///  @param		t	the time of the observation
-            ///  @param		y	the observation vector
-            ///  @param		observationId	the element of y being used, -1 for all elements
-            /// 
-            ///  @return  Covariance matrix (1x1 if observationId >= 0)
+            /// Observation error models provide filters with (potentially varying)
+            /// covariance matrices characterising the random errors in observation
+            /// elements.  The inverse of the covariance matrix ('precision' matrix)
+            /// is more frequently required during filter processing.  Error models
+            /// generally can compute this inverse more efficiently than by naive
+            /// inverse of the covariance matrix.
             /// 
             class IObservationErrorModel {
                 public:
@@ -70,7 +69,7 @@ namespace PolynomialFiltering {
 
         }; // namespace controls
     }; // namespace filters
-}; // namespace PolynomialFiltering
+}; // namespace polynomialfiltering
 
 
 #endif // ___POLYNOMIALFILTERING_FILTERS_CONTROLS_IOBSERVATIONERRORMODEL_HPP

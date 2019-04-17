@@ -1,4 +1,4 @@
-/***** /PolynomialFiltering/filters/controls/BaseScalarJudge/
+/***** /polynomialfiltering/filters/controls/BaseScalarJudge/
  * (C) Copyright 2019 - Blue Lightning Development, LLC.
  * D. F. Linton. support@BlueLightningDevelopment.com
  *
@@ -12,7 +12,7 @@
 
 #pragma float_control(push)
 #pragma float_control(precise, off)
-namespace PolynomialFiltering {
+namespace polynomialfiltering {
     namespace filters {
         namespace controls {
             using namespace Eigen;
@@ -86,6 +86,6 @@ namespace PolynomialFiltering {
 
         }; // namespace controls
     }; // namespace filters
-}; // namespace PolynomialFiltering
+}; // namespace polynomialfiltering
 
 #pragma float_control(pop)

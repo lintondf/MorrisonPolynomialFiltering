@@ -441,7 +441,8 @@ public abstract class AbstractCppTarget extends AbstractLanguageTarget {
 				}
 			}
 			if (tln.getListOpen().equals("[")) {
-//				System.out.println(tln.getTop().traverse(1, tln)); ////@@
+//				if (scope.toString().contains("ConstantObservationErrorModel"))
+//					System.out.println(tln.getTop().traverse(1, tln)); ////@@
 				if ( tln.isArraySlice() ) {
 					Symbol array = null;
 					if (tln.getLeftSibling() instanceof TranslationSymbolNode) {
@@ -462,15 +463,16 @@ public abstract class AbstractCppTarget extends AbstractLanguageTarget {
 					 *     LIST[1](OPERATOR:)
 					 * [i:m] -> block(i,0,m,1) / segment(i,m)
 					 *     LIST[1](subscript(SUBEXPR,OPERATOR:,SUBEXPR))
-					 *[i:m,j:n] -> block(i,j,m,n)
-					 *     LIST[3](SUBEXPR,SUBEXPR,subscript(SUBEXPR,OPERATOR:,SUBEXPR))
+					 * [i:m,j:n] -> block(i,j,m,n)
+					 *     LIST[2](SUBEXPR,SUBEXPR,subscript(SUBEXPR,OPERATOR:,SUBEXPR))
 					 */
 					Symbol slice = programmer.getSliceSymbol(array.getType());
 					programmer.writeOperator(out, ".");
 					switch (tln.getChildCount()) {
 					case 0:
 						break;
-					case 1:
+						
+					case 1: // [i] || [:]
 						programmer.writeSymbol( out, slice );
 						programmer.openParenthesis( out );
 						if (tln.getChild(0) instanceof TranslationOperatorNode) {  //->programmer
@@ -502,30 +504,70 @@ public abstract class AbstractCppTarget extends AbstractLanguageTarget {
 							}
 						}
 						break;
-					case 2:
-						if (tln.getChild(0) instanceof TranslationOperatorNode) {        //[:,...]
+						
+					case 2: // [:,j] || [i,:] || [i:n,j] || [i,j:m] || [i:n,j:m]
+						if (tln.getChild(0) instanceof TranslationOperatorNode) {  // [:,j] - get column
 							Symbol which = programmer.getRowColSymbol("1");
 							programmer.writeSymbol( out, which );
 							programmer.openParenthesis( out );
-							emitChild(out, scope, tln.getChild(1));
-						} else if (tln.getChild(1) instanceof TranslationOperatorNode) { //[...,:]
+							emitChild(out, scope, tln.getChild(1));							
+						} else if (tln.getChild(1) instanceof TranslationOperatorNode) {  // [i,:] - get row
 							Symbol which = programmer.getRowColSymbol("0");
 							programmer.writeSymbol( out, which );
 							programmer.openParenthesis( out );
 							emitChild(out, scope, tln.getChild(0));
+						} else { 
+							/* [i:n,j]   LIST[2]{subscript[3]{expr,:,expr}, expr}
+							 *    -> block(i, j, n, 1)
+							 * [i,j:m]   LIST[2]{expr, subscript[3]{expr,:,expr}}
+							 *    -> block(i, j, 1, m)
+							 * [i:n,j:m] LIST[2]{subscript[3]{expr,:,expr}, subscript[3]{expr,:,expr}}
+							 *    -> block(i,j,n,m)
+							 */
+							programmer.writeSymbol( out, slice );
+							programmer.openParenthesis( out );
+							if (tln.getChild(0).getChildCount() > 0 && tln.getChild(1).getChildCount() > 0) { // [i:n,j:m]
+								TranslationNode subscript0 = tln.getChild(0);
+								TranslationNode subscript1 = tln.getChild(1);
+								//TODO check child(1) is in fact :
+								emitChild(out, scope, subscript0.getChild(0));
+								out.append(", "); //->programmer
+								emitChild(out, scope, subscript1.getChild(0));
+								out.append(", "); //->programmer
+								TranslationOperatorNode minus = new TranslationOperatorNode(tln.getParserRuleContext(), tln, "-");
+								emitChild(out, scope, subscript0.getChild(2));
+								emitChild(out, scope, minus);
+								emitChild(out, scope, subscript0.getChild(0));								
+								out.append(", "); 	 //->programmer							
+								emitChild(out, scope, subscript1.getChild(2));
+								emitChild(out, scope, minus);
+								emitChild(out, scope, subscript1.getChild(0));								
+							} else if (tln.getChild(0).getChildCount() > 0) { // [i:n,j]
+								TranslationNode subscript0 = tln.getChild(0);
+								TranslationNode subscript1 = tln.getChild(1);
+								emitChild(out, scope, subscript0.getChild(0));
+								out.append(", "); //->programmer
+								emitChild(out, scope, subscript1);
+								out.append(", "); //->programmer
+								emitChild(out, scope, subscript0.getChild(2));
+								out.append(", 1 "); 	 //->programmer															
+							} else if (tln.getChild(1).getChildCount() > 0) { // [i,j:m]
+								TranslationNode subscript0 = tln.getChild(0);
+								TranslationNode subscript1 = tln.getChild(1);
+								programmer.writeSymbol( out, slice );
+								programmer.openParenthesis( out );
+								emitChild(out, scope, subscript0);
+								out.append(", "); //->programmer
+								emitChild(out, scope, subscript1.getChild(0));								
+								out.append(", 1,  "); //->programmer
+								emitChild(out, scope, subscript1.getChild(2));
+								TranslationOperatorNode minus = new TranslationOperatorNode(tln.getParserRuleContext(), tln, "-");
+								emitChild(out, scope, minus);
+								emitChild(out, scope, subscript1.getChild(0));								
+							} else {
+								Transpiler.instance().reportError(tln.getParserRuleContext(), "Impossible slice/non-slice");
+							}
 						}
-						break;
-					case 3: // [i:m,j:n] -> block(i,j,m,n) -> LIST[3](SUBEXPR,SUBEXPR,subscript(SUBEXPR,OPERATOR:,SUBEXPR))
-						TranslationNode subscript = tln.getChild(2);
-						programmer.writeSymbol( out, slice );
-						programmer.openParenthesis( out );
-						emitChild(out, scope, tln.getChild(0));
-						out.append(", "); //->programmer
-						emitChild(out, scope, subscript.getChild(0));
-						out.append(", "); //->programmer
-						emitChild(out, scope, tln.getChild(1));
-						out.append(", "); 	 //->programmer							
-						emitChild(out, scope, subscript.getChild(2));
 						break;
 					}
 					programmer.closeParenthesis( out );
