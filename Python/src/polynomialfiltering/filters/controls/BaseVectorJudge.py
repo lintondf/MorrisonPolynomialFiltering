@@ -6,14 +6,14 @@
  See separate LICENSE file for full text
 '''
 
-from PolynomialFiltering.PythonUtilities import virtual, chi2Cdf, chi2Ppf
+from polynomialfiltering.PythonUtilities import virtual, chi2Cdf, chi2Ppf
 
 from numpy import array, zeros, eye, exp, transpose
 from numpy import array as vector;
 
-from PolynomialFiltering.Main import AbstractFilterWithCovariance
-from PolynomialFiltering.Components.FadingMemoryPolynomialFilter import makeFMP
-from PolynomialFiltering.filters.controls.IJudge import IJudge
+from polynomialfiltering.Main import AbstractFilterWithCovariance
+from polynomialfiltering.components.FadingMemoryPolynomialFilter import makeFMP
+from polynomialfiltering.filters.controls.IJudge import IJudge
 
 
 class BaseVectorJudge(IJudge):

@@ -19,7 +19,7 @@ from math import sqrt, sin
 from runstats import Statistics
 from scipy.stats._continuous_distns import chi2
 
-from PolynomialFiltering.Components.FixedMemoryPolynomialFilter import FixedMemoryFilter;
+from polynomialfiltering.components.FixedMemoryPolynomialFilter import FixedMemoryFilter;
 
 from TestSuite import testDataPath;
 

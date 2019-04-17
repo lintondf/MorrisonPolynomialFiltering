@@ -11,9 +11,9 @@ from abc import abstractmethod
 from math import isnan;
 from numpy import array, diag, zeros, sqrt, transpose
 from numpy import array as vector
-from PolynomialFiltering.Components.AbstractRecursiveFilter import AbstractRecursiveFilter
-from PolynomialFiltering.Components.ExpandingMemoryPolynomialFilter import makeEMP, EMPBase
-from PolynomialFiltering.Components.FadingMemoryPolynomialFilter import makeFMP, FMPBase
+from polynomialfiltering.components.AbstractRecursiveFilter import AbstractRecursiveFilter
+from polynomialfiltering.components.ExpandingMemoryPolynomialFilter import makeEMP, EMPBase
+from polynomialfiltering.components.FadingMemoryPolynomialFilter import makeFMP, FMPBase
 
 class EmpFmpPair(AbstractRecursiveFilter) :
     """

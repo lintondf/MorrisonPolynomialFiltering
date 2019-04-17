@@ -11,8 +11,8 @@ from numpy.testing import assert_almost_equal
 from netCDF4 import Dataset
 from TestUtilities import *
 from TestSuite import testDataPath;
-from PolynomialFiltering.filters.controls.ConstantObservationErrorModel import ConstantObservationErrorModel
-from PolynomialFiltering.PythonUtilities import ignore, testcase
+from polynomialfiltering.filters.controls.ConstantObservationErrorModel import ConstantObservationErrorModel
+from polynomialfiltering.PythonUtilities import ignore, testcase
 from TestData import TestData
 
 class TestConstantObservationErrorModel(unittest.TestCase):

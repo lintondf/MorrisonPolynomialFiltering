@@ -13,8 +13,8 @@ from abc import abstractmethod
 from numpy import array, zeros;
 from numpy import array as vector;
 
-from PolynomialFiltering.PythonUtilities import virtual;
-from PolynomialFiltering.Main import AbstractFilter, FilterStatus
+from polynomialfiltering.PythonUtilities import virtual;
+from polynomialfiltering.Main import AbstractFilter, FilterStatus
 
     
 class AbstractRecursiveFilter(AbstractFilter):

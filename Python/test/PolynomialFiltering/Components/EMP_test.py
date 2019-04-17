@@ -5,8 +5,8 @@ Created on Feb 13, 2019
 '''
 import unittest
 
-from PolynomialFiltering.Components.ExpandingMemoryPolynomialFilter import *
-from PolynomialFiltering.Components.FixedMemoryPolynomialFilter import FixedMemoryFilter
+from polynomialfiltering.components.ExpandingMemoryPolynomialFilter import *
+from polynomialfiltering.components.FixedMemoryPolynomialFilter import FixedMemoryFilter
 
 from copy import deepcopy
 from TestUtilities import *

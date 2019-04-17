@@ -6,7 +6,7 @@ Created on Mar 27, 2019
 import os
 import unittest
 
-from PolynomialFiltering.Components.EmpFmpPair import *
+from polynomialfiltering.components.EmpFmpPair import *
 
 from TestUtilities import *
 from numpy import arange, array2string, cov, log, var, zeros, trace, mean, std, transpose,\

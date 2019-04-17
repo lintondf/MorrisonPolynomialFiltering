@@ -10,10 +10,10 @@ from abc import abstractmethod
 from typing import List;
 
 from numpy import array as vector
-from PolynomialFiltering.PythonUtilities import virtual;
-from PolynomialFiltering.Components import AbstractRecursiveFilter
-from PolynomialFiltering.filters import ManagedFilterBase;
-from PolynomialFiltering.filters.controls.BaseScalarJudge import BaseScalarJudge
+from polynomialfiltering.PythonUtilities import virtual;
+from polynomialfiltering.components import AbstractRecursiveFilter
+from polynomialfiltering.filters import ManagedFilterBase;
+from polynomialfiltering.filters.controls.BaseScalarJudge import BaseScalarJudge
 
 
 class ManagedScalarRecursiveFilterSet(ManagedFilterBase):

@@ -12,7 +12,7 @@ from numpy import array, copy, eye, ones, zeros, transpose
 from numpy import array as vector
 from numpy.linalg.linalg import solve, lstsq, inv
 
-from PolynomialFiltering.Main import AbstractFilterWithCovariance, FilterStatus
+from polynomialfiltering.Main import AbstractFilterWithCovariance, FilterStatus
 
 class FixedMemoryFilter(AbstractFilterWithCovariance) :
     """

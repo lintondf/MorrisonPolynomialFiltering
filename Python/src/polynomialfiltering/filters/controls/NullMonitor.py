@@ -11,8 +11,8 @@ from abc import ABC, abstractmethod
 from numpy import array
 from numpy import array as vector;
 
-from PolynomialFiltering.Main import AbstractFilterWithCovariance
-from PolynomialFiltering.filters.controls.IMonitor import IMonitor
+from polynomialfiltering.Main import AbstractFilterWithCovariance
+from polynomialfiltering.filters.controls.IMonitor import IMonitor
 
 class NullMonitor(IMonitor):
     def __init__(self):

@@ -11,8 +11,8 @@ from abc import ABC, abstractmethod
 from numpy import array
 from numpy import array as vector;
 
-from PolynomialFiltering.Main import AbstractFilterWithCovariance
-from PolynomialFiltering.filters.controls.IObservationErrorModel import IObservationErrorModel
+from polynomialfiltering.Main import AbstractFilterWithCovariance
+from polynomialfiltering.filters.controls.IObservationErrorModel import IObservationErrorModel
 
 
 class IManagedFilter(ABC):

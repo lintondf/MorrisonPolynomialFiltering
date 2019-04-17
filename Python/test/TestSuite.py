@@ -15,13 +15,13 @@ def testDataPath( filename : str) -> str:
 
 def runAll():
     testmodules = [
-        'Components.AbstractRecursiveFilter_test',
-        'Components.EMP_test',
-        'Components.FixedMemoryFilter_test',
-        'Components.FMP_test',
-        'Components.EmpFmpPair_test',
-        'filters.ManagedFilterBase_test',
-        'filters.controls.ConstantObservationErrorModel_test',
+        'polynomialfiltering.components.AbstractRecursiveFilter_test',
+        'polynomialfiltering.components.EMP_test',
+        'polynomialfiltering.components.FixedMemoryFilter_test',
+        'polynomialfiltering.components.FMP_test',
+        'polynomialfiltering.components.EmpFmpPair_test',
+        'polynomialfiltering.filters.ManagedFilterBase_test',
+        'polynomialfiltering.filters.controls.ConstantObservationErrorModel_test',
         ]
     
     suite = unittest.TestSuite()

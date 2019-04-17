@@ -5,13 +5,13 @@
  SPDX-License-Identifier: MIT
  See separate LICENSE file for full text
 '''
-from PolynomialFiltering.PythonUtilities import constructor, ignore
+from polynomialfiltering.PythonUtilities import constructor, ignore
 
 from numpy import array, isscalar
 from numpy import array as vector
 from numpy.linalg import inv
-from PolynomialFiltering.Main import AbstractFilterWithCovariance
-from PolynomialFiltering.filters.controls.IObservationErrorModel import IObservationErrorModel
+from polynomialfiltering.Main import AbstractFilterWithCovariance
+from polynomialfiltering.filters.controls.IObservationErrorModel import IObservationErrorModel
 
 
 class ConstantObservationErrorModel(IObservationErrorModel):

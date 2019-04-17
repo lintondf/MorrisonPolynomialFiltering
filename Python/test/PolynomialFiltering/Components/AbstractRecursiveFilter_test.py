@@ -5,7 +5,7 @@ Created on Mar 7, 2019
 '''
 import unittest
 
-from PolynomialFiltering.Components.ExpandingMemoryPolynomialFilter import *
+from polynomialfiltering.components.ExpandingMemoryPolynomialFilter import *
 
 from netCDF4 import Dataset
 from TestUtilities import *

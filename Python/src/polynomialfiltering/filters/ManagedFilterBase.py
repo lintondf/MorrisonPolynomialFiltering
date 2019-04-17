@@ -10,13 +10,13 @@ from abc import abstractmethod
 
 from numpy import array, eye
 from numpy import array as vector
-from PolynomialFiltering.Main import AbstractFilterWithCovariance, FilterStatus
-from PolynomialFiltering.Components.AbstractRecursiveFilter import AbstractRecursiveFilter
-from PolynomialFiltering.filters.IManagedFilter import IManagedFilter;
-from PolynomialFiltering.filters.controls.IObservationErrorModel import IObservationErrorModel
-from PolynomialFiltering.filters.controls.IJudge import IJudge
-from PolynomialFiltering.filters.controls.IMonitor import IMonitor
-from PolynomialFiltering.filters.controls.ConstantObservationErrorModel import ConstantObservationErrorModel
+from polynomialfiltering.Main import AbstractFilterWithCovariance, FilterStatus
+from polynomialfiltering.components.AbstractRecursiveFilter import AbstractRecursiveFilter
+from polynomialfiltering.filters.IManagedFilter import IManagedFilter;
+from polynomialfiltering.filters.controls.IObservationErrorModel import IObservationErrorModel
+from polynomialfiltering.filters.controls.IJudge import IJudge
+from polynomialfiltering.filters.controls.IMonitor import IMonitor
+from polynomialfiltering.filters.controls.ConstantObservationErrorModel import ConstantObservationErrorModel
 
 
 class ManagedFilterBase(AbstractFilterWithCovariance, IManagedFilter):

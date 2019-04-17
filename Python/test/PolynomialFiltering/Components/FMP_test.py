@@ -5,8 +5,8 @@ Created on Feb 15, 2019
 '''
 import unittest
 
-from PolynomialFiltering.Main import AbstractFilterWithCovariance
-from PolynomialFiltering.Components.FadingMemoryPolynomialFilter import *
+from polynomialfiltering.Main import AbstractFilterWithCovariance
+from polynomialfiltering.components.FadingMemoryPolynomialFilter import *
 
 from TestUtilities import *
 from numpy import arange, array2string, cov, zeros, mean, std, var, diag,\

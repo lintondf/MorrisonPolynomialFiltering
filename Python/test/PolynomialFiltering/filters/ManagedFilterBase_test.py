@@ -8,9 +8,9 @@ import unittest
 from numpy import array, zeros
 from numpy import array as vector;
 
-from PolynomialFiltering.Components import AbstractRecursiveFilter
-from PolynomialFiltering.Components.EmpFmpPair import EmpFmpPair;
-from PolynomialFiltering.filters.ManagedFilterBase import ManagedFilterBase;
+from polynomialfiltering.components import AbstractRecursiveFilter
+from polynomialfiltering.components.EmpFmpPair import EmpFmpPair;
+from polynomialfiltering.filters.ManagedFilterBase import ManagedFilterBase;
 
 class ManagedFilterBaseMock(ManagedFilterBase):
     

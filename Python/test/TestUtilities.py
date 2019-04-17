@@ -17,7 +17,7 @@ from numpy.random import randn
 from scipy.linalg.matfuncs import expm
 from scipy.stats import chi2
 from scipy.stats._continuous_distns import norm
-from PolynomialFiltering.Main import AbstractFilter
+from polynomialfiltering.Main import AbstractFilter
 
 def createTestGroup(cdf : Dataset, name : str ) -> Dataset:
     return cdf.createGroup(name);

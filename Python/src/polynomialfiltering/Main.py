@@ -16,7 +16,7 @@ from abc import ABC, abstractmethod
 from enum import Enum
 from numpy import array, eye, transpose, zeros
 from numpy import array as vector;
-from PolynomialFiltering.PythonUtilities import virtual;
+from polynomialfiltering.PythonUtilities import virtual;
 
 class FilterStatus(Enum):
     """

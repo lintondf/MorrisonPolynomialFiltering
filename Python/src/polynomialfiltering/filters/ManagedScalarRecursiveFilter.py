@@ -9,11 +9,11 @@
 from abc import abstractmethod
 from numpy import zeros
 from numpy import array as vector
-from PolynomialFiltering.PythonUtilities import virtual;
-from PolynomialFiltering.Components import AbstractRecursiveFilter
-from PolynomialFiltering.filters.ManagedFilterBase import ManagedFilterBase;
-from PolynomialFiltering.filters.controls.BaseScalarJudge import BaseScalarJudge
-from PolynomialFiltering.filters.controls.NullMonitor import NullMonitor
+from polynomialfiltering.PythonUtilities import virtual;
+from polynomialfiltering.components import AbstractRecursiveFilter
+from polynomialfiltering.filters.ManagedFilterBase import ManagedFilterBase;
+from polynomialfiltering.filters.controls.BaseScalarJudge import BaseScalarJudge
+from polynomialfiltering.filters.controls.NullMonitor import NullMonitor
 
 
 class ManagedScalarRecursiveFilter(ManagedFilterBase):
