@@ -7,6 +7,8 @@ import os
 import unittest
 import coverage
 
+
+
 def testDataPath( filename : str) -> str:
     path = os.getcwd();
     return path.replace("\\", "/").replace("Python/test.*", "testdata") + filename;
@@ -15,17 +17,20 @@ def testDataPath( filename : str) -> str:
 
 def runAll():
     testmodules = [
-        'polynomialfiltering.components.AbstractRecursiveFilter_test',
-        'polynomialfiltering.components.EMP_test',
-        'polynomialfiltering.components.FixedMemoryFilter_test',
-        'polynomialfiltering.components.FMP_test',
-        'polynomialfiltering.components.EmpFmpPair_test',
-        'polynomialfiltering.filters.ManagedFilterBase_test',
-        'polynomialfiltering.filters.controls.ConstantObservationErrorModel_test',
+        'components.AbstractRecursiveFilter_test',
+        'components.EMP_test',
+        'components.FixedMemoryFilter_test',
+        'components.FMP_test',
+        'components.EmpFmpPair_test',
+        'filters.ManagedFilterBase_test',
+        'filters.controls.ConstantObservationErrorModel_test',
         ]
     
     suite = unittest.TestSuite()
     
+    path = os.getcwd();
+    print(path)
+    os.chdir(path + "/polynomialfiltering");
     for t in testmodules:
         try:
             # If the module defines a suite() function, call it to get the suite.
@@ -37,6 +42,7 @@ def runAll():
             suite.addTest(unittest.defaultTestLoader.loadTestsFromName(t))
     
     unittest.TextTestRunner().run(suite)    
+    os.chdir(path);
 
 if __name__ == '__main__':
     cov = coverage.Coverage()
