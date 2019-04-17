@@ -36,7 +36,7 @@ namespace PolynomialFiltering {
                     if (observationId ==  - 1) {
                         return this->iR;
                     } else {
-                        return this->iR(observationId, observationId);
+                        return this->iR.);
                     }
                 }
 
@@ -44,7 +44,7 @@ namespace PolynomialFiltering {
                     if (observationId ==  - 1) {
                         return this->R;
                     } else {
-                        return this->R(observationId, observationId);
+                        return this->R.);
                     }
                 }
 

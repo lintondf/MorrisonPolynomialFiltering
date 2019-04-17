@@ -273,9 +273,6 @@ class SourceCompilationListener extends LcdPythonBaseListener {
 		@Override 
 		public void enterIf_stmt(LcdPythonParser.If_stmtContext ctx) { 
 			transpiler.logger.info(StringUtils.left(ctx.getText(), 80));
-//			transpiler.dumpChildren(ctx);
-//			System.out.println( ctx.getChild(1).getText());
-//			System.out.println( ctx.getChild(1).getChild(0).getChild(0).getText());
 			
 			SourceCompilationListener subListener = new SourceCompilationListener(transpiler, this.headerOnly);
 			subListener.expressionRoot = new TranslationExpressionNode(ctx, "IF_STMT");
@@ -283,7 +280,10 @@ class SourceCompilationListener extends LcdPythonBaseListener {
 			subListener.scope = scope;
 			transpiler.walker.walk(subListener, ctx.getChild(1));
 			TranslationNode condition = subListener.translateMap.get(ctx.getChild(1).getPayload());
-//			System.out.println( condition.traverse(1));
+//			if (ctx.getStart().getLine() == 58) {
+//				transpiler.dumpChildren(ctx);
+//				System.out.println( condition.traverse(1));
+//			}
 			transpiler.dispatcher.emitIfStatement(scope, condition);
 			subListener.expressionRoot = null;
 			
@@ -600,6 +600,10 @@ class SourceCompilationListener extends LcdPythonBaseListener {
 							//transpiler.dumpChildren(ctx, 1);
 							if (trailer.getChildCount() >= 2) {
 								TranslationListNode tln = new TranslationListNode(ctx, parent, unary );
+								TranslationNode left = tln.getLeftSibling();
+								if (left != null) {
+									tln.setType( left.getType() );
+								}
 								ParseTree list = trailer.getChild(1);
 //								System.out.println(list.toStringTree(transpiler.parser));
 								for (int iList = 0; iList < list.getChildCount(); iList += 2) {

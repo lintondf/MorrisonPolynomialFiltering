@@ -31,22 +31,22 @@ namespace PolynomialFiltering {
                     return chi2Ppf(p, df);
                 }
 
-                int BaseScalarJudge::best (const double pSwitch, const std::vector<IJudge> judges) {
+                int BaseScalarJudge::best (const double pSwitch, const double gofThreshold, const std::vector<std::shared_ptr<std::shared_ptr<IJudge>>> judges) {
                     int iBest;
                     double bestGOF;
                     iBest =  - 1;
                     bestGOF = 0;
                     double dG;
                     for (int iJ = 0; iJ < judges.size(); iJ++) {
-                        if (judges[iJ].getFilter().getLastVariance() < 1.0 && judges[iJ].getGOF() > this->gofThreshold) {
+                        if (judges[iJ]->getFilter()->getLastVariance() < 1.0 && judges[iJ]->getGOF() > gofThreshold) {
                             if (iBest < 0) {
                                 iBest = iJ;
-                                bestGOF = judges[iJ].getGOF();
-                            } else if (judges[iJ].getGOF() < bestGOF) {
-                                dG = bestGOF - judges[iJ].getGOF();
+                                bestGOF = judges[iJ]->getGOF();
+                            } else if (judges[iJ]->getGOF() < bestGOF) {
+                                dG = bestGOF - judges[iJ]->getGOF();
                                 if (dG > chi2Ppf(pSwitch, 1)) {
                                     iBest = iJ;
-                                    bestGOF = judges[iJ].getGOF();
+                                    bestGOF = judges[iJ]->getGOF();
                                 }
                             }
                         }

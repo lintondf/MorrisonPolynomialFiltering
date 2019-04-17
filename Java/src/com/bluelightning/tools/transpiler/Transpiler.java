@@ -60,8 +60,9 @@ import freemarker.template.TemplateException;
 import freemarker.template.TemplateExceptionHandler;
 
 /* TODO
- * 2. this.transpiler -> Transpiler.instance()
- * 4. Declaration listener; allow import for tests
+ * -- this.transpiler -> Transpiler.instance()
+ * -- Check for changes before writing sources
+ * -- Package capitalization
  */
 /**
  * @author NOOK

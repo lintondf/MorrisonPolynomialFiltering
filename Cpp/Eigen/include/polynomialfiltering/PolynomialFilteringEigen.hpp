@@ -5,7 +5,7 @@
 #include <exception>
 #include <tuple>
 
-namespace PolynomialFiltering {
+namespace polynomialfiltering {
 	class PolynomialFilteringException : public std::exception {
 	protected:
 		std::string message;
@@ -36,13 +36,13 @@ namespace PolynomialFiltering {
 
 }
 
-#define eigen_assert(X) do { if(!(X)) throw ::PolynomialFiltering::EigenException(#X); } while(false);
+#define eigen_assert(X) do { if(!(X)) throw ::polynomialfiltering::EigenException(#X); } while(false);
 
 #include <Eigen/Dense>
 #include <gsl/gsl_cdf.h>
 
 using namespace Eigen;
-namespace PolynomialFiltering {
+namespace polynomialfiltering {
 
 	typedef VectorXd RealVector;
 	typedef MatrixXd RealMatrix;

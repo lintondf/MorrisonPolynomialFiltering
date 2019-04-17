@@ -192,10 +192,6 @@ public abstract class AbstractCppTarget extends AbstractLanguageTarget {
 		if (symbol != null && fpi != null) {
 				String name = symbol.getName();
 				String remappedType = programmer.remapType(currentScope, symbol); 
-				Symbol outputClass = Transpiler.instance().lookup(scope, remappedType);
-				if (outputClass != null && outputClass.isClass() && !outputClass.isEnum()) { //if returning a class wrap in smart pointer
-					remappedType = String.format("std::shared_ptr<%s>", outputClass.getName() ); //->programmer
-				}
 				String type = remappedType + " ";
 				if (symbol.isConstructor()) {
 					name = currentClass;
@@ -213,7 +209,7 @@ public abstract class AbstractCppTarget extends AbstractLanguageTarget {
 					}
 					header.append("const ");
 					remappedType = programmer.remapType(currentScope, parameter);
-					remappedType = programmer.remapTypeParameter(remappedType);
+					remappedType = programmer.remapTypeParameter(currentScope, remappedType);
 					header.append(remappedType);
 					header.append(" ");
 					header.append( parameter.getName() );
@@ -382,7 +378,15 @@ public abstract class AbstractCppTarget extends AbstractLanguageTarget {
 					} else if (child.getLeftSibling() != null && child.getLeftSibling() instanceof TranslationSymbolNode) {
 						TranslationSymbolNode s = (TranslationSymbolNode) child.getLeftSibling();
 						Symbol type = Transpiler.instance().lookup(currentScope, s.getType());
-						if (/*!s.getSymbol().getName().equals("self") &&*/ type != null && type.isClass() && !type.isEnum()) {
+						if (type != null && type.isClass() && !type.isEnum()) {
+							programmer.writeOperator( out, "->" );
+						} else {
+							programmer.writeOperator( out, unary.getLhsValue() );
+						}
+					} else if (child.getLeftSibling() != null && child.getLeftSibling() instanceof TranslationListNode) {
+						TranslationListNode s = (TranslationListNode) child.getLeftSibling();
+						Symbol type = Transpiler.instance().lookupClass(s.getType()); 
+						if (type != null && type.isClass() && !type.isEnum()) {
 							programmer.writeOperator( out, "->" );
 						} else {
 							programmer.writeOperator( out, unary.getLhsValue() );
@@ -439,11 +443,16 @@ public abstract class AbstractCppTarget extends AbstractLanguageTarget {
 			if (tln.getListOpen().equals("[")) {
 //				System.out.println(tln.getTop().traverse(1, tln)); ////@@
 				if ( tln.isArraySlice() ) {
-					if (! (tln.getLeftSibling() instanceof TranslationSymbolNode) ) {
+					Symbol array = null;
+					if (tln.getLeftSibling() instanceof TranslationSymbolNode) {
+						array = ((TranslationSymbolNode) tln.getLeftSibling()).getSymbol();
+					} else if (tln.getLeftSibling() instanceof TranslationUnaryNode) {
+						array = ((TranslationUnaryNode) tln.getLeftSibling()).getRhsSymbol();
+					}
+					if (array == null) {
 						Transpiler.instance().reportError(tln.getTop(), "Bracket list follows non-symbol");
 						return 0;
 					}
-					Symbol array = ((TranslationSymbolNode) tln.getLeftSibling()).getSymbol();
 					/* FOR C++/Eigen
 					 * [:,i] -> col(i) == block(0,i,rows(),1)
 					 *     LIST[2](OPERATOR:,SUBEXPR)
@@ -666,10 +675,10 @@ public abstract class AbstractCppTarget extends AbstractLanguageTarget {
 		}
 		if (cppType.equals("enum"))
 			return;
-		Symbol type = Transpiler.instance().lookup(currentScope, cppType);
-		if (type != null && type.isClass() && !type.isEnum()) {
-			cppType = String.format("std::shared_ptr<%s>", cppType );
-		}
+//		Symbol type = Transpiler.instance().lookup(currentScope, cppType);
+//		if (type != null && type.isClass() && !type.isEnum()) {
+//			cppType = String.format("std::shared_ptr<%s>", cppType );
+//		}
 		String declaration = String.format("%s %s", cppType, symbol.getName() );
 		String endLine = ";";
 		if (comment != null) {
@@ -693,6 +702,7 @@ public abstract class AbstractCppTarget extends AbstractLanguageTarget {
 		case MEMBER:
 			cppIndent.writeln( declaration + endLine);
 			break;
+		default:
 		}
 	}
 
@@ -774,7 +784,7 @@ public abstract class AbstractCppTarget extends AbstractLanguageTarget {
 //			}
 		}
 		String file = includeFile.toString();
-		if (file.toLowerCase().endsWith("/Main/")) {
+		if (file.endsWith("/Main/")) {
 			file = file.replace("/Main/", "/Main.hpp");
 		} else {
 			file += scope.getLast() + ".hpp";

@@ -47,15 +47,15 @@ class BaseScalarJudge(IJudge):
         return chi2Ppf(p, df);
 
     @classmethod
-    def best(self, pSwitch : float, judges : List[IJudge]) -> int:
+    def best(self, pSwitch : float, gofThreshold : float, judges : List[IJudge]) -> int:
         '''@ iBest : int'''
         '''@ bestGOF : float '''
         iBest = -1;
         bestGOF = 0;
         '''@iJ : int'''
         '''@dG : float'''
-        for iJ in range(0, len(judges)) :
-            if (judges[iJ].getFilter().getLastVariance() < 1.0 and judges[iJ].getGOF() > self.gofThreshold) :
+        for iJ in range(0, len(judges)) : 
+            if (judges[iJ].getFilter().getLastVariance() < 1.0 and judges[iJ].getGOF() > gofThreshold) :
                 if (iBest < 0) :
                     iBest = iJ;
                     bestGOF = judges[iJ].getGOF();

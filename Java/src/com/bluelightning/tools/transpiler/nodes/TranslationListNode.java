@@ -17,6 +17,24 @@ public class TranslationListNode extends TranslationSubexpressionNode {
 		super(ctx, parent, "<LIST>"+name);
 		this.listOpen = name;
 	}
+	
+	@Override
+	public void setType(String type) {
+		int currentIndex = precedence.indexOf(this.type);
+		int typeIndex = precedence.indexOf(type);
+		if ( typeIndex >= 0 && currentIndex >= 0) { // update if both types are basic 
+			if (typeIndex > currentIndex) { // and higher precedence
+				this.type = type;
+			}
+		} else if (currentIndex >= 0) {
+			this.type = type;
+		}
+		if (parent != null) {
+			parent.setType(this.type);
+		}
+	}
+	
+	
 
 	public String getListOpen() {
 		return listOpen;

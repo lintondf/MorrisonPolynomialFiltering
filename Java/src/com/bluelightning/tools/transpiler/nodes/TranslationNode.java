@@ -18,7 +18,7 @@ import org.apache.commons.lang3.StringUtils;
 public class TranslationNode  {
 	
 	protected String name;
-	private String type;
+	protected String type;
 	private ParserRuleContext ctx;
 	
 
@@ -46,16 +46,16 @@ public class TranslationNode  {
 		return type;
 	}
 	
-	final static List<String> precedence = Arrays.asList(new String[] {"int", "float", "vector", "array"});
+	protected final static List<String> precedence = Arrays.asList(new String[] {"int", "float", "vector", "array"});
 	
 	public void setType(String type) {
 		int currentIndex = precedence.indexOf(this.type);
 		int typeIndex = precedence.indexOf(type);
-		if ( typeIndex >= 0 && currentIndex >= 0) {
-			if (typeIndex > currentIndex) {
+		if ( typeIndex >= 0 && currentIndex >= 0) { // update if both types are basic 
+			if (typeIndex > currentIndex) { // and higher precedence
 				this.type = type;
 			}
-		} else {
+		} else  {
 			this.type = type;
 		}
 		if (parent != null) {
@@ -90,7 +90,7 @@ public class TranslationNode  {
 		if (ctx != null ) {
 			where = String.format("L%5d C%3d: ", ctx.start.getLine(), ctx.start.getCharPositionInLine(), children.size() );
 		}
-		return String.format("%s[%5d] %s", where , this.getChildCount(), name );
+		return String.format("%10d %s[%5d] %s", this.hashCode(), where, this.getChildCount(), name );
 	}
 
 
@@ -108,7 +108,7 @@ public class TranslationNode  {
 			node.parent.removeChild(node);
 		}
 		node.parent = this;
-		this.type = node.type;
+		this.setType( node.getType() );
 		this.children = node.children;
 	}
 	

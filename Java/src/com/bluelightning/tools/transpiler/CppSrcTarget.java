@@ -35,7 +35,7 @@ public class CppSrcTarget extends AbstractCppTarget {
 		cppPath = srcDirectory;
 		StringBuilder moduleIncludeFile = new StringBuilder();
 		for (int i = 0; i < scope.getLevelCount()-1; i++) {
-			String level = scope.getLevel(i).toLowerCase();
+			String level = scope.getLevel(i);
 //			if (i > 0) {
 				moduleIncludeFile.append(level);
 				moduleIncludeFile.append('/');

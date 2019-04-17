@@ -36,7 +36,7 @@ namespace PolynomialFiltering {
                 
                     void test1Scalar () {
                         std::shared_ptr<TestData> testData;
-                        std::vector<std::string> matches;
+                        std::vector<std::shared_ptr<std::string>> matches;
                         int iE;
                         RealMatrix inputCovariance;
                         RealMatrix inputInverse;
@@ -63,7 +63,7 @@ namespace PolynomialFiltering {
 
                     void test2Matrix () {
                         std::shared_ptr<TestData> testData;
-                        std::vector<std::string> matches;
+                        std::vector<std::shared_ptr<std::string>> matches;
                         int iE;
                         RealMatrix inputCovariance;
                         RealMatrix inputInverse;
@@ -88,7 +88,7 @@ namespace PolynomialFiltering {
 
                     void test3MatrixMatrix () {
                         std::shared_ptr<TestData> testData;
-                        std::vector<std::string> matches;
+                        std::vector<std::shared_ptr<std::string>> matches;
                         int iE;
                         RealMatrix inputCovariance;
                         RealMatrix inputInverse;

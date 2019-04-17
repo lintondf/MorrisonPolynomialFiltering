@@ -16,7 +16,7 @@ namespace PolynomialFiltering {
     namespace filters {
         using namespace Eigen;
         
-            ManagedFilterBase::ManagedFilterBase (const std::shared_ptr<AbstractRecursiveFilter> worker) {
+            ManagedFilterBase::ManagedFilterBase (const std::shared_ptr<Components::AbstractRecursiveFilter> worker) {
                 this->worker = worker;
                 this->errorModel = ConstantObservationErrorModel(eye(1), eye(1));
                 this->judge = nullptr;
@@ -39,7 +39,7 @@ namespace PolynomialFiltering {
                 return this->worker->getState();
             }
 
-            std::shared_ptr<AbstractRecursiveFilter> ManagedFilterBase::getWorker () {
+            std::shared_ptr<Components::AbstractRecursiveFilter> ManagedFilterBase::getWorker () {
                 return this->worker;
             }
 
@@ -47,15 +47,15 @@ namespace PolynomialFiltering {
                 this->errorModel = ConstantObservationErrorModel(inverseR);
             }
 
-            void ManagedFilterBase::setObservationErrorModel (const std::shared_ptr<IObservationErrorModel> errorModel) {
+            void ManagedFilterBase::setObservationErrorModel (const std::shared_ptr<controls::IObservationErrorModel> errorModel) {
                 this->errorModel = errorModel;
             }
 
-            void ManagedFilterBase::setJudge (const std::shared_ptr<IJudge> judge) {
+            void ManagedFilterBase::setJudge (const std::shared_ptr<controls::IJudge> judge) {
                 this->judge = judge;
             }
 
-            void ManagedFilterBase::setMonitor (const std::shared_ptr<IMonitor> monitor) {
+            void ManagedFilterBase::setMonitor (const std::shared_ptr<controls::IMonitor> monitor) {
                 this->monitor = monitor;
             }
 

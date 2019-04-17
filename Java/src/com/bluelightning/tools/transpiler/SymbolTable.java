@@ -67,6 +67,9 @@ class SymbolTable {
 		
 		public Symbol lookupClass( String name ) {
 			name = name.trim();
+			if (name.startsWith("List[")) {
+				name = name.substring(5, name.length()-1);
+			}
 			Map<String, Symbol> aliases = table.get(name);
 			if (aliases == null) {
 				return null;

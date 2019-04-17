@@ -79,7 +79,8 @@ public class Symbol {
 			r += functionParametersInfo.toString();
 			r += ")";
 		}
-		r += "; ClassRef: " + this.isClassRef;
+		if (isClassRef)
+			r += " ClassRef; ";
 		return r;
 	}
 	

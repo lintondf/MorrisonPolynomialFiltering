@@ -49,7 +49,7 @@ public interface IProgrammer {
 
 	String remapType(Scope currentScope, Symbol symbol);
 
-	String remapTypeParameter(String remappedType);
+	String remapTypeParameter(Scope currentScope, String remappedType);
 	
 	String remapSymbolUsages( Scope currentScope, Symbol symbol);
 

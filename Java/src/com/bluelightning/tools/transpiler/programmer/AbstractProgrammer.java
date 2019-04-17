@@ -48,7 +48,8 @@ public abstract class AbstractProgrammer implements IProgrammer {
 
 	Scope libraryScope = new Scope();
 	Map<String, String> typeRemap = new HashMap<>();
-	Map<String, String> parameterTypeRemap = new HashMap<>();
+	Map<String, String> parameterTypeRemap = new HashMap<>(); // parameter type that should be by reference [typeName, typewithreference]
+	Map<String, Scope>  pointerParameterRemap = new HashMap<>(); // parameter type that will be ptr wrapped [typeName, type scope]
 	
 	// index by function-name yields map indexed by type yields library name
 	protected Map<String, Map<String,Symbol>> functionRewrites = new HashMap<>();
@@ -82,28 +83,39 @@ public abstract class AbstractProgrammer implements IProgrammer {
 	 */
 	@Override //General
 	public String remapType( Scope currentScope, Symbol symbol ) {
+		String type = remapTypeSymbol(currentScope, symbol);
+		return type;
+	}
+	
+	protected String remapTypeSymbol( Scope currentScope, Symbol symbol ) {
 		String type = symbol.getType();
-		if (type.startsWith("List[")) {
+		if (type.startsWith("List[")) { 
 			type = type.substring(5, type.length()-1).trim().replaceAll(" +", "");
 			String[] fields = type.split(",");
 			String tuple = "std::vector<";
 			for (String field : fields) {
-				field = remapType(currentScope, field);
-				tuple += field;
+				field = remapTypeString(currentScope, field);
+				tuple += String.format("std::shared_ptr<%s>", field);
 				tuple += ", ";
 			}
 			tuple = tuple.substring(0, tuple.length()-2) + ">"; // drop last ', ' close bracket
 			return tuple;
 		}
-		return remapType( currentScope, type );
+		return remapTypeString( currentScope, type );
 	}
 	
-	protected String remapType( Scope currentScope, String typeName) {
+	protected String remapTypeString( Scope currentScope, String typeName) {
 		Symbol c = Transpiler.instance().lookupClass(typeName);
 		if (c != null) {
+			Scope typeScope = c.getScope();
+			String prefix = typeScope.getVisiblityPrefix(currentScope);
 			String t = typeRemap.get(typeName);
 			if (t != null)
 				return t;
+			if (! prefix.isEmpty()) {
+				typeName = prefix.replace("/", "::") + typeName;
+			}
+			typeName = String.format("std::shared_ptr<%s>", typeName);
 			return typeName;			
 		} else {
 			String t = typeRemap.get(typeName);
@@ -113,6 +125,19 @@ public abstract class AbstractProgrammer implements IProgrammer {
 		}
 	}
 	
+	@Override
+	public String remapTypeParameter(Scope currentScope, String remappedType) {
+		if (parameterTypeRemap.containsKey(remappedType)) {
+			remappedType = parameterTypeRemap.get(remappedType);
+			return remappedType;
+		}
+		Symbol c = Transpiler.instance().lookupClass(remappedType);
+		if (c != null) {
+			remappedType += "&";
+		}
+		return remappedType;
+	}
+
 	/* (non-Javadoc)
 	 * @see com.bluelightning.tools.transpiler.IProgrammer#startExpression(com.bluelightning.tools.transpiler.CppBoostTarget.Indent)
 	 */
@@ -323,17 +348,10 @@ public abstract class AbstractProgrammer implements IProgrammer {
 	}
 
 	@Override
-	public String remapTypeParameter(String remappedType) {
-		if (parameterTypeRemap.containsKey(remappedType)) {
-			remappedType = parameterTypeRemap.get(remappedType);
-		}
-		return remappedType;
-	}
-
-	@Override
 	public void addParameterClass(String className) {
-		if (! parameterTypeRemap.containsKey(className)) {
-			parameterTypeRemap.put(className, "std::shared_ptr<" + className + ">");
+		if (! pointerParameterRemap.containsKey(className)) {
+			Symbol c = Transpiler.instance().lookupClass(className);
+			pointerParameterRemap.put(className, c.getScope());
 		}
 	}
 

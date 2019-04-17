@@ -127,5 +127,30 @@ public class Scope {
 		public String getLevel(int level) {
 			return qualifiers.get(level);
 		}
+
+		public String getVisiblityPrefix(Scope currentScope) {
+			StringBuilder sb = new StringBuilder();
+			for (int i = 0; i < qualifiers.size(); i++) {
+				if (i >= currentScope.qualifiers.size()) {
+					for (int j = i; j < qualifiers.size(); j++) {
+						if (qualifiers.get(j).equals("Main"))
+							continue;
+						sb.append(qualifiers.get(j));
+						sb.append("/");
+					}
+					return sb.toString();
+				} if (levels.get(i+1) != currentScope.levels.get(i+1) || 
+					  !qualifiers.get(i).equals(currentScope.qualifiers.get(i))) {
+					for (int j = i; j < qualifiers.size(); j++) {
+						if (qualifiers.get(j).equals("Main"))
+							continue;
+						sb.append(qualifiers.get(j));
+						sb.append("/");
+					}
+					return sb.toString();					
+				}
+			}
+			return "";
+		}
 		
 	}
