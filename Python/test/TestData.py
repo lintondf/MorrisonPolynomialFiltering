@@ -40,7 +40,10 @@ class TestData :
     
     def testDataPath(self, filename : str) -> str:
         path = os.getcwd();
-        return path.replace("\\", "/").replace("Python/test.*", "testdata") + filename;
+        path = path.replace("\\", "/")
+        i = path.find("Python/test")
+        path = path[0:i] + "testdata/"
+        return path + filename;
     
     def getMatchingGroups(self, prefix : str) -> List[str]:
         results = []

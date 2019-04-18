@@ -37,6 +37,7 @@ class TestConstantObservationErrorModel(unittest.TestCase):
 
     def test0Generate(self) -> None:
         path = testDataPath('testConstantObservationErrorModel.nc');
+        print("Writing to: ", path)
         cdf = Dataset(path, "w", format="NETCDF4");
         
         iTest = 0;

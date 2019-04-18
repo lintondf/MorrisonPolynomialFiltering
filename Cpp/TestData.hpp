@@ -3,6 +3,7 @@
 #define __FILTERING_TESTDATA_HPP
 
 #include <iostream>
+#include <stdlib.h>
 #include <vector>
 
 #include <cmath>
@@ -37,7 +38,7 @@ public:
 
 
 	TestData(std::string fileName) {
-		std::string filePath = "C:\\Users\\NOOK\\GITHUB\\ReynekeMorrisonFiltering\\testdata\\";
+		std::string filePath = "C:\\Users\\NOOK\\GITHUB\\MorrisonPolynomialFiltering\\testdata\\";
 		filePath += fileName;
 		int retval, numgrps;
 		retval = nc_open(filePath.c_str(), NC_NOWRITE, &ncid);

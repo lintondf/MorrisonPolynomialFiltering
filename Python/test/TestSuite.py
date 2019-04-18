@@ -11,7 +11,10 @@ import coverage
 
 def testDataPath( filename : str) -> str:
     path = os.getcwd();
-    return path.replace("\\", "/").replace("Python/test.*", "testdata") + filename;
+    path = path.replace("\\", "/")
+    i = path.find("Python/test")
+    path = path[0:i] + "testdata/"
+    return path + filename;
 
 # .. call your code ..
 
@@ -43,10 +46,15 @@ def runAll():
     unittest.TextTestRunner().run(suite)    
 
 if __name__ == '__main__':
+#     path = os.getcwd();
+#     path = path.replace("\\", "/")
+#     i = path.find("Python/test")
+#     path = path[0:i] + "/testdata/"
+#     print(path)
     cov = coverage.Coverage()
     cov.start()
     runAll()
     cov.stop()
     cov.save()
     cov.html_report()
-    
+     
