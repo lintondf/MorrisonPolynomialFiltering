@@ -128,7 +128,6 @@ public abstract class AbstractCppTarget extends AbstractLanguageTarget {
 			if (symbol != null && symbol.getSuperClassInfo().superClasses != null) {
 				String separator = " : ";
 				for (String superClass : symbol.getSuperClassInfo().superClasses) {
-					System.out.println(symbol.getName() + " " + superClass);
 					if (!ignoredSuperClasses.contains(superClass)) {
 						decl += separator + "public " + superClass;
 						separator = ", ";

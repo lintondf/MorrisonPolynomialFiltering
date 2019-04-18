@@ -14,6 +14,7 @@ from TestSuite import testDataPath;
 from polynomialfiltering.filters.controls.ConstantObservationErrorModel import ConstantObservationErrorModel
 from polynomialfiltering.PythonUtilities import ignore, testcase
 from TestData import TestData
+from polynomialfiltering.PythonUtilities import assert_not_empty
 
 class TestConstantObservationErrorModel(unittest.TestCase):
     '''@cdf : Dataset'''
@@ -124,6 +125,7 @@ class TestConstantObservationErrorModel(unittest.TestCase):
         
         testData = TestData('testConstantObservationErrorModel.nc')
         matches = testData.getMatchingGroups('testScalar_')
+        assert_not_empty(matches)
         for i in range(0, len(matches)) :
             element = testData.getGroupVariable(matches[i], 'element')
             inputCovariance = testData.getGroupVariable(matches[i], 'inputCovariance')
@@ -151,6 +153,7 @@ class TestConstantObservationErrorModel(unittest.TestCase):
         
         testData = TestData('testConstantObservationErrorModel.nc')
         matches = testData.getMatchingGroups('testMatrix_')
+        assert_not_empty(matches)
         for i in range(0, len(matches)) :
             element = testData.getGroupVariable(matches[i], 'element')
             inputCovariance = testData.getGroupVariable(matches[i], 'inputCovariance')
@@ -177,6 +180,7 @@ class TestConstantObservationErrorModel(unittest.TestCase):
         
         testData = TestData('testConstantObservationErrorModel.nc')
         matches = testData.getMatchingGroups('testMatrixMatrix_')
+        assert_not_empty(matches)
         for i in range(0, len(matches)) :
             element = testData.getGroupVariable(matches[i], 'element')
             inputCovariance = testData.getGroupVariable(matches[i], 'inputCovariance')

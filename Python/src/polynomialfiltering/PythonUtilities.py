@@ -9,6 +9,8 @@
 """***************** DO NOT TRANSPILE THIS MODULE *************************"""
 from numpy import exp
 from scipy.stats import chi2, f;
+from typing import List;
+
 
 
 '''********************************************************************
@@ -39,6 +41,10 @@ def testcase(funcobj):
     Function marked @testcase are transpiled into the test template when in test generation mode
     '''
     return funcobj;
+
+
+def assert_not_empty(list : List[str ]) -> None:
+    assert( len(list) > 0);
 
 
 '''********************************************************************

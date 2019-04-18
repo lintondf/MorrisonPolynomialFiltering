@@ -61,8 +61,7 @@ import freemarker.template.TemplateExceptionHandler;
 
 /* TODO
  * -- this.transpiler -> Transpiler.instance()
- * -- Check for changes before writing sources
- * -- handle multiple inheritance in c++ bodies
+ * -- Check for changes before writing sources; done for sources, add for tests
  * -- handle superclass init for multiple constructors
  */
 /**
@@ -570,6 +569,7 @@ public class Transpiler {
 		symbolTable.add( importScope, "True", "bool");
 		symbolTable.add( importScope, "False", "bool");
 		symbolTable.add( importScope, "assert_almost_equal", "None");
+		symbolTable.add( importScope, "assert_not_empty", "None");
 		
 		valueMap.put( TranslationUnaryNode.staticFieldReference, "::");
 

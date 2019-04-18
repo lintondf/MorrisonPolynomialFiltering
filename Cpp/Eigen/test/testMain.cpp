@@ -29,7 +29,9 @@ void assert_almost_equal(double A, double B) {
 	CHECK(fabs(A - B) < 1e-12);
 }
 
-
+void assert_not_empty(std::vector< std::string >& list) {
+	CHECK(list.size() > 0);
+}
 
 int main(int argc, char** argv) {
 	doctest::Context  context;

@@ -414,8 +414,6 @@ class SourceCompilationListener extends LcdPythonBaseListener {
 
 		@Override
 		public void exitExpr_stmt(LcdPythonParser.Expr_stmtContext ctx) {
-			if (ctx.getStart().getLine() == 165)
-				transpiler.dumpChildren(ctx,1);
 			transpiler.logger.info(StringUtils.left(ctx.getText(), 80));
 			if (expressionRoot != null) {
 				TranslationNode expr = defaultOperandOperator( ctx, expressionRoot.getName() );
@@ -431,8 +429,6 @@ class SourceCompilationListener extends LcdPythonBaseListener {
 				if (ctx.getText().trim().startsWith("super().__init__")) {
 					// ignore
 				} else if ( ! transpiler.valueMap.get(ctx.getPayload()).startsWith("'''@")) {
-					if (ctx.getStart().getLine() == 165)
-						System.out.println( expressionRoot.traverse(1));
 					if (expressionRoot.getChildCount() > 2) {
 						if (expressionRoot.getChild(1) instanceof TranslationOperatorNode) {
 							TranslationOperatorNode ton = (TranslationOperatorNode) expressionRoot.getChild(1);

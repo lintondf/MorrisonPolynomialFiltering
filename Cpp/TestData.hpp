@@ -25,6 +25,8 @@ void assert_almost_equal(double B, RealMatrix& A);
 
 void assert_almost_equal(double A, double B);
 
+void assert_not_empty(std::vector< std::string >& list);
+
 
 class TestData {
 public:
@@ -39,6 +41,7 @@ public:
 		filePath += fileName;
 		int retval, numgrps;
 		retval = nc_open(filePath.c_str(), NC_NOWRITE, &ncid);
+		std::cout << "TestData: " << filePath << " = " << retval << std::endl;
 		if (retval == 0) {
 			nc_inq_grps(ncid, &numgrps, NULL);
 			int* grp_ncids = new int[numgrps];

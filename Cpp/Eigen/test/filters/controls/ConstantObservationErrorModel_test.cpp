@@ -46,6 +46,7 @@ namespace polynomialfiltering {
                         std::shared_ptr<polynomialfiltering::filters::controls::ConstantObservationErrorModel> model;
                         testData = std::make_shared<TestData>("testConstantObservationErrorModel.nc");
                         matches = testData->getMatchingGroups("testScalar_");
+                        assert_not_empty(matches);
                         for (int i = 0; i < matches.size(); i++) {
                             element = testData->getGroupVariable(matches[i], "element");
                             inputCovariance = testData->getGroupVariable(matches[i], "inputCovariance");
@@ -72,6 +73,7 @@ namespace polynomialfiltering {
                         std::shared_ptr<polynomialfiltering::filters::controls::ConstantObservationErrorModel> model;
                         testData = std::make_shared<TestData>("testConstantObservationErrorModel.nc");
                         matches = testData->getMatchingGroups("testMatrix_");
+                        assert_not_empty(matches);
                         for (int i = 0; i < matches.size(); i++) {
                             element = testData->getGroupVariable(matches[i], "element");
                             inputCovariance = testData->getGroupVariable(matches[i], "inputCovariance");
@@ -97,6 +99,7 @@ namespace polynomialfiltering {
                         std::shared_ptr<polynomialfiltering::filters::controls::ConstantObservationErrorModel> model;
                         testData = std::make_shared<TestData>("testConstantObservationErrorModel.nc");
                         matches = testData->getMatchingGroups("testMatrixMatrix_");
+                        assert_not_empty(matches);
                         for (int i = 0; i < matches.size(); i++) {
                             element = testData->getGroupVariable(matches[i], "element");
                             inputCovariance = testData->getGroupVariable(matches[i], "inputCovariance");

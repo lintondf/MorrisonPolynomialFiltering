@@ -130,16 +130,20 @@ public class CppSrcTarget extends AbstractCppTarget {
 				Writer out = new OutputStreamWriter(new FileOutputStream(hppPath.toFile()));
 				out.write(strOut.toString());
 				out.close();
+			} else {
+				System.out.println("  Unchanged: " + hppPath.toString() );
 			}
 			if (!headerOnly) {
 				strOut = new StringWriter();
 				cpp.process(templateDataModel, strOut);
-				old = readFileToString( hppPath );
+				old = readFileToString( cppPath );
 				if (old == null || !old.equals(strOut.toString())) {
 					cppPath.toFile().getParentFile().mkdirs();
 					Writer out = new OutputStreamWriter(new FileOutputStream(cppPath.toFile()));
 					out.write(strOut.toString());
 					out.close();
+				} else {
+					System.out.println("  Unchanged: " + cppPath.toString() );
 				}
 			}
 		} catch (IOException iox ) {
