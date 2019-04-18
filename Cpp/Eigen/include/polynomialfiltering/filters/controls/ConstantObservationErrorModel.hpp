@@ -63,7 +63,7 @@ namespace polynomialfiltering {
                     /// 
                     ///  @return  Inverse of the covariance matrix (1x1 if observationId >= 0)
                     /// 
-                    RealMatrix getPrecisionMatrix(const /*rTS*/std::shared_ptr<AbstractFilterWithCovariance> f, const double t, const RealVector& y, const int observationId=-1);
+                    RealMatrix getPrecisionMatrix(const std::shared_ptr<AbstractFilterWithCovariance> f, const double t, const RealVector& y, const int observationId=-1);
 
                     ///// @brief Get the covariance matrix for an observation
                     /// 
@@ -75,7 +75,7 @@ namespace polynomialfiltering {
                     /// 
                     ///  @return  Covariance matrix (1x1 if observationId >= 0)
                     /// 
-                    RealMatrix getCovarianceMatrix(const /*rTS*/std::shared_ptr<AbstractFilterWithCovariance> f, const double t, const RealVector& y, const int observationId=-1);
+                    RealMatrix getCovarianceMatrix(const std::shared_ptr<AbstractFilterWithCovariance> f, const double t, const RealVector& y, const int observationId=-1);
                 protected:
                     RealMatrix R; ///<  observation covariance matrix
                     RealMatrix iR; ///<  observation precision (inverse covariance) matrix

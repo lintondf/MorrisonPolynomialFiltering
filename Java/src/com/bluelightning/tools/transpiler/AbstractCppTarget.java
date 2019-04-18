@@ -125,15 +125,18 @@ public abstract class AbstractCppTarget extends AbstractLanguageTarget {
 		String decl = "class " + currentClass;
 		Symbol symbol = Transpiler.instance().symbolTable.lookup(currentScope, currentClass);
 		if (symbol != null) {
-			if (symbol != null && symbol.getSuperClassInfo().superClass != null) {
-				String superClass = symbol.getSuperClassInfo().superClass;
-				System.out.println(symbol.getName() + " " + superClass);
-				if (!ignoredSuperClasses.contains(superClass)) {
-					decl += " : public " + symbol.getSuperClassInfo().superClass;
-				}
-				if (superClass.equals("Enum")) {
-					inEnum = true;
-					decl = "enum " + currentClass;
+			if (symbol != null && symbol.getSuperClassInfo().superClasses != null) {
+				String separator = " : ";
+				for (String superClass : symbol.getSuperClassInfo().superClasses) {
+					System.out.println(symbol.getName() + " " + superClass);
+					if (!ignoredSuperClasses.contains(superClass)) {
+						decl += separator + "public " + superClass;
+						separator = ", ";
+					}
+					if (superClass.equals("Enum")) {
+						inEnum = true;
+						decl = "enum " + currentClass;
+					}
 				}
 			}
 		}
@@ -248,7 +251,9 @@ public abstract class AbstractCppTarget extends AbstractLanguageTarget {
 					where.append(decl);
 				}
 				
-				if (fpi.decorators.contains("@abstractmethod")) {
+				if (symbol.isConstructor() && this.headerOnly) {
+					where.append(" {}");
+				} else if (fpi.decorators.contains("@abstractmethod")) {
 					where.append(" = 0");
 					isAbstract = true;
 				}
@@ -257,7 +262,7 @@ public abstract class AbstractCppTarget extends AbstractLanguageTarget {
 				if (! fpi.decorators.contains("@abstractmethod")) {
 					decl = generateBodyDeclaration( type, currentClass, name, body.out.toString() );
 					if (currentClass != null) {
-						if (fpi.decorators.contains("@superClassConstructor")) {
+						if (fpi.decorators.contains("@superClassConstructor")) { // decorator inserted by Declarations listener; not in Python source
 							String className = symbol.getScope().getLast();
 							Scope superScope = symbol.getScope().getParent();
 							Symbol c = Transpiler.instance().lookup(superScope, className);
@@ -272,8 +277,13 @@ public abstract class AbstractCppTarget extends AbstractLanguageTarget {
 								}
 								scInitializers = scInitializers.substring(0, iClose);
 							}
-							decl += " : " + c.getSuperClassInfo().superClass + "(";
-							decl += scInitializers;
+							String separator = " : ";
+							for (String sc : c.getSuperClassInfo().superClasses) {
+								if (sc.charAt(0) != 'I' || Character.isLowerCase(sc.charAt(1))) { // ignore interfaces
+									decl += separator + sc + "("; // TODO handle passing only relevant arguments
+									decl += scInitializers;
+								}
+							}
 							decl += ")";
 						}
 					}
@@ -699,19 +709,8 @@ public abstract class AbstractCppTarget extends AbstractLanguageTarget {
 			cppIndent.append( String.format("/*eNE?*/std::shared_ptr<%s>(new ", className)); //->programmer
 			emitSubExpression( cppIndent, scope, root);
 		} else {
-//			cppIndent.append( String.format("/*eNE*/std::make_shared<%s>(", className));
-//			emitSubExpression( cppIndent, scope, list);
-			cppIndent.append( String.format("/*eNE*/std::make_shared<%s>", className));
-//			List<TranslationNode> children = list.getChildren();
-//			boolean first = true;
-//			for (TranslationNode child : children) {
-//				if (! first) 
-//					cppIndent.append(", ");
-//				first = false;
-//				emitSubExpression( cppIndent, scope, child);
-//			}
+			cppIndent.append( String.format("std::make_shared<%s>", className));
 		}
-		//cppIndent.append(")"); //->programmer
 	}
 
 	@Override

@@ -17,7 +17,7 @@ namespace polynomialfiltering {
         namespace controls {
             using namespace Eigen;
             
-                BaseScalarJudge::BaseScalarJudge (const /*rTS*/std::shared_ptr<AbstractFilterWithCovariance> f, const double editChi2, const double chi2Smoothing, const double gofThreshold) {
+                BaseScalarJudge::BaseScalarJudge (const std::shared_ptr<AbstractFilterWithCovariance> f, const double editChi2, const double chi2Smoothing, const double gofThreshold) {
                     this->chi2Starts = Map<RowVectorXd>( new double[6] {23.92812697687947, 27.631021115871036, 30.664849706154268, 33.37684158165888, 35.88818687961042, 38.258336377145845}, 6);
                     this->f = f;
                     this->editChi2 = editChi2;
@@ -31,7 +31,7 @@ namespace polynomialfiltering {
                     return chi2Ppf(p, df);
                 }
 
-                int BaseScalarJudge::best (const double pSwitch, const double gofThreshold, const std::vector</*rTS*/std::shared_ptr<IJudge>> judges) {
+                int BaseScalarJudge::best (const double pSwitch, const double gofThreshold, const std::vector<std::shared_ptr<IJudge>> judges) {
                     int iBest;
                     double bestGOF;
                     iBest =  - 1;
@@ -76,7 +76,7 @@ namespace polynomialfiltering {
                     return this->chi2;
                 }
 
-                /*rTS*/std::shared_ptr<AbstractFilterWithCovariance> BaseScalarJudge::getFilter () {
+                std::shared_ptr<AbstractFilterWithCovariance> BaseScalarJudge::getFilter () {
                     return this->f;
                 }
 

@@ -63,6 +63,7 @@ import freemarker.template.TemplateExceptionHandler;
  * -- this.transpiler -> Transpiler.instance()
  * -- Check for changes before writing sources
  * -- handle multiple inheritance in c++ bodies
+ * -- handle superclass init for multiple constructors
  */
 /**
  * @author NOOK

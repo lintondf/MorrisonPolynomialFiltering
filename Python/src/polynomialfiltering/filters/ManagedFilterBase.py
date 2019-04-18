@@ -6,7 +6,7 @@
  See separate LICENSE file for full text
 '''
 
-from abc import abstractmethod
+from abc import abstractmethod 
 
 from numpy import array, eye
 from numpy import array as vector
@@ -20,9 +20,12 @@ from polynomialfiltering.filters.controls.ConstantObservationErrorModel import C
 
 
 class ManagedFilterBase(AbstractFilterWithCovariance, IManagedFilter):
-    '''
-    classdocs
-    '''
+    """
+    Base class for all managed filters
+    
+    Managed filters support analytic or emperical error models, observation editing and goodness-of-fit
+    evaluators, and running status monitors that can stop and restart filters. 
+    """
 
     '''@INITIAL_SSR : float | start point for smoothed SSR '''
     '''@ worker : AbstractRecursiveFilter | that which is managed'''

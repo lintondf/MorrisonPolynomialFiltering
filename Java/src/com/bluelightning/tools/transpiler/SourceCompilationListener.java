@@ -451,7 +451,8 @@ class SourceCompilationListener extends LcdPythonBaseListener {
 											}
 										}
 										if (newExpression) {
-											transpiler.dispatcher.emitNewExpression(scope, tsn.getSymbol().getType(), expressionRoot.getChild(2));
+											//transpiler.dispatcher.emitNewExpression(scope, tsn.getSymbol().getType(), expressionRoot.getChild(2));
+											transpiler.dispatcher.emitSubExpression(scope, expressionRoot.getChild(2));
 										} else {
 											transpiler.dispatcher.emitSubExpression(scope, expressionRoot.getChild(2));
 										}

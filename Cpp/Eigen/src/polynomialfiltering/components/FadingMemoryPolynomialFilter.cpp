@@ -275,19 +275,19 @@ namespace polynomialfiltering {
                 return V;
             }
 
-        /*rTS*/std::shared_ptr<FMPBase> makeFMP (const int order, const double theta, const double tau) {
+        std::shared_ptr<FMPBase> makeFMP (const int order, const double theta, const double tau) {
             if (order == 0) {
-                return /*eNE*/std::make_shared<FMP0>(theta, tau);
+                return std::make_shared<FMP0>(theta, tau);
             } else if (order == 1) {
-                return /*eNE*/std::make_shared<FMP1>(theta, tau);
+                return std::make_shared<FMP1>(theta, tau);
             } else if (order == 2) {
-                return /*eNE*/std::make_shared<FMP2>(theta, tau);
+                return std::make_shared<FMP2>(theta, tau);
             } else if (order == 3) {
-                return /*eNE*/std::make_shared<FMP3>(theta, tau);
+                return std::make_shared<FMP3>(theta, tau);
             } else if (order == 4) {
-                return /*eNE*/std::make_shared<FMP4>(theta, tau);
+                return std::make_shared<FMP4>(theta, tau);
             } else {
-                return /*eNE*/std::make_shared<FMP5>(theta, tau);
+                return std::make_shared<FMP5>(theta, tau);
             }
         }
 

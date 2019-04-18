@@ -15,7 +15,7 @@
 
 
 using namespace Eigen;
-using namespace PolynomialFiltering;
+using namespace polynomialfiltering;
 
 static std::string filename = "FixedMemoryFiltering.nc";
 
@@ -31,7 +31,7 @@ RealMatrix executeEstimatedState(RealMatrix setup, RealMatrix data) {
 	RealMatrix times = data.col(0);
 	RealMatrix observations = data.col(1);
 
-	Components::FixedMemoryFilter fixed(order, window);
+	components::FixedMemoryFilter fixed(order, window);
 	for (int i = 0; i < M; i++) {
 		fixed.add( times(i), observations(i) );
 	}
@@ -47,7 +47,7 @@ RealMatrix executeVRF(RealMatrix setup, RealMatrix data) {
 	RealMatrix times = data.col(0);
 	RealMatrix observations = data.col(1);
 
-	Components::FixedMemoryFilter fixed(order, window);
+	components::FixedMemoryFilter fixed(order, window);
 	for (int i = 0; i < M; i++) {
 		fixed.add(times(i), observations(i));
 	}

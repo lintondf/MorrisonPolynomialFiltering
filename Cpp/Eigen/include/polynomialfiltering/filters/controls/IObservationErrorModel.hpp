@@ -40,7 +40,7 @@ namespace polynomialfiltering {
                     ///// @brief Constructor
                     /// 
                     /// 
-                    IObservationErrorModel();
+                    IObservationErrorModel() {};
 
                     ///// @brief Get the precision matrix (inverse covariance) for an observation
                     /// 
@@ -52,7 +52,7 @@ namespace polynomialfiltering {
                     /// 
                     ///  @return  Inverse of the covariance matrix (1x1 if observationId >= 0)
                     /// 
-                    virtual RealMatrix getPrecisionMatrix(const /*rTS*/std::shared_ptr<AbstractFilterWithCovariance> f, const double t, const RealVector& y, const int observationId) = 0;
+                    virtual RealMatrix getPrecisionMatrix(const std::shared_ptr<AbstractFilterWithCovariance> f, const double t, const RealVector& y, const int observationId) = 0;
 
                     ///// @brief Get the covariance matrix for an observation
                     /// 
@@ -64,7 +64,7 @@ namespace polynomialfiltering {
                     /// 
                     ///  @return  Covariance matrix (1x1 if observationId >= 0)
                     /// 
-                    virtual RealMatrix getCovarianceMatrix(const /*rTS*/std::shared_ptr<AbstractFilterWithCovariance> f, const double t, const RealVector& y, const int observationId) = 0;
+                    virtual RealMatrix getCovarianceMatrix(const std::shared_ptr<AbstractFilterWithCovariance> f, const double t, const RealVector& y, const int observationId) = 0;
             }; // class IObservationErrorModel 
 
         }; // namespace controls

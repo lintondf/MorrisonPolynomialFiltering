@@ -77,6 +77,10 @@ public class CppTestTarget extends AbstractCppTarget {
 		templateDataModel.put("hppBody", "");
 		templateDataModel.put("cppBody", "");
 		
+		cppIndent.write(String.format("namespace %s {\n", "polynomialfiltering"));
+		namespaceStack.push(String.format("%s}; // namespace %s\n", hppIndent.toString(), "polynomialfiltering"));
+		hppIndent.in();
+		cppIndent.in();
 		for (int i = 0; i < scope.getQualifiers().size()-1; i++) {
 			cppIndent.write(String.format("namespace %s {\n", scope.getQualifiers().get(i)));
 			namespaceStack.push(String.format("%s}; // namespace %s\n", hppIndent.toString(), scope.getQualifiers().get(i)));

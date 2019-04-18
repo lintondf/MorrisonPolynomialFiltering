@@ -25,11 +25,11 @@ namespace polynomialfiltering {
     namespace filters {
         class IManagedFilter {
             public:
-                IManagedFilter(const std::string name="");
+                IManagedFilter(const std::string name="") {};
                 virtual double getGoodnessOfFit() = 0;
                 virtual bool add(const double t, const RealVector& y, const int observationId=0) = 0;
                 virtual void setObservationInverseR(const RealMatrix& inverseR) = 0;
-                virtual void setObservationErrorModel(const /*rTS*/std::shared_ptr<controls::IObservationErrorModel> errorModel) = 0;
+                virtual void setObservationErrorModel(const std::shared_ptr<controls::IObservationErrorModel> errorModel) = 0;
         }; // class IManagedFilter 
 
     }; // namespace filters

@@ -104,28 +104,30 @@ public abstract class AbstractProgrammer implements IProgrammer {
 				vector += ", ";
 			}
 			vector = vector.substring(0, vector.length()-2) + ">"; // drop last ', ' close bracket
+//			if (type.equals("str")) 
+//				System.out.println(vector);
 			return vector;
 		}
 		return remapTypeString( currentScope, type );
 	}
 	
 	protected String remapTypeString( Scope currentScope, String typeName) {
+		String t = typeRemap.get(typeName);
+		if (t != null)
+			return t;
 		Symbol c = Transpiler.instance().lookupClass(typeName);
 		if (c != null) {
 			Scope typeScope = c.getScope();
 			String prefix = typeScope.getVisiblityPrefix(currentScope);
-			String t = typeRemap.get(typeName);
+			t = typeRemap.get(typeName);
 			if (t != null)
 				return t;
 			if (! prefix.isEmpty()) {
 				typeName = prefix.replace("/", "::") + typeName;
 			}
-			typeName = String.format("/*rTS*/std::shared_ptr<%s>", typeName);
+			typeName = String.format("std::shared_ptr<%s>", typeName);
 			return typeName;			
 		} else {
-			String t = typeRemap.get(typeName);
-			if (t != null)
-				return t;
 			return typeName;
 		}
 	}

@@ -33,11 +33,11 @@ namespace polynomialfiltering {
             /// 
             class IJudge {
                 public:
-                    IJudge();
+                    IJudge() {};
                     virtual bool scalarUpdate(const double e, const RealMatrix& iR) = 0;
                     virtual bool vectorUpdate(const RealVector& e, const RealMatrix& iR) = 0;
                     virtual double getChi2() = 0;
-                    virtual /*rTS*/std::shared_ptr<AbstractFilterWithCovariance> getFilter() = 0;
+                    virtual std::shared_ptr<AbstractFilterWithCovariance> getFilter() = 0;
                     virtual double getGOF() = 0;
             }; // class IJudge 
 

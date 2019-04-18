@@ -8,10 +8,10 @@ import java.util.TreeSet;
 public class Symbol {
 	
 	public static class SuperClassInfo {
-		public String superClass;
+		public ArrayList<String> superClasses;
 		
 		public SuperClassInfo() {
-			superClass = "";
+			superClasses = new ArrayList<>();
 		}
 	}
 	
@@ -72,7 +72,12 @@ public class Symbol {
 	public String toString() {
 		String r = String.format("%s::%s : %s", scope.toString(), name, type );
 		if  (superClassInfo != null) {
-			r += "; supers(" +  superClassInfo.superClass + ")";
+			r += "; supers(";
+			for (String sc : superClassInfo.superClasses) {
+				r += sc;
+				r += ",";
+			}
+			r += ")";
 		}
 		if (functionParametersInfo != null) {
 			r += "; params(";
@@ -108,7 +113,7 @@ public class Symbol {
 
 	public void setSuperClassInfo(SuperClassInfo superClassInfo) {
 		this.superClassInfo = superClassInfo;
-		if (superClassInfo.superClass.equals("Enum")) {
+		if (superClassInfo.superClasses.contains("Enum")) {
 			type = "<ENUM>";
 		}
 	}

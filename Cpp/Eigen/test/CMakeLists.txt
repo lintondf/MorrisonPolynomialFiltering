@@ -25,6 +25,10 @@ FILE(GLOB_RECURSE MAIN_SRC ../src/polynomialfiltering/*.cpp)
 
 FILE(GLOB_RECURSE TEST_SRC ../test/*_test.cpp)
 
+if(MSVC)
+  set(CMAKE_EXE_LINKER_FLAGS
+      "${CMAKE_EXE_LINKER_FLAGS}  /NODEFAULTLIB:LIBCMT")
+endif()
 
 set(SOURCES  ${MAIN_SRC}
 	${TEST_SRC}

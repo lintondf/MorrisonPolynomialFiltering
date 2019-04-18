@@ -25,9 +25,9 @@ namespace polynomialfiltering {
         namespace controls {
             class IMonitor {
                 public:
-                    IMonitor();
-                    virtual void accepted(const /*rTS*/std::shared_ptr<AbstractFilterWithCovariance> f, const double t, const RealVector& y, const RealVector& innovation, const int observationId) = 0;
-                    virtual void rejected(const /*rTS*/std::shared_ptr<AbstractFilterWithCovariance> f, const double t, const RealVector& y, const RealVector& innovation, const int observationId) = 0;
+                    IMonitor() {};
+                    virtual void accepted(const std::shared_ptr<AbstractFilterWithCovariance> f, const double t, const RealVector& y, const RealVector& innovation, const int observationId) = 0;
+                    virtual void rejected(const std::shared_ptr<AbstractFilterWithCovariance> f, const double t, const RealVector& y, const RealVector& innovation, const int observationId) = 0;
             }; // class IMonitor 
 
         }; // namespace controls

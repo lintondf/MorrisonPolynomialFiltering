@@ -176,22 +176,24 @@ class DeclarationsListener extends LcdPythonBaseListener {
 		
 		protected void inheritDeclarations( Scope classScope, Symbol classSymbol) {
 			//System.out.println("inheritDecl " + classScope + " | " + classSymbol );
-			if (classSymbol.getSuperClassInfo().superClass == null)
+			if (classSymbol.getSuperClassInfo().superClasses == null)
 				return;
-			Symbol superClass = transpiler.lookup(classScope, classSymbol.getSuperClassInfo().superClass);
-			if (superClass != null) {
-				while (superClass.getAncestor() != null) {
-					superClass = superClass.getAncestor();
+			for (String sc : classSymbol.getSuperClassInfo().superClasses) {
+				Symbol superClass = transpiler.lookup(classScope, sc);
+				if (superClass != null) {
+					while (superClass.getAncestor() != null) {
+						superClass = superClass.getAncestor();
+					}
+					Scope membersScope = superClass.getScope().getChild(Level.CLASS, superClass.getName());
+					List<Symbol> inheritance = transpiler.symbolTable.atScope(membersScope);
+					for (Symbol i : inheritance ) {
+						if (i.getName().equals("__init__"))
+							continue;
+						//System.out.println( i.getName() + " --> " + classScope.toString() );
+						transpiler.symbolTable.inherit(i, classScope);
+					}
+					inheritDeclarations(classScope, superClass);
 				}
-				Scope membersScope = superClass.getScope().getChild(Level.CLASS, superClass.getName());
-				List<Symbol> inheritance = transpiler.symbolTable.atScope(membersScope);
-				for (Symbol i : inheritance ) {
-					if (i.getName().equals("__init__"))
-						continue;
-					//System.out.println( i.getName() + " --> " + classScope.toString() );
-					transpiler.symbolTable.inherit(i, classScope);
-				}
-				inheritDeclarations(classScope, superClass);
 			}
 		}
  
@@ -217,9 +219,11 @@ class DeclarationsListener extends LcdPythonBaseListener {
 			scopeStack.push( classScope );
 			
 			Symbol.SuperClassInfo sci = new Symbol.SuperClassInfo();
-			sci.superClass = null;
 			if (ctx.getChildCount() >= 5) {
-				sci.superClass = getChildText(ctx, 3);
+				String[] text = getChildText(ctx, 3).replace(" ", "").split(",");
+				for (String c : text) {
+					sci.superClasses.add( c );
+				}
 			}
 			symbol.setSuperClassInfo(sci);
 			this.transpiler.scopeMap.put( ctx.getPayload(), classScope );

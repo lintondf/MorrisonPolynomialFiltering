@@ -149,7 +149,7 @@ class TestConstantObservationErrorModel(unittest.TestCase):
         '''@Q : array'''
         '''@model : ConstantObservationErrorModel'''
         
-        testData = TestData.make('testConstantObservationErrorModel.nc')
+        testData = TestData('testConstantObservationErrorModel.nc')
         matches = testData.getMatchingGroups('testMatrix_')
         for i in range(0, len(matches)) :
             element = testData.getGroupVariable(matches[i], 'element')
@@ -175,7 +175,7 @@ class TestConstantObservationErrorModel(unittest.TestCase):
         '''@Q : array'''
         '''@model : ConstantObservationErrorModel'''
         
-        testData = TestData.make('testConstantObservationErrorModel.nc')
+        testData = TestData('testConstantObservationErrorModel.nc')
         matches = testData.getMatchingGroups('testMatrixMatrix_')
         for i in range(0, len(matches)) :
             element = testData.getGroupVariable(matches[i], 'element')

@@ -144,9 +144,9 @@ public class Documenter {
 			return null;
 		Symbol c = Transpiler.instance().lookup(s.getParent(), s.getLast() ); // symbol for containing class
 		while (c != null) {
-			if (c.getSuperClassInfo() == null || c.getSuperClassInfo().superClass.isEmpty())
+			if (c.getSuperClassInfo() == null || c.getSuperClassInfo().superClasses.isEmpty())
 				return null;
-			c = Transpiler.instance().lookupClass(c.getSuperClassInfo().superClass);
+			c = Transpiler.instance().lookupClass(c.getSuperClassInfo().superClasses.get(0));
 			if (c == null)
 				return null;			
 			Symbol m = Transpiler.instance().lookup(c.getScope().getChild(Level.CLASS, c.getName()), scope.getLast() );

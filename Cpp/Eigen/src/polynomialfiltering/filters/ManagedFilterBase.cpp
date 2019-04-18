@@ -16,9 +16,9 @@ namespace polynomialfiltering {
     namespace filters {
         using namespace Eigen;
         
-            ManagedFilterBase::ManagedFilterBase (const int order, const /*rTS*/std::shared_ptr<components::AbstractRecursiveFilter> worker) : AbstractFilterWithCovariance,IManagedFilter(order) {
+            ManagedFilterBase::ManagedFilterBase (const int order, const std::shared_ptr<components::AbstractRecursiveFilter> worker) : AbstractFilterWithCovariance(order) {
                 this->worker = worker;
-                this->errorModel = /*eNE*/std::make_shared<controls::ConstantObservationErrorModel>(1.0);
+                this->errorModel = std::make_shared<controls::ConstantObservationErrorModel>(1.0);
                 this->judge = nullptr;
                 this->monitor = nullptr;
             }
@@ -39,23 +39,23 @@ namespace polynomialfiltering {
                 return this->worker->getState();
             }
 
-            /*rTS*/std::shared_ptr<components::AbstractRecursiveFilter> ManagedFilterBase::getWorker () {
+            std::shared_ptr<components::AbstractRecursiveFilter> ManagedFilterBase::getWorker () {
                 return this->worker;
             }
 
             void ManagedFilterBase::setObservationInverseR (const RealMatrix& inverseR) {
-                this->errorModel = /*eNE*/std::make_shared<controls::ConstantObservationErrorModel>(inverseR);
+                this->errorModel = std::make_shared<controls::ConstantObservationErrorModel>(inverseR);
             }
 
-            void ManagedFilterBase::setObservationErrorModel (const /*rTS*/std::shared_ptr<controls::IObservationErrorModel> errorModel) {
+            void ManagedFilterBase::setObservationErrorModel (const std::shared_ptr<controls::IObservationErrorModel> errorModel) {
                 this->errorModel = errorModel;
             }
 
-            void ManagedFilterBase::setJudge (const /*rTS*/std::shared_ptr<controls::IJudge> judge) {
+            void ManagedFilterBase::setJudge (const std::shared_ptr<controls::IJudge> judge) {
                 this->judge = judge;
             }
 
-            void ManagedFilterBase::setMonitor (const /*rTS*/std::shared_ptr<controls::IMonitor> monitor) {
+            void ManagedFilterBase::setMonitor (const std::shared_ptr<controls::IMonitor> monitor) {
                 this->monitor = monitor;
             }
 

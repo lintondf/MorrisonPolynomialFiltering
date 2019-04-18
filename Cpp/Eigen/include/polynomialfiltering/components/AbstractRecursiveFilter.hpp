@@ -47,7 +47,7 @@ namespace polynomialfiltering {
 
                 ///// @brief Copy the state of another filter into this filter.
                 /// 
-                virtual void copyState(const /*rTS*/std::shared_ptr<AbstractRecursiveFilter> that);
+                virtual void copyState(const std::shared_ptr<AbstractRecursiveFilter> that);
 
                 ///// @brief Start or restart the filter
                 /// 

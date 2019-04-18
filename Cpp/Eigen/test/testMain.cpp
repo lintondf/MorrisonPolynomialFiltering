@@ -6,7 +6,7 @@
 #include <polynomialfiltering/PolynomialFilteringEigen.hpp>
 
 using namespace Eigen;
-using namespace PolynomialFiltering;
+using namespace polynomialfiltering;
 
 
 void assert_almost_equal(RealMatrix& A, RealMatrix& B) {
