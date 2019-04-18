@@ -44,12 +44,17 @@ public abstract class AbstractProgrammer implements IProgrammer {
 			libraryNames.put("vector", new Symbol(libraryScope, "???vector_eye???", "vector") ); //Eigen
 		functionRewrites.put("eye", libraryNames);
 		
+		symbolRemap.put("self", "this");
+		symbolRemap.put("True", "true");
+		symbolRemap.put("False", "false");
+		symbolRemap.put("None", "nullptr");
 	}
 
 	Scope libraryScope = new Scope();
 	Map<String, String> typeRemap = new HashMap<>();
 	Map<String, String> parameterTypeRemap = new HashMap<>(); // parameter type that should be by reference [typeName, typewithreference]
 	Map<String, Scope>  pointerParameterRemap = new HashMap<>(); // parameter type that will be ptr wrapped [typeName, type scope]
+	Map<String, String> symbolRemap = new HashMap<>();
 	
 	// index by function-name yields map indexed by type yields library name
 	protected Map<String, Map<String,Symbol>> functionRewrites = new HashMap<>();
@@ -92,14 +97,14 @@ public abstract class AbstractProgrammer implements IProgrammer {
 		if (type.startsWith("List[")) { 
 			type = type.substring(5, type.length()-1).trim().replaceAll(" +", "");
 			String[] fields = type.split(",");
-			String tuple = "std::vector<";
+			String vector = "std::vector<";
 			for (String field : fields) {
 				field = remapTypeString(currentScope, field);
-				tuple += String.format("std::shared_ptr<%s>", field);
-				tuple += ", ";
+				vector += field;
+				vector += ", ";
 			}
-			tuple = tuple.substring(0, tuple.length()-2) + ">"; // drop last ', ' close bracket
-			return tuple;
+			vector = vector.substring(0, vector.length()-2) + ">"; // drop last ', ' close bracket
+			return vector;
 		}
 		return remapTypeString( currentScope, type );
 	}
@@ -115,7 +120,7 @@ public abstract class AbstractProgrammer implements IProgrammer {
 			if (! prefix.isEmpty()) {
 				typeName = prefix.replace("/", "::") + typeName;
 			}
-			typeName = String.format("std::shared_ptr<%s>", typeName);
+			typeName = String.format("/*rTS*/std::shared_ptr<%s>", typeName);
 			return typeName;			
 		} else {
 			String t = typeRemap.get(typeName);
@@ -168,18 +173,19 @@ public abstract class AbstractProgrammer implements IProgrammer {
 	 * @see com.bluelightning.tools.transpiler.IProgrammer#writeSymbol(com.bluelightning.tools.transpiler.CppBoostTarget.Indent, com.bluelightning.tools.transpiler.Symbol)
 	 */
 	@Override //General
-	public void writeSymbol(Indent out, Symbol symbol) {
-		if (symbol.getName().equals("self")) {
-			out.append("this");
-		} else 
-			/*out.append("(*this)"); 
-		} else if (symbol.isClassReference()) {
-			out.append("(*" + symbol.getName() + ")" );
-		} else*/ if (symbol.getName().equals("None")) {
-			out.append("nullptr");  // TODO symbolRemap
+	public String rewriteSymbol(Scope scope, Symbol symbol) {
+		String rewrite = symbolRemap.get(symbol.getName());
+		if (rewrite != null) {
+			return rewrite;
 		} else {
 			String name = symbol.getName(); 
-			out.append(name);
+			Symbol c = Transpiler.instance().lookupClass(name);
+			if (c != null) {
+				String prefix = c.getScope().getVisiblityPrefix(scope).replace("/", "::");
+				return prefix + name;
+			} else {
+				return name;
+			}
 		}
 	}
 

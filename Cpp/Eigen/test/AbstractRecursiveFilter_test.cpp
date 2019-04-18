@@ -14,13 +14,13 @@
 #include <TestData.hpp>
 
 using namespace Eigen;
-using namespace PolynomialFiltering;
+using namespace polynomialfiltering;
 
 static std::string filename = "AbstractRecursiveFilter.nc";
 
 static int ORDER = 3;
 
-class AbstractRecursiveFilterMock : protected Components::AbstractRecursiveFilter {
+class AbstractRecursiveFilterMock : protected components::AbstractRecursiveFilter {
 public:
 
 	AbstractRecursiveFilterMock(long order, double tau) : AbstractRecursiveFilter(order, tau) {

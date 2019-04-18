@@ -127,6 +127,7 @@ public abstract class AbstractCppTarget extends AbstractLanguageTarget {
 		if (symbol != null) {
 			if (symbol != null && symbol.getSuperClassInfo().superClass != null) {
 				String superClass = symbol.getSuperClassInfo().superClass;
+				System.out.println(symbol.getName() + " " + superClass);
 				if (!ignoredSuperClasses.contains(superClass)) {
 					decl += " : public " + symbol.getSuperClassInfo().superClass;
 				}
@@ -351,7 +352,13 @@ public abstract class AbstractCppTarget extends AbstractLanguageTarget {
 					}
 				}
 			}
-			programmer.writeSymbol( out, symbol );
+			Symbol c = Transpiler.instance().lookupClass(symbol.getName());
+			if (c != null && child.getRightSibling() != null && child.getRightSibling() instanceof TranslationListNode) { // create an object
+				String rewrite = programmer.rewriteSymbol( scope, symbol );
+				emitNewExpression( scope, rewrite, child );
+			} else {
+				out.append( programmer.rewriteSymbol( scope, symbol ) );
+			}
 		} else if (child instanceof TranslationConstantNode) {
 			programmer.writeConstant( out, (TranslationConstantNode) child );
 		} else if (child instanceof TranslationOperatorNode) {
@@ -405,13 +412,13 @@ public abstract class AbstractCppTarget extends AbstractLanguageTarget {
 						TranslationSymbolNode tsn = (TranslationSymbolNode) child.getLeftSibling(); 
 						TranslationConstantNode tcn = (TranslationConstantNode) which;
 						symbol = programmer.getDimensionSymbol( tsn.getSymbol().getType(), tcn.getValue() );
-						programmer.writeSymbol( out, symbol );
+						out.append( programmer.rewriteSymbol( scope, symbol ) );
 						programmer.openParenthesis( out );
 						programmer.closeParenthesis( out );
 						return 1;
 					}
 				} else {
-					programmer.writeSymbol( out, symbol );
+					out.append( programmer.rewriteSymbol( scope, symbol ) );
 					if (unary.getChildCount() == 0 && unary.getRightSibling() == null && 
 							symbol.getFunctionParametersInfo() != null) {
 						programmer.openParenthesis( out );
@@ -426,6 +433,8 @@ public abstract class AbstractCppTarget extends AbstractLanguageTarget {
 			}
 		} else if (child instanceof TranslationListNode) {
 			TranslationListNode tln = (TranslationListNode) child;
+			if (scope.toString().contains("FadingMemoryPolynomialFilter") && tln.getParserRuleContext().getStart().getLine() == 404)
+				System.out.println(tln.getTop().traverse(1, tln)); ////@@
 			if (tln.getListOpen().equals("(") && tln.getChildCount() == 0) {
 				// may be ([...]) which compiles to LIST(:0, LIST[{LIST[...}
 				TranslationNode next = tln.getRightSibling();
@@ -441,8 +450,6 @@ public abstract class AbstractCppTarget extends AbstractLanguageTarget {
 				}
 			}
 			if (tln.getListOpen().equals("[")) {
-//				if (scope.toString().contains("ConstantObservationErrorModel"))
-//					System.out.println(tln.getTop().traverse(1, tln)); ////@@
 				if ( tln.isArraySlice() ) {
 					Symbol array = null;
 					if (tln.getLeftSibling() instanceof TranslationSymbolNode) {
@@ -473,7 +480,7 @@ public abstract class AbstractCppTarget extends AbstractLanguageTarget {
 						break;
 						
 					case 1: // [i] || [:]
-						programmer.writeSymbol( out, slice );
+						out.append( programmer.rewriteSymbol( scope, slice ) );
 						programmer.openParenthesis( out );
 						if (tln.getChild(0) instanceof TranslationOperatorNode) {  //->programmer
 							// [:] -> block(0,0,rows(),cols()) / segment(0,size())
@@ -508,12 +515,12 @@ public abstract class AbstractCppTarget extends AbstractLanguageTarget {
 					case 2: // [:,j] || [i,:] || [i:n,j] || [i,j:m] || [i:n,j:m]
 						if (tln.getChild(0) instanceof TranslationOperatorNode) {  // [:,j] - get column
 							Symbol which = programmer.getRowColSymbol("1");
-							programmer.writeSymbol( out, which );
+							out.append( programmer.rewriteSymbol( scope, which ) );
 							programmer.openParenthesis( out );
 							emitChild(out, scope, tln.getChild(1));							
 						} else if (tln.getChild(1) instanceof TranslationOperatorNode) {  // [i,:] - get row
 							Symbol which = programmer.getRowColSymbol("0");
-							programmer.writeSymbol( out, which );
+							out.append( programmer.rewriteSymbol( scope, which ) );
 							programmer.openParenthesis( out );
 							emitChild(out, scope, tln.getChild(0));
 						} else { 
@@ -524,7 +531,7 @@ public abstract class AbstractCppTarget extends AbstractLanguageTarget {
 							 * [i:n,j:m] LIST[2]{subscript[3]{expr,:,expr}, subscript[3]{expr,:,expr}}
 							 *    -> block(i,j,n,m)
 							 */
-							programmer.writeSymbol( out, slice );
+							out.append( programmer.rewriteSymbol( scope, slice ) );
 							programmer.openParenthesis( out );
 							if (tln.getChild(0).getChildCount() > 0 && tln.getChild(1).getChildCount() > 0) { // [i:n,j:m]
 								TranslationNode subscript0 = tln.getChild(0);
@@ -554,7 +561,7 @@ public abstract class AbstractCppTarget extends AbstractLanguageTarget {
 							} else if (tln.getChild(1).getChildCount() > 0) { // [i,j:m]
 								TranslationNode subscript0 = tln.getChild(0);
 								TranslationNode subscript1 = tln.getChild(1);
-								programmer.writeSymbol( out, slice );
+								out.append( programmer.rewriteSymbol( scope, slice ) );
 								programmer.openParenthesis( out );
 								emitChild(out, scope, subscript0);
 								out.append(", "); //->programmer
@@ -647,8 +654,7 @@ public abstract class AbstractCppTarget extends AbstractLanguageTarget {
 			emitChild( out, scope, root);
 		} else {
 			if (root instanceof TranslationListNode) { // tuple
-				out.append("std::make_tuple"); //->programmer OR SCRAP
-				emitBracketedList(out, scope, root.getFirstChild(), "(" );
+				emitBracketedList(out, scope, root.getFirstChild(), "/*eSE*/(" );
 				return;
 			} else if (root instanceof TranslationSubexpressionNode) {
 				TranslationSubexpressionNode tsn = (TranslationSubexpressionNode) root;
@@ -684,9 +690,28 @@ public abstract class AbstractCppTarget extends AbstractLanguageTarget {
 	
 	@Override
 	public void emitNewExpression(Scope scope, String className, TranslationNode root) {
-		cppIndent.append( String.format("std::shared_ptr<%s>(new ", className)); //->programmer
-		emitSubExpression( cppIndent, scope, root);
-		cppIndent.append(")"); //->programmer
+		TranslationNode list = root.getRightSibling();
+		if (list == null && root.getChildCount() >= 2) {
+			list = root.getChild(1);
+		}
+		if (list == null) {
+			System.out.println(root.traverse(1)); // TODO is this just an error?
+			cppIndent.append( String.format("/*eNE?*/std::shared_ptr<%s>(new ", className)); //->programmer
+			emitSubExpression( cppIndent, scope, root);
+		} else {
+//			cppIndent.append( String.format("/*eNE*/std::make_shared<%s>(", className));
+//			emitSubExpression( cppIndent, scope, list);
+			cppIndent.append( String.format("/*eNE*/std::make_shared<%s>", className));
+//			List<TranslationNode> children = list.getChildren();
+//			boolean first = true;
+//			for (TranslationNode child : children) {
+//				if (! first) 
+//					cppIndent.append(", ");
+//				first = false;
+//				emitSubExpression( cppIndent, scope, child);
+//			}
+		}
+		//cppIndent.append(")"); //->programmer
 	}
 
 	@Override

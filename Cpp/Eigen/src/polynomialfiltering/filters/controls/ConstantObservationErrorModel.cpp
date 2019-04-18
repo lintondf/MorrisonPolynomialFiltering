@@ -32,7 +32,7 @@ namespace polynomialfiltering {
                     this->iR = inverseR;
                 }
 
-                RealMatrix ConstantObservationErrorModel::getPrecisionMatrix (const std::shared_ptr<AbstractFilterWithCovariance> f, const double t, const RealVector& y, const int observationId) {
+                RealMatrix ConstantObservationErrorModel::getPrecisionMatrix (const /*rTS*/std::shared_ptr<AbstractFilterWithCovariance> f, const double t, const RealVector& y, const int observationId) {
                     if (observationId ==  - 1) {
                         return this->iR;
                     } else {
@@ -40,7 +40,7 @@ namespace polynomialfiltering {
                     }
                 }
 
-                RealMatrix ConstantObservationErrorModel::getCovarianceMatrix (const std::shared_ptr<AbstractFilterWithCovariance> f, const double t, const RealVector& y, const int observationId) {
+                RealMatrix ConstantObservationErrorModel::getCovarianceMatrix (const /*rTS*/std::shared_ptr<AbstractFilterWithCovariance> f, const double t, const RealVector& y, const int observationId) {
                     if (observationId ==  - 1) {
                         return this->R;
                     } else {

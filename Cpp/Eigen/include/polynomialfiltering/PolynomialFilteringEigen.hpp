@@ -129,6 +129,10 @@ namespace polynomialfiltering {
 		return a.array() * b.array();
 	}
 
+	inline double arrayTimes(double a, double b) {
+		return a * b;
+	}
+
 	inline RealMatrix arrayDivide(const RealMatrix& a, const RealMatrix& b) {
 		return a.array() / b.array();
 	}

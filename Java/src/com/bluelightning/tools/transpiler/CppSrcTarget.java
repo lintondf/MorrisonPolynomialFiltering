@@ -3,7 +3,9 @@ package com.bluelightning.tools.transpiler;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.io.StringWriter;
 import java.io.Writer;
+import java.nio.file.Files;
 import java.nio.file.Path;
 
 import freemarker.template.Configuration;
@@ -89,6 +91,17 @@ public class CppSrcTarget extends AbstractCppTarget {
 		cppIndent.writeln("");
 	}
 	
+	public static String readFileToString( Path path ) {
+		try {
+			byte[] bytes = Files.readAllBytes(path);
+			String content = new String(bytes, "UTF-8");
+			return content;
+		} catch (Exception x) {
+			return null;
+		}
+	}
+	
+	
 	@Override
 	public void finishModule() {
 		if (inTest) {
@@ -108,16 +121,26 @@ public class CppSrcTarget extends AbstractCppTarget {
 			templateDataModel.put("cppBody", cppIndent.out.toString().replaceAll("\\(\\*([^\\)]*)\\)\\.", "$1->")); //.replace("(*this).", "this->"));
 		}
 		try {
-			hppPath.toFile().getParentFile().mkdirs();
-			Writer out = new OutputStreamWriter(new FileOutputStream(hppPath.toFile()));
 			//System.out.println(hppFile.toString());
-			hpp.process(templateDataModel, out);
-			out.close();
-			if (!headerOnly) {
-				cppPath.toFile().getParentFile().mkdirs();
-				out = new OutputStreamWriter(new FileOutputStream(cppPath.toFile()));
-				cpp.process(templateDataModel, out);
+			StringWriter strOut = new StringWriter();
+			hpp.process(templateDataModel, strOut);
+			String old = readFileToString( hppPath );
+			if (old == null || !old.equals(strOut.toString())) {
+				hppPath.toFile().getParentFile().mkdirs();
+				Writer out = new OutputStreamWriter(new FileOutputStream(hppPath.toFile()));
+				out.write(strOut.toString());
 				out.close();
+			}
+			if (!headerOnly) {
+				strOut = new StringWriter();
+				cpp.process(templateDataModel, strOut);
+				old = readFileToString( hppPath );
+				if (old == null || !old.equals(strOut.toString())) {
+					cppPath.toFile().getParentFile().mkdirs();
+					Writer out = new OutputStreamWriter(new FileOutputStream(cppPath.toFile()));
+					out.write(strOut.toString());
+					out.close();
+				}
 			}
 		} catch (IOException iox ) {
 			iox.printStackTrace();

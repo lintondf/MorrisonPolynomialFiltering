@@ -42,7 +42,7 @@ namespace polynomialfiltering {
                 }
             }
 
-            void AbstractRecursiveFilter::copyState (const std::shared_ptr<AbstractRecursiveFilter> that) {
+            void AbstractRecursiveFilter::copyState (const /*rTS*/std::shared_ptr<AbstractRecursiveFilter> that) {
                 this->n = that->n;
                 this->t0 = that->t0;
                 this->t = that->t;

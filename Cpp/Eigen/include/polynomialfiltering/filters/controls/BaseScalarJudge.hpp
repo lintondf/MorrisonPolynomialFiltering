@@ -31,17 +31,17 @@ namespace polynomialfiltering {
             /// 
             class BaseScalarJudge : public IJudge {
                 public:
-                    BaseScalarJudge(const std::shared_ptr<AbstractFilterWithCovariance> f, const double editChi2=3.0, const double chi2Smoothing=0.9, const double gofThreshold=0.5);
+                    BaseScalarJudge(const /*rTS*/std::shared_ptr<AbstractFilterWithCovariance> f, const double editChi2=3.0, const double chi2Smoothing=0.9, const double gofThreshold=0.5);
                     static double probabilityToChi2(const double p, const int df);
-                    static int best(const double pSwitch, const double gofThreshold, const std::vector<std::shared_ptr<std::shared_ptr<IJudge>>> judges);
+                    static int best(const double pSwitch, const double gofThreshold, const std::vector</*rTS*/std::shared_ptr<IJudge>> judges);
                     virtual bool scalarUpdate(const double e, const RealMatrix& iR);
                     virtual bool vectorUpdate(const RealVector& e, const RealMatrix& iR);
                     virtual double getChi2();
-                    virtual std::shared_ptr<AbstractFilterWithCovariance> getFilter();
+                    virtual /*rTS*/std::shared_ptr<AbstractFilterWithCovariance> getFilter();
                     virtual double getGOF();
                 protected:
                     RealMatrix chi2Starts; ///<  chi2 initialization values corresponding to 0.999999 Chi2 probability indexed by filter order
-                    std::shared_ptr<AbstractFilterWithCovariance> f; ///<  filter to judge
+                    /*rTS*/std::shared_ptr<AbstractFilterWithCovariance> f; ///<  filter to judge
                     double chi2Smoothing; ///<  Chi2 smoothing factor for goodness-of-fit; 0 no smoothing; 1 ignore residuals completely
                     double chi2; ///<  Chi2 statistic for last update
                     double chi2Smoothed; ///<  Smoothed Chi2 statistic

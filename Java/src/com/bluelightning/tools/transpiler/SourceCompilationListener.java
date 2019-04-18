@@ -338,7 +338,8 @@ class SourceCompilationListener extends LcdPythonBaseListener {
 					TranslationSymbolNode tsn = (TranslationSymbolNode) expressionRoot.getFirstChild();
 					if (tsn.getSymbol().isClass() && !tsn.getSymbol().isEnum()) {
 						if (! (tsn.getRightSibling() instanceof TranslationUnaryNode)) {
-							transpiler.dispatcher.emitNewExpression(scope, tsn.getSymbol().getName(), expressionRoot);
+							//transpiler.dispatcher.emitNewExpression(scope, tsn.getSymbol().getName(), expressionRoot);
+							transpiler.dispatcher.emitSubExpression(scope, expressionRoot);
 							transpiler.dispatcher.finishStatement();
 							expressionRoot = null;
 							return;
@@ -598,12 +599,12 @@ class SourceCompilationListener extends LcdPythonBaseListener {
 						case "[":
 //							System.out.println("Compiling LIST " + trailer.getChild(i).getText() );
 							//transpiler.dumpChildren(ctx, 1);
+							TranslationListNode tln = new TranslationListNode(ctx, parent, unary );
+							TranslationNode left = tln.getLeftSibling();
+							if (left != null) {
+								tln.setType( left.getType() );
+							}
 							if (trailer.getChildCount() >= 2) {
-								TranslationListNode tln = new TranslationListNode(ctx, parent, unary );
-								TranslationNode left = tln.getLeftSibling();
-								if (left != null) {
-									tln.setType( left.getType() );
-								}
 								ParseTree list = trailer.getChild(1);
 //								System.out.println(list.toStringTree(transpiler.parser));
 								for (int iList = 0; iList < list.getChildCount(); iList += 2) {
@@ -616,8 +617,8 @@ class SourceCompilationListener extends LcdPythonBaseListener {
 //									System.out.printf("%d %d %s\n", iTrailer, iList, node.toString() );
 									translateMap.put( list.getChild(iList).getPayload(), node);
 								}
-								translateMap.put( trailer.getChild(1).getPayload(), tln);
 							}
+							translateMap.put( trailer.getChild(1).getPayload(), tln);
 							break;
 						case ".":
 							String fieldName = trailer.getChild(i+1).getText(); 

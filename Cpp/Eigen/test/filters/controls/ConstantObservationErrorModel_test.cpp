@@ -34,16 +34,16 @@ namespace filters {
             using namespace Eigen;
             
                 void test1Scalar () {
-                    std::shared_ptr<TestData> testData;
-                    std::vector<std::shared_ptr<std::string>> matches;
+                    /*rTS*/std::shared_ptr<TestData> testData;
+                    std::vector<std::string> matches;
                     int iE;
                     RealMatrix inputCovariance;
                     RealMatrix inputInverse;
                     RealVector element;
                     double x;
                     RealMatrix Q;
-                    std::shared_ptr<polynomialfiltering::filters::controls::ConstantObservationErrorModel> model;
-                    testData = std::shared_ptr<TestData>(new TestData("testConstantObservationErrorModel.nc"));
+                    /*rTS*/std::shared_ptr<polynomialfiltering::filters::controls::ConstantObservationErrorModel> model;
+                    testData = /*eNE*/std::make_shared<TestData>;
                     matches = testData->getMatchingGroups("testScalar_");
                     for (int i = 0; i < matches.size(); i++) {
                         element = testData->getGroupVariable(matches[i], "element");
@@ -51,7 +51,7 @@ namespace filters {
                         inputInverse = testData->getGroupVariable(matches[i], "inputInverse");
                         iE = int(element(0));
                         x = inputCovariance(0, 0);
-                        model = std::shared_ptr<ConstantObservationErrorModel>(new ConstantObservationErrorModel(x));
+                        model = /*eNE*/std::make_shared<ConstantObservationErrorModel>;
                         Q = model->getCovarianceMatrix(nullptr, 0.0, Map<RowVectorXd>( new double[1] {0.}, 1), iE);
                         assert_almost_equal(inputCovariance(0, 0), Q);
                         Q = model->getPrecisionMatrix(nullptr, 0.0, Map<RowVectorXd>( new double[1] {0.}, 1), iE);
@@ -61,14 +61,14 @@ namespace filters {
                 }
 
                 void test2Matrix () {
-                    std::shared_ptr<TestData> testData;
-                    std::vector<std::shared_ptr<std::string>> matches;
+                    /*rTS*/std::shared_ptr<TestData> testData;
+                    std::vector<std::string> matches;
                     int iE;
                     RealMatrix inputCovariance;
                     RealMatrix inputInverse;
                     RealVector element;
                     RealMatrix Q;
-                    std::shared_ptr<polynomialfiltering::filters::controls::ConstantObservationErrorModel> model;
+                    /*rTS*/std::shared_ptr<polynomialfiltering::filters::controls::ConstantObservationErrorModel> model;
                     testData = TestData::make("testConstantObservationErrorModel.nc");
                     matches = testData->getMatchingGroups("testMatrix_");
                     for (int i = 0; i < matches.size(); i++) {
@@ -76,7 +76,7 @@ namespace filters {
                         inputCovariance = testData->getGroupVariable(matches[i], "inputCovariance");
                         inputInverse = testData->getGroupVariable(matches[i], "inputInverse");
                         iE = int(element(0));
-                        model = std::shared_ptr<ConstantObservationErrorModel>(new ConstantObservationErrorModel(inputCovariance(0, 0)));
+                        model = /*eNE*/std::make_shared<ConstantObservationErrorModel>;
                         Q = model->getCovarianceMatrix(nullptr, 0.0, Map<RowVectorXd>( new double[1] {0.}, 1), iE);
                         assert_almost_equal(inputCovariance(0, 0), Q);
                         Q = model->getPrecisionMatrix(nullptr, 0.0, Map<RowVectorXd>( new double[1] {0.}, 1), iE);
@@ -86,14 +86,14 @@ namespace filters {
                 }
 
                 void test3MatrixMatrix () {
-                    std::shared_ptr<TestData> testData;
-                    std::vector<std::shared_ptr<std::string>> matches;
+                    /*rTS*/std::shared_ptr<TestData> testData;
+                    std::vector<std::string> matches;
                     int iE;
                     RealMatrix inputCovariance;
                     RealMatrix inputInverse;
                     RealVector element;
                     RealMatrix Q;
-                    std::shared_ptr<polynomialfiltering::filters::controls::ConstantObservationErrorModel> model;
+                    /*rTS*/std::shared_ptr<polynomialfiltering::filters::controls::ConstantObservationErrorModel> model;
                     testData = TestData::make("testConstantObservationErrorModel.nc");
                     matches = testData->getMatchingGroups("testMatrixMatrix_");
                     for (int i = 0; i < matches.size(); i++) {
@@ -101,7 +101,7 @@ namespace filters {
                         inputCovariance = testData->getGroupVariable(matches[i], "inputCovariance");
                         inputInverse = testData->getGroupVariable(matches[i], "inputInverse");
                         iE = int(element(0));
-                        model = std::shared_ptr<ConstantObservationErrorModel>(new ConstantObservationErrorModel(inputCovariance, inputInverse));
+                        model = /*eNE*/std::make_shared<ConstantObservationErrorModel>;
                         if (iE < 0) {
                             Q = model->getCovarianceMatrix(nullptr, 0.0, Map<RowVectorXd>( new double[1] {0.}, 1), iE);
                             assert_almost_equal(inputCovariance, Q);

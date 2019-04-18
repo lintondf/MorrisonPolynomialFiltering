@@ -167,6 +167,8 @@ public class TranslationNode  {
 	}
 	
 	public TranslationNode getRightSibling() {
+		if (parent == null || parent.children == null)
+			return null;
 		int i = parent.children.indexOf(this);
 		if (i >= parent.children.size()-1) {
 			return null;

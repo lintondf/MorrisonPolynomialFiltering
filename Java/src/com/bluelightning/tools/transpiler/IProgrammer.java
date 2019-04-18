@@ -19,7 +19,7 @@ public interface IProgrammer {
 
 	void finishExpression(Indent out);
 
-	void writeSymbol(Indent out, Symbol symbol);
+	String rewriteSymbol(Scope scope, Symbol symbol);
 
 	void writeOperator(Indent out, String operator );
 	

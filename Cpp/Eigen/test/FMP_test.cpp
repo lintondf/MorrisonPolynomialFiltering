@@ -15,12 +15,12 @@
 
 
 using namespace Eigen;
-using namespace PolynomialFiltering;
+using namespace polynomialfiltering;
 
 static std::string filename = "FadingMemoryFiltering.nc";
 
 RealMatrix runCase(long order, double theta, double tau, long N, RealMatrix data ) {
-	std::shared_ptr<Components::FMPBase> fmp = Components::makeFMP(order, theta, tau);
+	std::shared_ptr<components::FMPBase> fmp = components::makeFMP(order, theta, tau);
 	RealMatrix actual = zeros(N, order + 1);
 	actual.block(0, 0, 1, order + 1) = data.block(0, 2, 1, order + 1);
 	//std::cout << " time = " << data(0, 0) << std::endl << " state = " << data.block(0, 2, 1, order + 1) << std::endl;

@@ -281,19 +281,19 @@ namespace polynomialfiltering {
                 return V;
             }
 
-        std::shared_ptr<EMPBase> makeEMP (const int order, const double tau) {
+        /*rTS*/std::shared_ptr<EMPBase> makeEMP (const int order, const double tau) {
             if (order == 0) {
-                return std::shared_ptr<EMP0>(new EMP0(tau));
+                return /*eNE*/std::make_shared<EMP0>(tau);
             } else if (order == 1) {
-                return std::shared_ptr<EMP1>(new EMP1(tau));
+                return /*eNE*/std::make_shared<EMP1>(tau);
             } else if (order == 2) {
-                return std::shared_ptr<EMP2>(new EMP2(tau));
+                return /*eNE*/std::make_shared<EMP2>(tau);
             } else if (order == 3) {
-                return std::shared_ptr<EMP3>(new EMP3(tau));
+                return /*eNE*/std::make_shared<EMP3>(tau);
             } else if (order == 4) {
-                return std::shared_ptr<EMP4>(new EMP4(tau));
+                return /*eNE*/std::make_shared<EMP4>(tau);
             } else {
-                return std::shared_ptr<EMP5>(new EMP5(tau));
+                return /*eNE*/std::make_shared<EMP5>(tau);
             }
         }
 
