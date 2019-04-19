@@ -51,6 +51,7 @@ if __name__ == '__main__':
 #     i = path.find("Python/test")
 #     path = path[0:i] + "/testdata/"
 #     print(path)
+# cov = coverage.coverage(omit='/usr/lib/python2.6/site-packages/*')
     cov = coverage.Coverage()
     cov.start()
     runAll()

@@ -269,6 +269,7 @@ class AbstractFilterWithCovariance(AbstractFilter) :
         """
         pass
 
+    @virtual
     def getFirstVariance(self) -> float:
         """
         Get the variance reduction factor for the 0th derivative
@@ -283,6 +284,7 @@ class AbstractFilterWithCovariance(AbstractFilter) :
         V = self.getCovariance();
         return V[0,0]; # TODO more efficient
 
+    @virtual
     def getLastVariance(self) -> float:
         """
         Get the variance reduction factor for the 'order'th derivative

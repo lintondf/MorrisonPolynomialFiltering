@@ -14,8 +14,8 @@ from polynomialfiltering.filters.ManagedFilterBase import ManagedFilterBase;
 
 class ManagedFilterBaseMock(ManagedFilterBase):
     
-    def __init__(self, worker : AbstractRecursiveFilter):
-        super().__init__(worker);
+    def __init__(self, order : int, worker : AbstractRecursiveFilter):
+        super().__init__(order, worker);
     
     def add(self, t:float, y:vector, observationId:int = 0) -> bool :
         return False;
@@ -41,7 +41,7 @@ class Test(unittest.TestCase):
 
     def testName(self):
         f = EmpFmpPair(0, 0.95, 0.1);
-        m = ManagedFilterBaseMock( f );
+        m = ManagedFilterBaseMock( f.getOrder(), f );
         assert( m.getN() == 0 )
         assert( m.getWorker().getOrder() == 0)
         assert( m.getWorker().getTau() == 0.1)

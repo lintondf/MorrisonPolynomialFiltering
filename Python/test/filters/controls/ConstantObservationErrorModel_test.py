@@ -11,10 +11,11 @@ from numpy.testing import assert_almost_equal
 from netCDF4 import Dataset
 from TestUtilities import *
 from TestSuite import testDataPath;
-from polynomialfiltering.filters.controls.ConstantObservationErrorModel import ConstantObservationErrorModel
 from polynomialfiltering.PythonUtilities import ignore, testcase
 from TestData import TestData
 from polynomialfiltering.PythonUtilities import assert_not_empty
+
+from polynomialfiltering.filters.controls.ConstantObservationErrorModel import ConstantObservationErrorModel
 
 class TestConstantObservationErrorModel(unittest.TestCase):
     '''@cdf : Dataset'''
@@ -37,7 +38,7 @@ class TestConstantObservationErrorModel(unittest.TestCase):
 
     def test0Generate(self) -> None:
         path = testDataPath('testConstantObservationErrorModel.nc');
-        print("Writing to: ", path)
+#         print("Writing to: ", path)
         cdf = Dataset(path, "w", format="NETCDF4");
         
         iTest = 0;
