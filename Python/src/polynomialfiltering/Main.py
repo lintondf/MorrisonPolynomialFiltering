@@ -240,7 +240,7 @@ class AbstractFilterWithCovariance(AbstractFilter) :
         """
         '''@ F : array'''
         F = AbstractFilter.stateTransitionMatrix(int(V.shape[0]), dt );
-        return transpose(F) @ V @ (F);
+        return (F) @ V @ transpose(F);
 
     @virtual
     def transitionCovariance(self, t : float ) -> array:
