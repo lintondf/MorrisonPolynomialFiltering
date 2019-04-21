@@ -21,9 +21,9 @@ def testDataPath( filename : str) -> str:
 def runAll():
     testmodules = [
         'components.AbstractRecursiveFilter_test',
-        'components.EMP_test',
+        'components.ExpandingMemoryPolynomialFilter_test',
         'components.FixedMemoryFilter_test',
-        'components.FMP_test',
+        'components.FadingMemoryPolynomialFilter_test',
         'components.EmpFmpPair_test',
         'filters.ManagedFilterBase_test',
         'filters.controls.ConstantObservationErrorModel_test',

@@ -227,7 +227,7 @@ class AbstractFilterWithCovariance(AbstractFilter) :
         """
 
     @classmethod
-    def transitionCovarianceMatrix(self, dt : float, V : array ) -> array:
+    def transitionCovarianceMatrix(self, dt : float, V : array ) -> array:  #TODO test!!
         """
         Transition the specified covariance by the specified time step
         
@@ -240,7 +240,7 @@ class AbstractFilterWithCovariance(AbstractFilter) :
         """
         '''@ F : array'''
         F = AbstractFilter.stateTransitionMatrix(int(V.shape[0]), dt );
-        return (F) @ V @ transpose(F);
+        return transpose(F) @ V @ (F);
 
     @virtual
     def transitionCovariance(self, t : float ) -> array:

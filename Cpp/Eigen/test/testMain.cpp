@@ -35,7 +35,7 @@ void assert_not_empty(std::vector< std::string >& list) {
 
 int main(int argc, char** argv) {
 	doctest::Context  context;
-	char* args[] = { "", "-d", NULL };
+	char* args[] = { "", "-d", "--reporters=xml", NULL };
 	context.applyCommandLine(2, args);
 	int i = context.run(); // output);
 	return i;
