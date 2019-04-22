@@ -12,6 +12,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import com.bluelightning.tools.transpiler.Transpiler;
 
@@ -21,8 +23,8 @@ import com.bluelightning.tools.transpiler.Transpiler;
  */
 public class TranslateOctaveDiary {
 	
-	public static final String EMP_CURRENT = "0";
-	public static final String EMP_ONESTEP = "1";
+	public static final String EMP_CURRENT = "current-estimate";
+	public static final String EMP_ONESTEP = "one-step";
 	public static final String FMP_CURRENT = "0";
 	public static final String FMP_ONESTEP = "-1";
 	
@@ -107,41 +109,111 @@ public class TranslateOctaveDiary {
 		return -1;
 	}
 	
+	public static Pattern element = Pattern.compile("V\\[(\\d),(\\d)\\]");
+
+	public void refactorLines(Iterator<String> it) {
+		String line = null;
+		String vFirst = null;
+		String vLast = null;
+		ArrayList<String> diag = new ArrayList<>();
+		ArrayList<String> offdiag = new ArrayList<>();
+		while (it.hasNext()) {
+			line = it.next().trim();
+			Matcher match = element.matcher(line);
+			if (match.find()) {
+				if (match.group(1).equals(match.group(2))) { // diagonal
+					diag.add(line);
+					if (match.group(1).equals("0"))
+						vFirst = line;
+					else
+						vLast = line;
+				} else {
+					offdiag.add(line);
+				}
+			}
+		}
+		if (vLast != null) {
+			diag.remove(vLast);								
+		} else {
+			vLast = vFirst;
+		}
+//		System.out.println(vFirst);
+//		System.out.println(vLast);
+//		diag.forEach(System.out::println);
+//		offdiag.forEach(System.out::println);
+	
+		diag.remove(vFirst);
+		System.out.println("    def _getFirstVRF(self, n : int, tau : float ) -> float:");
+		System.out.printf( "        return %s;\n\n", vFirst.substring(7));
+		System.out.println("    def _getLastVRF(self, n : int, tau : float ) -> float:");
+		System.out.printf( "        return %s;\n\n", vLast.substring(7));
+		System.out.println("    def _getDiagonalVRF(self, n : int, tau : float ) -> array:");
+		System.out.println("        V = allocate_V;");
+		System.out.printf("        %sself._getFirstVRF(n, tau);\n", vFirst.substring(0, 7));
+		for (String d : diag) {
+			System.out.println("        " + d );
+		}
+		if (vFirst != vLast) {
+			System.out.printf("        %sself._getLastVRF(n, tau);\n", vLast.substring(0, 7));								
+		}
+		System.out.println("        return V;\n");
+		System.out.println("    def _getVRF(self, n : int, tau : float ) -> array:");
+		System.out.println("        V = self._getDiagonalVRF(n, tau)");
+		for (String d : offdiag) {
+			System.out.println("        " + d );
+		}
+		System.out.println("        return V;\n");
+	}
+
+	
+	public void writeEmpPython() {
+		int order = 0;
+		while (true) {
+			String key = String.format("EMP%d %s", order, EMP_CURRENT);
+			List<String> block = codeBlocks.get(key);
+			if (block == null)
+				break;
+			System.out.println(key);
+			refactorLines(block.iterator());
+			order++;
+		}
+	}
+	
 	public TranslateOctaveDiary(String classBase, String which, String diaryPath, String srcPath ) {
 		try {
 			byte[] bytes = Files.readAllBytes( Paths.get(diaryPath) );
 			diary = Arrays.asList( new String( bytes, "UTF-8" ).split("\n") );
 			loadCodeBlocks();
-			//codeBlocks.entrySet().forEach(System.out::println);
-			bytes = Files.readAllBytes( Paths.get(srcPath) );
-			src = new ArrayList<String>( Arrays.asList( new String( bytes, "UTF-8" ).split("\n") ) );
-			for (int order = 0; order < 6; order++) {
-				int i = findClass( String.format("class %s%d", classBase, order) );
-				System.out.print(i + ": " + src.get(i));
-				i = skipToVrf(i);
-				System.out.print(i + ": " + src.get(i));
-				int j = findReturn(i);
-				System.out.print(j + ": " + src.get(j));
-				for (int k = i+1; k < j; k++) {
-					System.out.println("Removing: " + src.get(i+1));
-					src.remove(i+1);
-				}
-				String key = String.format("%s%d %s", classBase, order, which);
-				List<String> block = codeBlocks.get( key );
-				if (block == null) {
-					src.add(i+1, String.format("MISSING %s", key) );
-				} else {
-					int indent = src.get(i).indexOf("V");
-					String prefix = src.get(i).substring(0, indent);
-					for (String c : block) {
-						i++;
-						src.add(i, prefix + c);
-					}
-				}
-			}
-			PrintWriter out = new PrintWriter( new File(srcPath) );
-			src.forEach(out::print);
-			out.close();
+			writeEmpPython();
+//			bytes = Files.readAllBytes( Paths.get(srcPath) );
+//			src = new ArrayList<String>( Arrays.asList( new String( bytes, "UTF-8" ).split("\n") ) );
+//			for (int order = 0; order < 6; order++) {
+//				int i = findClass( String.format("class %s%d", classBase, order) );
+//				System.out.print(i + ": " + src.get(i));
+//				i = skipToVrf(i);
+//				System.out.print(i + ": " + src.get(i));
+//				int j = findReturn(i);
+//				System.out.print(j + ": " + src.get(j));
+//				for (int k = i+1; k < j; k++) {
+//					System.out.println("Removing: " + src.get(i+1));
+//					src.remove(i+1);
+//				}
+//				String key = String.format("%s%d %s", classBase, order, which);
+//				List<String> block = codeBlocks.get( key );
+//				if (block == null) {
+//					src.add(i+1, String.format("MISSING %s", key) );
+//				} else {
+//					int indent = src.get(i).indexOf("V");
+//					String prefix = src.get(i).substring(0, indent);
+//					for (String c : block) {
+//						i++;
+//						src.add(i, prefix + c);
+//					}
+//				}
+//			}
+//			PrintWriter out = new PrintWriter( new File(srcPath) );
+//			src.forEach(out::print);
+//			out.close();
 		} catch (Exception x) {
 			x.printStackTrace();
 		}
@@ -151,9 +223,9 @@ public class TranslateOctaveDiary {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		new TranslateOctaveDiary( "FMP", FMP_CURRENT, 
-				"C:\\Users\\NOOK\\GITHUB\\MorrisonPolynomialFiltering\\Java\\data\\FMP_diary.txt",
-				"C:\\Users\\NOOK\\GITHUB\\MorrisonPolynomialFiltering\\Python\\src\\PolynomialFiltering\\Components\\FadingMemoryPolynomialFilter.py" );
+//		new TranslateOctaveDiary( "FMP", FMP_CURRENT, 
+//				"C:\\Users\\NOOK\\GITHUB\\MorrisonPolynomialFiltering\\Java\\data\\FMP_diary.txt",
+//				"C:\\Users\\NOOK\\GITHUB\\MorrisonPolynomialFiltering\\Python\\src\\PolynomialFiltering\\Components\\FadingMemoryPolynomialFilter.py" );
 		new TranslateOctaveDiary( "EMP", EMP_CURRENT, 
 				"C:\\Users\\NOOK\\GITHUB\\MorrisonPolynomialFiltering\\Java\\data\\EMP_diary.txt",
 				"C:\\Users\\NOOK\\GITHUB\\MorrisonPolynomialFiltering\\Python\\src\\PolynomialFiltering\\Components\\ExpandingMemoryPolynomialFilter.py" );

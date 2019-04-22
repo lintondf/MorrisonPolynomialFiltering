@@ -17,6 +17,7 @@ from numpy.random import randn
 from scipy.linalg.matfuncs import expm
 from scipy.stats import chi2
 from scipy.stats._continuous_distns import norm
+
 from polynomialfiltering.Main import AbstractFilter
 
 def createTestGroup(cdf : Dataset, name : str ) -> Dataset:
@@ -39,11 +40,17 @@ def writeTestVariable(group : Dataset, name : str, data : array) -> None:
     v[:] = data;
     
 def hellingerDistance( u1, P1, u2, P2 ):
-    P12 = 0.5 * (P1 + P2)
-    a = det(P1)**0.25 * det(P2)**0.25 / det(P12)**0.5;
-    b = -(1/8)* transpose(u1-u2) @ inv(P12) @ (u1-u2)
-#     print(det(P1), det(P2), det(P12), a, b)
-    return sqrt(1 - a * exp(b));
+    """
+    https://en.wikipedia.org/wiki/Hellinger_distance
+    """
+    if (isscalar(u1) or len(u1) == 1) :
+        e = exp(-0.25 * (u1 - u2)**2 / (P1+P2))
+        return 1.0 - sqrt((2.0*sqrt(P1*P2))/(P1+P2)) * e
+    else :
+        P12 = 0.5 * (P1 + P2)
+        a = det(P1)**0.25 * det(P2)**0.25 / det(P12)**0.5;
+        b = -(1/8)* transpose(u1-u2) @ inv(P12) @ (u1-u2)
+        return sqrt(1 - a * exp(b));
 
 def covarianceIntersection( P1, P2 ):
     I1 = inv(P1)

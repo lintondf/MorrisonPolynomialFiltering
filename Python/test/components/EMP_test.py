@@ -21,17 +21,21 @@ from numpy.ma.core import isarray
 from scipy.stats import norm as normalDistribution
 from math import sin
 from runstats import Statistics
-# from gevent.libev.corecext import stat
+from fitter import Fitter
+
 
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
+import matplotlib.mlab as mlab
 
-from polynomialfiltering.Main import AbstractFilterWithCovariance
-from polynomialfiltering.components.Emp import makeEmp
+from polynomialfiltering.Main import AbstractFilterWithCovariance, FilterStatus
+from polynomialfiltering.components.Emp import makeEmp, makeEmpCore
+from scipy.stats import kstest, chi2, lognorm
+from scipy.optimize import fsolve
 
 class EMP_test(unittest.TestCase):
 
-    Y0 = 0.1*array([1e4, -5e3, +1e3, -5e2, +1e2, -5e1]);
+    Y0 = array([1e3, -5e2, +1e2, -5e0, +1e0, -5e-1]);
 
 
     def setUp(self):
@@ -41,21 +45,25 @@ class EMP_test(unittest.TestCase):
     def tearDown(self):
         pass
         
-    def test0Generate(self):
+    def testVerifyVRF(self):
+        for i in range(0,25) :
+            self.doVerifyVRF()
+            
+    def doVerifyVRF(self):
         for order in range(0,5+1) :
             for tau in (0.01, 0.1, 1, 10) :
-                seed(1)
-                print(order, tau)
-                R = 10.0;
-                N = 201
-                M = 1000;
-                Y = self.Y0;
+#                 seed(1)
+                R = 10.0 * tau;
+                N = 401
+                M = 500;
+                Y = self.Y0 / tau;
 #                 print('Y0', A2S(Y))
                 residuals = zeros([M, N, order+1])
                 samples = zeros([M,N])
+                distances = zeros([N,1]);
                 for iM in range(0,M) :
                     f = makeEmp(order, tau);
-                    (times, truth, observations, noise) = generateTestData(order, N, 0.0, self.Y0[0:order+1], tau, sigma=R)
+                    (times, truth, observations, noise) = generateTestData(order, N, 0.0, Y[0:order+1], tau, sigma=R)
                     f.start(0.0, Y)
                     for i in range(0,N) :
                         samples[iM,i] = noise[i];
@@ -67,91 +75,73 @@ class EMP_test(unittest.TestCase):
 #                 print('Yn', A2S(f.getState()))
                 k = 0;
                 K = 0 * f.getVRF()
-                for j in range(10, N, 10) :
+                for j in range(order+1, N) :
                     f._setN( j );
                     C = cov(residuals[:,j,:],rowvar=False)
+                    uC = mean(residuals[:,j,:], axis=0)
                     r = var(samples[:,j])
                     V = r * f.getVRF()
-#                     print(j, r)
-                    if (order == 0) :
-#                         print( A2S( C / V ) )
-                        K += C/V;
-                    else :
-#                         print( A2S( (C) / ( V )) )
-                        K += C/V
-                    k += 1;
+                    distances[j] = hellingerDistance(uC, C, 0*uC, V);
+                    if (j > 50) :
+                        if (order == 0) :
+                            K += C/V;
+                        else :
+                            K += C/V
+                        k += 1;
                 K = K /k
-                print(k, mean(K), (mean(K)-1.0)/R)
-#                 print( A2S(K) )
+                fit = lognorm.fit(distances[order+1:], fscale=1) # fit only sigma and mean
+                print('%1d, %6.2f, %10.3f, %10.3f, %10.3f,  %10.3f, %10.3f' % ( order, tau, 100*(mean(K)-1.0), \
+                    100*mean(distances[order+1:]), 100*std(distances[order+1:]), fit[0], fit[1] ))
+#                 f = Fitter(distances[order+1:])
+#                 f.verbose = False;
+#                 f.distributions = ['loggamma', 'chi2', 'norm', 'lognorm']
+#                 f.fit()
+#                 print(f.summary())
+#                 print(f.get_best())
+                
+#                 num_bins = 50
+#                 n, bins, patches = plt.hist(100*distances[order+1:], num_bins, facecolor='blue', alpha=0.5)
+#                 plt.show()
         seed()
-
-    def xtest0Generate(self):
-        order = 5
-        tau = 0.1
+        
+    def driver(self, order : int, tau : float, dt : float):
+        seed(1)
         R = 10.0;
-        N = 500
+        N = 1501
+        Y = self.Y0;
+        schi2 = zeros([N,4])
         f = makeEmp(order, tau);
-        (times, truth, observations, noise) = generateTestData(order, N, 0.0, self.Y0[0:order+1], tau, sigma=0.0)
-        f.start(0.0, self.Y0[0:order+1])
-        residuals = zeros([N, order+1]);
+        (times, truth, observations, noise) = generateTestData(order, N, 0.0, self.Y0[0:order+1], tau, sigma=R)
+        f.start(0.0, Y)
         for i in range(0,N) :
             Zstar = f.predict(times[i][0])
             e = observations[i] - Zstar[0]
             f.update(times[i][0], Zstar, e)
-            V = f.getVRF();
-            if (V[0,0] > 0 and V[1,1] <= 1) :
-                break;
-        print(i,diag(V))
-        for i in range(i+1,i+3) :
-            print(i,A2S(diag(V)))
-            empP1 = deepcopy(f)
-            empM1 = deepcopy(f)
-#             k = -0.5
-#             n = 1.0
-#             w0 = k/(n+k)
-#             wi = R/(2*(n+k))
-#             s = sqrt(n+k)
-#         A = wi * array([-s, +s])
-#         O = array([-s, +s]);
-#             print(i, wi*(O @ O.T))
-#             k = 0.5;
-#             a = 0.5;
-#             b = 2;
-#             g = 1; # a*a*(1+k)-1
-#             wm = g/(1+g)
-#             wc = wm# + (1-a*a+b)
-            s = R
-            wc = 0.5
-            e0 = observations[i] - Zstar[0]
-            em1 = (observations[i] - s) - Zstar[0]
-            ep1 = (observations[i] + s) - Zstar[0]
-            f.update(times[i][0], Zstar, e0)
-            y0 = f.getState()
-            V = f.getVRF();
-            empP1.update(times[i][0], Zstar, em1)
-            ym1 = empP1.getState()
-            empM1.update(times[i][0], Zstar, ep1)
-            yp1 = empM1.getState()
-            
-#             print('y 0', A2S(y0))
-#             print('y-1', A2S(ym1))
-#             print('y+1', A2S(yp1))
-            
-            zm1 = (ym1 - y0);
-            zm1.shape = (order+1,1)
-            zp1 = (yp1 - y0);
-            zp1.shape = (order+1,1)
-    #         print(A2S(zm1), A2S(zp1))
-            C = wc*(zm1 @ zm1.T)
-            C += wc*(zp1 @ zp1.T)
-            print(i, A2S(diag(C)))
-            r = C / (R*R*V)
-            print('C/V', A2S(diag(r)))
-                
-        
-        pass
+            if (f.getStatus() == FilterStatus.RUNNING) :
+                r = f.getState() - truth[i,:]
+                V = R**2 * f.getVRF();
+                V = AbstractFilterWithCovariance.transitionCovarianceMatrix(dt, V)
+                schi2[i, 0] = r @ inv(V) @ transpose(r)
+                schi2[i, 1:order+2] = r / sqrt(diag(V));
+#                         if ((i % 10) == 0) : 
+#                             print( '%5d %s' % (i, A2S(schi2[i,:])) )
+        return mean(schi2[:,1])
 
-
+    def xtest0Generate(self):
+        for order in range(2,2+1) :
+            for tau in [0.1] : #[0.01, 0.1, 1, 10] :
+#                 print( fsolve(lambda x: self.driver(order, tau, x), 0.0) )
+                for dt in arange(-0.0, 1, 0.1) :
+                    print(dt, self.driver(order, tau, dt))
+#                 print(order, tau)
+#                 print(kstest(schi2[1000:,0], lambda x: chi2.cdf(x, df=order+1)));
+#                 print(kstest(schi2[1000:,1], 'norm' ))
+#                 print(kstest(schi2[1000:,2], 'norm' ))
+#                 print(kstest(schi2[1000:,3], 'norm' ))
+#                 num_bins = 50
+#                 n, bins, patches = plt.hist(schi2[:,1], num_bins, facecolor='blue', alpha=0.5)
+#                 plt.show()
+                        
 if __name__ == "__main__":
     #import sys;sys.argv = ['', 'Test.testName']
     unittest.main()

@@ -36,6 +36,12 @@ def ignore(funcobj):
     '''
     return funcobj;
 
+def inline(funcobj):
+    '''
+    @inline pass an inline hint to the target language where applicable
+    '''
+    return funcobj;
+
 def testcase(funcobj):
     '''
     Function marked @testcase are transpiled into the test template when in test generation mode

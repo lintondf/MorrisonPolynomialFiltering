@@ -9,82 +9,20 @@
 # from __future__ import annotations;
 
 from abc import ABC, abstractmethod
+from polynomialfiltering.PythonUtilities import virtual, inline;
 
 from numpy import array, zeros;
 from numpy import array as vector;
 
-from polynomialfiltering.PythonUtilities import virtual;
 from polynomialfiltering.Main import AbstractFilter, FilterStatus
+from polynomialfiltering.components.ICore import ICore
 
-class ICore(ABC):
-    
-    def __init__(self):
-        pass
-    
-
-    @abstractmethod # pragma: no cover   
-    def getGamma(self, t : float, dtau : float) -> vector:
-        """
-        Get the innovation scale vector
-        
-        Arguments:
-            t - external time
-            dtau - internal step
-        
-        Returns:
-            vector (order+1) of (observation-predict) multipliers
-        """
-        pass
-
-    @abstractmethod # pragma: no cover
-    def getVRF(self, n : int) -> array:
-        """
-        Get the variance reduction matrix
-        
-        Arguments:
-            None
-        
-        Returns:
-            Square matrix (order+1) of input to output variance ratios
-        
-        """
-        pass
-    
-    @abstractmethod # pragma: no cover
-    def getFirstVariance(self, n : int) -> float:
-        """
-        Get the variance reduction factor for the 0th derivative
-        
-        Arguments:
-            None
-        
-        Returns:
-            0th derivative input to output variance ratio
-        """
-        '''@V:array'''
-        pass
-    
-    @abstractmethod # pragma: no cover
-    def getLastVariance(self, n : int) -> float:
-        """
-        Get the variance reduction factor for the 'order'th derivative
-        
-        Arguments:
-            None
-        
-        Returns:
-            'order'th derivative input to output variance ratio
-        """
-        '''@V:array'''
-        pass
-    
 class RecursivePolynomialFilter(AbstractFilter):
     """
     Base class for both expanding and fading polynomial filter and their combinations.            
     """
     
     '''@ n : int | number of samples'''
-    '''@ n0 : int | threshold number of samples for valid output'''
     '''@ dtau : float | delta nominal scaled time step'''
     '''@ t0 : float | filter start time'''
     '''@ tau : float | nominal scaled time step'''
@@ -106,7 +44,6 @@ class RecursivePolynomialFilter(AbstractFilter):
             raise ValueError("Polynomial orders < 0 or > 5 are not supported")
         self.n = 0
         self.core = core;
-        self.n0 = order+2
         self.dtau = 0
         self.t0 = 0;
         self.t = 0;
@@ -164,6 +101,7 @@ class RecursivePolynomialFilter(AbstractFilter):
         
         return RecursivePolynomialFilter.conformState(self.order, state)
         
+    @inline
     def _normalizeTime(self, t : float) -> float:
         """
         Convert an external time to internal (tau) units
@@ -177,6 +115,7 @@ class RecursivePolynomialFilter(AbstractFilter):
         """
         return (t - self.t0)/self.tau
     
+    @inline
     def _normalizeDeltaTime(self, dt : float) -> float:
         """
         Converts external delta time to internal (tau) step units
@@ -190,6 +129,7 @@ class RecursivePolynomialFilter(AbstractFilter):
         """
         return dt / self.tau
     
+    @inline
     def _normalizeState(self, Z : vector) -> vector:
         """
         Normalize a state vector
@@ -205,6 +145,7 @@ class RecursivePolynomialFilter(AbstractFilter):
         """
         return Z * self.D
     
+    @inline
     def _denormalizeState(self, Z : vector) -> vector:
         """
         Denormalize a state vector
@@ -287,12 +228,13 @@ class RecursivePolynomialFilter(AbstractFilter):
         self.Z = (Zstar + innovation)
         self.t = t
         self.n += 1;
-        if (self.n < self.n0) :
+        if (self.n < self.order+2) :
             self.setStatus( FilterStatus.INITIALIZING )
         else :
             self.setStatus( FilterStatus.RUNNING )
         return innovation;
     
+    @inline    
     def getN(self)->int:
         """
         Return the number of processed observations since start
@@ -306,6 +248,7 @@ class RecursivePolynomialFilter(AbstractFilter):
         """
         return self.n
     
+    @inline
     def getTau(self) -> float:
         """
         Return the nominal time step for the filter
@@ -319,6 +262,7 @@ class RecursivePolynomialFilter(AbstractFilter):
         """
         return self.tau
     
+    @inline
     def getTime(self) -> float:
         """
         Return the time of the last processed observation or filter start
@@ -332,6 +276,7 @@ class RecursivePolynomialFilter(AbstractFilter):
         """
         return self.t
     
+    @inline
     def getState(self) -> vector:
         """
         Get the current filter state vector
@@ -345,6 +290,7 @@ class RecursivePolynomialFilter(AbstractFilter):
         """
         return self._denormalizeState(self.Z)
     
+    @inline
     def getVRF(self) -> array:
         """
         Get the variance reduction factor matrix
