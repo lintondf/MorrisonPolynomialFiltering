@@ -292,14 +292,20 @@ class RecursivePolynomialFilter(AbstractFilter):
     
     @inline
     def getFirstVRF(self) -> float:
+        if (self.n < self.order+1) :
+            return 0.0;
         return self.core.getFirstVRF(self.n)
 
     @inline
     def getLastVRF(self) -> float:
+        if (self.n < self.order+1) :
+            return 0.0;
         return self.core.getLastVRF(self.n)
     
     @inline
-    def getDiagonalVRF(self) -> vector:
+    def getDiagonalVRF(self) -> array:
+        if (self.n < self.order+1) :
+            return zeros([self.order + 1, self.order + 1]);
         return self.core.getDiagonalVRF(self.nu)
 
     @inline
@@ -315,6 +321,8 @@ class RecursivePolynomialFilter(AbstractFilter):
         
         """
         '''@ V : array'''
+        if (self.n < self.order+1) :
+            return zeros([self.order + 1, self.order + 1]);
         V = self.core.getVRF(self.n)
         return V;
 

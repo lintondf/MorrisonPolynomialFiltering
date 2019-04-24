@@ -15,7 +15,6 @@ from numpy import sqrt
 from numpy.linalg import inv
 from numpy.random import randn, seed
 from numpy.testing import assert_almost_equal
-from numpy.testing.nose_tools.utils import assert_allclose
 from numpy.linalg.linalg import norm
 from numpy.ma.core import isarray
 from scipy.stats import norm as normalDistribution
@@ -29,7 +28,7 @@ import matplotlib.mlab as mlab
 
 from polynomialfiltering.Main import AbstractFilterWithCovariance, FilterStatus
 from polynomialfiltering.components.Emp import makeEmp, makeEmpCore
-from scipy.stats import kstest, chi2, lognorm
+from scipy.stats import kstest, chi2, lognorm, norm
 from scipy.optimize import fsolve
 
 class EMP_test(unittest.TestCase):
@@ -119,22 +118,22 @@ class EMP_test(unittest.TestCase):
 #                 plt.show()
         seed()
         
-    def driver(self, order : int, tau : float):
+    def driver(self, order : int, tau : float, N : int):
 #         seed(1)
         t0 = 0.0
-        R = 10.0 # 1.0 * tau;
-        N = 501
+        R = 1.0 # 1.0 * tau;
         Y = generateTestPolynomial( order, N, t0, tau )
 #         Y = self.Y0 / tau;
         actual = zeros([N,order+1]);
         schi2 = zeros([N,4])
         f = makeEmp(order, tau);
         (times, truth, observations, noise) = generateTestData(order, N, 0.0, Y[0:order+1], tau, sigma=R)
-        print(mean(noise), std(noise), R)
+#         print('%5d, %6.3f, %10.3f, %10.3f' % (order, tau,  mean(noise**2), var(noise**2)))
         f.start(0.0, Y)
         iFirst = 0;
         for i in range(0,N) :
             Zstar = f.predict(times[i][0])
+            V = f.getVRF()
             e = observations[i] - Zstar[0]
             f.update(times[i][0], Zstar, e)
             if (f.getStatus() == FilterStatus.RUNNING) :
@@ -143,12 +142,15 @@ class EMP_test(unittest.TestCase):
                 actual[i,:] = f.getState()
                 error = f.getState() - truth[i,:]
 #                 R = var(noise[0:i+1])
-                V = R**2 * f.getVRF();
-                schi2[i, 0] = error[0]**2 / V[0,0] # r @ inv(V) @ transpose(r)
+                V = f.getVRF()
+                V *= R**2;
+                schi2[i, 0] = error @ inv(V) @ transpose(error) # error[0]**2 / V[0,0] # 
                 schi2[i, 1] = V[0,0]
-                schi2[i, 2] = error[0]**2
+                schi2[i, 2] = error[0]
                 schi2[i, 3] = var(noise[0:i+1])
-                print('%5d, %10.6f, %10.6f, %10.6f, %10.6f, %10.6f' % (i, schi2[i,0], schi2[i,1], schi2[i,2], schi2[i,3], noise[i]))
+                
+#         print(kstest(schi2[:, 0]**2, lambda x: chi2.cdf(x,df=1),alternative='greater'))
+#                 print('%5d, %10.6f, %10.6f, %10.6f, %10.6f, %10.6f' % (i, schi2[i,0], schi2[i,1], schi2[i,2], schi2[i,3], noise[i]))
 #                 print(schi2[i,:], chi2.cdf(schi2[i,:], df=1))
 #                 schi2[i, 1:order+2] = r / sqrt(diag(V));
 #                 if ((i % 10) == 0) : 
@@ -160,8 +162,7 @@ class EMP_test(unittest.TestCase):
 #         print(f.summary())
 #         print(f.get_best())
 #         fit = chi2.fit(schi2[iFirst:,0], fscale=1) # fit only sigma and mean
-#         print('%5d, %6.3f, %10.3f, %10.3f, %10.3f, %10.6f, %10.6f, %10.6f' % (order, tau,  100*min(schi2[iFirst:,0]), 100*mean(schi2[iFirst:,0]), 100*max(schi2[iFirst:,0]), fit[0], fit[1], fit[2]))
-        threshold = chi2.ppf(array([0.95, 0.96]),df=1);
+#         print('%5d, %6.3f, %10.3f, %10.3f' % (order, tau,  mean(schi2[iFirst:,0]), var(schi2[iFirst:,0])))
 #         bin_values = chi2.ppf(array([0.5, 0.75, 0.9, 0.95, 0.99, 0.9999999999]), df=1)
 #         n, bins, patches = plt.hist(schi2[iFirst:,0], bin_values, facecolor='blue', alpha=0.5)
 #         plt.show()
@@ -177,36 +178,43 @@ class EMP_test(unittest.TestCase):
 #         print(A2S(schi2[iFirst:,0]))
 #         print(A2S(threshold))
 #         print(where(schi2[iFirst:,0] > threshold[0]))
-        n95 = len(where(schi2[iFirst:,0] < threshold[0])[0])/(N-iFirst)
-        n96 = len(where(schi2[iFirst:,0] < threshold[1])[0])/(N-iFirst)
-        if (n95 < 0.95) :
-            print(A2S(schi2))
-            print(order, tau, n95, n96)
-            f0 = plt.figure(figsize=(10, 6))
-            ax = plt.subplot(1, 1, 1)
-            ax.plot(array([0,N]), array([threshold[0], threshold[0]]), 'r-', label='95%')
-            ax.plot(range(iFirst,N), schi2[iFirst:,0], 'k-', label='Chi2')
-#             ax.plot(range(iFirst,N), schi2[iFirst:,1], 'm-', label='V[0,0]')
-#             ax.plot(range(iFirst,N), schi2[iFirst:,2], 'b.', label='error2')
-            ax.legend()
+        threshold = chi2.ppf(array([0.95, 0.99]),df=order+1);
+        n95 = len(where(schi2[iFirst:,0] > threshold[0])[0])
+        return n95
+#             print(threshold)
+#             print(A2S(chi2.cdf(schi2[where(schi2[:,0] > threshold[0])[0],0],df=order+1)) )
+#             print(A2S(schi2))
+#             print('%3d, %6.3f, %6.4f, %6.4f  FAIL' % (order, tau, n95, n96))
+#             f0 = plt.figure(figsize=(10, 6))
+#             ax = plt.subplot(1, 1, 1)
+#             ax.plot(array([0,N]), array([threshold[0], threshold[0]]), 'r-', label='95%')
+#             ax.plot(range(iFirst,N), schi2[iFirst:,0], 'k-', label='Chi2')
+#             ax.legend()
+#             f0 = plt.figure(figsize=(10, 6))
+#             ax = plt.subplot(1, 1, 1)
+#             ax.plot(range(iFirst,N), +sqrt(schi2[iFirst:,1]), 'm-', label='V[0,0]')
+#             ax.plot(range(iFirst,N), -sqrt(schi2[iFirst:,1]), 'm-', label='V[0,0]')
+#             ax.plot(range(iFirst,N), schi2[iFirst:,2], 'b.', label='error')
+#             ax.plot(range(iFirst,N), noise[iFirst:], 'r.', label='noise')
+#             ax.legend()
 #             f0 = plt.figure(figsize=(10, 6))
 #             ax = plt.subplot(1, 1, 1)
 #             ax.plot(times[iFirst:N,0], actual[iFirst:N,0], 'k-', times[iFirst:N,0], observations[iFirst:N], 'b.', times[iFirst:N,0], truth[iFirst:N,0], 'r-')
 #             f0 = plt.figure(figsize=(10, 6))
 #             ax = plt.subplot(1, 1, 1)
 #             ax.plot(arange(iFirst,N,1), schi2[iFirst:,1], 'k.', arange(iFirst,N,1), schi2[iFirst:,2], 'b.')
-            plt.show()
-        return (n95, n96)
+#             plt.show()
 
     def test0Generate(self):
+#         print( norm.ppf([0.025, 0.975])**2, chi2.ppf([0.95], df=1), chi2.ppf([0.95], df=2))
+        N = 501
         for order in range(0, 5+1) :
-            for tau in [1] : #[0.01, 0.1, 1, 10] :
-                c9596 = zeros([25,2])
-                for j in range(0,c9596.shape[0]) :
-                    n95, n96 = self.driver(order, tau )
-                    c9596[j,:] = [n95, n96]
-                ci = mean(c9596,axis=0)+std(c9596,axis=0);
-                print('%3d, %6.3f, %6.4f, %6.4f' % (order, tau, mean(c9596[:,0]), max(c9596[:,0]) ))
+            for tau in [0.01, 0.1, 1, 10] :
+                M = 100
+                failed = 0;
+                for j in range(0,M) :
+                    failed += self.driver(order, tau, N )
+                print('%3d, %6.3f, %6d, %6.4f' % (order, tau, failed, failed/(N*M)) )
 #                     if (n95 > 0.05 and n96 > 0.04) :
 #                         print(order, tau, j, n95, n96)
 #                 print('%3d, %6.3f, %6.4f, %6.4f, %6.4f, %6.4f' % (order, tau, min(c95), max(c95), mean(c95), mean(c95)-std(c95)))
@@ -222,13 +230,7 @@ class EMP_test(unittest.TestCase):
 #                 n, bins, patches = plt.hist(schi2[:,1], num_bins, facecolor='blue', alpha=0.5)
 #                 plt.show()
                
-    def testVRF0(self):
-        order = 0
-        tau = 0.01
-        f = makeEmp(order, tau);
-        for i in range(0,50) :
-            f._setN(i)
-            print(i, f.getFirstVRF())
+
                  
 if __name__ == "__main__":
     #import sys;sys.argv = ['', 'Test.testName']
