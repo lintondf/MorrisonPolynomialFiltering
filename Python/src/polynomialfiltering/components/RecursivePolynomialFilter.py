@@ -291,6 +291,18 @@ class RecursivePolynomialFilter(AbstractFilter):
         return self._denormalizeState(self.Z)
     
     @inline
+    def getFirstVRF(self) -> float:
+        return self.core.getFirstVRF(self.n)
+
+    @inline
+    def getLastVRF(self) -> float:
+        return self.core.getLastVRF(self.n)
+    
+    @inline
+    def getDiagonalVRF(self) -> vector:
+        return self.core.getDiagonalVRF(self.nu)
+
+    @inline
     def getVRF(self) -> array:
         """
         Get the variance reduction factor matrix

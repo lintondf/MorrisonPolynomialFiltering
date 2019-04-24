@@ -10,7 +10,7 @@ from netCDF4 import Dataset
 from math import sin, cos, exp
 import numpy as np
 from numpy import array, array2string, diag, eye, ones, transpose, zeros, sqrt, mean, std, var,\
-    isscalar
+    isscalar, arange, flip, polyder, poly1d, concatenate
 from numpy import array as vector
 from numpy.linalg.linalg import det, inv
 from numpy.random import randn
@@ -18,7 +18,20 @@ from scipy.linalg.matfuncs import expm
 from scipy.stats import chi2
 from scipy.stats._continuous_distns import norm
 
+from random import uniform
+from numpy.polynomial.polynomial import Polynomial
+import matplotlib.pyplot as plt
+import matplotlib.dates as mdates
+import matplotlib.mlab as mlab
+
+
+
 from polynomialfiltering.Main import AbstractFilter
+from scipy.integrate.odepack import odeint
+from scipy.integrate._bvp import solve_bvp
+
+from polynomialfiltering.components.FixedMemoryPolynomialFilter import FixedMemoryFilter;
+
 
 def createTestGroup(cdf : Dataset, name : str ) -> Dataset:
     return cdf.createGroup(name);
@@ -248,15 +261,42 @@ def scaleVRFEMP( V : array, t : float, n : float ) -> array:
         for j in range(1,S.shape[1]) :
             S[i,j] = S[i,j-1] / (t*n);
     return S * V;
-        
+    
+    
+def generateTestPolynomial( order : int, N : int, t0 : float, tau : float, minY : float = -1e6, maxY : float = 1e6):
+    tn = t0 + (N-1)*tau
+    if (order == 0) :
+        XY = (array([t0]), array([uniform(minY, maxY)]))
+    if (order == 1) :
+        XY = (array([t0, tn]), array([uniform(minY, maxY), uniform(minY, maxY)]))
+    else :
+        N = order+1 
+        X = arange(t0, tn, (tn - t0)/N) 
+        X[-1] = tn;
+        Y = zeros([N])
+        for i in range(0,order+1) :
+            Y[i] = uniform(minY, maxY)
+        XY = (X, Y)
+    fixed = FixedMemoryFilter(order, order+1);
+    for i in range(0,order+1) :
+        fixed.add(XY[0][i], XY[1][i]);
+    Y0 = fixed.transitionState(t0);
+    return Y0;
             
+
 if __name__ == '__main__':
     pass
-    N = randn(10,1)
-    print(mean(N), std(N))
-    N2 = N*N;
-    print(mean(chi2.cdf(N2,1)))
-    print(chi2.cdf(sum(N2)/len(N2),len(N2)))
+    order = 2;
+    N = 501
+    tau = 10;
+    t0 = 10.0
     
+    for i in range(0,10) :
+        Y0 = generateTestPolynomial( order, N, t0, tau )
         
-    
+        R = 1
+        (times, truth, observations, noise) = generateTestData(order, N, t0, Y0, tau, sigma=R)
+        f0 = plt.figure(figsize=(10, 6))
+        ax = plt.subplot(1, 1, 1)
+        ax.plot(times[0:N,0], observations[0:N], 'b.', times[0:N,0], truth[0:N,0], 'r-')
+        plt.show()
