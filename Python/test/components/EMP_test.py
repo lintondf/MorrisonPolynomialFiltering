@@ -121,9 +121,11 @@ class EMP_test(unittest.TestCase):
         
     def driver(self, order : int, tau : float):
 #         seed(1)
-        R = 1.0 * tau;
+        t0 = 0.0
+        R = 10.0 # 1.0 * tau;
         N = 501
-        Y = self.Y0 / tau;
+        Y = generateTestPolynomial( order, N, t0, tau )
+#         Y = self.Y0 / tau;
         actual = zeros([N,order+1]);
         schi2 = zeros([N,4])
         f = makeEmp(order, tau);
@@ -136,17 +138,17 @@ class EMP_test(unittest.TestCase):
             e = observations[i] - Zstar[0]
             f.update(times[i][0], Zstar, e)
             if (f.getStatus() == FilterStatus.RUNNING) :
-                if (iFirst == 0) :
+                if (iFirst == 0 and f.getFirstVRF() < 1.0) :
                     iFirst = i;
                 actual[i,:] = f.getState()
-                r = f.getState() - truth[i,:]
+                error = f.getState() - truth[i,:]
 #                 R = var(noise[0:i+1])
                 V = R**2 * f.getVRF();
-                schi2[i, 0] = r[0]**2 / V[0,0] # r @ inv(V) @ transpose(r)
-                schi2[i, 1] = V[0, 0]
-                schi2[i, 2] = r[0]**2
-                schi2[i, 3] = mean(observations[0:i+1])
-#                 print('%5d, %10.6f, %10.6f, %10.6f, %10.6f' % (i, schi2[i,0], schi2[i,1], schi2[i,2], schi2[i,3]))
+                schi2[i, 0] = error[0]**2 / V[0,0] # r @ inv(V) @ transpose(r)
+                schi2[i, 1] = V[0,0]
+                schi2[i, 2] = error[0]**2
+                schi2[i, 3] = var(noise[0:i+1])
+                print('%5d, %10.6f, %10.6f, %10.6f, %10.6f, %10.6f' % (i, schi2[i,0], schi2[i,1], schi2[i,2], schi2[i,3], noise[i]))
 #                 print(schi2[i,:], chi2.cdf(schi2[i,:], df=1))
 #                 schi2[i, 1:order+2] = r / sqrt(diag(V));
 #                 if ((i % 10) == 0) : 
@@ -182,14 +184,17 @@ class EMP_test(unittest.TestCase):
             print(order, tau, n95, n96)
             f0 = plt.figure(figsize=(10, 6))
             ax = plt.subplot(1, 1, 1)
-            ax.plot(array([0,N]), array([threshold[0], threshold[0]]), 'r-')
-            ax.plot(range(iFirst,N), schi2[iFirst:,0], 'k-', range(iFirst,N), schi2[iFirst:,1], 'b.')
-            f0 = plt.figure(figsize=(10, 6))
-            ax = plt.subplot(1, 1, 1)
-            ax.plot(times[iFirst:N,0], actual[iFirst:N,0], 'k-', times[iFirst:N,0], observations[iFirst:N], 'b.', times[iFirst:N,0], truth[iFirst:N,0], 'r-')
-            f0 = plt.figure(figsize=(10, 6))
-            ax = plt.subplot(1, 1, 1)
-            ax.plot(arange(iFirst,N,1), schi2[iFirst:,1], 'k.', arange(iFirst,N,1), schi2[iFirst:,2], 'b.')
+            ax.plot(array([0,N]), array([threshold[0], threshold[0]]), 'r-', label='95%')
+            ax.plot(range(iFirst,N), schi2[iFirst:,0], 'k-', label='Chi2')
+#             ax.plot(range(iFirst,N), schi2[iFirst:,1], 'm-', label='V[0,0]')
+#             ax.plot(range(iFirst,N), schi2[iFirst:,2], 'b.', label='error2')
+            ax.legend()
+#             f0 = plt.figure(figsize=(10, 6))
+#             ax = plt.subplot(1, 1, 1)
+#             ax.plot(times[iFirst:N,0], actual[iFirst:N,0], 'k-', times[iFirst:N,0], observations[iFirst:N], 'b.', times[iFirst:N,0], truth[iFirst:N,0], 'r-')
+#             f0 = plt.figure(figsize=(10, 6))
+#             ax = plt.subplot(1, 1, 1)
+#             ax.plot(arange(iFirst,N,1), schi2[iFirst:,1], 'k.', arange(iFirst,N,1), schi2[iFirst:,2], 'b.')
             plt.show()
         return (n95, n96)
 
@@ -216,7 +221,15 @@ class EMP_test(unittest.TestCase):
 #                 num_bins = 50
 #                 n, bins, patches = plt.hist(schi2[:,1], num_bins, facecolor='blue', alpha=0.5)
 #                 plt.show()
-                        
+               
+    def testVRF0(self):
+        order = 0
+        tau = 0.01
+        f = makeEmp(order, tau);
+        for i in range(0,50) :
+            f._setN(i)
+            print(i, f.getFirstVRF())
+                 
 if __name__ == "__main__":
     #import sys;sys.argv = ['', 'Test.testName']
     unittest.main()

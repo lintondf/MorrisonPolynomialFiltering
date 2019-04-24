@@ -103,6 +103,10 @@ def generateTestData(order, N, t0, Y0, dt, bias=0.0, sigma=1.0):
     if (order >= 0) :
         truth = zeros([N,order+1])
         noise = bias + sigma*randn(N,1)
+        # insure that sample mean and variance conform to specification
+        noise += (bias - mean(noise))
+        noise /= (sigma / std(noise))
+        print('gTD', bias, sigma, mean(noise), std(noise))
         observations = zeros([N,1])
         times = zeros([N,1])
         S = stateTransitionMatrix(order+1, dt)

@@ -12,6 +12,7 @@ Java/*.log
 Java/bin
 Java/out
 Java/target
+Java/moduleChecksums.obj
 Python/src/__pycache__
 Python/test/__pycache__
 testdata
