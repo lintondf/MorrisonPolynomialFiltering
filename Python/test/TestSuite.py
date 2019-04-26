@@ -7,7 +7,8 @@ import os
 import unittest
 import coverage
 
-
+def slow() -> bool:
+    return False;
 
 def testDataPath( filename : str) -> str:
     path = os.getcwd();
