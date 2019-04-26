@@ -190,7 +190,7 @@ namespace polynomialfiltering {
             /// 
             ///  @return  0th derivative input to output variance ratio
             /// 
-            double getFirstVariance();
+            virtual double getFirstVariance();
 
             ///// @brief Get the variance reduction factor for the 'order'th derivative
             /// 
@@ -199,7 +199,7 @@ namespace polynomialfiltering {
             /// 
             ///  @return  'order'th derivative input to output variance ratio
             /// 
-            double getLastVariance();
+            virtual double getLastVariance();
     }; // class AbstractFilterWithCovariance 
 
 }; // namespace polynomialfiltering

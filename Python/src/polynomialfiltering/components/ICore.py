@@ -88,5 +88,4 @@ class ICore(ABC):
         """
         '''@V:array'''
         pass
-    
-        
+

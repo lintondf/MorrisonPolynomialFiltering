@@ -70,26 +70,11 @@ def fdistPpf(p : float, df1 : int, df2 : int) -> float:
     return 1e-9 + f.ppf(p, df1, df2)
 
 
-def nUnitLastVRF( order : int, tau : float ):
-    if (order == 0) :
-        return 0;
-    elif (order == 1) :
-        return max(order, exp(-0.7469*log(tau) + 0.3752));
-    elif (order == 2) :
-        return max(order, exp(-0.8363*log(tau) + 1.1127));
-    elif (order == 3) :
-        return max(order, exp(-0.8753*log(tau) + 1.5427));
-    elif (order == 4) :
-        return max(order, exp(-0.897*log(tau) + 1.8462)); 
-    else :
-        return max(order, exp(-0.9108*log(tau) + 2.0805)); 
-        
-
 if __name__ == '__main__':
     pass
-    for order in range(0,5+1) :
-        for tau in [0.001, 0.01, 0.1, 1, 10, 100, 1000] :
-            print(order, tau, nUnitLastVRF(order, tau))
+#     for order in range(0,5+1) :
+#         for tau in [0.001, 0.01, 0.1, 1, 10, 100, 1000] :
+#             print(order, tau, nUnitLastVRF(order, tau))
 #     print(chi2Cdf(6.64, 1), chi2Cdf(2*4.61, 2), chi2Cdf(3*3.78, 3), chi2Cdf(4*3.32, 4), chi2Cdf(10*2.32, 10))
 #     for i in range(1,21) :
 #         print(i, chi2Ppf(0.99, i)/i)

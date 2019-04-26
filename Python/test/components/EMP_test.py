@@ -13,7 +13,7 @@ from numpy import arange, array2string, cov, log, var, zeros, trace, mean, std, 
     concatenate, allclose, min, max, nonzero, cumsum, histogram, where
 from numpy import sqrt
 from numpy.linalg import inv
-from numpy.random import randn, seed
+from numpy.random import randn, seed, get_state
 from numpy.testing import assert_almost_equal
 from numpy.linalg.linalg import norm
 from numpy.ma.core import isarray
@@ -21,24 +21,23 @@ from scipy.stats import norm as normalDistribution
 from math import sin
 from runstats import Statistics
 from fitter import Fitter
+from scipy.stats import kstest, chi2, lognorm, norm, anderson
+from scipy.optimize import fsolve
+
+from runstats import Statistics
 
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 import matplotlib.mlab as mlab
 
 from polynomialfiltering.Main import AbstractFilterWithCovariance, FilterStatus
-from polynomialfiltering.components.Emp import makeEmp, makeEmpCore
-from scipy.stats import kstest, chi2, lognorm, norm
-from scipy.optimize import fsolve
+from polynomialfiltering.components.Emp import makeEmp, makeEmpCore, nUnitLastVRF
+from scipy.stats.stats import jarque_bera
 
 class EMP_test(unittest.TestCase):
 
-    Y0 = array([1e3, -5e2, +1e2, -5e0, +1e0, -5e-1]);
-
-
     def setUp(self):
         pass
-
 
     def tearDown(self):
         pass
@@ -118,13 +117,13 @@ class EMP_test(unittest.TestCase):
 #                 plt.show()
         seed()
         
-    def driver(self, order : int, tau : float, N : int):
+    def driver(self, order : int, tau : float, N : int, R : float = 10.0):
+#         state = get_state()
+#         print(state)
 #         seed(1)
         t0 = 0.0
-        R = 1.0 # 1.0 * tau;
         Y = generateTestPolynomial( order, N, t0, tau )
-#         Y = self.Y0 / tau;
-        actual = zeros([N,order+1]);
+        errors = zeros([N,order+1]);
         schi2 = zeros([N,4])
         f = makeEmp(order, tau);
         (times, truth, observations, noise) = generateTestData(order, N, 0.0, Y[0:order+1], tau, sigma=R)
@@ -139,12 +138,13 @@ class EMP_test(unittest.TestCase):
             if (f.getStatus() == FilterStatus.RUNNING) :
                 if (iFirst == 0 and f.getFirstVRF() < 1.0) :
                     iFirst = i;
-                actual[i,:] = f.getState()
                 error = f.getState() - truth[i,:]
-#                 R = var(noise[0:i+1])
+#                 if ( i == 63) :
+#                     print(i, error)
+                errors[i,:] = error
                 V = f.getVRF()
                 V *= R**2;
-                schi2[i, 0] = error @ inv(V) @ transpose(error) # error[0]**2 / V[0,0] # 
+                schi2[i, 0] = error @ inv(V) @ transpose(error)
                 schi2[i, 1] = V[0,0]
                 schi2[i, 2] = error[0]
                 schi2[i, 3] = var(noise[0:i+1])
@@ -178,9 +178,10 @@ class EMP_test(unittest.TestCase):
 #         print(A2S(schi2[iFirst:,0]))
 #         print(A2S(threshold))
 #         print(where(schi2[iFirst:,0] > threshold[0]))
+#         print( jarque_bera(schi2[iFirst:,2]/sqrt(schi2[iFirst:,3])) )#  # noise/R
         threshold = chi2.ppf(array([0.95, 0.99]),df=order+1);
         n95 = len(where(schi2[iFirst:,0] > threshold[0])[0])
-        return n95
+        return (n95, errors)
 #             print(threshold)
 #             print(A2S(chi2.cdf(schi2[where(schi2[:,0] > threshold[0])[0],0],df=order+1)) )
 #             print(A2S(schi2))
@@ -205,33 +206,65 @@ class EMP_test(unittest.TestCase):
 #             ax.plot(arange(iFirst,N,1), schi2[iFirst:,1], 'k.', arange(iFirst,N,1), schi2[iFirst:,2], 'b.')
 #             plt.show()
 
+    @unittest.skip
     def test0Generate(self):
 #         print( norm.ppf([0.025, 0.975])**2, chi2.ppf([0.95], df=1), chi2.ppf([0.95], df=2))
-        N = 501
+        N = [64, 128, 128, 256, 512, 1024]
+        M = [256, 256, 256, 256, 256, 128]
         for order in range(0, 5+1) :
             for tau in [0.01, 0.1, 1, 10] :
-                M = 100
                 failed = 0;
-                for j in range(0,M) :
-                    failed += self.driver(order, tau, N )
-                print('%3d, %6.3f, %6d, %6.4f' % (order, tau, failed, failed/(N*M)) )
-#                     if (n95 > 0.05 and n96 > 0.04) :
-#                         print(order, tau, j, n95, n96)
-#                 print('%3d, %6.3f, %6.4f, %6.4f, %6.4f, %6.4f' % (order, tau, min(c95), max(c95), mean(c95), mean(c95)-std(c95)))
-#                 print( fsolve(lambda x: self.driver(order, tau, x), 0.0) )
-#                 for dt in arange(-0.0, 1, 0.1) :
-#                     print(dt, self.driver(order, tau, dt))
-#                 print(order, tau)
-#                 print(kstest(schi2[1000:,0], lambda x: chi2.cdf(x, df=order+1)));
-#                 print(kstest(schi2[1000:,1], 'norm' ))
-#                 print(kstest(schi2[1000:,2], 'norm' ))
-#                 print(kstest(schi2[1000:,3], 'norm' ))
-#                 num_bins = 50
-#                 n, bins, patches = plt.hist(schi2[:,1], num_bins, facecolor='blue', alpha=0.5)
-#                 plt.show()
-               
-
-                 
+                for j in range(0,M[order]) :
+                    failed += self.driver(order, tau, N[order] )[0]
+                print('%3d, %6.3f, %6d, %6.4f' % (order, tau, failed, failed/(N[order]*M[order])) )
+           
+    def crossSectionChi2(self):
+        R = 10.0
+        N = [64, 128, 128, 256, 512, 1024]
+        M = 100*[256, 256, 256, 256, 256, 128]
+        bin_values = chi2.ppf(array([0.0, 0.5, 0.75, 0.9, 0.95, 0.99, 0.9999999999]), df=1)
+        for order in range(0, 5+1) :
+            stats = [[Statistics() for j in range(order+1)] for i in range(order+1)]
+            for tau in [0.01, 0.1, 1, 10] :
+                E = zeros([N[order], M[order], order+1])
+                for iM in range(0, M[order]) :
+                    errors = self.driver(order, tau, N[order], R )[1]
+                    E[:, iM,:] = errors
+                    
+                f = makeEmp(order, tau);
+                check = zeros([N[order], 3])
+                iFirst = -1;
+#                 print(E[-1,:,:])
+                for iN in range(0, N[order]) :
+                    f._setN(iN)
+                    if (iN > order+1 and f.getFirstVRF() > 0 and f.getFirstVRF() < 1.0) :
+                        if (iFirst < 0) :
+                            iFirst = iN;
+                        x = mean(E[iN,:,:],axis=0)
+                        X = cov(E[iN,:,:],rowvar=False)
+                        V = R**2 * f.getVRF()
+                        XV = X / V
+#                         XV = XV.flatten();
+                        for k1 in range(0,order+1) :
+                            for k2 in range(0,order+1) :
+                                stats[k1][k2].push(XV[k1,k2]);
+#                         check[iN,0] = min(XV)
+#                         check[iN,1] = mean(XV)
+#                         check[iN,2] = max(XV)
+#                         print( chi2.cdf([x @ inv(X) @ x.T, x @ inv(V) @ x.T], df=order+1) )
+#                         print('%5d, %6.3f, %5d, %6.4f, %6.4f, %6.4f, %6.4f' % (order, tau, iN, min(XV), mean(XV), max(XV), std(XV)))
+#                 print('%5d, %6.3f, %5d, %6.4f, %6.4f, %6.4f' % (order, tau, iN, min(check[iFirst:,0]), mean(check[iFirst:,1]), max(check[iFirst:,2])))
+            print(order)
+            for k1 in range(0,order+1) :
+                for k2 in range(0,order+1) :
+                    print('%6.4f, ' % (stats[k1][k2].mean()+stats[k1][k2].stddev()), end='')
+                print('')
+            print('')
+#             print('%5d, %6.4f, %6.4f, %6.4f, %6.4f' % (order, stats.mean(), stats.stddev(), stats.maximum(), stats.mean()+stats.stddev()) )
+                
+    def test0CrossSectionChi2(self):
+        self.crossSectionChi2()
+            
 if __name__ == "__main__":
     #import sys;sys.argv = ['', 'Test.testName']
     unittest.main()

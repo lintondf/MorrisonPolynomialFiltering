@@ -84,83 +84,6 @@ class RecursivePolynomialFilter(AbstractFilter):
         self.D = that.D;
         self.Z = that.Z;
             
-    def _conformState(self, state : vector) -> vector:
-        """
-        Matches an input state vector to the filter order
-        
-        Longer state vectors are truncated and short ones are zero filled
-        
-        Arguments:
-            state(vector) - arbitrary length input state vector
-        
-        Returns:
-            conformed state vector with order+1 elements
-        
-        """
-        '''@Z : vector'''
-        
-        return RecursivePolynomialFilter.conformState(self.order, state)
-        
-    @inline
-    def _normalizeTime(self, t : float) -> float:
-        """
-        Convert an external time to internal (tau) units
-        
-        Arguments:
-            t - external time (e.g. seconds)
-        
-        Returns:
-            time in internal units (tau steps since t0)
-        
-        """
-        return (t - self.t0)/self.tau
-    
-    @inline
-    def _normalizeDeltaTime(self, dt : float) -> float:
-        """
-        Converts external delta time to internal (tau) step units
-        
-        Arguments:
-            dt - external time step (e.g. seconds)
-        
-        Returns:
-            time step in internal units
-        
-        """
-        return dt / self.tau
-    
-    @inline
-    def _normalizeState(self, Z : vector) -> vector:
-        """
-        Normalize a state vector
-        
-        Multiplies the input state vector by the normalization vector D
-        
-        Arguments:
-            Z(vector) - state vector in external units
-        
-        Returns:
-            state vector in internal units
-        
-        """
-        return Z * self.D
-    
-    @inline
-    def _denormalizeState(self, Z : vector) -> vector:
-        """
-        Denormalize a state vector
-        
-        Divides the input state vector by the normalization vector D
-        
-        Arguments:
-            Z(vector) - state vector in internal units
-        
-        Returns:
-            state vector in external units
-        
-        """
-        return Z / self.D
-    
     def start(self, t : float, Z : vector) -> None:
         """
         Start or restart the filter
@@ -306,7 +229,7 @@ class RecursivePolynomialFilter(AbstractFilter):
     def getDiagonalVRF(self) -> array:
         if (self.n < self.order+1) :
             return zeros([self.order + 1, self.order + 1]);
-        return self.core.getDiagonalVRF(self.nu)
+        return self.core.getDiagonalVRF(self.n)
 
     @inline
     def getVRF(self) -> array:
@@ -326,6 +249,83 @@ class RecursivePolynomialFilter(AbstractFilter):
         V = self.core.getVRF(self.n)
         return V;
 
+    def _conformState(self, state : vector) -> vector:
+        """
+        Matches an input state vector to the filter order
+        
+        Longer state vectors are truncated and short ones are zero filled
+        
+        Arguments:
+            state(vector) - arbitrary length input state vector
+        
+        Returns:
+            conformed state vector with order+1 elements
+        
+        """
+        '''@Z : vector'''
+        
+        return RecursivePolynomialFilter.conformState(self.order, state)
+        
+    @inline
+    def _normalizeTime(self, t : float) -> float:
+        """
+        Convert an external time to internal (tau) units
+        
+        Arguments:
+            t - external time (e.g. seconds)
+        
+        Returns:
+            time in internal units (tau steps since t0)
+        
+        """
+        return (t - self.t0)/self.tau
+    
+    @inline
+    def _normalizeDeltaTime(self, dt : float) -> float:
+        """
+        Converts external delta time to internal (tau) step units
+        
+        Arguments:
+            dt - external time step (e.g. seconds)
+        
+        Returns:
+            time step in internal units
+        
+        """
+        return dt / self.tau
+    
+    @inline
+    def _normalizeState(self, Z : vector) -> vector:
+        """
+        Normalize a state vector
+        
+        Multiplies the input state vector by the normalization vector D
+        
+        Arguments:
+            Z(vector) - state vector in external units
+        
+        Returns:
+            state vector in internal units
+        
+        """
+        return Z * self.D
+    
+    @inline
+    def _denormalizeState(self, Z : vector) -> vector:
+        """
+        Denormalize a state vector
+        
+        Divides the input state vector by the normalization vector D
+        
+        Arguments:
+            Z(vector) - state vector in internal units
+        
+        Returns:
+            state vector in external units
+        
+        """
+        return Z / self.D
+    
     def _setN(self, n : int):
         self.n = n;
         
