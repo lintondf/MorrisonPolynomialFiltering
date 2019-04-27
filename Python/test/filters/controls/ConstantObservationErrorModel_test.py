@@ -4,12 +4,14 @@ Created on Apr 11, 2019
 @author: NOOK
 '''
 import unittest
+
+from numpy import array, array as vector
 from numpy import cov
 from numpy.linalg import inv
 from numpy.random import randn
 from numpy.testing import assert_almost_equal
 from netCDF4 import Dataset
-from TestUtilities import *
+from TestUtilities import createTestGroup, writeTestVariable
 from TestSuite import testDataPath;
 from polynomialfiltering.PythonUtilities import ignore, testcase
 from TestData import TestData
@@ -18,8 +20,6 @@ from polynomialfiltering.PythonUtilities import assert_not_empty
 from polynomialfiltering.filters.controls.ConstantObservationErrorModel import ConstantObservationErrorModel
 
 class TestConstantObservationErrorModel(unittest.TestCase):
-    '''@cdf : Dataset'''
-    cdf = None;
 
     @classmethod
     def setUpClass(self):
