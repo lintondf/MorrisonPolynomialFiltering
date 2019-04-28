@@ -63,5 +63,23 @@ public class TranslationUnaryNode extends TranslationSubexpressionNode {
 		else
 			return null;
 	}
+	
+	public static boolean isMinusOne(TranslationNode node) {
+		if (node == null)
+			return false;
+		while (node.getChildCount() == 1) {
+			node = node.getFirstChild();
+		}
+		if (! (node instanceof TranslationUnaryNode))
+			return false;
+		TranslationUnaryNode tun = (TranslationUnaryNode) node;
+		if (tun.rhs == null)
+			return false;
+		if (tun.rhs instanceof TranslationConstantNode) {
+			TranslationConstantNode tcn = (TranslationConstantNode) tun.rhs;
+			return tcn.value.equals("1");
+		}
+		return false;
+	}
 
 }

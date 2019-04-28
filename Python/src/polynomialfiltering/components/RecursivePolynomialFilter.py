@@ -72,8 +72,8 @@ class RecursivePolynomialFilter(AbstractFilter):
         return 1.0 - factor/n
     
     
-    @virtual      
-    def copyState(self, that : 'AbstractRecursiveFilter') -> None:
+    #TODO @virtual      
+    def copyState(self, that : 'RecursivePolynomialFilter') -> None:
         """
         Copy the state of another filter into this filter.
         """
@@ -141,7 +141,6 @@ class RecursivePolynomialFilter(AbstractFilter):
         """
         '''@ dt : float'''
         '''@ dtau : float'''
-        '''@ p : float'''
         '''@ gamma : vector'''
         '''@ innovation : vector'''
         dt = t - self.t
@@ -325,7 +324,3 @@ class RecursivePolynomialFilter(AbstractFilter):
         
         """
         return Z / self.D
-    
-    def _setN(self, n : int):
-        self.n = n;
-        

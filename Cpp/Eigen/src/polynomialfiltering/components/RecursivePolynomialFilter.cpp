@@ -42,13 +42,13 @@ namespace polynomialfiltering {
                 return 1.0 - factor / n;
             }
 
-            void RecursivePolynomialFilter::copyState (const AbstractRecursiveFilter that) {
-                this->n = that.n;
-                this->t0 = that.t0;
-                this->t = that.t;
-                this->tau = that.tau;
-                this->D = that.D;
-                this->Z = that.Z;
+            void RecursivePolynomialFilter::copyState (const std::shared_ptr<RecursivePolynomialFilter> that) {
+                this->n = that->n;
+                this->t0 = that->t0;
+                this->t = that->t;
+                this->tau = that->tau;
+                this->D = that->D;
+                this->Z = that->Z;
             }
 
             void RecursivePolynomialFilter::start (const double t, const RealVector& Z) {
@@ -73,7 +73,6 @@ namespace polynomialfiltering {
             RealVector RecursivePolynomialFilter::update (const double t, const RealVector& Zstar, const double e) {
                 double dt;
                 double dtau;
-                double p;
                 RealVector gamma;
                 RealVector innovation;
                 dt = t - this->t;
@@ -156,10 +155,6 @@ namespace polynomialfiltering {
 
             RealVector RecursivePolynomialFilter::_denormalizeState (const RealVector& Z) {
                 return arrayDivide(Z, this->D);
-            }
-
-            self.n=n; RecursivePolynomialFilter::_setN (const int n) {
-                this->n = n;
             }
 
     }; // namespace components

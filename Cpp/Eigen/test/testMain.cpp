@@ -13,6 +13,10 @@ void assert_almost_equal(RealMatrix& A, RealMatrix& B) {
 	CHECK(A.isApprox(B));
 }
 
+void assert_almost_equal(RealVector& A, RealVector& B) {
+	CHECK(A.isApprox(B));
+}
+
 void assert_almost_equal(RealMatrix& A, double B) {
 	CHECK(A.rows() == 1);
 	CHECK(A.cols() == 1);

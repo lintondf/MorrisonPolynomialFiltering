@@ -21,7 +21,7 @@
 
 namespace polynomialfiltering {
 
-    ///// @class FilterStatus
+    ///// @class /polynomialfiltering/Main/::FilterStatus : <ENUM>; supers(Enum,)
     /// @brief The FilterStats enumeration defines the possible states of a filter.
     /// 
     ///  	IDLE	Filter is awaiting the first observation
@@ -36,10 +36,10 @@ namespace polynomialfiltering {
         RUNNING = 2,
         COASTING = 3,
         RESETING = 4,
-    }; // class FilterStatus 
+    }; // class /polynomialfiltering/Main/::FilterStatus : <ENUM>; supers(Enum,) 
 
 
-    ///// @class AbstractFilter
+    ///// @class /polynomialfiltering/Main/::AbstractFilter : <CLASS>; supers(ABC,)
     /// @brief The base class for all of the filters and components in this package.
     /// 
     class AbstractFilter {
@@ -141,10 +141,10 @@ namespace polynomialfiltering {
             int order; ///<  polynomial order
             std::string name; ///<  name of this filter
             FilterStatus status; ///<  current status
-    }; // class AbstractFilter 
+    }; // class /polynomialfiltering/Main/::AbstractFilter : <CLASS>; supers(ABC,) 
 
 
-    ///// @class AbstractFilterWithCovariance
+    ///// @class /polynomialfiltering/Main/::AbstractFilterWithCovariance : <CLASS>; supers(AbstractFilter,)
     /// @brief Extends AbstractFilter to support state vector covariance methods.
     /// 
     class AbstractFilterWithCovariance : public AbstractFilter {
@@ -200,7 +200,7 @@ namespace polynomialfiltering {
             ///  @return  'order'th derivative input to output variance ratio
             /// 
             virtual double getLastVariance();
-    }; // class AbstractFilterWithCovariance 
+    }; // class /polynomialfiltering/Main/::AbstractFilterWithCovariance : <CLASS>; supers(AbstractFilter,) 
 
 }; // namespace polynomialfiltering
 

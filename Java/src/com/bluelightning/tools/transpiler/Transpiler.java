@@ -63,6 +63,7 @@ import freemarker.template.TemplateExceptionHandler;
  * -- this.transpiler -> Transpiler.instance()
  * -- Check for changes before writing sources; done for sources, add for tests
  * -- handle superclass init for multiple constructors
+ * -- auto define missing variables as None?
  */
 /**
  * @author NOOK
@@ -106,10 +107,11 @@ public class Transpiler {
 	static Target[] targets = {
 //		new Target(Paths.get(""), "TranspilerTest"),
 		new Target(Paths.get("polynomialfiltering"), "Main"),
-		new Target(Paths.get("polynomialfiltering/components"), "FixedMemoryPolynomialFilter"),
-		new Target(Paths.get("polynomialfiltering/components"), "ICore"),
+//		new Target(Paths.get("polynomialfiltering/components"), "FixedMemoryPolynomialFilter"),
+		new Target(Paths.get("polynomialfiltering/components"), "ICore", true),
 		new Target(Paths.get("polynomialfiltering/components"), "RecursivePolynomialFilter"),
 		new Target(Paths.get("polynomialfiltering/components"), "Emp"),
+		new TestTarget(Paths.get("components"), "EMP_test"),
 //		new Target(Paths.get("polynomialfiltering/components"), "AbstractRecursiveFilter"),
 //		new Target(Paths.get("polynomialfiltering/components"), "ExpandingMemoryPolynomialFilter"),
 //		new Target(Paths.get("polynomialfiltering/components"), "FadingMemoryPolynomialFilter"),

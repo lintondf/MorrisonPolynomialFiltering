@@ -2,9 +2,11 @@ package com.bluelightning.tools.transpiler;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Stack;
 
 import org.antlr.v4.runtime.CommonToken;
+import org.antlr.v4.runtime.RuleContext;
 import org.antlr.v4.runtime.Token;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.RuleNode;
@@ -25,6 +27,9 @@ class DeclarationsListener extends LcdPythonBaseListener {
 		protected Scope moduleScope;
 		Stack<Scope> scopeStack = new Stack<>();
 		boolean isTest = false;
+		
+		int classdefContextIndex = -1;
+		int funcdefContextIndex = -1;
 
 		public DeclarationsListener(Transpiler transpiler, Scope moduleScope, boolean isTest) {
 			super();
@@ -32,6 +37,9 @@ class DeclarationsListener extends LcdPythonBaseListener {
 			this.moduleScope = moduleScope;
 			this.isTest = isTest;
 			scopeStack.push(moduleScope);
+			Map<String, Integer> map = transpiler.parser.getRuleIndexMap();
+			classdefContextIndex = map.get("classdef");
+			funcdefContextIndex = map.get("funcdef");
 		}
 		
 		protected String getChildText( RuleNode ctx, int iChild) {
@@ -168,10 +176,19 @@ class DeclarationsListener extends LcdPythonBaseListener {
 		@Override public void exitDecorated(LcdPythonParser.DecoratedContext ctx) { 
 //			transpiler.dumpChildren(ctx);
 			String decoration = getChildText(ctx, 0).trim();
-			String functionName = transpiler.valueMap.get(ctx.getChild(1).getChild(1).getPayload()).trim();
-			Symbol symbol = transpiler.symbolTable.lookup(scopeStack.peek(), functionName);
-			Symbol.FunctionParametersInfo fpi = symbol.getFunctionParametersInfo();
-			fpi.decorators.add(decoration);
+			RuleContext ruleContext = (RuleContext) ctx.getChild(1);
+			if (ruleContext.getRuleIndex() == funcdefContextIndex) {
+				String functionName = transpiler.valueMap.get(ctx.getChild(1).getChild(1).getPayload()).trim();
+				Symbol symbol = transpiler.symbolTable.lookup(scopeStack.peek(), functionName);
+				Symbol.FunctionParametersInfo fpi = symbol.getFunctionParametersInfo();
+				fpi.decorators.add(decoration);
+			} else {
+				String className = transpiler.valueMap.get(ctx.getChild(1).getChild(1).getPayload()).trim();
+				Symbol symbol = transpiler.lookupClass(className);
+				Symbol.FunctionParametersInfo fpi = new Symbol.FunctionParametersInfo();
+				fpi.decorators.add(decoration);
+				symbol.setFunctionParametersInfo(fpi);
+			}
 		}
 		
 		protected void inheritDeclarations( Scope classScope, Symbol classSymbol) {

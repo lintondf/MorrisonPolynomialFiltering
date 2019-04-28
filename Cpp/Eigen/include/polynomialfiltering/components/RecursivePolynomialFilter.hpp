@@ -24,7 +24,7 @@
 namespace polynomialfiltering {
     namespace components {
 
-        ///// @class RecursivePolynomialFilter
+        ///// @class /polynomialfiltering/components/::RecursivePolynomialFilter : <CLASS>; supers(AbstractFilter,)
         /// @brief Base class for both expanding and fading polynomial filter and their combinations.
         /// 
         class RecursivePolynomialFilter : public AbstractFilter {
@@ -48,7 +48,7 @@ namespace polynomialfiltering {
 
                 ///// @brief Copy the state of another filter into this filter.
                 /// 
-                virtual void copyState(const AbstractRecursiveFilter that);
+                void copyState(const std::shared_ptr<RecursivePolynomialFilter> that);
 
                 ///// @brief Start or restart the filter
                 /// 
@@ -204,8 +204,7 @@ namespace polynomialfiltering {
                 /// 
                 /// 
                 RealVector _denormalizeState(const RealVector& Z);
-                self.n=n; _setN(const int n);
-        }; // class RecursivePolynomialFilter 
+        }; // class /polynomialfiltering/components/::RecursivePolynomialFilter : <CLASS>; supers(AbstractFilter,) 
 
     }; // namespace components
 }; // namespace polynomialfiltering

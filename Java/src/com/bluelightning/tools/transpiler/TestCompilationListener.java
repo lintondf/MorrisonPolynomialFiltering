@@ -24,8 +24,16 @@ public class TestCompilationListener extends LcdPythonBaseListener {
 	@Override
 	public void enterClassdef(LcdPythonParser.ClassdefContext ctx) {
 		scope = Transpiler.instance().scopeMap.get(ctx.getPayload());
-//		System.out.println("class > " + scope);
-		Transpiler.instance().dispatcher.startClass(scope);
+		Symbol cls = Transpiler.instance().lookup(scope.getParent(), scope.getLast());
+		System.out.println("class > " + scope + " "+ cls);
+		if (cls != null) {
+			if (cls.hasDecorator("@testclass")) {
+				SourceCompilationListener source = new SourceCompilationListener(Transpiler.instance(), scope.getParent(), ctx );
+				Transpiler.instance().walker.walk(source, ctx);
+			}
+		} else {			
+			Transpiler.instance().dispatcher.startClass(scope);
+		}
 	}
 	
 	@Override

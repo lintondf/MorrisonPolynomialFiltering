@@ -111,7 +111,8 @@ public abstract class AbstractCppTarget extends AbstractLanguageTarget {
 	}
 
 
-	String currentClass = null;
+	Symbol currentClass = null;
+	String currentClassName = null;
 	boolean inEnum = false;
 	boolean isAbstract = false;
 	boolean headerOnly = false;
@@ -120,10 +121,11 @@ public abstract class AbstractCppTarget extends AbstractLanguageTarget {
 	public void startClass(Scope scope) {
 		hppPrivate = new Indent();
 		currentScope = scope;
-		currentClass = scope.getLast();
+		currentClassName = scope.getLast();
 		// hpp
-		String decl = "class " + currentClass;
-		Symbol symbol = Transpiler.instance().symbolTable.lookup(currentScope, currentClass);
+		String decl = "class " + currentClassName;
+		Symbol symbol = Transpiler.instance().symbolTable.lookup(currentScope, currentClassName);
+		currentClass = symbol;
 		if (symbol != null) {
 			if (symbol != null && symbol.getSuperClassInfo().superClasses != null) {
 				String separator = " : ";
@@ -134,50 +136,63 @@ public abstract class AbstractCppTarget extends AbstractLanguageTarget {
 					}
 					if (superClass.equals("Enum")) {
 						inEnum = true;
-						decl = "enum " + currentClass;
+						decl = "enum " + currentClassName;
 					}
 				}
 			}
 		}
 		
+		Indent where = hppIndent;
+		if (symbol.hasDecorator("@testclass")) {
+			where = cppIndent;
+		}
 		String headerScope = currentScope.toString();
 		String headerComments = Transpiler.instance().getDocumenter().getComments("Doxygen/C++", headerScope, hppIndent.toString());
 		if (headerComments != null) {
 			headerComments = headerComments.replace("///// @brief", "///// @class " + currentClass + "\n" + hppIndent.toString() +"/// @brief");
-			hppIndent.append("\n");
-			hppIndent.append(headerComments);
+			where.append("\n");
+			where.append(headerComments);
 		}
-		hppIndent.writeln( String.format("%s {", decl));
-		hppIndent.in();
-		cppIndent.in();
+		where.writeln( String.format("%s {", decl));
+		where.in();
 		if (! inEnum) {
-			hppIndent.writeln("public:");
-			hppIndent.in();
+			where.writeln("public:");
+			where.in();
+		}
+		if (where != cppIndent) {
+			cppIndent.in();
 		}
 	}
 
 	@Override
 	public void finishClass(Scope scope) {
 		currentScope = scope;
+		Indent where = hppIndent;
+		if (currentClass != null && currentClass.hasDecorator("@testclass")) {
+			where = cppIndent;
+		}
 		if (hppPrivate.out.length() > 0) {
 			
-			hppIndent.out();
-			hppIndent.writeln("protected:");
-			hppIndent.in();
+			where.out();
+			where.writeln("protected:");
+			where.in();
 			String[] declarations = hppPrivate.out.toString().split("\n");
 			for (String decl : declarations) {
-				hppIndent.writeln(decl);
+				where.writeln(decl);
 			}
 		}
 		// hpp
 		if (! inEnum) {
-			hppIndent.out();
+			where.out();
 		}
 		inEnum = false;
-		hppIndent.out();
-		cppIndent.out();
-		hppIndent.writeln( String.format("}; // class %s \n", currentClass));
+		where.out();
+		where.writeln( String.format("}; // class %s \n", currentClass));
+		if (where != cppIndent) {
+			cppIndent.out();
+		}
 		currentClass = null;
+		currentClassName = null;
 	}
 	
 	protected void writeMethodDeclaration( Indent head) {} 
@@ -197,7 +212,7 @@ public abstract class AbstractCppTarget extends AbstractLanguageTarget {
 				String remappedType = programmer.remapType(currentScope, symbol); 
 				String type = remappedType + " ";
 				if (symbol.isConstructor()) {
-					name = currentClass;
+					name = currentClass.getName();
 					type = "";
 				}
 //				System.out.println(">>> " + currentClass + "::" + currentFunction + fpi.toString());
@@ -259,7 +274,7 @@ public abstract class AbstractCppTarget extends AbstractLanguageTarget {
 				where.append(";\n");
 				
 				if (! fpi.decorators.contains("@abstractmethod")) {
-					decl = generateBodyDeclaration( type, currentClass, name, body.out.toString() );
+					decl = generateBodyDeclaration( type, currentClassName, name, body.out.toString() );
 					if (currentClass != null) {
 						if (fpi.decorators.contains("@superClassConstructor")) { // decorator inserted by Declarations listener; not in Python source
 							String className = symbol.getScope().getLast();
@@ -281,9 +296,9 @@ public abstract class AbstractCppTarget extends AbstractLanguageTarget {
 								if (sc.charAt(0) != 'I' || Character.isLowerCase(sc.charAt(1))) { // ignore interfaces
 									decl += separator + sc + "("; // TODO handle passing only relevant arguments
 									decl += scInitializers;
+									decl += ")";
 								}
 							}
-							decl += ")";
 						}
 					}
 					cppIndent.writeln( decl + " {");
@@ -442,7 +457,7 @@ public abstract class AbstractCppTarget extends AbstractLanguageTarget {
 			}
 		} else if (child instanceof TranslationListNode) {
 			TranslationListNode tln = (TranslationListNode) child;
-			if (scope.toString().contains("FadingMemoryPolynomialFilter") && tln.getParserRuleContext().getStart().getLine() == 404)
+			if (scope.toString().contains("EMP_test"+"") && tln.getParserRuleContext().getStart().getLine() == 339)
 				System.out.println(tln.getTop().traverse(1, tln)); ////@@
 			if (tln.getListOpen().equals("(") && tln.getChildCount() == 0) {
 				// may be ([...]) which compiles to LIST(:0, LIST[{LIST[...}
@@ -459,13 +474,13 @@ public abstract class AbstractCppTarget extends AbstractLanguageTarget {
 				}
 			}
 			if (tln.getListOpen().equals("[")) {
+				Symbol array = null;
+				if (tln.getLeftSibling() instanceof TranslationSymbolNode) {
+					array = ((TranslationSymbolNode) tln.getLeftSibling()).getSymbol();
+				} else if (tln.getLeftSibling() instanceof TranslationUnaryNode) {
+					array = ((TranslationUnaryNode) tln.getLeftSibling()).getRhsSymbol();
+				}
 				if ( tln.isArraySlice() ) {
-					Symbol array = null;
-					if (tln.getLeftSibling() instanceof TranslationSymbolNode) {
-						array = ((TranslationSymbolNode) tln.getLeftSibling()).getSymbol();
-					} else if (tln.getLeftSibling() instanceof TranslationUnaryNode) {
-						array = ((TranslationUnaryNode) tln.getLeftSibling()).getRhsSymbol();
-					}
 					if (array == null) {
 						Transpiler.instance().reportError(tln.getTop(), "Bracket list follows non-symbol");
 						return 0;
@@ -485,7 +500,7 @@ public abstract class AbstractCppTarget extends AbstractLanguageTarget {
 					Symbol slice = programmer.getSliceSymbol(array.getType());
 					programmer.writeOperator(out, ".");
 					switch (tln.getChildCount()) {
-					case 0:
+					case 0: 
 						break;
 						
 					case 1: // [i] || [:]
@@ -522,16 +537,33 @@ public abstract class AbstractCppTarget extends AbstractLanguageTarget {
 						break;
 						
 					case 2: // [:,j] || [i,:] || [i:n,j] || [i,j:m] || [i:n,j:m]
-						if (tln.getChild(0) instanceof TranslationOperatorNode) {  // [:,j] - get column
+						if (tln.getChild(0) instanceof TranslationOperatorNode) {  // [:,j] - get column; [:,j:k] - get slice
 							Symbol which = programmer.getRowColSymbol("1");
 							out.append( programmer.rewriteSymbol( scope, which ) );
 							programmer.openParenthesis( out );
 							emitChild(out, scope, tln.getChild(1));							
-						} else if (tln.getChild(1) instanceof TranslationOperatorNode) {  // [i,:] - get row
-							Symbol which = programmer.getRowColSymbol("0");
-							out.append( programmer.rewriteSymbol( scope, which ) );
-							programmer.openParenthesis( out );
-							emitChild(out, scope, tln.getChild(0));
+						} else if (tln.getChild(1) instanceof TranslationOperatorNode) {  // [i,:] - get row; [j:k,:] - get slice
+							if (tln.getChild(0).getChildCount() > 0) { // [i:n,:]
+								out.append( programmer.rewriteSymbol( scope, slice ) );
+								programmer.openParenthesis( out );
+								TranslationNode subscript0 = tln.getChild(0);
+								emitChild(out, scope, subscript0.getChild(0));
+								out.append(", "); //->programmer
+								out.append("0");
+								out.append(", "); //->programmer
+								emitChild(out, scope, subscript0.getChild(2));
+								TranslationOperatorNode minus = new TranslationOperatorNode(tln.getParserRuleContext(), null, "-");
+								emitChild(out, scope, minus);
+								emitChild(out, scope, subscript0.getChild(0));								
+								out.append(", "); 	 //->programmer															
+								out.append(array.getName());
+								out.append(".cols() ");	 // TODO from programmer	
+							} else {
+								Symbol which = programmer.getRowColSymbol("0");
+								out.append( programmer.rewriteSymbol( scope, which ) );
+								programmer.openParenthesis( out );
+								emitChild(out, scope, tln.getChild(0));
+							}
 						} else { 
 							/* [i:n,j]   LIST[2]{subscript[3]{expr,:,expr}, expr}
 							 *    -> block(i, j, n, 1)
@@ -550,8 +582,8 @@ public abstract class AbstractCppTarget extends AbstractLanguageTarget {
 								out.append(", "); //->programmer
 								emitChild(out, scope, subscript1.getChild(0));
 								out.append(", "); //->programmer
-								TranslationOperatorNode minus = new TranslationOperatorNode(tln.getParserRuleContext(), tln, "-");
 								emitChild(out, scope, subscript0.getChild(2));
+								TranslationOperatorNode minus = new TranslationOperatorNode(tln.getParserRuleContext(), null, "-");
 								emitChild(out, scope, minus);
 								emitChild(out, scope, subscript0.getChild(0));								
 								out.append(", "); 	 //->programmer							
@@ -577,7 +609,7 @@ public abstract class AbstractCppTarget extends AbstractLanguageTarget {
 								emitChild(out, scope, subscript1.getChild(0));								
 								out.append(", 1,  "); //->programmer
 								emitChild(out, scope, subscript1.getChild(2));
-								TranslationOperatorNode minus = new TranslationOperatorNode(tln.getParserRuleContext(), tln, "-");
+								TranslationOperatorNode minus = new TranslationOperatorNode(tln.getParserRuleContext(), null, "-");
 								emitChild(out, scope, minus);
 								emitChild(out, scope, subscript1.getChild(0));								
 							} else {
@@ -611,7 +643,16 @@ public abstract class AbstractCppTarget extends AbstractLanguageTarget {
 						TranslationNode subscript = tln.getChild(i);
 						if (i != 0)
 							out.append(", "); //->programmer
-						emitChild(out, scope, tln.getChild(i));
+						if (TranslationUnaryNode.isMinusOne(tln.getChild(i))) {
+							out.append(array.getName());
+							if (i == 0) {
+								out.append(".rows()-1"); // TODO from programmer
+							} else {
+								out.append(".cols()-1"); // TODO from programmer								
+							}
+						} else {
+							emitChild(out, scope, tln.getChild(i));
+						}
 					}
 					if (isListAccess)
 						programmer.closeBracket(out);

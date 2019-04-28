@@ -24,7 +24,7 @@
 namespace polynomialfiltering {
     namespace components {
 
-        ///// @class CoreEmp0
+        ///// @class /polynomialfiltering/components/Emp/::CoreEmp0 : <CLASS>; supers(ICore,)
         /// @brief     Class for the 0th order expanding memory polynomial filter.
         /// 
         class CoreEmp0 : public ICore {
@@ -53,14 +53,14 @@ namespace polynomialfiltering {
             protected:
                 int order;
                 double tau;
-                double _getFirstVRF(const int n, const double tau);
-                double _getLastVRF(const int n, const double tau);
-                RealMatrix _getDiagonalVRF(const int n, const double tau);
-                RealMatrix _getVRF(const int n, const double tau);
-        }; // class CoreEmp0 
+                double _getFirstVRF(const double n, const double tau);
+                double _getLastVRF(const double n, const double tau);
+                RealMatrix _getDiagonalVRF(const double n, const double tau);
+                RealMatrix _getVRF(const double n, const double tau);
+        }; // class /polynomialfiltering/components/Emp/::CoreEmp0 : <CLASS>; supers(ICore,) 
 
 
-        ///// @class CoreEmp1
+        ///// @class /polynomialfiltering/components/Emp/::CoreEmp1 : <CLASS>; supers(ICore,)
         /// @brief     Class for the 1st order expanding memory polynomial filter.
         /// 
         class CoreEmp1 : public ICore {
@@ -89,14 +89,14 @@ namespace polynomialfiltering {
             protected:
                 int order;
                 double tau;
-                double _getFirstVRF(const int n, const double tau);
-                double _getLastVRF(const int n, const double tau);
-                RealMatrix _getDiagonalVRF(const int n, const double tau);
-                RealMatrix _getVRF(const int n, const double tau);
-        }; // class CoreEmp1 
+                double _getFirstVRF(const double n, const double tau);
+                double _getLastVRF(const double n, const double tau);
+                RealMatrix _getDiagonalVRF(const double n, const double tau);
+                RealMatrix _getVRF(const double n, const double tau);
+        }; // class /polynomialfiltering/components/Emp/::CoreEmp1 : <CLASS>; supers(ICore,) 
 
 
-        ///// @class CoreEmp2
+        ///// @class /polynomialfiltering/components/Emp/::CoreEmp2 : <CLASS>; supers(ICore,)
         /// @brief     Class for the 2nd order expanding memory polynomial filter.
         /// 
         class CoreEmp2 : public ICore {
@@ -125,14 +125,14 @@ namespace polynomialfiltering {
             protected:
                 int order;
                 double tau;
-                double _getFirstVRF(const int n, const double tau);
-                double _getLastVRF(const int n, const double tau);
-                RealMatrix _getDiagonalVRF(const int n, const double tau);
-                RealMatrix _getVRF(const int n, const double tau);
-        }; // class CoreEmp2 
+                double _getFirstVRF(const double n, const double tau);
+                double _getLastVRF(const double n, const double tau);
+                RealMatrix _getDiagonalVRF(const double n, const double tau);
+                RealMatrix _getVRF(const double n, const double tau);
+        }; // class /polynomialfiltering/components/Emp/::CoreEmp2 : <CLASS>; supers(ICore,) 
 
 
-        ///// @class CoreEmp3
+        ///// @class /polynomialfiltering/components/Emp/::CoreEmp3 : <CLASS>; supers(ICore,)
         /// @brief     Class for the 3rd order expanding memory polynomial filter.
         /// 
         class CoreEmp3 : public ICore {
@@ -161,14 +161,14 @@ namespace polynomialfiltering {
             protected:
                 int order;
                 double tau;
-                double _getFirstVRF(const int n, const double tau);
-                double _getLastVRF(const int n, const double tau);
-                RealMatrix _getDiagonalVRF(const int n, const double tau);
-                RealMatrix _getVRF(const int n, const double tau);
-        }; // class CoreEmp3 
+                double _getFirstVRF(const double n, const double tau);
+                double _getLastVRF(const double n, const double tau);
+                RealMatrix _getDiagonalVRF(const double n, const double tau);
+                RealMatrix _getVRF(const double n, const double tau);
+        }; // class /polynomialfiltering/components/Emp/::CoreEmp3 : <CLASS>; supers(ICore,) 
 
 
-        ///// @class CoreEmp4
+        ///// @class /polynomialfiltering/components/Emp/::CoreEmp4 : <CLASS>; supers(ICore,)
         /// @brief     Class for the 4th order expanding memory polynomial filter.
         /// 
         class CoreEmp4 : public ICore {
@@ -197,14 +197,14 @@ namespace polynomialfiltering {
             protected:
                 int order;
                 double tau;
-                double _getFirstVRF(const int n, const double tau);
-                double _getLastVRF(const int n, const double tau);
-                RealMatrix _getDiagonalVRF(const int n, const double tau);
-                RealMatrix _getVRF(const int n, const double tau);
-        }; // class CoreEmp4 
+                double _getFirstVRF(const double n, const double tau);
+                double _getLastVRF(const double n, const double tau);
+                RealMatrix _getDiagonalVRF(const double n, const double tau);
+                RealMatrix _getVRF(const double n, const double tau);
+        }; // class /polynomialfiltering/components/Emp/::CoreEmp4 : <CLASS>; supers(ICore,) 
 
 
-        ///// @class CoreEmp5
+        ///// @class /polynomialfiltering/components/Emp/::CoreEmp5 : <CLASS>; supers(ICore,)
         /// @brief     Class for the 5th order expanding memory polynomial filter.
         /// 
         class CoreEmp5 : public ICore {
@@ -233,14 +233,14 @@ namespace polynomialfiltering {
             protected:
                 int order;
                 double tau;
-                double _getFirstVRF(const int n, const double tau);
-                double _getLastVRF(const int n, const double tau);
-                RealMatrix _getDiagonalVRF(const int n, const double tau);
-                RealMatrix _getVRF(const int n, const double tau);
-        }; // class CoreEmp5 
+                double _getFirstVRF(const double n, const double tau);
+                double _getLastVRF(const double n, const double tau);
+                RealMatrix _getDiagonalVRF(const double n, const double tau);
+                RealMatrix _getVRF(const double n, const double tau);
+        }; // class /polynomialfiltering/components/Emp/::CoreEmp5 : <CLASS>; supers(ICore,) 
 
         double nSwitch(const int order, const double theta);
-        if(order==0):         return0;  elif(order==1):         returnmax(order,exp(-0.7469*log(tau)+0.3752));  elif(order==2):         returnmax(order,exp(-0.8363*log(tau)+1.1127));  elif(order==3):         returnmax(order,exp(-0.8753*log(tau)+1.5427));  elif(order==4):         returnmax(order,exp(-0.897*log(tau)+1.8462));  else:         returnmax(order,exp(-0.9108*log(tau)+2.0805)); nUnitLastVRF(const int order, const double tau);
+        int nUnitLastVRF(const int order, const double tau);
 
         ///// @brief     Factory for expanding memory polynomial filters
         /// 

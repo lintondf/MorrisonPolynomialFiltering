@@ -20,6 +20,8 @@ using namespace polynomialfiltering;
 
 void assert_almost_equal(RealMatrix& A, RealMatrix& B);
 
+void assert_almost_equal(RealVector& A, RealVector& B);
+
 void assert_almost_equal(RealMatrix& A, double B);
 
 void assert_almost_equal(double B, RealMatrix& A);

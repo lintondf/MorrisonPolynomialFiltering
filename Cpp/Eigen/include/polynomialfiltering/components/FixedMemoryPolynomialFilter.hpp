@@ -23,7 +23,7 @@
 namespace polynomialfiltering {
     namespace components {
 
-        ///// @class FixedMemoryFilter
+        ///// @class /polynomialfiltering/components/FixedMemoryPolynomialFilter/::FixedMemoryFilter : <CLASS>; supers(AbstractFilterWithCovariance,)
         /// @brief Equally-weighted, fixed memory size, irregularly spaced data filter
         /// 
         /// Same units between state and observations
@@ -51,7 +51,7 @@ namespace polynomialfiltering {
                 RealVector tRing; ///<  ring buffer holding times of observations
                 RealVector yRing; ///<  ring buffer holding values of observations
                 RealMatrix _getTn(const RealVector& dt);
-        }; // class FixedMemoryFilter 
+        }; // class /polynomialfiltering/components/FixedMemoryPolynomialFilter/::FixedMemoryFilter : <CLASS>; supers(AbstractFilterWithCovariance,) 
 
     }; // namespace components
 }; // namespace polynomialfiltering

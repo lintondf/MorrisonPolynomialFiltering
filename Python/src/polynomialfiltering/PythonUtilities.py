@@ -48,6 +48,18 @@ def testcase(funcobj):
     '''
     return funcobj;
 
+def testclass(funcobj):
+    '''
+    Classes marked @testclass are transpiled into the test template when in test generation mode
+    '''
+    return funcobj;
+
+def testclassmethod(funcobj):
+    '''
+    Classes methods marked @testclassmethod are transpiled into the test template when in test generation mode
+    '''
+    return funcobj;
+
 
 def assert_not_empty(list : List[str ]) -> None:
     assert( len(list) > 0);

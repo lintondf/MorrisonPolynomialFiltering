@@ -31,16 +31,18 @@ from polynomialfiltering.components.RecursivePolynomialFilter import RecursivePo
 from polynomialfiltering.components.ICore import ICore
 from polynomialfiltering.components.Emp import makeEmp, makeEmpCore, nUnitLastVRF
 
-from polynomialfiltering.PythonUtilities import ignore, testcase
+from polynomialfiltering.PythonUtilities import ignore, testcase, testclass, testclassmethod
 from polynomialfiltering.PythonUtilities import assert_not_empty
 
-
+@testclass
 class RecursivePolynomialFilterMock(RecursivePolynomialFilter):
-    
+     
+    @testclassmethod
     def __init__(self, order : int, tau : float, core : ICore):
         super().__init__(order, tau, core)
-        
-    def setN(self, n : int) -> int:
+         
+    @testclassmethod
+    def setN(self, n : int) -> None:
         self.n = n;
 
 
@@ -301,8 +303,19 @@ class EMP_test(unittest.TestCase):
     def test1CheckVRF(self) -> None:
         '''@testData : TestData'''
         '''@matches : List[str]'''
-        '''@i : int'''
-        print("test1CheckVRF")
+        '''@order : int'''
+        '''@setup : array'''
+        '''@N : int'''
+        '''@taus : array'''
+        '''@expected : array'''
+        '''@offset : int'''
+        '''@itau : int'''
+        '''@tau : float'''
+        '''@core : ICore'''
+        '''@f : RecursivePolynomialFilterMock'''
+        '''@iN : int'''
+        '''@V : array'''
+        '''@E : array'''
         testData = TestData('testEMP.nc')
         matches = testData.getMatchingGroups('VRF_')
         assert_not_empty(matches)
@@ -317,9 +330,10 @@ class EMP_test(unittest.TestCase):
                 core = makeEmpCore(order, tau)
                 f = RecursivePolynomialFilterMock( order, tau, core )
                 for iN in range(order+1, N) :
-                    f.setN(iN)
+                    f.setN(iN+0)
                     V = f.getVRF();
-                    assert_almost_equal(V, expected[offset:offset+order+1,:])
+                    E = expected[offset:offset+order+1,:]
+                    assert_almost_equal(V, E)
                     offset += order+1
                     assert_almost_equal(V[0,0], f.getFirstVRF())
                     assert_almost_equal(V[-1,-1], f.getLastVRF())
@@ -329,8 +343,21 @@ class EMP_test(unittest.TestCase):
     def test2CheckStates(self) -> None:
         '''@testData : TestData'''
         '''@matches : List[str]'''
+        '''@order : int'''
+        '''@setup : array'''
+        '''@taus : array'''
+        '''@expected : array'''
+        '''@actual : array'''
+        '''@times : array'''
+        '''@observations : array'''
+        '''@Zstar : array'''
+        '''@diff : array'''
+        '''@tau : float'''
+        '''@core : ICore'''
+        '''@f : RecursivePolynomialFilter'''
         '''@i : int'''
-        print("test2CheckStates")
+        '''@j : int'''
+        '''@e : float'''
         testData = TestData('testEMP.nc')
         matches = testData.getMatchingGroups('States')
         assert_not_empty(matches)
@@ -340,19 +367,17 @@ class EMP_test(unittest.TestCase):
         for i in range(0, len(matches)) :
             order = int(setup[i,0])
             tau = setup[i,1]
-            print(matches[i], order, tau)
             times = testData.getGroupVariable(matches[i], 'times')
             observations = testData.getGroupVariable(matches[i], 'observations')
             expected = testData.getGroupVariable(matches[i], 'expected')
-            actual = zeros(expected.shape)            
+            actual = zeros([expected.shape[0], expected.shape[1]])            
             f = makeEmp(order, tau);
             f.start(0.0, expected[0,:])
             for j in range(0,times.shape[0]) :
-                Zstar = f.predict(times[j][0])
+                Zstar = f.predict(times[j,0])
                 e = observations[j] - Zstar[0]
-                f.update(times[j][0], Zstar, e)
+                f.update(times[j,0], Zstar, e)
                 actual[j,:] = f.getState();
-            diff = actual-expected
             assert_almost_equal(actual, expected)
         
     def test9CrossSectionChi2(self):

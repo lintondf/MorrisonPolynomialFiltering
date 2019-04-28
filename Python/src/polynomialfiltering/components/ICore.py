@@ -76,7 +76,7 @@ class ICore(ABC):
         pass
     
     @abstractmethod # pragma: no cover
-    def getDiagonalVRF(self, n : int) -> vector:
+    def getDiagonalVRF(self, n : int) -> array:
         """
         Get the variance reduction matrix diagonal vector for the 'order'th derivative
         

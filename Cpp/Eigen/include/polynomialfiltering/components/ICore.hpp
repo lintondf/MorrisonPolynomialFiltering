@@ -23,7 +23,7 @@ namespace polynomialfiltering {
     namespace components {
         class ICore {
             public:
-                ICore();
+                ICore() {};
 
                 ///// @brief Get the innovation scale vector
                 /// 
@@ -71,7 +71,7 @@ namespace polynomialfiltering {
                 ///  @return  'order'th derivative input to output variance ratio
                 /// 
                 virtual RealVector getDiagonalVRF(const int n) = 0;
-        }; // class ICore 
+        }; // class /polynomialfiltering/components/::ICore : <CLASS>; supers(ABC,) 
 
     }; // namespace components
 }; // namespace polynomialfiltering

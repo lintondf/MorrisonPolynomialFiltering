@@ -18,7 +18,7 @@ public class CppTestTarget extends AbstractCppTarget {
 
 	boolean inTest = false;
 	String moduleName = null;
-	ArrayList<String> moduleTests = null;
+	ArrayList<Scope> moduleTests = null;
 
 	@Override
 	public void startModule(Scope scope, boolean headerOnly, boolean isTest) {
@@ -103,7 +103,6 @@ public class CppTestTarget extends AbstractCppTarget {
 		if (! inTest) {
 			return;
 		}
-		String qualifier = currentScope.getParent().toString().substring(1).replace("/", "::");
 		while (! namespaceStack.isEmpty() ) {
 			String close = namespaceStack.pop();
 			hppIndent.append( close );
@@ -116,10 +115,11 @@ public class CppTestTarget extends AbstractCppTarget {
 		Indent docIndent = new Indent();
 		docIndent.append(String.format("TEST_CASE(\"%s\") {\n", moduleName ) );
 		docIndent.in();
-		for (String test : moduleTests) {
-			docIndent.writeln( String.format("SUBCASE(\"%s\") {", test));
+		for (Scope test : moduleTests) {
+			String qualifier = test.getParent().toString().substring(1).replace("/", "::");
+			docIndent.writeln( String.format("SUBCASE(\"%s\") {", test.getLast()));
 			docIndent.in();
-			docIndent.writeln( String.format("%s%s();", qualifier, test  ) );
+			docIndent.writeln( String.format("%s%s();", qualifier, test.getLast()  ) );
 			docIndent.out();
 			docIndent.writeln("}");
 		}
@@ -144,7 +144,10 @@ public class CppTestTarget extends AbstractCppTarget {
 		if (inTest) {
 			currentScope = scope;
 			String currentFunction = scope.getLast();
-			moduleTests.add(currentFunction);
+			Symbol cls = Transpiler.instance().lookupClass(scope.getParent().getLast());
+			if (cls == null || !cls.hasDecorator("@testclass")) {
+				moduleTests.add(scope);
+			}
 		}
 		super.startMethod(scope);
 	}

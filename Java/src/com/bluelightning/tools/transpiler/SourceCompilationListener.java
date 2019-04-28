@@ -191,6 +191,14 @@ class SourceCompilationListener extends LcdPythonBaseListener {
 		public void enterClassdef(LcdPythonParser.ClassdefContext ctx) {
 			scope = this.transpiler.scopeMap.get(ctx.getPayload());
 //			System.out.println("class > " + scope);
+			Symbol cls = transpiler.lookupClass(scope.getLast());
+			if (this.isTest) {
+				if (cls != null && (cls.hasDecorator("@testclass"))) {
+					transpiler.dispatcher.setIgnoring(false);
+				} else {
+					transpiler.dispatcher.setIgnoring(true);
+				}
+			}
 			transpiler.dispatcher.startClass(scope);
 		}
 		
@@ -199,6 +207,7 @@ class SourceCompilationListener extends LcdPythonBaseListener {
 			scope = scope.getParent();
 //			System.out.println("class < " + scope);
 			transpiler.dispatcher.finishClass(scope);
+			transpiler.dispatcher.setIgnoring(false);
 		}
 		
 		@Override
@@ -208,7 +217,11 @@ class SourceCompilationListener extends LcdPythonBaseListener {
 			Symbol func = transpiler.lookup(scope.getParent(), scope.getLast());
 			if (func != null) {
 				if (this.isTest) {
-					transpiler.dispatcher.setIgnoring( ! func.hasDecorator("@testcase") );
+					if (func.hasDecorator("@testcase") || func.hasDecorator("@testclassmethod")) {
+						transpiler.dispatcher.setIgnoring(false);
+					} else {
+						transpiler.dispatcher.setIgnoring(true);
+					}
 				} else if (func.hasDecorator("@ignore")) {
 					transpiler.dispatcher.setIgnoring(true);
 				}
