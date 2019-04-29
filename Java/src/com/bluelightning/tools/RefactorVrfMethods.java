@@ -122,7 +122,10 @@ public class RefactorVrfMethods {
 					continue;
 				Matcher match = element.matcher(line);
 				if (match.find()) {
-					line = floatConstants( line, 1 + line.indexOf('='));
+					int iStart = 1 + line.indexOf('=');
+					if (! line.substring(iStart).startsWith("V[")) {
+						line = floatConstants( line, iStart);
+					}
 					System.out.println(line);
 				} else if (line.trim().startsWith("return")) {
 					int iStart = line.indexOf("return ");

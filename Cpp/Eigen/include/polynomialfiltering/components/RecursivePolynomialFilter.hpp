@@ -204,7 +204,7 @@ namespace polynomialfiltering {
                 /// 
                 /// 
                 RealVector _denormalizeState(const RealVector& Z);
-        }; // class /polynomialfiltering/components/::RecursivePolynomialFilter : <CLASS>; supers(AbstractFilter,) 
+        }; // class RecursivePolynomialFilter 
 
     }; // namespace components
 }; // namespace polynomialfiltering

@@ -4,7 +4,6 @@ Created on Apr 19, 2019
 @author: NOOK
 '''
 
-#TODO capture cross section of noise; does it explain variance in variance
 import unittest
 from typing import List;
 
@@ -16,7 +15,7 @@ from numpy import arange, array2string, cov, log, var, zeros, trace, mean, std, 
 from numpy import sqrt
 from numpy.linalg import inv
 from numpy.random import randn, seed, get_state
-from numpy.testing import assert_almost_equal
+from numpy.testing import assert_allclose
 from scipy.stats import kstest, chi2, lognorm, norm, anderson
 
 from runstats import Statistics
@@ -214,7 +213,7 @@ class EMP_test(unittest.TestCase):
             for k1 in range(0,order+1) :
                 for k2 in range(0,order+1) :
                     actual = stats[k1][k2].mean()+stats[k1][k2].stddev();
-                    assert_almost_equal(actual, expected[order][k1][k2], decimal=4)
+                    assert_allclose(actual, expected[order][k1][k2], decimal=4)
         seed()
     
     def generateVRF(self, cdf : Dataset) -> None:
@@ -333,11 +332,11 @@ class EMP_test(unittest.TestCase):
                     f.setN(iN+0)
                     V = f.getVRF();
                     E = expected[offset:offset+order+1,:]
-                    assert_almost_equal(V, E)
+                    assert_allclose(V, E)
                     offset += order+1
-                    assert_almost_equal(V[0,0], f.getFirstVRF())
-                    assert_almost_equal(V[-1,-1], f.getLastVRF())
-                    assert_almost_equal(diag(V), diag(f.getDiagonalVRF()))
+                    assert_allclose(V[0,0], f.getFirstVRF())
+                    assert_allclose(V[-1,-1], f.getLastVRF())
+                    assert_allclose(diag(V), diag(f.getDiagonalVRF()))
                 
     @testcase
     def test2CheckStates(self) -> None:
@@ -378,7 +377,8 @@ class EMP_test(unittest.TestCase):
                 e = observations[j] - Zstar[0]
                 f.update(times[j,0], Zstar, e)
                 actual[j,:] = f.getState();
-            assert_almost_equal(actual, expected)
+#                 assert_allclose(actual[j,:], expected[j,:])
+            assert_allclose(actual, expected)
         
     def test9CrossSectionChi2(self):
         print("test9CrossSectionChi2")

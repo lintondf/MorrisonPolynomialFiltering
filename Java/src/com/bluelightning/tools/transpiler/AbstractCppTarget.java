@@ -187,7 +187,7 @@ public abstract class AbstractCppTarget extends AbstractLanguageTarget {
 		}
 		inEnum = false;
 		where.out();
-		where.writeln( String.format("}; // class %s \n", currentClass));
+		where.writeln( String.format("}; // class %s \n", currentClassName));
 		if (where != cppIndent) {
 			cppIndent.out();
 		}
@@ -336,7 +336,7 @@ public abstract class AbstractCppTarget extends AbstractLanguageTarget {
 					symbol = rename;
 				}
 				// special handling for array initialization
-				if (symbol.getName().equals("array")) { // TODO this is Eigen specific
+				/*if (symbol.getName().equals("array")) { // TODO this is Eigen specific
 					//array(...) -> Map<RowVectorXd>(new double[#] { ... }, #);
 					//System.out.println( child.getTop().traverse(1, child ) );
 					Indent gather = new Indent();
@@ -353,7 +353,7 @@ public abstract class AbstractCppTarget extends AbstractLanguageTarget {
 					int commas = values.length() - values.replace(",", "").length();
 					out.append(String.format("Map<RowVectorXd>( new double[%d] {%s}, %d)", commas+1, values, commas+1)); //->programmer
 					return 2;
-				} else if (symbol.getName().equals("len")) { //TODO generalize
+				} else*/ if (symbol.getName().equals("len")) { //TODO generalize
 					Indent gather = new Indent();
 					while (child.getChildCount() == 0) {
 						child = child.getRightSibling();
@@ -457,8 +457,8 @@ public abstract class AbstractCppTarget extends AbstractLanguageTarget {
 			}
 		} else if (child instanceof TranslationListNode) {
 			TranslationListNode tln = (TranslationListNode) child;
-			if (scope.toString().contains("EMP_test"+"") && tln.getParserRuleContext().getStart().getLine() == 339)
-				System.out.println(tln.getTop().traverse(1, tln)); ////@@
+//			if (scope.toString().contains("EMP_test"+"") && tln.getParserRuleContext().getStart().getLine() == 339)
+//				System.out.println(tln.getTop().traverse(1, tln)); ////@@
 			if (tln.getListOpen().equals("(") && tln.getChildCount() == 0) {
 				// may be ([...]) which compiles to LIST(:0, LIST[{LIST[...}
 				TranslationNode next = tln.getRightSibling();
@@ -752,6 +752,46 @@ public abstract class AbstractCppTarget extends AbstractLanguageTarget {
 			cppIndent.append( String.format("std::make_shared<%s>", className));
 		}
 	}
+	
+	protected boolean handleConstantArrayAssignment( Indent out, Scope scope, TranslationNode root ) {
+		if (root.getChildCount() == 3) {
+			if (root.getChild(0) instanceof TranslationSymbolNode &&
+				root.getChild(1) instanceof TranslationOperatorNode &&
+				root.getChild(2) instanceof TranslationSubexpressionNode) {
+				TranslationSymbolNode target = (TranslationSymbolNode) root.getChild(0);
+				TranslationOperatorNode ton = (TranslationOperatorNode) root.getChild(1);
+				if (ton.getOperator().equals("=") && root.getChild(2).getChildCount() > 1) {
+					TranslationNode node = root.getChild(2).getChild(0);
+					if (node instanceof TranslationSymbolNode) {
+						TranslationSymbolNode tsn = (TranslationSymbolNode) node;
+						if (tsn.getSymbol().getName().equals("array")) { // TODO this is pure Eigen
+							//array(...) -> Map<RowVectorXd>(new double[#] { ... }, #);
+							//System.out.println( child.getTop().traverse(1, child ) );
+							Indent gather = new Indent();
+							while (node.getChildCount() == 0) {
+								node = node.getRightSibling();
+							}
+							programmer.forceFloatConstants(true);
+							traverseEmitter( gather, scope, node, 0 );
+							programmer.forceFloatConstants(false);
+							
+							String values = gather.out.toString(); //.replace("(","{").replace(")","}");
+
+							values = values.substring(1, values.length()-1 );
+							//int commas = values.length() - values.replace(",", "").length();
+							//out.append(String.format("Map<RowVectorXd>( new double[%d] {%s}, %d)", commas+1, values, commas+1)); //->programmer
+							out.append(target.getSymbol().getName());
+							out.append(" << ");
+							out.append(values);
+							return true;
+						}
+					}
+				}
+			}
+			return false;
+		}
+		return false;
+	}
 
 	@Override
 	public void emitExpressionStatement(Scope scope, TranslationNode root) {
@@ -762,7 +802,9 @@ public abstract class AbstractCppTarget extends AbstractLanguageTarget {
 		} else {
 			out.write( "" );
 		}
-		emitSubExpression( out, scope, root );
+		if (! handleConstantArrayAssignment(out, scope, root)) {
+			emitSubExpression( out, scope, root );
+		}
 		if (inEnum) {
 			out.append(",");	 //->programmer		
 		} else {
@@ -786,6 +828,16 @@ public abstract class AbstractCppTarget extends AbstractLanguageTarget {
 //			cppType = String.format("std::shared_ptr<%s>", cppType );
 //		}
 		String declaration = String.format("%s %s", cppType, symbol.getName() );
+		Integer[] dims = symbol.getDimensions();
+		if (dims != null) {
+			declaration += "(";
+			declaration += dims[0].toString();
+			if (dims.length > 1) {
+				declaration += ", ";
+				declaration += dims[1].toString();
+			}
+			declaration += ")";
+		}
 		String endLine = ";";
 		if (comment != null) {
 			endLine = String.format("; ///< %s", comment);

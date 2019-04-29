@@ -36,6 +36,7 @@ class FixedMemoryFilter(AbstractFilterWithCovariance) :
         super().__init__(order);  # TODO name
         if (order < 0 or order > 5) :
             raise ValueError("Polynomial orders < 1 or > 5 are not supported") # TODO exceptions
+        self.order = order
         self.L = memorySize;
         self.n = 0
         self.n0 = memorySize;

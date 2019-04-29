@@ -64,6 +64,7 @@ import freemarker.template.TemplateExceptionHandler;
  * -- Check for changes before writing sources; done for sources, add for tests
  * -- handle superclass init for multiple constructors
  * -- auto define missing variables as None?
+ * -- direct return of vector of zeros fails
  */
 /**
  * @author NOOK
@@ -107,10 +108,12 @@ public class Transpiler {
 	static Target[] targets = {
 //		new Target(Paths.get(""), "TranspilerTest"),
 		new Target(Paths.get("polynomialfiltering"), "Main"),
-//		new Target(Paths.get("polynomialfiltering/components"), "FixedMemoryPolynomialFilter"),
+		new Target(Paths.get("polynomialfiltering/components"), "FixedMemoryPolynomialFilter"),
 		new Target(Paths.get("polynomialfiltering/components"), "ICore", true),
 		new Target(Paths.get("polynomialfiltering/components"), "RecursivePolynomialFilter"),
 		new Target(Paths.get("polynomialfiltering/components"), "Emp"),
+		
+		new TestTarget(Paths.get("components"), "RecursivePolynomialFilter_test"),
 		new TestTarget(Paths.get("components"), "EMP_test"),
 //		new Target(Paths.get("polynomialfiltering/components"), "AbstractRecursiveFilter"),
 //		new Target(Paths.get("polynomialfiltering/components"), "ExpandingMemoryPolynomialFilter"),
@@ -575,6 +578,7 @@ public class Transpiler {
 		symbolTable.add( importScope, "ftestPpf", "float");
 		symbolTable.add( importScope, "True", "bool");
 		symbolTable.add( importScope, "False", "bool");
+		symbolTable.add( importScope, "assert_allclose", "None");
 		symbolTable.add( importScope, "assert_almost_equal", "None");
 		symbolTable.add( importScope, "assert_not_empty", "None");
 		

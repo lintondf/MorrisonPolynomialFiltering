@@ -51,7 +51,7 @@ namespace polynomialfiltering {
                 RealVector tRing; ///<  ring buffer holding times of observations
                 RealVector yRing; ///<  ring buffer holding values of observations
                 RealMatrix _getTn(const RealVector& dt);
-        }; // class /polynomialfiltering/components/FixedMemoryPolynomialFilter/::FixedMemoryFilter : <CLASS>; supers(AbstractFilterWithCovariance,) 
+        }; // class FixedMemoryFilter 
 
     }; // namespace components
 }; // namespace polynomialfiltering

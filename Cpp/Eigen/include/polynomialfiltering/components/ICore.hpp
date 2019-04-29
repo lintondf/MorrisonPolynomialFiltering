@@ -70,8 +70,8 @@ namespace polynomialfiltering {
                 /// 
                 ///  @return  'order'th derivative input to output variance ratio
                 /// 
-                virtual RealVector getDiagonalVRF(const int n) = 0;
-        }; // class /polynomialfiltering/components/::ICore : <CLASS>; supers(ABC,) 
+                virtual RealMatrix getDiagonalVRF(const int n) = 0;
+        }; // class ICore 
 
     }; // namespace components
 }; // namespace polynomialfiltering

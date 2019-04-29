@@ -36,7 +36,7 @@ namespace polynomialfiltering {
         RUNNING = 2,
         COASTING = 3,
         RESETING = 4,
-    }; // class /polynomialfiltering/Main/::FilterStatus : <ENUM>; supers(Enum,) 
+    }; // class FilterStatus 
 
 
     ///// @class /polynomialfiltering/Main/::AbstractFilter : <CLASS>; supers(ABC,)
@@ -141,7 +141,7 @@ namespace polynomialfiltering {
             int order; ///<  polynomial order
             std::string name; ///<  name of this filter
             FilterStatus status; ///<  current status
-    }; // class /polynomialfiltering/Main/::AbstractFilter : <CLASS>; supers(ABC,) 
+    }; // class AbstractFilter 
 
 
     ///// @class /polynomialfiltering/Main/::AbstractFilterWithCovariance : <CLASS>; supers(AbstractFilter,)
@@ -200,7 +200,7 @@ namespace polynomialfiltering {
             ///  @return  'order'th derivative input to output variance ratio
             /// 
             virtual double getLastVariance();
-    }; // class /polynomialfiltering/Main/::AbstractFilterWithCovariance : <CLASS>; supers(AbstractFilter,) 
+    }; // class AbstractFilterWithCovariance 
 
 }; // namespace polynomialfiltering
 

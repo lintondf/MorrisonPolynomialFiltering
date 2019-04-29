@@ -44,7 +44,7 @@ public:
 		filePath += fileName;
 		int retval, numgrps;
 		retval = nc_open(filePath.c_str(), NC_NOWRITE, &ncid);
-		std::cout << "TestData: " << filePath << " = " << retval << std::endl;
+		std::cout << "TestData: " << fileName << " = " << retval << std::endl;
 		if (retval == 0) {
 			nc_inq_grps(ncid, &numgrps, NULL);
 			int* grp_ncids = new int[numgrps];
@@ -83,7 +83,10 @@ public:
 			if (groupNames.at(i) == groupName) {
 				int gid = groupIds.at(i);
 				int vid;
-				nc_inq_varid(gid, variableName.c_str(), &vid);
+				int status = nc_inq_varid(gid, variableName.c_str(), &vid);
+				if (status != NC_NOERR) {
+					throw ValueError("Missing test variable:" + groupName + " / " + variableName);
+				}
 
 				//int  rh_id;
 				nc_type rh_type;
@@ -104,7 +107,9 @@ public:
 				double* data = new double[numel];
 				nc_get_vara_double(gid, vid, start, count, data);
 				Map<RealMatrix>  m(data, count[1], count[0]);
-				return m.transpose();
+				RealMatrix out = m.transpose();
+				delete data;
+				return out;
 			}
 		}
 		return RealMatrix::Zero(0, 0);

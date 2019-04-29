@@ -19,33 +19,49 @@ from TestUtilities import *
 from TestSuite import testDataPath;
 from polynomialfiltering.PythonUtilities import ignore, testcase
 from TestData import TestData
+
+from polynomialfiltering.PythonUtilities import ignore, testcase, testclass, testclassmethod
 from polynomialfiltering.PythonUtilities import assert_not_empty
 
 
 from polynomialfiltering.components.RecursivePolynomialFilter import RecursivePolynomialFilter, ICore
 
+@testclass
 class PurePredictCore(ICore): 
     
+    '''@order : int'''
+    
+    @testclassmethod
     def __init__(self, order : int):
         self.order = order;
         pass
     
+    @testclassmethod
     def getGamma(self, t : float, dtau : float) -> vector:
-        return zeros([self.order+1])
+        '''@g : vector'''
+        g = zeros([self.order+1])
+        return g
     
-    def getVRF(self) -> array:
+    @testclassmethod
+    def getVRF(self, n : int) -> array:
         return zeros([self.order+1, self.order+1])
     
-    def getFirstVariance(self)->float:
+    @testclassmethod
+    def getFirstVRF(self, n : int) -> float:
         return 0.0;
 
-    def getLastVariance(self)->float:
+    @testclassmethod
+    def getLastVRF(self, n : int) -> float:
         return 0.0;
     
+    @testclassmethod
+    def getDiagonalVRF(self, n : int) -> array:
+        return zeros([self.order+1, self.order+1])
+       
        
 class RecursivePolynomialFilter_test(unittest.TestCase):
 
-    Y0 = array([1e4, -5e3, +1e3, -5e2, +1e2, -5e1]);
+#     Y0 = array([1e4, -5e3, +1e3, -5e2, +1e2, -5e1]);
 
     def setUp(self):
         pass
@@ -98,9 +114,22 @@ class RecursivePolynomialFilter_test(unittest.TestCase):
     def test1PurePredict(self) -> None: 
         '''@testData : TestData'''
         '''@matches : List[str]'''
-        '''@i : int'''
+        '''@iMatch : int'''
+        '''@N : int'''
+        '''@order : int'''
+        '''@tau : float'''
         '''@setup : array'''
-        '''@data : array'''
+        '''@times : array'''
+        '''@truth : array'''
+        '''@observations : array'''
+        '''@actual : array'''
+        '''@expected : array'''
+        '''@core : ICore'''
+        '''@f : RecursivePolynomialFilter'''
+        '''@Zstar : vector'''
+        '''@e : float'''
+        '''@V : array'''
+        '''@i : int'''
         
         testData = TestData('testRecursivePolynomialFilter.nc')
         matches = testData.getMatchingGroups('testPurePredict_')

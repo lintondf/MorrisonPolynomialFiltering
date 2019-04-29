@@ -25,12 +25,12 @@ namespace polynomialfiltering {
     namespace components {
 
         ///// @class /polynomialfiltering/components/Emp/::CoreEmp0 : <CLASS>; supers(ICore,)
-        /// @brief     Class for the 0th order expanding memory polynomial filter.
+        /// @brief Class for the 0th order expanding memory polynomial filter.
         /// 
         class CoreEmp0 : public ICore {
             public:
 
-                ///// @brief         Constructor
+                ///// @brief Constructor
                 /// 
                 /// 
                 ///  @param		tau	nominal time step
@@ -48,7 +48,7 @@ namespace polynomialfiltering {
                 RealVector getGamma(const double n, const double dtau);
                 double getFirstVRF(const int n);
                 double getLastVRF(const int n);
-                RealVector getDiagonalVRF(const int n);
+                RealMatrix getDiagonalVRF(const int n);
                 RealMatrix getVRF(const int n);
             protected:
                 int order;
@@ -57,16 +57,16 @@ namespace polynomialfiltering {
                 double _getLastVRF(const double n, const double tau);
                 RealMatrix _getDiagonalVRF(const double n, const double tau);
                 RealMatrix _getVRF(const double n, const double tau);
-        }; // class /polynomialfiltering/components/Emp/::CoreEmp0 : <CLASS>; supers(ICore,) 
+        }; // class CoreEmp0 
 
 
         ///// @class /polynomialfiltering/components/Emp/::CoreEmp1 : <CLASS>; supers(ICore,)
-        /// @brief     Class for the 1st order expanding memory polynomial filter.
+        /// @brief Class for the 1st order expanding memory polynomial filter.
         /// 
         class CoreEmp1 : public ICore {
             public:
 
-                ///// @brief         Constructor
+                ///// @brief Constructor
                 /// 
                 /// 
                 ///  @param		tau	nominal time step
@@ -84,7 +84,7 @@ namespace polynomialfiltering {
                 RealVector getGamma(const double n, const double dtau);
                 double getFirstVRF(const int n);
                 double getLastVRF(const int n);
-                RealVector getDiagonalVRF(const int n);
+                RealMatrix getDiagonalVRF(const int n);
                 RealMatrix getVRF(const int n);
             protected:
                 int order;
@@ -93,16 +93,16 @@ namespace polynomialfiltering {
                 double _getLastVRF(const double n, const double tau);
                 RealMatrix _getDiagonalVRF(const double n, const double tau);
                 RealMatrix _getVRF(const double n, const double tau);
-        }; // class /polynomialfiltering/components/Emp/::CoreEmp1 : <CLASS>; supers(ICore,) 
+        }; // class CoreEmp1 
 
 
         ///// @class /polynomialfiltering/components/Emp/::CoreEmp2 : <CLASS>; supers(ICore,)
-        /// @brief     Class for the 2nd order expanding memory polynomial filter.
+        /// @brief Class for the 2nd order expanding memory polynomial filter.
         /// 
         class CoreEmp2 : public ICore {
             public:
 
-                ///// @brief         Constructor
+                ///// @brief Constructor
                 /// 
                 /// 
                 ///  @param		tau	nominal time step
@@ -120,7 +120,7 @@ namespace polynomialfiltering {
                 RealVector getGamma(const double n, const double dtau);
                 double getFirstVRF(const int n);
                 double getLastVRF(const int n);
-                RealVector getDiagonalVRF(const int n);
+                RealMatrix getDiagonalVRF(const int n);
                 RealMatrix getVRF(const int n);
             protected:
                 int order;
@@ -129,16 +129,16 @@ namespace polynomialfiltering {
                 double _getLastVRF(const double n, const double tau);
                 RealMatrix _getDiagonalVRF(const double n, const double tau);
                 RealMatrix _getVRF(const double n, const double tau);
-        }; // class /polynomialfiltering/components/Emp/::CoreEmp2 : <CLASS>; supers(ICore,) 
+        }; // class CoreEmp2 
 
 
         ///// @class /polynomialfiltering/components/Emp/::CoreEmp3 : <CLASS>; supers(ICore,)
-        /// @brief     Class for the 3rd order expanding memory polynomial filter.
+        /// @brief Class for the 3rd order expanding memory polynomial filter.
         /// 
         class CoreEmp3 : public ICore {
             public:
 
-                ///// @brief         Constructor
+                ///// @brief Constructor
                 /// 
                 /// 
                 ///  @param		tau	nominal time step
@@ -156,7 +156,7 @@ namespace polynomialfiltering {
                 RealVector getGamma(const double n, const double dtau);
                 double getFirstVRF(const int n);
                 double getLastVRF(const int n);
-                RealVector getDiagonalVRF(const int n);
+                RealMatrix getDiagonalVRF(const int n);
                 RealMatrix getVRF(const int n);
             protected:
                 int order;
@@ -165,16 +165,16 @@ namespace polynomialfiltering {
                 double _getLastVRF(const double n, const double tau);
                 RealMatrix _getDiagonalVRF(const double n, const double tau);
                 RealMatrix _getVRF(const double n, const double tau);
-        }; // class /polynomialfiltering/components/Emp/::CoreEmp3 : <CLASS>; supers(ICore,) 
+        }; // class CoreEmp3 
 
 
         ///// @class /polynomialfiltering/components/Emp/::CoreEmp4 : <CLASS>; supers(ICore,)
-        /// @brief     Class for the 4th order expanding memory polynomial filter.
+        /// @brief Class for the 4th order expanding memory polynomial filter.
         /// 
         class CoreEmp4 : public ICore {
             public:
 
-                ///// @brief         Constructor
+                ///// @brief Constructor
                 /// 
                 /// 
                 ///  @param		tau	nominal time step
@@ -192,7 +192,7 @@ namespace polynomialfiltering {
                 RealVector getGamma(const double n, const double dtau);
                 double getFirstVRF(const int n);
                 double getLastVRF(const int n);
-                RealVector getDiagonalVRF(const int n);
+                RealMatrix getDiagonalVRF(const int n);
                 RealMatrix getVRF(const int n);
             protected:
                 int order;
@@ -201,16 +201,16 @@ namespace polynomialfiltering {
                 double _getLastVRF(const double n, const double tau);
                 RealMatrix _getDiagonalVRF(const double n, const double tau);
                 RealMatrix _getVRF(const double n, const double tau);
-        }; // class /polynomialfiltering/components/Emp/::CoreEmp4 : <CLASS>; supers(ICore,) 
+        }; // class CoreEmp4 
 
 
         ///// @class /polynomialfiltering/components/Emp/::CoreEmp5 : <CLASS>; supers(ICore,)
-        /// @brief     Class for the 5th order expanding memory polynomial filter.
+        /// @brief Class for the 5th order expanding memory polynomial filter.
         /// 
         class CoreEmp5 : public ICore {
             public:
 
-                ///// @brief         Constructor
+                ///// @brief Constructor
                 /// 
                 /// 
                 ///  @param		tau	nominal time step
@@ -228,7 +228,7 @@ namespace polynomialfiltering {
                 RealVector getGamma(const double n, const double dtau);
                 double getFirstVRF(const int n);
                 double getLastVRF(const int n);
-                RealVector getDiagonalVRF(const int n);
+                RealMatrix getDiagonalVRF(const int n);
                 RealMatrix getVRF(const int n);
             protected:
                 int order;
@@ -237,18 +237,18 @@ namespace polynomialfiltering {
                 double _getLastVRF(const double n, const double tau);
                 RealMatrix _getDiagonalVRF(const double n, const double tau);
                 RealMatrix _getVRF(const double n, const double tau);
-        }; // class /polynomialfiltering/components/Emp/::CoreEmp5 : <CLASS>; supers(ICore,) 
+        }; // class CoreEmp5 
 
         double nSwitch(const int order, const double theta);
         int nUnitLastVRF(const int order, const double tau);
 
-        ///// @brief     Factory for expanding memory polynomial filters
+        ///// @brief Factory for expanding memory polynomial filters
         /// 
         /// 
         ///  @param		order	integer polynomial orer
         ///  @param		tau	nominal time step
         /// 
-        ///  @return          expanding memory filter object
+        ///  @return  expanding memory filter object
         /// 
         std::shared_ptr<ICore> makeEmpCore(const int order, const double tau);
         std::shared_ptr<RecursivePolynomialFilter> makeEmp(const int order, const double tau);

@@ -39,6 +39,7 @@ public abstract class AbstractProgrammer implements IProgrammer {
 		simpleRemaps.put("chi2Ppf", new Symbol(libraryScope, "chi2Ppf", "float"));
 		simpleRemaps.put("ftestCdf", new Symbol(libraryScope, "ftestCdf", "float"));
 		simpleRemaps.put("ftestPpf", new Symbol(libraryScope, "ftestPpf", "float"));
+		simpleRemaps.put("assert_allclose", new Symbol(libraryScope, "assert_almost_equal", "float"));
 			Map<String, Symbol> libraryNames = new HashMap<>();
 			libraryNames.put("array",  new Symbol(libraryScope, "identity", "array") ); 
 			libraryNames.put("vector", new Symbol(libraryScope, "???vector_eye???", "vector") ); //Eigen

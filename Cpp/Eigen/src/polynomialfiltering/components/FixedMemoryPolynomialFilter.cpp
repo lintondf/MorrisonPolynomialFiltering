@@ -20,6 +20,7 @@ namespace polynomialfiltering {
                 if (order < 0 || order > 5) {
                     throw ValueError("Polynomial orders < 1 or > 5 are not supported");
                 }
+                this->order = order;
                 this->L = memorySize;
                 this->n = 0;
                 this->n0 = memorySize;

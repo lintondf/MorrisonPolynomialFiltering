@@ -50,7 +50,7 @@ class DeclarationsListener extends LcdPythonBaseListener {
 			switch (fields[1]) {
 			case "vector":
 				if (fields.length == 3) {
-					Integer[] dims = new Integer[]{ Integer.parseInt(fields[2]) };
+					Integer[] dims = new Integer[]{ Integer.parseInt(fields[2].trim()) };
 					symbol.setDimensions(dims);
 				} else {
 					transpiler.reportError("Only one dimension allowed on vector: " + fields[0]);
@@ -58,7 +58,7 @@ class DeclarationsListener extends LcdPythonBaseListener {
 				break;
 			case "array":
 				if (fields.length == 4) {
-					Integer[] dims = new Integer[]{ Integer.parseInt(fields[2]), Integer.parseInt(fields[3]) };
+					Integer[] dims = new Integer[]{ Integer.parseInt(fields[2].trim()), Integer.parseInt(fields[3].trim()) };
 					symbol.setDimensions(dims);
 				} else {
 					transpiler.reportError("Two dimensions required on matrix: " + fields[0]);
