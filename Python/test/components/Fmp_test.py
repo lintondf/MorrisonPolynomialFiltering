@@ -89,9 +89,9 @@ class Fmp_test(unittest.TestCase):
                         residuals[j,:] = f.getState() - truth[j,:]
                     C = cov(residuals, rowvar=False)
                     V = R**2 * f.getVRF()
-                    CV = C/V;
+                    CV = sqrt(C/V);
                     print('%8.6f, %d, %6.3f, %6.2f,  %6.3f, %6.3f' % 
-                        (theta, order, tau, R, min(CV.flatten()), max(CV.flatten())))
+                        (theta, order, tau, R, min(CV.flatten())-1, max(CV.flatten())-1))
 #                 print(A2S(C/V))
 
 
