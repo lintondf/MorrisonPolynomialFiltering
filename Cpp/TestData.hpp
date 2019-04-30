@@ -28,8 +28,11 @@ void assert_almost_equal(double B, RealMatrix& A);
 
 void assert_almost_equal(double A, double B);
 
-void assert_not_empty(std::vector< std::string >& list);
+void assert_array_less(MatrixXd& A, MatrixXd& B);
 
+void assert_array_less(double A, double B);
+
+void assert_not_empty(std::vector< std::string >& list);
 
 class TestData {
 public:

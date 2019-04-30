@@ -69,7 +69,7 @@ public class RefactorVrfMethods {
 //		System.out.println("        return V;\n");
 //	}
 	
-	protected String floatConstants( String line, int iStart) {
+	protected static String floatConstants( String line, int iStart) {
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < iStart; i++) {
 			sb.append(line.charAt(i));
@@ -79,10 +79,10 @@ public class RefactorVrfMethods {
 				sb.append(line.charAt(i));
 				if (Character.isAlphabetic(line.charAt(i-1)))
 					continue;
-				if (line.charAt(i-2) == '*' && line.charAt(i-1) == '*')
-					continue;
-				i++;
 				boolean hasPoint = false;
+				if (line.charAt(i-2) == '*' && line.charAt(i-1) == '*')
+					hasPoint = true;
+				i++;
 				while (i < line.length()) {
 					if (Character.isDigit(line.charAt(i))) {
 						sb.append(line.charAt(i));											

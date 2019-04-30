@@ -479,6 +479,22 @@ class CoreEmp5(ICore) :
 
 
 def nSwitch(order : int, theta : float) -> float:
+    """
+    Estimate the sample number when the first VRF diagonal elements of an EMP/FMP pair will match
+    
+    Uses approximate relationships to estimate the switchover point for an EMP/FMP pair when the
+    0th element of the VRF diagonals will match, e.g. approximately equal noise reduction.  The 
+    approximations are more accurate as theta approaches one.
+    
+    Arguments:
+         order - polynomial filter order
+         theta - FMP fading factor
+         
+    Returns:
+        n - estimated crossover sample number
+       
+    """
+    
     if (order == 0) :
         return 2.0/(1.0-theta)
     elif (order == 1.0) :
@@ -496,18 +512,32 @@ def nSwitch(order : int, theta : float) -> float:
 
 
 def nUnitLastVRF( order : int, tau : float ) -> int:
+    """
+    Estimate the sample number when the final VRF diagonal value is one or less
+    
+    Uses curve fits to estimate the sample number when the final VRF diagonal element
+    first approaches zero.  For larger tau values, will return the first value value
+    for this element.
+    
+    Arguments:
+        order - polynomial filter order
+        tau - default time step 
+        
+    Returns:
+        n - estimated sample number
+    """
     if (order == 0) :
-        return 0;
+        return 1+0;
     elif (order == 1.0) :
-        return int(max(order, exp(-0.7469*log(tau) + 0.3752)));
+        return 1+int(max(order, exp(-0.7469*log(tau) + 0.3752)));
     elif (order == 2.0) :
-        return int(max(order, exp(-0.8363*log(tau) + 1.1127)));
+        return 1+int(max(order, exp(-0.8363*log(tau) + 1.1127)));
     elif (order == 3.0) :
-        return int(max(order, exp(-0.8753*log(tau) + 1.5427)));
+        return 1+int(max(order, exp(-0.8753*log(tau) + 1.5427)));
     elif (order == 4.0) :
-        return int(max(order, exp(-0.897*log(tau) + 1.8462))); 
+        return 1+int(max(order, exp(-0.897*log(tau) + 1.8462))); 
     else :
-        return int(max(order, exp(-0.9108*log(tau) + 2.0805))); 
+        return 1+int(max(order, exp(-0.9108*log(tau) + 2.0805))); 
         
 
 

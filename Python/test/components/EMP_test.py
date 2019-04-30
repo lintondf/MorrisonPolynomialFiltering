@@ -11,11 +11,11 @@ from TestSuite import slow
 
 from numpy import array, array as vector
 from numpy import arange, array2string, cov, log, var, zeros, trace, mean, std, transpose,\
-    concatenate, allclose, min, max, nonzero, cumsum, histogram, where, diag
+    concatenate, allclose, min, max, nonzero, cumsum, histogram, where, diag, ones
 from numpy import sqrt
 from numpy.linalg import inv
 from numpy.random import randn, seed, get_state
-from numpy.testing import assert_allclose
+from numpy.testing import assert_allclose, assert_array_less
 from scipy.stats import kstest, chi2, lognorm, norm, anderson
 
 from runstats import Statistics
@@ -379,6 +379,35 @@ class EMP_test(unittest.TestCase):
                 actual[j,:] = f.getState();
 #                 assert_allclose(actual[j,:], expected[j,:])
             assert_allclose(actual, expected)
+            
+    def test9CoreBasic(self) -> None:
+        '''@core : ICore'''
+        '''@corehalf : ICore'''
+        '''@coredouble : ICore'''
+        core = makeEmpCore(3, 1.0)
+        corehalf = makeEmpCore(3, 2.0)
+        coredouble = makeEmpCore(3, 0.5)
+        
+        assert_array_less( core.getVRF(5), core.getVRF(4))
+        assert_allclose( ones([3+1,3+1]), (coredouble.getVRF(5) / core.getVRF(5)) * (corehalf.getVRF(5) / core.getVRF(5)) )
+        assert_allclose( core.getGamma(10.0, 5.0), core.getGamma(10.0, 6.0) )
+
+    @testcase 
+    def test9NUnitLastVRF(self) -> None:
+        '''@core : ICore'''
+        '''@order : int'''
+        '''@tau : float'''
+        '''@itau : int'''
+        '''@taus : array'''
+        '''@n : int'''
+        taus = vector([0.01, 0.1, 1, 10, 100]);
+        for order in range(0,5+1) :
+            for itau in range(0, len(taus)):
+                tau = taus[itau]
+                n = nUnitLastVRF(order, tau)
+                core = makeEmpCore(order, tau)
+                assert( core.getLastVRF(n)< 2.0 )
+
         
     def test9CrossSectionChi2(self):
         print("test9CrossSectionChi2")

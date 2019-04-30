@@ -336,7 +336,8 @@ public abstract class AbstractCppTarget extends AbstractLanguageTarget {
 					symbol = rename;
 				}
 				// special handling for array initialization
-				/*if (symbol.getName().equals("array")) { // TODO this is Eigen specific
+				if (symbol.getName().equals("array")) { // TODO this is Eigen specific
+					//TODO allow "vector([])"
 					//array(...) -> Map<RowVectorXd>(new double[#] { ... }, #);
 					//System.out.println( child.getTop().traverse(1, child ) );
 					Indent gather = new Indent();
@@ -351,9 +352,11 @@ public abstract class AbstractCppTarget extends AbstractLanguageTarget {
 
 					values = values.substring(1, values.length()-1 );
 					int commas = values.length() - values.replace(",", "").length();
-					out.append(String.format("Map<RowVectorXd>( new double[%d] {%s}, %d)", commas+1, values, commas+1)); //->programmer
+					//(RealMatrix3() << x, 1 * x, 2 * x, 4 * x, 5 * x, 6 * x, 7 * x, 8 * x, 9 * x).finished();
+					out.append(String.format("(RealVector%d() << %s).finished()", commas+1, values)); //->programmer
+					//out.append(String.format("Map<RowVectorXd>( new double[%d] {%s}, %d)", commas+1, values, commas+1)); //->programmer
 					return 2;
-				} else*/ if (symbol.getName().equals("len")) { //TODO generalize
+				} else if (symbol.getName().equals("len")) { //TODO generalize
 					Indent gather = new Indent();
 					while (child.getChildCount() == 0) {
 						child = child.getRightSibling();

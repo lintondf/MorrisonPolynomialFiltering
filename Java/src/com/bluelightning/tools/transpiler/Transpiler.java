@@ -112,9 +112,11 @@ public class Transpiler {
 		new Target(Paths.get("polynomialfiltering/components"), "ICore", true),
 		new Target(Paths.get("polynomialfiltering/components"), "RecursivePolynomialFilter"),
 		new Target(Paths.get("polynomialfiltering/components"), "Emp"),
+		new Target(Paths.get("polynomialfiltering/components"), "Fmp"),
 		
 		new TestTarget(Paths.get("components"), "RecursivePolynomialFilter_test"),
 		new TestTarget(Paths.get("components"), "EMP_test"),
+		new TestTarget(Paths.get("components"), "Fmp_test"),
 //		new Target(Paths.get("polynomialfiltering/components"), "AbstractRecursiveFilter"),
 //		new Target(Paths.get("polynomialfiltering/components"), "ExpandingMemoryPolynomialFilter"),
 //		new Target(Paths.get("polynomialfiltering/components"), "FadingMemoryPolynomialFilter"),
@@ -580,6 +582,7 @@ public class Transpiler {
 		symbolTable.add( importScope, "False", "bool");
 		symbolTable.add( importScope, "assert_allclose", "None");
 		symbolTable.add( importScope, "assert_almost_equal", "None");
+		symbolTable.add( importScope, "assert_array_less", "None");
 		symbolTable.add( importScope, "assert_not_empty", "None");
 		
 		valueMap.put( TranslationUnaryNode.staticFieldReference, "::");

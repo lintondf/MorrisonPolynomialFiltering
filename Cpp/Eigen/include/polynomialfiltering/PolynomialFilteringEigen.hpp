@@ -46,6 +46,28 @@ namespace polynomialfiltering {
 
 	typedef VectorXd RealVector;
 	typedef MatrixXd RealMatrix;
+	typedef Matrix<double, 1, 1> RealVector1;
+	typedef Matrix<double, 2, 1> RealVector2;
+	typedef Matrix<double, 3, 1> RealVector3;
+	typedef Matrix<double, 4, 1> RealVector4;
+	typedef Matrix<double, 5, 1> RealVector5;
+	typedef Matrix<double, 6, 1> RealVector6;
+	typedef Matrix<double, 7, 1> RealVector7;
+	typedef Matrix<double, 8, 1> RealVector8;
+	typedef Matrix<double, 9, 1> RealVector9;
+	typedef Matrix<double, 10, 1> RealVector10;
+	typedef Matrix<double, 1, 1> RealMatrix1;
+	typedef Matrix<double, 2, 2> RealMatrix2;
+	typedef Matrix<double, 3, 3> RealMatrix3;
+	typedef Matrix<double, 4, 4> RealMatrix4;
+	typedef Matrix<double, 5, 5> RealMatrix5;
+	typedef Matrix<double, 6, 6> RealMatrix6;
+	typedef Matrix<double, 7, 7> RealMatrix7;
+	typedef Matrix<double, 8, 8> RealMatrix8;
+	typedef Matrix<double, 9, 9> RealMatrix9;
+	typedef Matrix<double, 10, 10> RealMatrix10;
+
+
 	using std::shared_ptr;
 
 	inline int integerCast(Index a) {

@@ -33,6 +33,15 @@ void assert_almost_equal(double A, double B) {
 	CHECK(fabs(A - B) < 1e-12);
 }
 
+
+void assert_array_less(MatrixXd& A, MatrixXd& B) {
+	CHECK( (A.array() < B.array()).all() );
+}
+
+void assert_array_less(double A, double B) {
+	CHECK(A < B);
+}
+
 void assert_not_empty(std::vector< std::string >& list) {
 	CHECK(list.size() > 0);
 }

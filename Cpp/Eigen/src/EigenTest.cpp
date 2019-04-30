@@ -6,11 +6,12 @@
 #include<math.h>
 #include <gsl/gsl_cdf.h>
 
-//#include <polynomialfiltering/PolynomialFilteringEigen.hpp>
+#include <polynomialfiltering/PolynomialFilteringEigen.hpp>
 //#include <polynomialfiltering/Main.hpp>
 //#include <polynomialfiltering/components/FixedMemoryPolynomialFilter.hpp>
 using namespace Eigen;
 //using namespace std;
+using namespace polynomialfiltering;
 
 class Timer
 {
@@ -46,14 +47,63 @@ int main() {
 	double chicdf = 0;
 	double chi = 0;
 	Timer tmr;
-	for (int i = 0; i < 1500000; i++) {
-		x += 1e-6;
-		//chi += gsl_cdf_chisq_Pinv(1 - x, nu);
-		chicdf += gsl_cdf_chisq_P(3.0, nu);
-	}
-	double t = tmr.elapsed();
-	std::cout << t << std::endl;
+	RealMatrix3 three;
+	RealMatrix3 sum;
+	for (int k = 0; k < 5; k++) {
+		for (int i = 0; i < 100000000; i++) {
+			three << x, 1 * x, 2 * x, 4 * x, 5 * x, 6 * x, 7 * x, 8 * x, 9 * x;  // 3.71 s, 3.39, 0.006427, 100xO2 0.6278
 
+			sum += three;
+			x += 1e-6;
+			//chi += gsl_cdf_chisq_Pinv(1 - x, nu);
+			//chicdf += gsl_cdf_chisq_P(3.0, nu);
+		}
+		double t = tmr.elapsed();
+		std::cout << sum << std::endl;
+		std::cout << "A " << t << std::endl;
+		tmr.reset();
+		sum = 0 * sum;
+	}
+	for (int k = 0; k < 5; k++) {
+		for (int i = 0; i < 100000000; i++) {
+			//three << x, 1 * x, 2 * x, 4 * x, 5 * x, 6 * x, 7 * x, 8 * x, 9 * x;  // 3.71 s, 3.39, 0.006427, 100xO2 0.6278
+			three = (RealMatrix3() << x, 1 * x, 2 * x, 4 * x, 5 * x, 6 * x, 7 * x, 8 * x, 9 * x).finished(); //5.52 s, 5.99, 0.006234, 0.65595
+
+			sum += three;
+			x += 1e-6;
+			//chi += gsl_cdf_chisq_Pinv(1 - x, nu);
+			//chicdf += gsl_cdf_chisq_P(3.0, nu);
+		}
+		double t = tmr.elapsed();
+		std::cout << sum << std::endl;
+		std::cout << "B " << t << std::endl;
+		tmr.reset();
+		sum = 0 * sum;
+	}
+	for (int k = 0; k < 5; k++) {
+		for (int i = 0; i < 100000000; i++) {
+			//three << x, 1 * x, 2 * x, 4 * x, 5 * x, 6 * x, 7 * x, 8 * x, 9 * x;  // 3.71 s, 3.39, 0.006427, 100xO2 0.6278
+			//three = (RealMatrix3() << x, 1 * x, 2 * x, 4 * x, 5 * x, 6 * x, 7 * x, 8 * x, 9 * x).finished(); //5.52 s, 5.99, 0.006234, 0.65595
+			three(0, 0) = x;
+			three(0, 1) = 1 * x;
+			three(0, 2) = 2 * x;
+			three(1, 0) = 4 * x;
+			three(1, 1) = 5 * x;
+			three(1, 2) = 6 * x;
+			three(2, 0) = 7 * x;
+			three(2, 1) = 8 * x;
+			three(2, 2) = 9 * x; // 5.61, 5.3, 0.0062, 0.6796
+			sum += three;
+			x += 1e-6;
+			//chi += gsl_cdf_chisq_Pinv(1 - x, nu);
+			//chicdf += gsl_cdf_chisq_P(3.0, nu);
+		}
+		double t = tmr.elapsed();
+		std::cout << sum << std::endl;
+		std::cout << "C " << t << std::endl;
+		tmr.reset();
+		sum = 0 * sum;
+	}
 	/*
 	Matrix<double, 4, 4> mx;
 	Matrix3d m = Matrix3d::Constant(2.0);
