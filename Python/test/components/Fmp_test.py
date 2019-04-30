@@ -47,7 +47,7 @@ class Fmp_test(unittest.TestCase):
 
     def generateStates(self, cdf : Dataset) -> None:
         print("generateStates", chi2.ppf(0.95,df=1))
-        N = array([64, 128, 5120, 512, 1024, 2048])
+#         N = array([64, 128, 5120, 512, 1024, 2048])
         setup = array([
 #             [0, 0.01],[0, 0.1], [0, 1.0], [0, 10.0],  
 #             [1, 0.01],[1, 0.1], [1, 1.0], [1, 10.0],  
@@ -70,25 +70,29 @@ class Fmp_test(unittest.TestCase):
                 case = createTestGroup(cdf, 'Case_%d' % iCase)
                 iCase += 1
                 t0 = 0.0
-                Y = generateTestPolynomial( order, N[order], t0, tau )
-                R = 10.0
-                (times, truth, observations, noise) = generateTestData(order, N[order], 0.0, Y[0:order+1], tau, sigma=R)
-                R = std(noise)
-                expected = zeros([N[order], order+1])            
-                residuals = zeros([N[order], order+1])            
-                f = makeFmp(order, tau, theta);
-                f.start(0.0, Y)
-                tchi2 = chi2.ppf(0.95, df=order+1)
-                for j in range(0,times.shape[0]) :
-                    Zstar = f.predict(times[j][0])
-                    e = observations[j] - Zstar[0]
-                    f.update(times[j][0], Zstar, e)
-                    expected[j,:] = f.getState();
-                    residuals[j,:] = f.getState() - truth[j,:]
-                print(theta, order, tau, mean(residuals,axis=0))
-                C = cov(residuals, rowvar=False)
-                V = R**2 * f.getVRF()
-                print(A2S(C/V))
+                n = int(nSwitch(order, theta))
+                for it in range(0,10) :
+                    Y = generateTestPolynomial( order, n, t0, tau )
+                    R = 10.0
+                    (times, truth, observations, noise) = generateTestData(order, n, 0.0, Y[0:order+1], tau, sigma=R)
+                    R = std(noise)
+                    expected = zeros([n, order+1])            
+                    residuals = zeros([n, order+1])            
+                    f = makeFmp(order, tau, theta);
+                    f.start(0.0, Y)
+                    tchi2 = chi2.ppf(0.95, df=order+1)
+                    for j in range(0,times.shape[0]) :
+                        Zstar = f.predict(times[j][0])
+                        e = observations[j] - Zstar[0]
+                        f.update(times[j][0], Zstar, e)
+                        expected[j,:] = f.getState();
+                        residuals[j,:] = f.getState() - truth[j,:]
+                    C = cov(residuals, rowvar=False)
+                    V = R**2 * f.getVRF()
+                    CV = C/V;
+                    print('%8.6f, %d, %6.3f, %6.2f,  %6.3f, %6.3f' % 
+                        (theta, order, tau, R, min(CV.flatten()), max(CV.flatten())))
+#                 print(A2S(C/V))
 
 
     def test0Generate(self):

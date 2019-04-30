@@ -229,10 +229,10 @@ public class TranslateOctaveDiary {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		new TranslateOctaveDiary( "FMP", FMP_CURRENT, 
+		new TranslateOctaveDiary( "FMP", FMP_ONESTEP, 
 				"C:\\Users\\NOOK\\GITHUB\\MorrisonPolynomialFiltering\\Java\\data\\FMP_diary.txt",
 				"C:\\Users\\NOOK\\GITHUB\\MorrisonPolynomialFiltering\\Python\\src\\PolynomialFiltering\\Components\\FadingMemoryPolynomialFilter.py" );
-//		new TranslateOctaveDiary( "EMP", EMP_CURRENT, 
+//		new TranslateOctaveDiary( "EMP", EMP_ONESTEP, 
 //				"C:\\Users\\NOOK\\GITHUB\\MorrisonPolynomialFiltering\\Java\\data\\EMP_diary.txt",
 //				"C:\\Users\\NOOK\\GITHUB\\MorrisonPolynomialFiltering\\Python\\src\\PolynomialFiltering\\Components\\ExpandingMemoryPolynomialFilter.py" );
 	}
