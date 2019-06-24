@@ -62,12 +62,12 @@
   		<artifactId>logback-classic</artifactId>
   		<version>1.2.1</version>
   	</dependency>
-<!-- https://mvnrepository.com/artifact/com.googlecode.efficient-java-matrix-library/ejml -->
+<!-- https://mvnrepository.com/artifact/com.googlecode.efficient-java-matrix-library/ejml 
 <dependency>
   <groupId>org.ejml</groupId>
   <artifactId>ejml-all</artifactId>
   <version>0.37.1</version>
 </dependency>
-
+-->
   </dependencies>
 </project>

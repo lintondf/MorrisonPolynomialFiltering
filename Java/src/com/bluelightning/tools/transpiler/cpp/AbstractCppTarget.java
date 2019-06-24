@@ -1,7 +1,7 @@
 /**
  * TODO remove _ from private methods (decl and use)
  */
-package com.bluelightning.tools.transpiler;
+package com.bluelightning.tools.transpiler.cpp;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -18,7 +18,15 @@ import java.util.Set;
 import java.util.Stack;
 import java.util.TreeSet;
 
+import com.bluelightning.tools.transpiler.AbstractLanguageTarget;
+import com.bluelightning.tools.transpiler.IProgrammer;
+import com.bluelightning.tools.transpiler.Indent;
+import com.bluelightning.tools.transpiler.Scope;
+import com.bluelightning.tools.transpiler.SourceCompilationListener;
+import com.bluelightning.tools.transpiler.Symbol;
+import com.bluelightning.tools.transpiler.Transpiler;
 import com.bluelightning.tools.transpiler.Scope.Level;
+import com.bluelightning.tools.transpiler.Symbol.FunctionParametersInfo;
 import com.bluelightning.tools.transpiler.nodes.TranslationConstantNode;
 import com.bluelightning.tools.transpiler.nodes.TranslationListNode;
 import com.bluelightning.tools.transpiler.nodes.TranslationNode;
@@ -124,7 +132,7 @@ public abstract class AbstractCppTarget extends AbstractLanguageTarget {
 		currentClassName = scope.getLast();
 		// hpp
 		String decl = "class " + currentClassName;
-		Symbol symbol = Transpiler.instance().symbolTable.lookup(currentScope, currentClassName);
+		Symbol symbol = Transpiler.instance().lookup(currentScope, currentClassName);
 		currentClass = symbol;
 		if (symbol != null) {
 			if (symbol != null && symbol.getSuperClassInfo().superClasses != null) {
@@ -202,7 +210,7 @@ public abstract class AbstractCppTarget extends AbstractLanguageTarget {
 		currentScope = scope;
 		String currentFunction = scope.getLast();
 		Scope functionScope = scope.getParent();
-		Symbol symbol = Transpiler.instance().symbolTable.lookup(functionScope, currentFunction);
+		Symbol symbol = Transpiler.instance().lookup(functionScope, currentFunction);
 		if (symbol == null) {
 			Transpiler.instance().reportError("startMethod::Unknown symbol: " + currentFunction + " " + functionScope );
 		}
@@ -431,7 +439,7 @@ public abstract class AbstractCppTarget extends AbstractLanguageTarget {
 				}
 				if (symbol.getName().equals("shape")) {
 					if (child.getRightSibling() == null) {
-						Transpiler.instance().logger.error("No right sibling on 'shape'");
+						Transpiler.instance().logger().error("No right sibling on 'shape'");
 						return 1;
 					}
 					TranslationNode which = child.getRightSibling().getFirstChild();

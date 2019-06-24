@@ -134,7 +134,7 @@ public class RefactorVrfMethods {
 					System.out.println(line);
 					while (it.hasNext()) {
 						line = it.next();
-						if (line.isBlank()) {
+						if (line.trim().isEmpty()) {
 							System.out.println(line);
 							break;
 						}

@@ -23,7 +23,7 @@ import com.bluelightning.tools.transpiler.nodes.TranslationUnaryNode;
 import com.bluelightning.tools.transpiler.nodes.TranslationConstantNode.Kind;
 import com.bluelightning.tools.transpiler.nodes.TranslationExpressionNode;
 
-class SourceCompilationListener extends LcdPythonBaseListener {
+public class SourceCompilationListener extends LcdPythonBaseListener {
 		
 		/**
 		 * 

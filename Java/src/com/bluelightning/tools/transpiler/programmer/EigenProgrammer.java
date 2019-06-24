@@ -7,11 +7,11 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
 
-import com.bluelightning.tools.transpiler.AbstractCppTarget;
 import com.bluelightning.tools.transpiler.IProgrammer;
 import com.bluelightning.tools.transpiler.Indent;
 import com.bluelightning.tools.transpiler.Scope;
 import com.bluelightning.tools.transpiler.Symbol;
+import com.bluelightning.tools.transpiler.cpp.AbstractCppTarget;
 import com.bluelightning.tools.transpiler.nodes.TranslationConstantNode;
 import com.bluelightning.tools.transpiler.nodes.TranslationNode;
 

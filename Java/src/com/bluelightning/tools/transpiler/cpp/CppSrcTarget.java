@@ -1,4 +1,4 @@
-package com.bluelightning.tools.transpiler;
+package com.bluelightning.tools.transpiler.cpp;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -7,6 +7,10 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.nio.file.Files;
 import java.nio.file.Path;
+
+import com.bluelightning.tools.transpiler.IProgrammer;
+import com.bluelightning.tools.transpiler.Indent;
+import com.bluelightning.tools.transpiler.Scope;
 
 import freemarker.template.Configuration;
 import freemarker.template.TemplateException;
