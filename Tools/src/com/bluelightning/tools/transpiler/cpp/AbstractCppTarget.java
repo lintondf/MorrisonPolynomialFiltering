@@ -83,7 +83,7 @@ public abstract class AbstractCppTarget extends AbstractLanguageTarget {
 			
 			hpp = cfg.getTemplate("Hpp.ftlh");
 			cpp = cfg.getTemplate("Cpp.ftlh");
-			test = cfg.getTemplate("Test.ftlh");
+			test = cfg.getTemplate("CppTest.ftlh");
 			
 		} catch (IOException iox ) {
 			iox.printStackTrace();
