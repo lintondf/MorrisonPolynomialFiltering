@@ -3,12 +3,17 @@ package com.bluelightning.tools.transpiler;
 import org.apache.commons.lang3.StringUtils;
 
 public class Indent {
+	private final boolean whence = false;
+	
 	int level = 0;
-	public StringBuilder out = new StringBuilder();;
+	public StringBuilder sb = new StringBuilder();;
 	
 	public Indent() {
 		level = 0;
-		this.out = out;
+	}
+	
+	public Indent( Indent that ) {
+		this.level = that.level;
 	}
 	
 	public void in() {
@@ -19,22 +24,59 @@ public class Indent {
 		level -= 1;
 	}
 	
+	@Override
 	public String toString() {
-		return StringUtils.repeat("  ", 2*level);
+		return StringUtils.repeat("    ", level);
+	}
+	
+	public String get() {
+		return StringUtils.repeat("    ", level);
 	}
 	
 	public void append( String text ) {
-		out.append(text);
+		sb.append(text);
+		if (whence && text.endsWith("\n")) {
+			deleteLast();
+			StackTraceElement[] st = Thread.currentThread().getStackTrace();
+			sb.append(String.format(" // %s:%s:%d\n", st[2].getFileName(), st[2].getMethodName(), st[2].getLineNumber()));			
+		}
 	}
 	
 	public void write( String text ) {
-		out.append(toString());
-		out.append(text);
+		sb.append(get());
+		sb.append(text);
+		if (whence && text.endsWith("\n")) {
+			deleteLast();
+			StackTraceElement[] st = Thread.currentThread().getStackTrace();
+			sb.append(String.format(" // %s:%s:%d\n", st[2].getFileName(), st[2].getMethodName(), st[2].getLineNumber()));			
+		}
 	}
 
 	public void writeln( String text ) {
-		out.append(toString());
-		out.append(text);
-		out.append('\n');
+		sb.append(get());
+		sb.append(text);
+		if (whence) {
+			StackTraceElement[] st = Thread.currentThread().getStackTrace();
+			sb.append(String.format(" // %s:%s:%d", st[2].getFileName(), st[2].getMethodName(), st[2].getLineNumber()));
+		}
+		sb.append('\n');
+	}
+	
+	public void write() {
+		sb.append(get());		
+	}
+	
+	public void writeln() {
+		sb.append(get());
+		sb.append('\n');
+	}
+
+	public void deleteLast() {
+		if (sb.length() > 0) 
+			sb.deleteCharAt(sb.length()-1);
+	}
+	
+	public int size() {
+		return sb.length();
 	}
 }

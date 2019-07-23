@@ -5,7 +5,7 @@
  * SPDX-License-Identifier: MIT
  * See separate LICENSE file for full text
  *
- * AUTO-GENERATED C++ TEST
+ * AUTO-GENERATED C++ TEST from Python Reference Implementation
  */
 
 #include <iostream>

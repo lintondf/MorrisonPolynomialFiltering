@@ -58,7 +58,6 @@ class ICore(ABC):
         Returns:
             0th derivative input to output variance ratio
         """
-        '''@V:array'''
         pass
     
     @abstractmethod # pragma: no cover
@@ -72,7 +71,6 @@ class ICore(ABC):
         Returns:
             'order'th derivative input to output variance ratio
         """
-        '''@V:array'''
         pass
     
     @abstractmethod # pragma: no cover
@@ -86,6 +84,5 @@ class ICore(ABC):
         Returns:
             'order'th derivative input to output variance ratio
         """
-        '''@V:array'''
         pass
 

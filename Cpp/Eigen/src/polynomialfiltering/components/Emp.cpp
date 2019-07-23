@@ -5,7 +5,7 @@
  * SPDX-License-Identifier: MIT
  * See separate LICENSE file for full text
  *
- * AUTO-GENERATED C++
+ * AUTO-GENERATED C++ from Python Reference Implementation
  */
 
 #include "polynomialfiltering/components/Emp.hpp"
@@ -23,7 +23,7 @@ namespace polynomialfiltering {
 
             RealVector CoreEmp0::getGamma (const double n, const double dtau) {
                 RealVector g(1);
-                g << 1.0 / (1.0 + n);
+                g = (RealVector1() << 1.0 / (1.0 + n)).finished();
                 return g;
             }
 
@@ -73,7 +73,7 @@ namespace polynomialfiltering {
                 double denom;
                 RealVector g(2);
                 denom = 1.0 / ((n + 2) * (n + 1));
-                g << 2.0 * (2.0 * n + 1.0), 6.0;
+                g = (RealVector2() << 2.0 * (2.0 * n + 1.0), 6.0).finished();
                 return denom * g;
             }
 
@@ -128,7 +128,7 @@ namespace polynomialfiltering {
                 RealVector g(3);
                 n2 = n * n;
                 denom = 1.0 / ((n + 3) * (n + 2) * (n + 1));
-                g << 3.0 * (3.0 * n2 + 3.0 * n + 2.0), 18.0 * (2.0 * n + 1.0), (2.0 * 1.0) * 30.0;
+                g = (RealVector3() << 3.0 * (3.0 * n2 + 3.0 * n + 2.0), 18.0 * (2.0 * n + 1.0), (2.0 * 1.0) * 30.0).finished();
                 return denom * g;
             }
 
@@ -190,7 +190,7 @@ namespace polynomialfiltering {
                 n2 = n * n;
                 n3 = n2 * n;
                 denom = 1.0 / ((n + 4) * (n + 3) * (n + 2) * (n + 1));
-                g << 8.0 * (2.0 * n3 + 3.0 * n2 + 7.0 * n + 3.0), 20.0 * (6.0 * n2 + 6.0 * n + 5.0), (2.0 * 1.0) * 120.0 * (2.0 * n + 1.0), (3.0 * 2.0 * 1.0) * 140.0;
+                g = (RealVector4() << 8.0 * (2.0 * n3 + 3.0 * n2 + 7.0 * n + 3.0), 20.0 * (6.0 * n2 + 6.0 * n + 5.0), (2.0 * 1.0) * 120.0 * (2.0 * n + 1.0), (3.0 * 2.0 * 1.0) * 140.0).finished();
                 return denom * g;
             }
 
@@ -261,7 +261,7 @@ namespace polynomialfiltering {
                 n3 = n2 * n;
                 n4 = n2 * n2;
                 denom = 1.0 / ((n + 5) * (n + 4) * (n + 3) * (n + 2) * (n + 1));
-                g << 5.0 * (5.0 * n4 + 10.0 * n3 + 55.0 * n2 + 50.0 * n + 24.0), 25.0 * (12.0 * n3 + 18.0 * n2 + 46.0 * n + 20.0), (2.0 * 1.0) * 1050.0 * (n2 + n + 1.0), (3.0 * 2.0 * 1.0) * 700.0 * (2.0 * n + 1.0), (4.0 * 3.0 * 2.0 * 1.0) * 630.0;
+                g = (RealVector5() << 5.0 * (5.0 * n4 + 10.0 * n3 + 55.0 * n2 + 50.0 * n + 24.0), 25.0 * (12.0 * n3 + 18.0 * n2 + 46.0 * n + 20.0), (2.0 * 1.0) * 1050.0 * (n2 + n + 1.0), (3.0 * 2.0 * 1.0) * 700.0 * (2.0 * n + 1.0), (4.0 * 3.0 * 2.0 * 1.0) * 630.0).finished();
                 return denom * g;
             }
 
@@ -341,7 +341,7 @@ namespace polynomialfiltering {
                 n3 = n2 * n;
                 n4 = n2 * n2;
                 denom = 1.0 / ((n + 6) * (n + 5) * (n + 4) * (n + 3) * (n + 2) * (n + 1));
-                g << 6.0 * (2.0 * n + 1.0) * (3.0 * n4 + 6.0 * n3 + 77.0 * n2 + 74.0 * n + 120.0), 126.0 * (5.0 * n4 + 10.0 * n3 + 55.0 * n2 + 50.0 * n + 28.0), (2.0 * 1.0) * 420.0 * (2.0 * n + 1.0) * (4.0 * n2 + 4.0 * n + 15.0), (3.0 * 2.0 * 1.0) * 1260.0 * (6.0 * n2 + 6.0 * n + 7.0), (4.0 * 3.0 * 2.0 * 1.0) * 3780.0 * (2.0 * n + 1.0), (5.0 * 4.0 * 3.0 * 2.0 * 1.0) * 2772.0;
+                g = (RealVector6() << 6.0 * (2.0 * n + 1.0) * (3.0 * n4 + 6.0 * n3 + 77.0 * n2 + 74.0 * n + 120.0), 126.0 * (5.0 * n4 + 10.0 * n3 + 55.0 * n2 + 50.0 * n + 28.0), (2.0 * 1.0) * 420.0 * (2.0 * n + 1.0) * (4.0 * n2 + 4.0 * n + 15.0), (3.0 * 2.0 * 1.0) * 1260.0 * (6.0 * n2 + 6.0 * n + 7.0), (4.0 * 3.0 * 2.0 * 1.0) * 3780.0 * (2.0 * n + 1.0), (5.0 * 4.0 * 3.0 * 2.0 * 1.0) * 2772.0).finished();
                 return denom * g;
             }
 
@@ -437,17 +437,17 @@ namespace polynomialfiltering {
 
         int nUnitLastVRF (const int order, const double tau) {
             if (order == 0) {
-                return 0;
+                return 1 + 0;
             } else if (order == 1.0) {
-                return int(max(order, exp( - 0.7469 * log(tau) + 0.3752)));
+                return 1 + int(max(order, exp( - 0.7469 * log(tau) + 0.3752)));
             } else if (order == 2.0) {
-                return int(max(order, exp( - 0.8363 * log(tau) + 1.1127)));
+                return 1 + int(max(order, exp( - 0.8363 * log(tau) + 1.1127)));
             } else if (order == 3.0) {
-                return int(max(order, exp( - 0.8753 * log(tau) + 1.5427)));
+                return 1 + int(max(order, exp( - 0.8753 * log(tau) + 1.5427)));
             } else if (order == 4.0) {
-                return int(max(order, exp( - 0.897 * log(tau) + 1.8462)));
+                return 1 + int(max(order, exp( - 0.897 * log(tau) + 1.8462)));
             } else {
-                return int(max(order, exp( - 0.9108 * log(tau) + 2.0805)));
+                return 1 + int(max(order, exp( - 0.9108 * log(tau) + 2.0805)));
             }
         }
 

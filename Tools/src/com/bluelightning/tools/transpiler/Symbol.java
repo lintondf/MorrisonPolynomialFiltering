@@ -50,6 +50,8 @@ public class Symbol {
 	protected Integer[] dimensions;
 	protected boolean isClassRef = false;
 	protected boolean isInherited = false;
+	protected boolean isReturnVariable = false;
+	protected boolean isAbstractClass = false;
 	
 	public boolean isInherited() {
 		return isInherited;
@@ -86,6 +88,8 @@ public class Symbol {
 		}
 		if (isClassRef)
 			r += " ClassRef; ";
+		if (isInherited)
+			r += " INHERITED; ";
 		return r;
 	}
 	
@@ -200,4 +204,35 @@ public class Symbol {
 		return this.functionParametersInfo.decorators.contains(string);
 	}
 
+	/**
+	 * @return the isReturnVariable
+	 */
+	public boolean isReturnVariable() {
+		return isReturnVariable;
+	}
+
+	/**
+	 * @param isReturnVariable the isReturnVariable to set
+	 */
+	public void setReturnVariable(boolean isReturnVariable) {
+		this.isReturnVariable = isReturnVariable;
+	}
+
+	/**
+	 * @return the isAbstractClass
+	 */
+	public boolean isAbstractClass() {
+		return isAbstractClass;
+	}
+
+	/**
+	 * @param isAbstractClass the isAbstractClass to set
+	 */
+	public void setAbstractClass(boolean isAbstractClass) {
+		this.isAbstractClass = isAbstractClass;
+	}
+
+	public boolean isFunction() {
+		return getFunctionParametersInfo() != null;
+	}
 }

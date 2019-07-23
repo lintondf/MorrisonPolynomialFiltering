@@ -51,6 +51,8 @@ import com.bluelightning.tools.transpiler.cpp.CppSrcTarget;
 import com.bluelightning.tools.transpiler.cpp.CppTestTarget;
 import com.bluelightning.tools.transpiler.cpp.programmer.BoostProgrammer;
 import com.bluelightning.tools.transpiler.cpp.programmer.EigenProgrammer;
+import com.bluelightning.tools.transpiler.java.JavaSrcTarget;
+import com.bluelightning.tools.transpiler.java.programmer.EjmlProgrammer;
 import com.bluelightning.tools.transpiler.nodes.TranslationExpressionNode;
 import com.bluelightning.tools.transpiler.nodes.TranslationNode;
 import com.bluelightning.tools.transpiler.nodes.TranslationUnaryNode;
@@ -109,32 +111,33 @@ public class Transpiler {
 	
 	static Target[] targets = {
 //		new Target(Paths.get(""), "TranspilerTest"),
+			
 		new Target(Paths.get("polynomialfiltering"), "Main"),
 		new Target(Paths.get("polynomialfiltering/components"), "FixedMemoryPolynomialFilter"),
 		new Target(Paths.get("polynomialfiltering/components"), "ICore", true),
 		new Target(Paths.get("polynomialfiltering/components"), "RecursivePolynomialFilter"),
 		new Target(Paths.get("polynomialfiltering/components"), "Emp"),
 		new Target(Paths.get("polynomialfiltering/components"), "Fmp"),
-		
-		new TestTarget(Paths.get("components"), "RecursivePolynomialFilter_test"),
-		new TestTarget(Paths.get("components"), "EMP_test"),
-		new TestTarget(Paths.get("components"), "Fmp_test"),
-//		new Target(Paths.get("polynomialfiltering/components"), "AbstractRecursiveFilter"),
-//		new Target(Paths.get("polynomialfiltering/components"), "ExpandingMemoryPolynomialFilter"),
-//		new Target(Paths.get("polynomialfiltering/components"), "FadingMemoryPolynomialFilter"),
-//		new Target(Paths.get("polynomialfiltering/components"), "EmpFmpPair"),
-//		new Target(Paths.get("polynomialfiltering/filters/controls"), "IObservationErrorModel", true),
-//		new Target(Paths.get("polynomialfiltering/filters/controls"), "IJudge", true),
-//		new Target(Paths.get("polynomialfiltering/filters/controls"), "IMonitor", true),
-//		new Target(Paths.get("polynomialfiltering/filters/controls"), "ConstantObservationErrorModel"),
-//		new Target(Paths.get("polynomialfiltering/filters/controls"), "BaseScalarJudge"),
-//		//new Target(Paths.get("polynomialfiltering/filters/controls"), "BaseVectorJudge"),
-//		//new Target(Paths.get("polynomialfiltering/filters/controls"), "NullMonitor"),
-//		new Target(Paths.get("polynomialfiltering/filters"), "IManagedFilter", true),
-//		new Target(Paths.get("polynomialfiltering/filters"), "ManagedFilterBase"),
-////		new Target(Paths.get("polynomialfiltering/filters"), "ManagedScalarRecursiveFilter"),
-////		new Target(Paths.get("polynomialfiltering/filters"), "ManagedScalarRecursiveFilterSet"),
-//		new TestTarget(Paths.get("filters/controls"), "ConstantObservationErrorModel_test"),
+//		
+//		new TestTarget(Paths.get("components"), "RecursivePolynomialFilter_test"),
+//		new TestTarget(Paths.get("components"), "EMP_test"),
+//		new TestTarget(Paths.get("components"), "Fmp_test"),
+////		new Target(Paths.get("polynomialfiltering/components"), "AbstractRecursiveFilter"),
+////		new Target(Paths.get("polynomialfiltering/components"), "ExpandingMemoryPolynomialFilter"),
+////		new Target(Paths.get("polynomialfiltering/components"), "FadingMemoryPolynomialFilter"),
+////		new Target(Paths.get("polynomialfiltering/components"), "EmpFmpPair"),
+////		new Target(Paths.get("polynomialfiltering/filters/controls"), "IObservationErrorModel", true),
+////		new Target(Paths.get("polynomialfiltering/filters/controls"), "IJudge", true),
+////		new Target(Paths.get("polynomialfiltering/filters/controls"), "IMonitor", true),
+////		new Target(Paths.get("polynomialfiltering/filters/controls"), "ConstantObservationErrorModel"),
+////		new Target(Paths.get("polynomialfiltering/filters/controls"), "BaseScalarJudge"),
+////		//new Target(Paths.get("polynomialfiltering/filters/controls"), "BaseVectorJudge"),
+////		//new Target(Paths.get("polynomialfiltering/filters/controls"), "NullMonitor"),
+////		new Target(Paths.get("polynomialfiltering/filters"), "IManagedFilter", true),
+////		new Target(Paths.get("polynomialfiltering/filters"), "ManagedFilterBase"),
+//////		new Target(Paths.get("polynomialfiltering/filters"), "ManagedScalarRecursiveFilter"),
+//////		new Target(Paths.get("polynomialfiltering/filters"), "ManagedScalarRecursiveFilterSet"),
+////		new TestTarget(Paths.get("filters/controls"), "ConstantObservationErrorModel_test"),
 	};
 	
 	protected Logger logger;
@@ -212,12 +215,20 @@ public class Transpiler {
 	
 	protected SymbolTable symbolTable = new SymbolTable(this);
 	
+	public SymbolTable getSymbolTable() {
+		return symbolTable;
+	}
+	
 	public Symbol lookup( Scope scope, String name ) {
 		return symbolTable.lookup(scope, name);
 	}
 	
 	public Symbol lookupClass( String name ) {
 		return symbolTable.lookupClass(name);
+	}
+	
+	public Symbol lookupClassOrEnum( String name ) {
+		return symbolTable.lookupClass(name, true);
 	}
 	
 	public void inheritClassMembers( Symbol symbol, Symbol type ) {
@@ -261,7 +272,7 @@ public class Transpiler {
 	
 		// Specify the source where the template files come from. Here I set a
 		// plain directory for it, but non-file-system sources are possible too:
-		cfg.setDirectoryForTemplateLoading(new File("../Java/data/templates"));
+		cfg.setDirectoryForTemplateLoading(new File("../Tools/data/templates"));
 	
 		// Set the preferred charset template files are stored in. UTF-8 is
 		// a good choice in most applications:
@@ -378,9 +389,9 @@ public class Transpiler {
 			}
 		}
 
-		public void emitReturnStatement() {
+		public void emitReturnStatement(Scope scope, ParserRuleContext ctx, TranslationNode expressionRoot) {
 			for (ILanguageTarget target : targets) {
-				target.emitReturnStatement();
+				target.emitReturnStatement(scope, ctx, expressionRoot);
 			}
 		}
 
@@ -555,6 +566,8 @@ public class Transpiler {
 				cfg, Paths.get("../Cpp/Eigen/") ) );
 		dispatcher.addTarget( new CppTestTarget(new EigenProgrammer(), 
 				cfg, Paths.get("../Cpp/Eigen/") ) );
+		dispatcher.addTarget( new JavaSrcTarget( new EjmlProgrammer(),
+				cfg, Paths.get("../Java/Ejml/") ) );
 
 		Scope importScope = new Scope();
 		symbolTable.add( importScope, "abs", "array");
@@ -564,6 +577,8 @@ public class Transpiler {
 		symbolTable.add( importScope, "eye", "array");
 		symbolTable.add( importScope, "inv", "array" );
 		symbolTable.add( importScope, "int", "integerCast" );
+		symbolTable.add( importScope, "float", "floatCast" );
+		symbolTable.add( importScope, "str", "stringCast" );
 		symbolTable.add( importScope, "len", "int" );
 		symbolTable.add( importScope, "max", "int" );  //TODO generic type
 		symbolTable.add( importScope, "min", "int" );  //TODO generic type

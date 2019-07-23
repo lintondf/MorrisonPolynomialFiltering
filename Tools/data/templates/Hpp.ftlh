@@ -5,7 +5,7 @@
  * SPDX-License-Identifier: MIT
  * See separate LICENSE file for full text
  *
- * AUTO-GENERATED C++
+ * AUTO-GENERATED C++ from Python Reference Implementation
  */
 #ifndef ${hppDefine}
 #define ${hppDefine}

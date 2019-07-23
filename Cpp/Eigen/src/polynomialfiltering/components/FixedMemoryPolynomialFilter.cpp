@@ -5,7 +5,7 @@
  * SPDX-License-Identifier: MIT
  * See separate LICENSE file for full text
  *
- * AUTO-GENERATED C++
+ * AUTO-GENERATED C++ from Python Reference Implementation
  */
 
 #include "polynomialfiltering/components/FixedMemoryPolynomialFilter.hpp"
@@ -64,9 +64,11 @@ namespace polynomialfiltering {
             }
 
             void FixedMemoryFilter::add (const double t, const double y, const std::string observationId) {
+                int idx;
                 this->t = t;
-                this->tRing(this->n % this->L) = t;
-                this->yRing(this->n % this->L) = y;
+                idx = this->n % this->L;
+                this->tRing(idx) = t;
+                this->yRing(idx) = y;
                 this->n += 1;
             }
 

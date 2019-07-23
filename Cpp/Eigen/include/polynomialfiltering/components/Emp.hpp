@@ -5,7 +5,7 @@
  * SPDX-License-Identifier: MIT
  * See separate LICENSE file for full text
  *
- * AUTO-GENERATED C++
+ * AUTO-GENERATED C++ from Python Reference Implementation
  */
 #ifndef ___POLYNOMIALFILTERING_COMPONENTS_EMP_HPP
 #define ___POLYNOMIALFILTERING_COMPONENTS_EMP_HPP
@@ -239,7 +239,34 @@ namespace polynomialfiltering {
                 RealMatrix _getVRF(const double n, const double tau);
         }; // class CoreEmp5 
 
+
+        ///// @brief Estimate the sample number when the first VRF diagonal elements of an EMP/FMP pair will match
+        /// 
+        /// Uses approximate relationships to estimate the switchover point for an EMP/FMP pair when the
+        /// 0th element of the VRF diagonals will match, e.g. approximately equal noise reduction.  The
+        /// approximations are more accurate as theta approaches one.
+        /// 
+        /// 
+        ///  @param		order	polynomial filter order
+        ///  @param		theta	FMP fading factor
+        /// 
+        ///  @return   @return		n	estimated crossover sample number
+        /// 
+        /// 
         double nSwitch(const int order, const double theta);
+
+        ///// @brief Estimate the sample number when the final VRF diagonal value is one or less
+        /// 
+        /// Uses curve fits to estimate the sample number when the final VRF diagonal element
+        /// first approaches zero.  For larger tau values, will return the first value value
+        /// for this element.
+        /// 
+        /// 
+        ///  @param		order	polynomial filter order
+        ///  @param		tau	default time step
+        /// 
+        ///  @return   @return		n	estimated sample number
+        /// 
         int nUnitLastVRF(const int order, const double tau);
 
         ///// @brief Factory for expanding memory polynomial filters

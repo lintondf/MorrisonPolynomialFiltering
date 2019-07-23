@@ -18,17 +18,18 @@
 using namespace Eigen;
 using namespace polynomialfiltering;
 
-void assert_almost_equal(RealMatrix& A, RealMatrix& B);
 
-void assert_almost_equal(RealVector& A, RealVector& B);
+void assert_almost_equal(const RealMatrix A, const RealMatrix B);
 
-void assert_almost_equal(RealMatrix& A, double B);
+void assert_almost_equal(const RealMatrix A, const RealVector B);
 
-void assert_almost_equal(double B, RealMatrix& A);
+void assert_almost_equal(const RealMatrix A, double B);
+
+void assert_almost_equal(double B, const RealMatrixx& A);
 
 void assert_almost_equal(double A, double B);
 
-void assert_array_less(MatrixXd& A, MatrixXd& B);
+void assert_array_less(const RealMatrix A, const RealMatrix B);
 
 void assert_array_less(double A, double B);
 
@@ -111,7 +112,7 @@ public:
 				nc_get_vara_double(gid, vid, start, count, data);
 				Map<RealMatrix>  m(data, count[1], count[0]);
 				RealMatrix out = m.transpose();
-				delete data;
+				delete[] data;
 				return out;
 			}
 		}

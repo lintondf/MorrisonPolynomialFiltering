@@ -3,7 +3,10 @@
  */
 package com.bluelightning.tools.transpiler.cpp.programmer;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 
@@ -35,43 +38,43 @@ public class EigenProgrammer extends AbstractProgrammer {
 		switch (operator) {
 		case "*":
 			out.append("arrayTimes(");
-			out.append(lhs.out.toString());
+			out.append(lhs.sb.toString());
 			out.append(", ");
-			out.append(rhs.out.toString());
+			out.append(rhs.sb.toString());
 			out.append(")");
 			break;
 		case "/":
 			out.append("arrayDivide(");
-			out.append(lhs.out.toString());
+			out.append(lhs.sb.toString());
 			out.append(", ");
-			out.append(rhs.out.toString());
+			out.append(rhs.sb.toString());
 			out.append(")");
 			break;
 		case "%":
 			out.append("arrayMod(");
-			out.append(lhs.out.toString());
+			out.append(lhs.sb.toString());
 			out.append(", ");
-			out.append(rhs.out.toString());
+			out.append(rhs.sb.toString());
 			out.append(")");
 			break;
 		case "**":
 			out.append("pow(");
-			out.append(lhs.out.toString());
+			out.append(lhs.sb.toString());
 			out.append(", ");
-			out.append(rhs.out.toString());
+			out.append(rhs.sb.toString());
 			out.append(")");
 			break;
 		case "@":
-			out.append(lhs.out.toString());
+			out.append(lhs.sb.toString());
 			out.append(" * ");
-			out.append(rhs.out.toString());
+			out.append(rhs.sb.toString());
 			break;
 		default:
-			out.append(lhs.out.toString());
+			out.append(lhs.sb.toString());
 			out.append(" ");
 			out.append(operator);
 			out.append(" ");
-			out.append(rhs.out.toString());
+			out.append(rhs.sb.toString());
 			break;
 		}
 	}
@@ -97,6 +100,21 @@ public class EigenProgrammer extends AbstractProgrammer {
 	static Symbol colAccess = new Symbol( new Scope(), "col", "array");
 	static Symbol vectorBlock = new Symbol( new Scope(), "segment", "vector");
 	static Symbol arrayBlock = new Symbol( new Scope(), "block", "array");
+	
+	List<Pair> vectorMethods = Arrays.asList(
+			new Pair[] {
+					new Pair(vectorDimension.getName(), vectorDimension.getType()),
+					new Pair(rowAccess.getName(), rowAccess.getType()),
+					new Pair(vectorBlock.getName(), vectorBlock.getType()),
+			} );
+	List<Pair> matrixMethods = Arrays.asList(
+			new Pair[] {
+					new Pair(rowDimension.getName(), rowDimension.getType()),
+					new Pair(colDimension.getName(), colDimension.getType()),
+					new Pair(rowAccess.getName(), rowAccess.getType()),
+					new Pair(colAccess.getName(), colAccess.getType()),
+					new Pair(arrayBlock.getName(), arrayBlock.getType()),
+			} );
 	
 
 	@Override //Eigen
@@ -138,6 +156,43 @@ public class EigenProgrammer extends AbstractProgrammer {
 	@Override
 	public String getName() {
 		return "Eigen";
+	}
+
+
+	@Override
+	public String generateVectorInitializer(String values) {
+		// TODO? .replace("(","{").replace(")","}");
+		values = values.substring(1, values.length()-1 );
+		int commas = values.length() - values.replace(",", "").length();
+		//(RealMatrix3() << x, 1 * x, 2 * x, 4 * x, 5 * x, 6 * x, 7 * x, 8 * x, 9 * x).finished();
+		return String.format("(RealVector%d() << %s).finished()", commas+1, values); 
+	}
+
+
+	@Override
+	public String getMeasurement(String symbol, Measurement which) {
+		switch (which) {
+		case NUMBER_OF_ELEMENTS:
+			return String.format("%s->size()", symbol);
+		case NUMBER_OF_ROWS:
+			return String.format("%s->rows()", symbol);
+		case NUMBER_OF_COLUMNS:
+			return String.format("%s->columns()", symbol);
+		default:
+			return null;
+		}
+	}
+
+
+	@Override
+	public List<Pair> getVectorMethods() {
+		return vectorMethods;
+	}
+
+
+	@Override
+	public List<Pair> getMatrixMethods() {
+		return matrixMethods;
 	}
 
 }

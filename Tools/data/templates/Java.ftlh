@@ -5,11 +5,11 @@
  * SPDX-License-Identifier: MIT
  * See separate LICENSE file for full text
  *
- * AUTO-GENERATED Java
+ * AUTO-GENERATED Java from Python Reference Implementation
  */
 
- {$package}
+${package}
  
- {$imports}
+${imports}
  
- {$class}
+${class}

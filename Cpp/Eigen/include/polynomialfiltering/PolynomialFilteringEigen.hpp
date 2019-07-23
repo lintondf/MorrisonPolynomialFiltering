@@ -2,6 +2,7 @@
 #define __POLYNOMIAL_FILTERING_HPP
 
 #include <iostream>
+#include <string>
 #include <exception>
 #include <tuple>
 
@@ -36,6 +37,7 @@ namespace polynomialfiltering {
 
 }
 
+#undef  eigen_assert
 #define eigen_assert(X) do { if(!(X)) throw ::polynomialfiltering::EigenException(#X); } while(false);
 
 #include <Eigen/Dense>

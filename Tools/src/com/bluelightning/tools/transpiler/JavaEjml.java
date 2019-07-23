@@ -13,9 +13,9 @@ public class JavaEjml {
 		Equation eq = new Equation();
 		DMatrixRMaj P = new DMatrixRMaj(4,4);
 		eq.alias(P,"P");
-		Sequence s = eq.compile("P=eye(4)+1.0", true, true);
+		Sequence s = eq.compile("P=eye(4)+1.0", true, true, true);
 		s.perform();
-		eq.compile("P = (0.5*P) + eye(4)/3.0", true, true).perform();
+		eq.compile("P = (0.5*P) + eye(4)/3.0", true, true, true).perform();
 		P.print();
 	}
 }

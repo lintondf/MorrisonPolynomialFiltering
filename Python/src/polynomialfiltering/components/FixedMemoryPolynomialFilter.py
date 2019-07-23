@@ -74,9 +74,11 @@ class FixedMemoryFilter(AbstractFilterWithCovariance) :
         return self.transitionState(self.t)
     
     def add(self, t : float, y : float, observationId : str = '') -> None:
+        '''@idx : int'''
         self.t = t;
-        self.tRing[ self.n % self.L ] = t;    
-        self.yRing[ self.n % self.L ] = y;
+        idx = self.n % self.L
+        self.tRing[ idx ] = t;    
+        self.yRing[ idx ] = y;
         self.n += 1;    
     
     def getCovariance(self) -> array:

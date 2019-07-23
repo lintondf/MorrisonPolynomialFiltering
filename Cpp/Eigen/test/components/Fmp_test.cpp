@@ -37,7 +37,7 @@ namespace polynomialfiltering {
             
             using namespace Eigen;
             
-            void testName () {
+            void test9CoreBasic () {
                 std::shared_ptr<polynomialfiltering::components::ICore> core90;
                 std::shared_ptr<polynomialfiltering::components::ICore> core95;
                 std::shared_ptr<polynomialfiltering::components::ICore> core95half;
@@ -55,6 +55,29 @@ namespace polynomialfiltering {
                 assert_almost_equal(core95->getGamma(10.0, 5.0), core95double->getGamma(10.0, 5.0));
             }
 
+            void test9NSwitch () {
+                std::shared_ptr<polynomialfiltering::components::ICore> emp;
+                std::shared_ptr<polynomialfiltering::components::ICore> fmp;
+                double tau;
+                RealMatrix taus;
+                double theta;
+                RealMatrix thetas;
+                int n;
+                taus << 0.01, 0.1, 1., 10., 100.;
+                thetas << 0.90, 0.95, 0.99, 0.999;
+                for (int order = 0; order < 5 + 1; order++) {
+                    for (int itheta = 0; itheta < thetas.size(); itheta++) {
+                        theta = thetas(itheta);
+                        for (int itau = 0; itau < taus.size(); itau++) {
+                            tau = taus(itau);
+                            emp = makeEmpCore(order, tau);
+                            fmp = makeFmpCore(order, tau, theta);
+                            n = nSwitch(order, theta);
+                        }
+                    }
+                }
+            }
+
         }; // namespace Fmp_test
     }; // namespace components
 }; // namespace polynomialfiltering
@@ -62,8 +85,11 @@ namespace polynomialfiltering {
 #pragma float_control(pop)
 
 TEST_CASE("Fmp_test") {
-    SUBCASE("testName") {
-        components::Fmp_test::testName();
+    SUBCASE("test9CoreBasic") {
+        components::Fmp_test::test9CoreBasic();
+    }
+    SUBCASE("test9NSwitch") {
+        components::Fmp_test::test9NSwitch();
     }
 }
 

@@ -116,7 +116,12 @@ class DeclarationsListener extends LcdPythonBaseListener {
 				this.transpiler.reportError(ctx.start, "Invalid function scope");
 			}
 			scopeStack.push( functionScope );
-			String functionType = getChildText(ctx, 4);
+			String functionType = "None";
+			if (getChildText(ctx,3).equals("->")) {
+				functionType = getChildText(ctx, 4);
+			} else if (name.equals("__init__")) {
+				functionType = getChildText(ctx, 4).trim(); // super.__init__ if present
+			}
 			Symbol.FunctionParametersInfo fpi = new Symbol.FunctionParametersInfo();
 			Symbol symbol = transpiler.symbolTable.add(currentScope, name, functionType);
 			transpiler.scopeMap.put( ctx.getPayload(), functionScope );
@@ -182,6 +187,12 @@ class DeclarationsListener extends LcdPythonBaseListener {
 				Symbol symbol = transpiler.symbolTable.lookup(scopeStack.peek(), functionName);
 				Symbol.FunctionParametersInfo fpi = symbol.getFunctionParametersInfo();
 				fpi.decorators.add(decoration);
+				if (decoration.equals("@abstractmethod")) {
+					symbol = transpiler.lookupClass(symbol.getScope().getLast());
+					if (symbol != null) {
+						symbol.setAbstractClass(true);
+					}
+				}
 			} else {
 				String className = transpiler.valueMap.get(ctx.getChild(1).getChild(1).getPayload()).trim();
 				Symbol symbol = transpiler.lookupClass(className);

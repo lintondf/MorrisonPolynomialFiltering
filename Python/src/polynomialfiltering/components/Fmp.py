@@ -68,7 +68,6 @@ class AbstractCoreFmp(ICore):
         Returns:
             0th derivative input to output variance ratio
         """
-        '''@V:array'''
         return self.VRF[0,0]
     
     def getLastVRF(self, n : int) -> float:
@@ -81,7 +80,6 @@ class AbstractCoreFmp(ICore):
         Returns:
             'order'th derivative input to output variance ratio
         """
-        '''@V:array'''
         return self.VRF[-1,-1]
     
     def getDiagonalVRF(self, n : int) -> array:
@@ -94,7 +92,6 @@ class AbstractCoreFmp(ICore):
         Returns:
             'order'th derivative input to output variance ratio
         """
-        '''@V:array'''
         return diag(diag(self.VRF))
     
     @abstractmethod # pragma: no cover
@@ -366,7 +363,7 @@ class CoreFmp5(AbstractCoreFmp):
         return V;
 
 
-def makeFmpCore(order : int, tau : float, theta : float) -> ICore:
+def _makeFmpCore(order : int, tau : float, theta : float) -> ICore:
     """
     Factory for fading memory polynomial filter cores
     
@@ -393,5 +390,5 @@ def makeFmpCore(order : int, tau : float, theta : float) -> ICore:
     
 def makeFmp(order : int, tau : float, theta : float) -> RecursivePolynomialFilter:
     '''@core : ICore'''
-    core = makeFmpCore(order, tau, theta);
+    core = _makeFmpCore(order, tau, theta);
     return RecursivePolynomialFilter(order, tau, core)

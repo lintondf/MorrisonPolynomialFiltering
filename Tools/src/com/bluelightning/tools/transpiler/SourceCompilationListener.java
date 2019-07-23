@@ -1,6 +1,7 @@
 package com.bluelightning.tools.transpiler;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -338,31 +339,16 @@ public class SourceCompilationListener extends LcdPythonBaseListener {
 		
 		// return_stmt: 'return' (testlist)?;
 		@Override 
-		public void exitReturn_stmt(LcdPythonParser.Return_stmtContext ctx) { 
+		public void exitReturn_stmt(LcdPythonParser.Return_stmtContext ctx) {
 			transpiler.logger.info(StringUtils.left(ctx.getText(), 80));
 			String line = ctx.getText();
-			transpiler.dispatcher.emitReturnStatement();
 			if (ctx.getChildCount() > 1) {
 				expressionRoot = translateMap.get( ctx.getChild(1).getPayload() );
-//				System.out.println("RETURN< " + line );
-//				System.out.println( expressionRoot.traverse(1));
-				if (expressionRoot.getFirstChild() instanceof TranslationSymbolNode) {
-					// handle special case of returning new object
-					TranslationSymbolNode tsn = (TranslationSymbolNode) expressionRoot.getFirstChild();
-					if (tsn.getSymbol().isClass() && !tsn.getSymbol().isEnum()) {
-						if (! (tsn.getRightSibling() instanceof TranslationUnaryNode)) {
-							//transpiler.dispatcher.emitNewExpression(scope, tsn.getSymbol().getName(), expressionRoot);
-							transpiler.dispatcher.emitSubExpression(scope, expressionRoot);
-							transpiler.dispatcher.finishStatement();
-							expressionRoot = null;
-							return;
-						}
-					}
-				}
-				transpiler.dispatcher.emitSubExpression(scope, expressionRoot);
-				transpiler.dispatcher.finishStatement();
-				expressionRoot = null;
+				transpiler.dispatcher.emitReturnStatement(scope, ctx, expressionRoot);				
+			} else {
+				transpiler.dispatcher.emitReturnStatement(scope, ctx, null);				
 			}
+			expressionRoot = null;
 		}
 		
 		
@@ -437,8 +423,8 @@ public class SourceCompilationListener extends LcdPythonBaseListener {
 						break;
 					expressionRoot = expr;
 				}
-//				System.out.println("EXPR_STMT< " + expr.toString() );
-//				System.out.println( expr.traverse(1));
+				//System.out.println("EXPR_STMT< " + expr.toString() );
+				//System.out.println( expr.traverse(1));
 				if (ctx.getText().trim().startsWith("super().__init__")) {
 					// ignore
 				} else if ( ! transpiler.valueMap.get(ctx.getPayload()).startsWith("'''@")) {
@@ -542,7 +528,7 @@ public class SourceCompilationListener extends LcdPythonBaseListener {
 
 		@Override
 		public void exitExpr(LcdPythonParser.ExprContext ctx) {
-//			transpiler.dumpChildren(ctx);
+			//transpiler.dumpChildren(ctx);
 			defaultOperandOperator( ctx, "exitexpr" );
 		}
 
@@ -558,6 +544,7 @@ public class SourceCompilationListener extends LcdPythonBaseListener {
 
 		@Override
 		public void exitShift_expr(LcdPythonParser.Shift_exprContext ctx) {
+//			System.out.println(StringUtils.left(ctx.getText(), 80));
 			defaultOperandOperator( ctx, "shift_expr" );
 		}
 

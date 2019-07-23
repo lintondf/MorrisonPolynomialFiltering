@@ -3,6 +3,8 @@
  */
 package com.bluelightning.tools.transpiler;
 
+import org.antlr.v4.runtime.ParserRuleContext;
+
 import com.bluelightning.tools.transpiler.nodes.TranslationNode;
 
 /**
@@ -52,7 +54,7 @@ public interface ILanguageTarget {
 	
 	public void emitRaiseStatement(String exception);
 	
-	public void emitReturnStatement();
+	public void emitReturnStatement(Scope scope, ParserRuleContext ctx, TranslationNode expressionRoot);
 	
 	public void emitSubExpression( Scope scope, TranslationNode root );
 	

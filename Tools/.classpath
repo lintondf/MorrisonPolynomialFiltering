@@ -17,6 +17,7 @@
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="/Users/lintondf/GITHUB/ejml/EJML.jar"/>
+	<classpathentry kind="lib" path="/Users/lintondf/GITHUB/ejml/EJML.jar" sourcepath="/ejml-simple/src"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/ejml-simple"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

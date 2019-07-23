@@ -369,5 +369,10 @@ public abstract class AbstractProgrammer implements IProgrammer {
 		return symbol.getName();
 	}
 
+	@Override
+	public String getTypeInitializer(String remappedType) {
+		return null;
+	}
+
 	
 }

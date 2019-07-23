@@ -1,6 +1,7 @@
 package com.bluelightning.tools.transpiler.cpp.programmer;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 
@@ -75,6 +76,34 @@ public class BoostProgrammer extends AbstractProgrammer {
 
 	@Override
 	public String remapSymbolUsages(Scope currentScope, Symbol symbol) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	@Override
+	public String generateVectorInitializer(String values) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	@Override
+	public String getMeasurement(String symbol, Measurement which) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	@Override
+	public List<Pair> getVectorMethods() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	@Override
+	public List<Pair> getMatrixMethods() {
 		// TODO Auto-generated method stub
 		return null;
 	}

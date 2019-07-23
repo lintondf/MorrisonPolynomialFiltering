@@ -128,6 +128,21 @@ namespace polynomialfiltering {
             }
         }
 
+        void test9NUnitLastVRF () {
+            std::shared_ptr<polynomialfiltering::components::ICore> core;
+            double tau;
+            RealMatrix taus;
+            int n;
+            taus << 0.01, 0.1, 1., 10., 100.;
+            for (int order = 0; order < 5 + 1; order++) {
+                for (int itau = 0; itau < taus.size(); itau++) {
+                    tau = taus(itau);
+                    n = nUnitLastVRF(order, tau);
+                    core = makeEmpCore(order, tau);
+                }
+            }
+        }
+
         }; // namespace EMP_test
     }; // namespace components
 }; // namespace polynomialfiltering
@@ -140,6 +155,9 @@ TEST_CASE("EMP_test") {
     }
     SUBCASE("test2CheckStates") {
         components::EMP_test::test2CheckStates();
+    }
+    SUBCASE("test9NUnitLastVRF") {
+        components::EMP_test::test9NUnitLastVRF();
     }
 }
 

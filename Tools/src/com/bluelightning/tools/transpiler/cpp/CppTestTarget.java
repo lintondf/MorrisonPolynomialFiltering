@@ -84,17 +84,17 @@ public class CppTestTarget extends AbstractCppTarget {
 		templateDataModel.put("cppBody", "");
 		
 		cppIndent.write(String.format("namespace %s {\n", "polynomialfiltering"));
-		namespaceStack.push(String.format("%s}; // namespace %s\n", hppIndent.toString(), "polynomialfiltering"));
+		namespaceStack.push(String.format("%s}; // namespace %s\n", hppIndent.get(), "polynomialfiltering"));
 		hppIndent.in();
 		cppIndent.in();
 		for (int i = 0; i < scope.getQualifiers().size()-1; i++) {
 			cppIndent.write(String.format("namespace %s {\n", scope.getQualifiers().get(i)));
-			namespaceStack.push(String.format("%s}; // namespace %s\n", hppIndent.toString(), scope.getQualifiers().get(i)));
+			namespaceStack.push(String.format("%s}; // namespace %s\n", hppIndent.get(), scope.getQualifiers().get(i)));
 			hppIndent.in();
 			cppIndent.in();
 		}
 		cppIndent.write(String.format("namespace %s {\n", moduleName));
-		namespaceStack.push(String.format("%s}; // namespace %s\n", cppIndent.toString(), moduleName));
+		namespaceStack.push(String.format("%s}; // namespace %s\n", cppIndent.get(), moduleName));
 		cppIndent.in();
 		
 		cppIndent.writeln("");
@@ -116,7 +116,7 @@ public class CppTestTarget extends AbstractCppTarget {
 			hppIndent.out();
 			cppIndent.out();
 		}
-		templateDataModel.put("cppBody", cppIndent.out.toString().replaceAll("\\(\\*([^\\)]*)\\)\\.", "$1->")); //.replace("(*this).", "this->"));
+		templateDataModel.put("cppBody", cppIndent.sb.toString().replaceAll("\\(\\*([^\\)]*)\\)\\.", "$1->")); //.replace("(*this).", "this->"));
 		
 		Indent docIndent = new Indent();
 		docIndent.append(String.format("TEST_CASE(\"%s\") {\n", moduleName ) );
@@ -131,7 +131,7 @@ public class CppTestTarget extends AbstractCppTarget {
 		}
 		docIndent.out();
 		docIndent.append("}\n");
-		templateDataModel.put("doctest", docIndent.out.toString());
+		templateDataModel.put("doctest", docIndent.sb.toString());
 		try {
 			cppPath.toFile().getParentFile().mkdirs();
 			OutputStreamWriter out = new OutputStreamWriter(new FileOutputStream(cppPath.toFile()));

@@ -141,6 +141,9 @@ public class Scope {
 			return qualifiers.get(level);
 		}
 
+		public Scope.Level getLevelKind(int level) {
+			return levels.elementAt(level+1);
+		}
 		public String getVisiblityPrefix(Scope currentScope) {
 			StringBuilder sb = new StringBuilder();
 			for (int i = 0; i < qualifiers.size(); i++) {

@@ -11,8 +11,12 @@
  */
 package com.bluelightning.tools.transpiler;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Set;
 import java.util.TreeSet;
+
+import org.antlr.v4.runtime.ParserRuleContext;
 
 import com.bluelightning.tools.transpiler.nodes.TranslationListNode;
 import com.bluelightning.tools.transpiler.nodes.TranslationNode;
@@ -204,7 +208,7 @@ public abstract class AbstractLanguageTarget implements ILanguageTarget {
 	 * @see com.bluelightning.tools.transpiler.ILanguageTarget#emitReturnStatement()
 	 */
 	@Override
-	public void emitReturnStatement() {
+	public void emitReturnStatement(Scope scope, ParserRuleContext ctx, TranslationNode expressionRoot) {
 	}
 
 	/* (non-Javadoc)
@@ -226,6 +230,16 @@ public abstract class AbstractLanguageTarget implements ILanguageTarget {
 	 */
 	@Override
 	public void closeBlock() {
+	}
+
+	public static String readFileToString( Path path ) {
+		try {
+			byte[] bytes = Files.readAllBytes(path);
+			String content = new String(bytes, "UTF-8");
+			return content;
+		} catch (Exception x) {
+			return null;
+		}
 	}
 
 }

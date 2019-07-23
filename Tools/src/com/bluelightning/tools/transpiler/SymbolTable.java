@@ -11,7 +11,7 @@ import com.bluelightning.tools.transpiler.Scope.Level;
 
 import java.util.TreeMap;
 
-class SymbolTable {
+public class SymbolTable {
 		/**
 		 * 
 		 */
@@ -66,6 +66,10 @@ class SymbolTable {
 		}
 		
 		public Symbol lookupClass( String name ) {
+			return lookupClass(name, false);
+		}
+		
+		public Symbol lookupClass( String name, boolean orEnum ) {
 			name = name.trim();
 			if (name.startsWith("List[")) {
 				name = name.substring(5, name.length()-1);
@@ -79,7 +83,7 @@ class SymbolTable {
 				Symbol c = it.next();
 				if (! c.isInherited() ) {
 					if (c.isEnum())
-						return null;
+						return (orEnum) ? c : null;
 					if (c.isClass())
 						return c;
 					else

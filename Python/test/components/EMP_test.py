@@ -400,7 +400,7 @@ class EMP_test(unittest.TestCase):
         '''@itau : int'''
         '''@taus : array'''
         '''@n : int'''
-        taus = vector([0.01, 0.1, 1, 10, 100]);
+        taus = array([0.01, 0.1, 1, 10, 100]);
         for order in range(0,5+1) :
             for itau in range(0, len(taus)):
                 tau = taus[itau]

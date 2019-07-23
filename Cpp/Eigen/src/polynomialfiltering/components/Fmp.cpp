@@ -5,7 +5,7 @@
  * SPDX-License-Identifier: MIT
  * See separate LICENSE file for full text
  *
- * AUTO-GENERATED C++
+ * AUTO-GENERATED C++ from Python Reference Implementation
  */
 
 #include "polynomialfiltering/components/Fmp.hpp"
@@ -25,17 +25,14 @@ namespace polynomialfiltering {
             }
 
             double AbstractCoreFmp::getFirstVRF (const int n) {
-                RealMatrix V;
                 return this->VRF(0, 0);
             }
 
             double AbstractCoreFmp::getLastVRF (const int n) {
-                RealMatrix V;
-                return this->VRF(VRF.rows()-1, VRF.cols()-1);
+                return this->VRF(VRF->rows()-1, VRF->columns()-1);
             }
 
             RealMatrix AbstractCoreFmp::getDiagonalVRF (const int n) {
-                RealMatrix V;
                 return diag(diag(this->VRF));
             }
 

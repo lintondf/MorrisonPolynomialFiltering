@@ -135,8 +135,8 @@ class Fmp_test(unittest.TestCase):
         '''@thetas : array'''
         '''@n : int'''
         
-        taus = vector([0.01, 0.1, 1, 10, 100]);
-        thetas = vector([0.90, 0.95, 0.99, 0.999])
+        taus = array([0.01, 0.1, 1, 10, 100]);
+        thetas = array([0.90, 0.95, 0.99, 0.999])
         for order in range(0,5+1) :
             for itheta in range(0, len(thetas)):
                 theta = thetas[itheta]

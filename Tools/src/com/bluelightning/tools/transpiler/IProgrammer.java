@@ -1,5 +1,8 @@
 package com.bluelightning.tools.transpiler;
 
+import java.util.AbstractMap;
+import java.util.List;
+
 import com.bluelightning.tools.transpiler.nodes.TranslationConstantNode;
 import com.bluelightning.tools.transpiler.nodes.TranslationNode;
 
@@ -51,6 +54,27 @@ public interface IProgrammer {
 
 	String remapTypeParameter(Scope currentScope, String remappedType);
 	
+	String getTypeInitializer( String remappedType );
+	
 	String remapSymbolUsages( Scope currentScope, Symbol symbol);
+
+	String generateVectorInitializer(String values);
+	
+	public enum Measurement {NUMBER_OF_ELEMENTS, NUMBER_OF_ROWS, NUMBER_OF_COLUMNS };
+	
+	String getMeasurement( String symbol, Measurement which );
+	
+	public static class Pair {
+		public Pair(String name, String type) {
+			methodName = name;
+			methodType = type;
+		}
+		public String methodName;
+		public String methodType;
+	}
+	
+	List<Pair> getVectorMethods();
+	
+	List<Pair> getMatrixMethods();
 
 }
