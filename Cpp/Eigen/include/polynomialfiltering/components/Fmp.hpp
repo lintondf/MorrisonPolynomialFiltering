@@ -181,17 +181,6 @@ namespace polynomialfiltering {
                 RealMatrix _getVRF(const double u, const double t);
         }; // class CoreFmp5 
 
-
-        ///// @brief Factory for fading memory polynomial filter cores
-        /// 
-        /// 
-        ///  @param		order	integer polynomial order
-        ///  @param		tau	nominal time step
-        ///  @param		theta	fading factor [0..1]
-        /// 
-        ///  @return  fading memory filter core object
-        /// 
-        std::shared_ptr<ICore> makeFmpCore(const int order, const double tau, const double theta);
         std::shared_ptr<RecursivePolynomialFilter> makeFmp(const int order, const double tau, const double theta);
     }; // namespace components
 }; // namespace polynomialfiltering

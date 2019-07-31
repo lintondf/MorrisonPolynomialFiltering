@@ -5,7 +5,7 @@
  * SPDX-License-Identifier: MIT
  * See separate LICENSE file for full text
  *
- * AUTO-GENERATED C++ TEST
+ * AUTO-GENERATED C++ TEST from Python Reference Implementation
  */
 
 #include <iostream>
@@ -85,7 +85,7 @@ namespace polynomialfiltering {
             testData = std::make_shared<TestData>("testRecursivePolynomialFilter.nc");
             matches = testData->getMatchingGroups("testPurePredict_");
             assert_not_empty(matches);
-            for (int iMatch = 0; iMatch < matches.size(); iMatch++) {
+            for (int iMatch = 0; iMatch < matches->size(); iMatch++) {
                 setup = testData->getGroupVariable(matches[iMatch], "setup");
                 times = testData->getGroupVariable(matches[iMatch], "times");
                 truth = testData->getGroupVariable(matches[iMatch], "truth");

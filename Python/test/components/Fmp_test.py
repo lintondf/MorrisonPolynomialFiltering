@@ -27,12 +27,12 @@ from TestData import TestData
 from polynomialfiltering.Main import AbstractFilter, FilterStatus
 from polynomialfiltering.components.RecursivePolynomialFilter import RecursivePolynomialFilter
 from polynomialfiltering.components.ICore import ICore
-from polynomialfiltering.components.Fmp import makeFmp, makeFmpCore
+from polynomialfiltering.components.Fmp import makeFmp, _makeFmpCore
 
 from polynomialfiltering.PythonUtilities import ignore, testcase, testclass, testclassmethod
 from polynomialfiltering.PythonUtilities import assert_not_empty
 
-from polynomialfiltering.components.Emp import makeEmp, makeEmpCore, nSwitch, nUnitLastVRF
+from polynomialfiltering.components.Emp import makeEmp, _makeEmpCore, nSwitch, nUnitLastVRF
 
 
 class Fmp_test(unittest.TestCase):
@@ -108,10 +108,10 @@ class Fmp_test(unittest.TestCase):
         '''@core95 : ICore'''
         '''@core95half : ICore'''
         '''@core95double : ICore'''
-        core90 = makeFmpCore(3, 1.0, 0.90)
-        core95 = makeFmpCore(3, 1.0, 0.95)
-        core95half = makeFmpCore(3, 2.0, 0.95)
-        core95double = makeFmpCore(3, 0.5, 0.95)
+        core90 = _makeFmpCore(3, 1.0, 0.90)
+        core95 = _makeFmpCore(3, 1.0, 0.95)
+        core95half = _makeFmpCore(3, 2.0, 0.95)
+        core95double = _makeFmpCore(3, 0.5, 0.95)
         
         assert_allclose( core90.getVRF(1), core90.getVRF(10) )  # should be time invariate
         assert_array_less( core95.getVRF(1), core90.getVRF(1))
@@ -142,8 +142,8 @@ class Fmp_test(unittest.TestCase):
                 theta = thetas[itheta]
                 for itau in range(0, len(taus)):
                     tau = taus[itau]
-                    emp = makeEmpCore(order, tau)
-                    fmp = makeFmpCore(order, tau, theta)
+                    emp = _makeEmpCore(order, tau)
+                    fmp = _makeFmpCore(order, tau, theta)
                     n = nSwitch( order, theta )
                     assert( fmp.getFirstVRF(0)/emp.getFirstVRF(n) < 1.25 )
 #                     print('%2d, %8.3f, %7.5f, %8.1f, %6.2f, %6.2f, %6.2f' %

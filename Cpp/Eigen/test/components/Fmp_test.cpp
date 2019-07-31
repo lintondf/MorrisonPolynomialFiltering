@@ -5,7 +5,7 @@
  * SPDX-License-Identifier: MIT
  * See separate LICENSE file for full text
  *
- * AUTO-GENERATED C++ TEST
+ * AUTO-GENERATED C++ TEST from Python Reference Implementation
  */
 
 #include <iostream>
@@ -21,6 +21,7 @@
 
 #include <TestData.hpp>
 #include <polynomialfiltering/components/RecursivePolynomialFilter.hpp>
+#include <polynomialfiltering/components/AbstractRecursiveFilter.hpp>
 #include <polynomialfiltering/Main.hpp>
 #include <polynomialfiltering/components/ICore.hpp>
 #include <polynomialfiltering/components/Emp.hpp>
@@ -42,10 +43,10 @@ namespace polynomialfiltering {
                 std::shared_ptr<polynomialfiltering::components::ICore> core95;
                 std::shared_ptr<polynomialfiltering::components::ICore> core95half;
                 std::shared_ptr<polynomialfiltering::components::ICore> core95double;
-                core90 = makeFmpCore(3, 1.0, 0.90);
-                core95 = makeFmpCore(3, 1.0, 0.95);
-                core95half = makeFmpCore(3, 2.0, 0.95);
-                core95double = makeFmpCore(3, 0.5, 0.95);
+                core90 = _makeFmpCore(3, 1.0, 0.90);
+                core95 = _makeFmpCore(3, 1.0, 0.95);
+                core95half = _makeFmpCore(3, 2.0, 0.95);
+                core95double = _makeFmpCore(3, 0.5, 0.95);
                 assert_almost_equal(core90->getVRF(1), core90->getVRF(10));
                 assert_array_less(core95->getVRF(1), core90->getVRF(1));
                 assert_almost_equal(ones(3 + 1, 3 + 1), arrayTimes((arrayDivide(core95double->getVRF(1), core95->getVRF(1))), (arrayDivide(core95half->getVRF(1), core95->getVRF(1)))));
@@ -63,15 +64,15 @@ namespace polynomialfiltering {
                 double theta;
                 RealMatrix thetas;
                 int n;
-                taus << 0.01, 0.1, 1., 10., 100.;
-                thetas << 0.90, 0.95, 0.99, 0.999;
+                taus = (RealVector5() << 0.01, 0.1, 1., 10., 100.).finished();
+                thetas = (RealVector4() << 0.90, 0.95, 0.99, 0.999).finished();
                 for (int order = 0; order < 5 + 1; order++) {
-                    for (int itheta = 0; itheta < thetas.size(); itheta++) {
+                    for (int itheta = 0; itheta < thetas->size(); itheta++) {
                         theta = thetas(itheta);
-                        for (int itau = 0; itau < taus.size(); itau++) {
+                        for (int itau = 0; itau < taus->size(); itau++) {
                             tau = taus(itau);
-                            emp = makeEmpCore(order, tau);
-                            fmp = makeFmpCore(order, tau, theta);
+                            emp = _makeEmpCore(order, tau);
+                            fmp = _makeFmpCore(order, tau, theta);
                             n = nSwitch(order, theta);
                         }
                     }

@@ -8,7 +8,7 @@ import unittest
 import coverage
 
 def slow() -> bool:
-    return False;
+    return True;
 
 def testDataPath( filename : str) -> str:
     path = os.getcwd();
@@ -22,10 +22,9 @@ def testDataPath( filename : str) -> str:
 def runAll():
     testmodules = [
         'components.AbstractRecursiveFilter_test',
-        'components.ExpandingMemoryPolynomialFilter_test',
+        'components.EMP_test',
         'components.FixedMemoryFilter_test',
-        'components.FadingMemoryPolynomialFilter_test',
-        'components.EmpFmpPair_test',
+        'components.FMP_test',
         'filters.ManagedFilterBase_test',
         'filters.controls.ConstantObservationErrorModel_test',
         ]

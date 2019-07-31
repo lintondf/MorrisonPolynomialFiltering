@@ -29,9 +29,9 @@ public abstract class AbstractProgrammer implements IProgrammer {
 		typeRemap.put("str", "String");	
 		
 		
-		simpleRemaps.put("int", new Symbol(libraryScope, "", "int")); //TODO generic
-		simpleRemaps.put("max", new Symbol(libraryScope, "Math.max", "int")); //TODO generic
-		simpleRemaps.put("min", new Symbol(libraryScope, "Math.min", "int")); //TODO generic
+		//simpleRemaps.put("int", new Symbol(libraryScope, "", "int")); //TODO generic
+		//simpleRemaps.put("max", new Symbol(libraryScope, "Math.max", "int")); //TODO generic
+		//simpleRemaps.put("min", new Symbol(libraryScope, "Math.min", "int")); //TODO generic
 		simpleRemaps.put("chi2Cdf", new Symbol(libraryScope, "chi2Cdf", "float"));
 		simpleRemaps.put("chi2Ppf", new Symbol(libraryScope, "chi2Ppf", "float"));
 		simpleRemaps.put("ftestCdf", new Symbol(libraryScope, "ftestCdf", "float"));
@@ -382,7 +382,7 @@ public abstract class AbstractProgrammer implements IProgrammer {
 			if (s.isAbstractClass()) {
 				return null;
 			}
-			return String.format("new %s()", remappedType );
+			return String.format("new %s", remappedType );
 		}
 	}
 	

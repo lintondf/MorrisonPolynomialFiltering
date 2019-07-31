@@ -14,7 +14,7 @@ from numpy import arange, array2string, cov, zeros, mean, std, var, diag,\
 from numpy.linalg import inv
 from numpy.random import randn
 from numpy.testing import assert_almost_equal
-from numpy.testing.nose_tools.utils import assert_allclose
+from numpy.testing import assert_allclose
 from math import sqrt, sin
 from runstats import Statistics
 from scipy.stats._continuous_distns import chi2
@@ -28,13 +28,13 @@ class TestFixedMemoryFiltering(unittest.TestCase):
     cdf = None;
 
     @classmethod
-    def setUpClass(cls):
+    def setUpClass(self):
         path = testDataPath('FixedMemoryFiltering.nc');
-        cls.cdf = Dataset(path, "w", format="NETCDF4");
+        self.cdf = Dataset(path, "w", format="NETCDF4");
 
     @classmethod
-    def tearDownClass(cls):
-        cls.cdf.close()
+    def tearDownClass(self):
+        self.cdf.close()
 
     Y0 = array([1e4, 1e3, 1e2, 1e1, 1e0, 1e-1]);
     
@@ -61,6 +61,7 @@ class TestFixedMemoryFiltering(unittest.TestCase):
         data = data[:,1:];
         observations = data[:,0:1];
         data = data[:,1:];
+#         print(order, window, M, iCheck, times[iCheck]);
         fixed = FixedMemoryFilter(order, window);
         for i in range(0,M) :
             fixed.add(times[i], observations[i]);
@@ -78,8 +79,11 @@ class TestFixedMemoryFiltering(unittest.TestCase):
             group = self.createTestGroup(self.cdf, 'testPerfect_%d' % order );
             self.writeTestVariable(group, 'setup', setup);
             self.writeTestVariable(group, 'data', data);
+#             print('setup ',setup)
+#             print('data ',data)
             
             expected = self.executeEstimatedState(setup, data);
+#             print(order, expected)
             
             self.writeTestVariable(group, 'expected', expected);
             assert_allclose( expected, truth[11,:], atol=0, rtol=1e-3 )

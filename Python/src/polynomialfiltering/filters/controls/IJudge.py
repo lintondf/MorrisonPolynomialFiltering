@@ -15,7 +15,7 @@ from numpy import array as vector;
 from scipy.stats import chi2;
 
 from polynomialfiltering.Main import AbstractFilterWithCovariance
-from polynomialfiltering.components.FadingMemoryPolynomialFilter import makeFMP
+from polynomialfiltering.components.Fmp import makeFmp
 
 
 class IJudge(ABC):

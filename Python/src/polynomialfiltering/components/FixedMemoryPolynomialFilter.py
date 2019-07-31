@@ -62,11 +62,15 @@ class FixedMemoryFilter(AbstractFilterWithCovariance) :
         '''@Tnt : array | transpose of Tn'''
         '''@TntTn : array'''
         '''@TntYn : array'''
+#         print(self.tRing);
+#         print(self.yRing)
         dt = self.tRing - t;
         Tn = self._getTn(dt);
         Tnt = transpose(Tn)
         TntTn = Tnt @ Tn;
         TntYn = Tnt @ self.yRing
+#         print(TntTn)
+#         print(TntYn)
         self.Z = solve(TntTn, TntYn); # lstsq(TntTn, TntYn, rcond=None)[0];
         return self.Z;
     

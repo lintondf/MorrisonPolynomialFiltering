@@ -14,8 +14,8 @@ from scipy.interpolate import PchipInterpolator
 import pymap3d
 import xml.etree.ElementTree as ET 
 from polynomialfiltering.Main import FilterStatus, AbstractFilter
-from polynomialfiltering.components.ExpandingMemoryPolynomialFilter import makeEMP
-from polynomialfiltering.components.FadingMemoryPolynomialFilter import makeFMP
+from polynomialfiltering.components.Emp import makeEmp
+from polynomialfiltering.components.Fmp import makeFmp
 from TestUtilities import A2S, scaleVRFEMP, covarianceToCorrelation, correlationToCovariance, generateTestData, hellingerDistance
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
@@ -156,7 +156,7 @@ def FMPVRFCorrelations():
 
 def VRF2(order : int):
     u = 0.1;
-    emp = makeEMP(order, u)
+    emp = makeEmp(order, u)
     C = array([[9,36,60],[36,192,360],[60,360,720]]);
     K = baseCovarianceToCorrelation(C);
     print('large n VRF base std dev')
@@ -242,7 +242,7 @@ def testEMPSet(Leff : int, pSwitch : float) :
     BET = zeros([N,order+1]);
     emps = [];
     for o in range(0, 5+1) :
-        emps.append( makeEMP(o, tau) );
+        emps.append( makeEmp(o, tau) );
     K = len(emps);
     Z = zeros(order+1);
     for emp in emps :
@@ -461,7 +461,7 @@ def testMvnrand():
         (times, truth, __, __) = \
             generateTestData(order, N, 0.0, array([1000, -100, 50, -15])[i:i+op1], tau, sigma=0)
         observations = truth[:,0] + X[:,i]
-        f = makeFMP(order, theta, tau);
+        f = makeFmp(order, theta, tau);
         f.start(0.0, truth[0,:])
 #         print(A2S(f.getState()))
 #         print(A2S(f.predict(times[1])))

@@ -16,7 +16,7 @@ from numpy import sqrt
 from numpy.linalg import inv
 from numpy.random import randn
 from numpy.testing import assert_almost_equal
-from numpy.testing.nose_tools.utils import assert_allclose
+from numpy.testing import assert_allclose
 from numpy.linalg.linalg import norm
 from numpy.ma.core import isarray
 from scipy.stats import norm as normalDistribution

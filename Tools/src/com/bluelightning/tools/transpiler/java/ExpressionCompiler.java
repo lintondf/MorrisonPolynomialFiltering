@@ -37,6 +37,8 @@ import com.bluelightning.tools.transpiler.java.programmer.AbstractProgrammer;
 
 public class ExpressionCompiler {
 	
+	public static boolean isTest = false;
+	
 	private static class JavaTargetManagerFunctions extends ManagerFunctions {
 		
 		AbstractProgrammer programmer;
@@ -47,9 +49,12 @@ public class ExpressionCompiler {
 			this.programmer = programmer;
 			this.tempManager = tempManager;
 			new CopyFunction().add();
+			new MaxFunction().add();
+			new MinFunction().add();
 			new NumRowsFunction().add();
 			new NumColsFunction().add();
 	    	new IdentityFunction().add();
+	    	new IntFunction().add();
 	    	new TransposeFunction().add();
 	    	new ZerosFunction().add();
 		}
@@ -102,6 +107,24 @@ public class ExpressionCompiler {
 //					}
 				}
 				scope = scope.getParent();
+			} // while ascending levels
+			
+			if (! isTest) {
+				List<Symbol> statics = Transpiler.instance().getSymbolTable().getStaticFunctions();
+				for (Symbol method : statics) {
+					if (method.getName().equals("__init__"))
+						continue;
+					Symbol symbol = Transpiler.instance().lookupClass(method.getScope().getLast());
+					if (symbol == null)
+						continue;
+					String name = programmer.rewriteSymbol(method.getScope().getParent(), symbol) + "$" + method.getName();
+	//				System.out.printf("      method %s: %s\n", name, method.getType());
+			    	GenericMethodFunction gmf = new GenericMethodFunction(name, method.getType(), tempManager);
+			    	if (gmf.output != null) {
+			    		add( gmf );
+			    	}
+					
+				}
 			}
 		}
 		
@@ -214,6 +237,42 @@ public class ExpressionCompiler {
 			}
 		}
 		
+		/*
+	    public class X extends CodedFunction1 {
+	    	X() {
+				super("");
+			}
+
+			@Override
+			public String opName() {
+				return "$-";
+			} 
+
+			@Override
+			public Info create(Variable A, ManagerTempVariables manager) {
+		    	final Info info = new Info(A);
+		    	if( A instanceof VariableMatrix ) {
+		    		info.output = manager.createInteger();
+		    		info.op = info.new Operation(opName()) {
+						@Override
+						public void process() {
+						}
+		    		};
+		    	} else {
+		    		throw new RuntimeException("numCols only takes one matrix parameter");
+		    	}
+	    		return info;
+			}
+
+			@Override
+			public String code(Info info) {
+				Variable A = info.input.get(0);
+				StringBuilder sb = new StringBuilder();
+				return sb.toString();
+			}
+	    }
+		 */
+		
 	    public class CopyFunction extends CodedFunction1 {
 	    	CopyFunction() {
 				super("copy");
@@ -293,6 +352,137 @@ public class ExpressionCompiler {
 				sb.append( String.format("%s.reshape(%s, %s);\n", info.output.getOperand(), A.getOperand(), A.getOperand()) );
 				//CommonOps_DDRM.setIdentity(output.matrix);
 				sb.append( String.format(EmitJavaOperation.formatCommonOps1, "setIdentity", info.output.getOperand()) );
+				return sb.toString();
+			}
+	    }
+	    
+	    public class IntFunction extends CodedFunction1 {
+	    	IntFunction() {
+				super("int");
+			}
+
+			@Override
+			public String opName() {
+				return "$int-s";
+			} 
+
+			@Override
+			public Info create(Variable A, ManagerTempVariables manager) {
+		    	final Info info = new Info(A);
+		    	if( A instanceof VariableScalar ) {
+		    		info.output = manager.createInteger();
+		    		info.op = info.new Operation(opName()) {
+						@Override
+						public void process() {
+							info.outputInteger().value = (int) ((VariableScalar) info.A()).getDouble();
+						}
+		    		};
+		    	} else {
+		    		throw new RuntimeException("int() only takes one scalar parameter");
+		    	}
+	    		return info;
+			}
+
+			@Override
+			public String code(Info info) {
+				Variable A = info.input.get(0);
+				StringBuilder sb = new StringBuilder();
+				sb.append(String.format("%s = (int) %s;\n", info.output.getOperand(), info.A().getOperand()));
+				return sb.toString();
+			}
+	    }
+	    public class MaxFunction extends CodedFunctionN {
+	    	MaxFunction() {
+				super("max");
+			}
+
+			@Override
+			public String opName() {
+				return "$max-s";
+			} 
+
+			@Override
+			public Info create(List<Variable> inputs, ManagerTempVariables manager) {
+		    	final Info info = new Info();
+		    	info.input = inputs;
+		    	if (info.input.size() == 2) {
+		    		info.output = manager.createDouble();
+		    		info.op = info.new Operation(opName()) {
+						@Override
+						public void process() {
+							info.outputDouble().value = Math.max(
+										((VariableScalar) info.input.get(0)).getDouble(),
+										((VariableScalar) info.input.get(1)).getDouble() );
+						}
+		    		};
+		    	} else {
+		    		throw new RuntimeException("max requires exactly two parameters");
+		    	}
+	    		return info;
+			}
+
+			@Override
+			public String code(Info info) {
+				Variable A = info.input.get(0);
+				StringBuilder sb = new StringBuilder();
+				sb.append( String.format("%s = Math.max(%s, %s);\n",
+							info.outputDouble().getOperand(), 
+							((VariableScalar) info.input.get(0)).getOperand(),
+							((VariableScalar) info.input.get(1)).getOperand() ));
+				return sb.toString();
+			}
+	    }
+	    
+	    public class MinFunction extends CodedFunctionN {
+	    	MinFunction() {
+				super("min");
+			}
+
+			@Override
+			public String opName() {
+				return "$min-s";
+			} 
+
+			@Override
+			public Info create(List<Variable> inputs, ManagerTempVariables manager) {
+		    	final Info info = new Info();
+		    	info.input = inputs;
+		    	if (info.input.size() == 2) {
+		    		if (info.input.get(0) instanceof VariableInteger && info.input.get(1) instanceof VariableInteger) {
+			    		info.output = manager.createInteger();
+			    		info.op = info.new Operation(opName()) {
+							@Override
+							public void process() {
+								info.outputInteger().value = Math.min(
+											((VariableInteger) info.input.get(0)).value,
+											((VariableInteger) info.input.get(1)).value );
+							}
+			    		};
+		    		} else {
+			    		info.output = manager.createDouble();
+			    		info.op = info.new Operation(opName()) {
+							@Override
+							public void process() {
+								info.outputDouble().value = Math.min(
+											((VariableScalar) info.input.get(0)).getDouble(),
+											((VariableScalar) info.input.get(1)).getDouble() );
+							}
+			    		};
+		    		}
+		    	} else {
+		    		throw new RuntimeException("min requires exactly two parameters");
+		    	}
+	    		return info;
+			}
+
+			@Override
+			public String code(Info info) {
+				Variable A = info.input.get(0);
+				StringBuilder sb = new StringBuilder();
+				sb.append( String.format("%s = Math.min(%s, %s);\n",
+							info.output.getOperand(), 
+							((VariableScalar) info.input.get(0)).getOperand(),
+							((VariableScalar) info.input.get(1)).getOperand() ));
 				return sb.toString();
 			}
 	    }

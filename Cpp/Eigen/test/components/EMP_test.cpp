@@ -1,11 +1,11 @@
-/***** /components/EMP_test/
+/***** /components/Emp_test/
  * (C) Copyright 2019 - Blue Lightning Development, LLC.
  * D. F. Linton. support@BlueLightningDevelopment.com
  *
  * SPDX-License-Identifier: MIT
  * See separate LICENSE file for full text
  *
- * AUTO-GENERATED C++ TEST
+ * AUTO-GENERATED C++ TEST from Python Reference Implementation
  */
 
 #include <iostream>
@@ -21,6 +21,7 @@
 
 #include <TestData.hpp>
 #include <polynomialfiltering/components/RecursivePolynomialFilter.hpp>
+#include <polynomialfiltering/components/AbstractRecursiveFilter.hpp>
 #include <polynomialfiltering/Main.hpp>
 #include <polynomialfiltering/components/ICore.hpp>
 #include <polynomialfiltering/components/Emp.hpp>
@@ -32,7 +33,7 @@
 #pragma float_control(precise, off)
 namespace polynomialfiltering {
     namespace components {
-        namespace EMP_test {
+        namespace Emp_test {
             
             using namespace Eigen;
             
@@ -57,30 +58,30 @@ namespace polynomialfiltering {
             int offset;
             double tau;
             std::shared_ptr<polynomialfiltering::components::ICore> core;
-            std::shared_ptr<EMP_test::RecursivePolynomialFilterMock> f;
+            std::shared_ptr<RecursivePolynomialFilterMock> f;
             RealMatrix V;
             RealMatrix E;
             testData = std::make_shared<TestData>("testEMP.nc");
             matches = testData->getMatchingGroups("VRF_");
             assert_not_empty(matches);
-            for (int order = 0; order < matches.size(); order++) {
+            for (int order = 0; order < matches->size(); order++) {
                 setup = testData->getGroupVariable(matches[order], "setup");
                 N = int(setup(0, 0));
                 taus = testData->getGroupVariable(matches[order], "taus");
                 expected = testData->getGroupVariable(matches[order], "expected");
                 offset = 0;
-                for (int itau = 0; itau < taus.size(); itau++) {
+                for (int itau = 0; itau < taus->size(); itau++) {
                     tau = taus(itau, 0);
-                    core = makeEmpCore(order, tau);
-                    f = std::make_shared<EMP_test::RecursivePolynomialFilterMock>(order, tau, core);
+                    core = _makeEmpCore(order, tau);
+                    f = std::make_shared<RecursivePolynomialFilterMock>(order, tau, core);
                     for (int iN = order + 1; iN < N; iN++) {
                         f->setN(iN + 0);
                         V = f->getVRF();
-                        E = expected.block(offset, 0, offset + order + 1 - offset, expected.cols() );
+                        E = expected.block(offset, 0, offset + order + 1 - offset, expected->columns());
                         assert_almost_equal(V, E);
                         offset += order + 1;
                         assert_almost_equal(V(0, 0), f->getFirstVRF());
-                        assert_almost_equal(V(V.rows()-1, V.cols()-1), f->getLastVRF());
+                        assert_almost_equal(V(V->rows()-1, V->columns()-1), f->getLastVRF());
                         assert_almost_equal(diag(V), diag(f->getDiagonalVRF()));
                     }
                 }
@@ -109,7 +110,7 @@ namespace polynomialfiltering {
             setup = testData->getGroupVariable(matches[0], "setup");
             matches = testData->getMatchingGroups("Case_");
             assert_not_empty(matches);
-            for (int i = 0; i < matches.size(); i++) {
+            for (int i = 0; i < matches->size(); i++) {
                 order = int(setup(i, 0));
                 tau = setup(i, 1);
                 times = testData->getGroupVariable(matches[i], "times");
@@ -133,31 +134,31 @@ namespace polynomialfiltering {
             double tau;
             RealMatrix taus;
             int n;
-            taus << 0.01, 0.1, 1., 10., 100.;
+            taus = (RealVector5() << 0.01, 0.1, 1., 10., 100.).finished();
             for (int order = 0; order < 5 + 1; order++) {
-                for (int itau = 0; itau < taus.size(); itau++) {
+                for (int itau = 0; itau < taus->size(); itau++) {
                     tau = taus(itau);
                     n = nUnitLastVRF(order, tau);
-                    core = makeEmpCore(order, tau);
+                    core = _makeEmpCore(order, tau);
                 }
             }
         }
 
-        }; // namespace EMP_test
+        }; // namespace Emp_test
     }; // namespace components
 }; // namespace polynomialfiltering
 
 #pragma float_control(pop)
 
-TEST_CASE("EMP_test") {
+TEST_CASE("Emp_test") {
     SUBCASE("test1CheckVRF") {
-        components::EMP_test::test1CheckVRF();
+        components::Emp_test::EMP_test::test1CheckVRF();
     }
     SUBCASE("test2CheckStates") {
-        components::EMP_test::test2CheckStates();
+        components::Emp_test::EMP_test::test2CheckStates();
     }
     SUBCASE("test9NUnitLastVRF") {
-        components::EMP_test::test9NUnitLastVRF();
+        components::Emp_test::EMP_test::test9NUnitLastVRF();
     }
 }
 

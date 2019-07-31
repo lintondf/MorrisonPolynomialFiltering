@@ -9,8 +9,9 @@ from numpy import array, zeros
 from numpy import array as vector;
 
 from polynomialfiltering.components import AbstractRecursiveFilter
-from polynomialfiltering.components.EmpFmpPair import EmpFmpPair;
+from polynomialfiltering.components.Emp import makeEmp
 from polynomialfiltering.filters.ManagedFilterBase import ManagedFilterBase;
+from Filtering import FilterStatus
 
 class ManagedFilterBaseMock(ManagedFilterBase):
     
@@ -40,11 +41,18 @@ class Test(unittest.TestCase):
 
 
     def testName(self):
-        f = EmpFmpPair(0, 0.95, 0.1);
+        f = makeEmp(0, 0.1)
         m = ManagedFilterBaseMock( f.getOrder(), f );
         assert( m.getN() == 0 )
         assert( m.getWorker().getOrder() == 0)
         assert( m.getWorker().getTau() == 0.1)
+        
+    def testWorkerPassthru(self):
+        f = makeEmp(1, 0.2)
+        m = ManagedFilterBaseMock( f.getOrder(), f )
+        assert( m.getWorker() == f)
+        f.setStatus(FilterStatus.RESETING);
+        assert( m.getStatus() == f.getStatus() )
 
 
 if __name__ == "__main__":

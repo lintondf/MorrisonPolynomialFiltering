@@ -277,7 +277,7 @@ namespace polynomialfiltering {
                 return V;
             }
 
-        std::shared_ptr<ICore> makeFmpCore (const int order, const double tau, const double theta) {
+        std::shared_ptr<ICore> _makeFmpCore (const int order, const double tau, const double theta) {
             if (order == 0) {
                 return std::make_shared<CoreFmp0>(tau, theta);
             } else if (order == 1.0) {
@@ -295,7 +295,7 @@ namespace polynomialfiltering {
 
         std::shared_ptr<RecursivePolynomialFilter> makeFmp (const int order, const double tau, const double theta) {
             std::shared_ptr<ICore> core;
-            core = makeFmpCore(order, tau, theta);
+            core = _makeFmpCore(order, tau, theta);
             return std::make_shared<RecursivePolynomialFilter>(order, tau, core);
         }
 

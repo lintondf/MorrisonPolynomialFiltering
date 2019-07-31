@@ -61,7 +61,7 @@ class PurePredictCore(ICore):
        
 class RecursivePolynomialFilter_test(unittest.TestCase):
 
-#     Y0 = array([1e4, -5e3, +1e3, -5e2, +1e2, -5e1]);
+    Y0 = array([1e4, -5e3, +1e3, -5e2, +1e2, -5e1]);
 
     def setUp(self):
         pass

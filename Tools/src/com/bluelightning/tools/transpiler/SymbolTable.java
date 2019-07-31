@@ -125,6 +125,18 @@ public class SymbolTable {
 			return out;
 		}
 		
+		public List<Symbol> getStaticFunctions() {
+			ArrayList<Symbol> out = new ArrayList<>();
+			for (Map<String, Symbol> aliases : table.values()) {
+				for (Symbol symbol : aliases.values()) {
+					if (symbol.isFunction() && symbol.getScope().getLevel() == Scope.Level.CLASS) {
+						out.add(symbol);
+					}
+				}
+			}
+			return out;			
+		}
+		
 		private void addShorter( TreeMap<String, Symbol> map, Symbol symbol) {
 			Symbol that = map.get(symbol.getName());
 			if (that == null) {

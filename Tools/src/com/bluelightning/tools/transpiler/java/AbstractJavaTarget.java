@@ -156,11 +156,17 @@ public class AbstractJavaTarget extends AbstractLanguageTarget{
 				String name = symbol.getName();
 				String remappedType = programmer.remapType(currentScope, symbol); 
 				String type = remappedType + " ";
+				Indent body = new Indent();
 				if (symbol.isConstructor()) {
 					name = currentClass.getName();
 					type = "";
+					if (! fpi.parameters.isEmpty() ) {
+						if (fpi.parameters.size() > 1 || ! fpi.parameters.get(0).getName().equals("self")) {
+							indent.writeln();
+							indent.writeln(String.format("public %s() {}  // auto-generated null constructor\n", name) );
+						}
+					}
 				}
-				Indent body = new Indent();
 				int nOptional = 0;
 				ArrayList<ParameterHandling> handling = new ArrayList<>();
 				for (Symbol parameter : fpi.parameters ) {
@@ -266,7 +272,6 @@ public class AbstractJavaTarget extends AbstractLanguageTarget{
 
 	protected void writeOptionalParameterAliases(Indent indent, String currentClassName, String type, String name,
 			ArrayList<ParameterHandling> handling) {
-		int n = 1 << handling.size();
 		indent.write( String.format("%s%s(", type, name) );
 		boolean addComma = false;
 		for (int j = 0; j < handling.size(); j++) {
@@ -375,6 +380,8 @@ public class AbstractJavaTarget extends AbstractLanguageTarget{
 		if (c != null && child.getRightSibling() != null && child.getRightSibling() instanceof TranslationListNode) { // create an object
 			String rewrite = programmer.rewriteSymbol( scope, symbol );
 			emitNewExpression( scope, rewrite, child );
+			addImport( c.getScope().getChild(Level.CLASS, rewrite) );
+			out.append( "new " + rewrite);
 		} else {
 			out.append( programmer.rewriteSymbol( scope, symbol ) );
 		}
@@ -744,6 +751,9 @@ public class AbstractJavaTarget extends AbstractLanguageTarget{
 			Transpiler.instance().logger().info("eSE< " + out.sb.toString());
 			ExpressionCompiler compiler = new ExpressionCompiler(scope, programmer, tempManager);
 			if (compiler.compile(out.sb.toString(), this.imports) ) {
+				if (! compiler.getHeader().isEmpty()) {
+					output.writeln();
+				}
 				for (String line : compiler.getHeader()) {
 					output.writeln(line.replace("$", "."));
 				}
@@ -766,17 +776,17 @@ public class AbstractJavaTarget extends AbstractLanguageTarget{
 	
 	@Override
 	public void emitNewExpression(Scope scope, String className, TranslationNode root) {
-		TranslationNode list = root.getRightSibling();
-		if (list == null && root.getChildCount() >= 2) {
-			list = root.getChild(1);
-		}
-		if (list == null) {
-			System.out.println(root.traverse(1)); // TODO is this just an error?
-			indent.append( String.format("/*eNE?*/std::shared_ptr<%s>(new ", className)); //->programmer
-			emitSubExpression( indent, scope, root);
-		} else {
-			indent.append( String.format("%s", className));
-		}
+//		TranslationNode list = root.getRightSibling();
+//		if (list == null && root.getChildCount() >= 2) {
+//			list = root.getChild(1);
+//		}
+//		if (list == null) {
+//			System.out.println(root.traverse(1)); // TODO is this just an error?
+//			indent.append( String.format("/*eNE?*/std::shared_ptr<%s>(new ", className)); //->programmer
+//			emitSubExpression( indent, scope, root);
+//		} else {
+//			indent.append( String.format("new %s", className));
+//		}
 	}
 	
 	protected boolean handleConstantArrayAssignment( Indent out, Scope scope, TranslationNode root ) {

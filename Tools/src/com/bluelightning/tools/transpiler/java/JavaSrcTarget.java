@@ -42,18 +42,25 @@ public class JavaSrcTarget extends AbstractJavaTarget {
 	public void startModule(Scope scope, boolean headerOnly, boolean isTest) {
 		if (isTest) {
 			inTest = true;
+			ExpressionCompiler.isTest = true;
 			return;
 		}
 		System.out.println(String.format("\nJava/%s src: ", programmer.getName()) + scope.toAnnotatedString() );
 		int containedClasses = 0;
+		int staticFunctions = 0;
 		List<Symbol> syms = Transpiler.instance().getSymbolTable().atScope(scope);
 		for (Symbol s : syms) {
 			if (s.isClass() && ! s.isInherited())
 				containedClasses++;
+			if (s.isFunction() && s.getScope().getLevel() == Scope.Level.MODULE)
+				staticFunctions++;
 		}
 		if (containedClasses > 1  && ! scope.getLast().equals("Main")) {
 			packageName = scope.getLast().toLowerCase();
 			System.out.println("PACKAGE: " + packageName);
+		}
+		if (staticFunctions > 0) {
+			System.out.printf("%s: %d classes; %d static functions\n", packageName, containedClasses, staticFunctions);
 		}
 	}
 	
@@ -61,15 +68,32 @@ public class JavaSrcTarget extends AbstractJavaTarget {
 	public void finishModule() {
 		if (inTest) {
 			inTest = false;
+			ExpressionCompiler.isTest = false;
 			return;
 		}
 		if (packageName != null) {
+			if (indent.sb.length() > 0) {
+//				System.out.println(currentScope);
+//				System.out.println(indent.sb.toString());
+				Symbol c = Transpiler.instance().getSymbolTable().add(currentScope, currentScope.getLast(), currentScope.getLast());
+				c.setSuperClassInfo( new Symbol.SuperClassInfo() );
+				String[] lines = indent.sb.toString().split("\n");
+				indent = new Indent();
+				startClass(currentScope);
+				for (String line : lines) {
+					indent.writeln(line);
+				}
+				finishClass(currentScope);
+				System.out.println(indent.sb.toString());
+			}
 			packageName = null;
 		}
 	}
 
 	@Override
 	public void startClass(Scope scope) {
+		if (inTest)
+			return;
 		currentScope = scope;
 		indent = new Indent();
 		moduleName = scope.getLast();
@@ -90,43 +114,22 @@ public class JavaSrcTarget extends AbstractJavaTarget {
 		
 		templateDataModel.put("package", String.format("package %s;", modulePackage.toString()));
 		
-//		Symbol symbol = Transpiler.instance().lookupClass(moduleName);
-//		if (symbol != null && symbol.getSuperClassInfo().superClasses != null) {
-//			for (String superClass : symbol.getSuperClassInfo().superClasses) {
-//				if (superClass.equals("Enum")) {
-//				} else if (!ignoredSuperClasses.contains(superClass)) {
-//					Symbol c = Transpiler.instance().lookupClass(superClass);
-//					if (c != null) {
-//						addImport( c.getScope().getChild(Level.CLASS, superClass));
-//					}
-//				}
-//			}
-//		}
-//		
-//		
-//		StringBuilder sb = new StringBuilder();
-//		for (String i : imports) {
-//			sb.append(String.format("import %s;\n", i));
-//		}
-//		templateDataModel.put("imports", sb.toString());
 		templateDataModel.put("class", "");
-//		indent.writeln(String.format("public class %s {", moduleName));
-//		indent.writeln("");
-//		indent.in();
 		super.startClass(scope);
 	}
 
 	@Override
 	public void finishClass(Scope scope) {
+		if (inTest)
+			return;
 		super.finishClass(scope);
-//		indent.out();
-//		indent.writeln("}");
 		StringBuilder sb = new StringBuilder();
 		for (String i : imports) {
 			sb.append(String.format("import %s;\n", i));
 		}
 		templateDataModel.put("imports", sb.toString());
 		templateDataModel.put("class", indent.sb.toString() );
+		indent.sb = new StringBuilder();
 		try {
 			//System.out.println(hppFile.toString());
 			StringWriter strOut = new StringWriter();

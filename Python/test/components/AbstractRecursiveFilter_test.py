@@ -5,7 +5,7 @@ Created on Mar 7, 2019
 '''
 import unittest
 
-from polynomialfiltering.components.ExpandingMemoryPolynomialFilter import *
+from polynomialfiltering.components.AbstractRecursiveFilter import AbstractRecursiveFilter
 
 from netCDF4 import Dataset
 from TestUtilities import *
@@ -16,7 +16,7 @@ from numpy.random import randn
 from numpy.testing import assert_almost_equal
 from math import sqrt, sin
 from runstats import Statistics
-from numpy.testing.nose_tools.utils import assert_allclose
+from numpy.testing import assert_allclose
 from numpy.linalg.linalg import norm
 from numpy.ma.core import isarray
 
@@ -41,19 +41,19 @@ class Test(unittest.TestCase):
     cdf = None;
 
     @classmethod
-    def setUpClass(cls):
+    def setUpClass(self):
         path = testDataPath('AbstractRecursiveFilter.nc');
-        cls.cdf = Dataset(path, "w", format="NETCDF4");
+        self.cdf = Dataset(path, "w", format="NETCDF4");
 
     @classmethod
-    def tearDownClass(cls):
-        cls.cdf.close();
+    def tearDownClass(self):
+        self.cdf.close();
 
     def testEffectiveTheta(self):
         setup = array([0.1, 5+1, 50])
         expected = array([0.96,0.936,0.912728,0.889892,0.867358,0.845044])
 
-        f = EMP4(setup[0]);
+        f = AbstractRecursiveFilterMock(int(setup[0]), 1.0);
         actual = zeros(int(setup[1]));
         for order in range(0,int(setup[1])) :
             f.order = order;
@@ -67,7 +67,7 @@ class Test(unittest.TestCase):
         setup = array([0.1, N, M])
         data = randn(int(setup[2]));
         
-        f = EMP0(setup[0])
+        f = AbstractRecursiveFilterMock(int(setup[0]), 1.0)
         expected = zeros([0])
         for order in range(0,int(setup[1])) :
             f.order = order;
@@ -87,7 +87,7 @@ class Test(unittest.TestCase):
             writeTestVariable(group, 'setup', setup);
             writeTestVariable(group, 'data', data);
             
-            f = makeEMP(setup[0], setup[1])
+            f = AbstractRecursiveFilterMock(int(setup[0]), setup[1])
     #        [n, n0, t0, t, tau, Z, D] [1, 1, 1, 1, 1, order+1, order+1] [0, order+1, 0, 0, zeros(order+1), D[tau]`]
             expected = array([f.n]);
             expected = concatenate([expected, array([f.n0])], axis=0);
@@ -162,7 +162,7 @@ class Test(unittest.TestCase):
             writeTestVariable(group, 'setup', setup);
             writeTestVariable(group, 'data', data);
             
-            f = makeEMP(setup[0], setup[1])
+            f = AbstractRecursiveFilterMock(int(setup[0]), setup[1])
             f.start(setup[2], data[0,:]);
             t = f.getTime();
             assert(t == setup[2])
