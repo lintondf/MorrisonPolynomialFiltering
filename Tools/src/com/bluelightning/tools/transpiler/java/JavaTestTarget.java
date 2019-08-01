@@ -22,6 +22,22 @@ import freemarker.template.TemplateException;
  */
 public class JavaTestTarget extends AbstractJavaTarget {
 
+	@Override
+	public void startClass(Scope scope) {
+		if (! inTest) {
+			return;
+		}
+		super.startClass(scope);
+	}
+
+	@Override
+	public void finishClass(Scope scope) {
+		if (! inTest) {
+			return;
+		}
+		super.finishClass(scope);
+	}
+
 	public JavaTestTarget(EjmlProgrammer programmer, Configuration cfg, Path baseDirectory) {
 		super(programmer, cfg, baseDirectory);
 		imports.add("org.ejml.data.DMatrixRMaj");
@@ -63,7 +79,7 @@ public class JavaTestTarget extends AbstractJavaTarget {
 		templateDataModel.put("package", String.format("package %s;", modulePackage.toString()));
 		
 		templateDataModel.put("class", "");
-		super.startModule(scope, headerOnly, isTest);
+		//super.startModule(scope, headerOnly, isTest);
 	}
 	
 	@Override

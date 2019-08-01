@@ -52,6 +52,7 @@ import com.bluelightning.tools.transpiler.cpp.CppTestTarget;
 import com.bluelightning.tools.transpiler.cpp.programmer.BoostProgrammer;
 import com.bluelightning.tools.transpiler.cpp.programmer.EigenProgrammer;
 import com.bluelightning.tools.transpiler.java.JavaSrcTarget;
+import com.bluelightning.tools.transpiler.java.JavaTestTarget;
 import com.bluelightning.tools.transpiler.java.programmer.EjmlProgrammer;
 import com.bluelightning.tools.transpiler.nodes.TranslationExpressionNode;
 import com.bluelightning.tools.transpiler.nodes.TranslationNode;
@@ -570,6 +571,8 @@ public class Transpiler {
 		dispatcher.addTarget( new CppTestTarget(new EigenProgrammer(), 
 				cfg, Paths.get("../Cpp/Eigen/") ) );
 		dispatcher.addTarget( new JavaSrcTarget( new EjmlProgrammer(),
+				cfg, Paths.get("../Java/Ejml/") ) );
+		dispatcher.addTarget( new JavaTestTarget( new EjmlProgrammer(),
 				cfg, Paths.get("../Java/Ejml/") ) );
 
 		Scope importScope = new Scope();
