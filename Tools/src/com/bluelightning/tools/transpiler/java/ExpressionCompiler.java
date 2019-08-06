@@ -89,7 +89,7 @@ public class ExpressionCompiler {
 //							System.out.printf("    object %s: %s\n", symbol.getName(), c.toString());
 							Scope objectClass = c.getScope().getChild(Level.CLASS, c.getName());
 							for (Symbol method : symbolTable.atScope(objectClass)) {
-								if (method.isFunction() && !method.isStatic()) {
+								if (method.isFunction()) {
 									if (method.getName().equals("__init__"))
 										continue;
 									String name = programmer.rewriteSymbol(symbol.getScope(), symbol) + "$" + method.getName();

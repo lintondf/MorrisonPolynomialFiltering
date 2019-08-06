@@ -13,6 +13,7 @@ import com.bluelightning.tools.transpiler.nodes.TranslationNode;
  */
 public interface ILanguageTarget {
 	
+	public boolean isTestTarget();
 	
 	public void setId(int id);
 	

@@ -16,6 +16,8 @@ namespace polynomialfiltering {
     namespace components {
         using namespace Eigen;
         
+            double AbstractCoreFmp::theta;
+            RealMatrix AbstractCoreFmp::VRF;
             AbstractCoreFmp::AbstractCoreFmp (const double tau, const double theta) {
                 this->theta = theta;
             }

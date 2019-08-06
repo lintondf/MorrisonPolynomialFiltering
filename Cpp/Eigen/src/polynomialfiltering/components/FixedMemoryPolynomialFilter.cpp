@@ -16,6 +16,16 @@ namespace polynomialfiltering {
     namespace components {
         using namespace Eigen;
         
+            int FixedMemoryFilter::order;
+            int FixedMemoryFilter::L;
+            int FixedMemoryFilter::n;
+            int FixedMemoryFilter::n0;
+            double FixedMemoryFilter::t0;
+            double FixedMemoryFilter::t;
+            double FixedMemoryFilter::tau;
+            RealVector FixedMemoryFilter::Z;
+            RealVector FixedMemoryFilter::tRing;
+            RealVector FixedMemoryFilter::yRing;
             FixedMemoryFilter::FixedMemoryFilter (const int order, const int memorySize) : AbstractFilterWithCovariance(order) {
                 if (order < 0 || order > 5) {
                     throw ValueError("Polynomial orders < 1 or > 5 are not supported");

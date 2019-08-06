@@ -1,4 +1,4 @@
-/***** /components/Emp_test/
+/***** /components/EMP_test/
  * (C) Copyright 2019 - Blue Lightning Development, LLC.
  * D. F. Linton. support@BlueLightningDevelopment.com
  *
@@ -19,12 +19,6 @@
 
 #include <polynomialfiltering/PolynomialFilteringEigen.hpp>
 
-#include <TestData.hpp>
-#include <polynomialfiltering/components/RecursivePolynomialFilter.hpp>
-#include <polynomialfiltering/components/AbstractRecursiveFilter.hpp>
-#include <polynomialfiltering/Main.hpp>
-#include <polynomialfiltering/components/ICore.hpp>
-#include <polynomialfiltering/components/Emp.hpp>
 
 
 
@@ -33,7 +27,7 @@
 #pragma float_control(precise, off)
 namespace polynomialfiltering {
     namespace components {
-        namespace Emp_test {
+        namespace EMP_test {
             
             using namespace Eigen;
             
@@ -73,7 +67,7 @@ namespace polynomialfiltering {
                 for (int itau = 0; itau < taus->size(); itau++) {
                     tau = taus(itau, 0);
                     core = _makeEmpCore(order, tau);
-                    f = std::make_shared<RecursivePolynomialFilterMock>(order, tau, core);
+                    f = this->RecursivePolynomialFilterMock(order, tau, core);
                     for (int iN = order + 1; iN < N; iN++) {
                         f->setN(iN + 0);
                         V = f->getVRF();
@@ -144,21 +138,21 @@ namespace polynomialfiltering {
             }
         }
 
-        }; // namespace Emp_test
+        }; // namespace EMP_test
     }; // namespace components
 }; // namespace polynomialfiltering
 
 #pragma float_control(pop)
 
-TEST_CASE("Emp_test") {
+TEST_CASE("EMP_test") {
     SUBCASE("test1CheckVRF") {
-        components::Emp_test::EMP_test::test1CheckVRF();
+        components::EMP_test::test1CheckVRF();
     }
     SUBCASE("test2CheckStates") {
-        components::Emp_test::EMP_test::test2CheckStates();
+        components::EMP_test::test2CheckStates();
     }
     SUBCASE("test9NUnitLastVRF") {
-        components::Emp_test::EMP_test::test9NUnitLastVRF();
+        components::EMP_test::test9NUnitLastVRF();
     }
 }
 

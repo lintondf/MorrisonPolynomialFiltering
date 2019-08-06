@@ -19,13 +19,6 @@
 
 #include <polynomialfiltering/PolynomialFilteringEigen.hpp>
 
-#include <TestData.hpp>
-#include <polynomialfiltering/components/RecursivePolynomialFilter.hpp>
-#include <polynomialfiltering/components/AbstractRecursiveFilter.hpp>
-#include <polynomialfiltering/Main.hpp>
-#include <polynomialfiltering/components/ICore.hpp>
-#include <polynomialfiltering/components/Emp.hpp>
-#include <polynomialfiltering/components/Fmp.hpp>
 
 
 

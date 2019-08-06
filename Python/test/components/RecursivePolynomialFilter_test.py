@@ -12,8 +12,9 @@ from numpy import array as vector
 
 from numpy import cov
 from numpy.linalg import inv
-from numpy.random import randn
-from numpy.testing import assert_almost_equal, assert_allclose
+# from numpy.random import randn
+from numpy.testing import assert_allclose
+from numpy.testing import assert_almost_equal
 from netCDF4 import Dataset
 from TestUtilities import *
 from TestSuite import testDataPath;
@@ -26,41 +27,41 @@ from polynomialfiltering.PythonUtilities import assert_not_empty
 
 from polynomialfiltering.components.RecursivePolynomialFilter import RecursivePolynomialFilter, ICore
 
-@testclass
-class PurePredictCore(ICore): 
-    
-    '''@order : int'''
-    
-    @testclassmethod
-    def __init__(self, order : int):
-        self.order = order;
-        pass
-    
-    @testclassmethod
-    def getGamma(self, t : float, dtau : float) -> vector:
-        '''@g : vector'''
-        g = zeros([self.order+1])
-        return g
-    
-    @testclassmethod
-    def getVRF(self, n : int) -> array:
-        return zeros([self.order+1, self.order+1])
-    
-    @testclassmethod
-    def getFirstVRF(self, n : int) -> float:
-        return 0.0;
-
-    @testclassmethod
-    def getLastVRF(self, n : int) -> float:
-        return 0.0;
-    
-    @testclassmethod
-    def getDiagonalVRF(self, n : int) -> array:
-        return zeros([self.order+1, self.order+1])
-       
-       
 class RecursivePolynomialFilter_test(unittest.TestCase):
 
+    @testclass
+    class PurePredictCore(ICore): 
+        
+        '''@order : int'''
+        
+        @testclassmethod
+        def __init__(self, order : int):
+            self.order = order;
+            pass
+        
+        @testclassmethod
+        def getGamma(self, t : float, dtau : float) -> vector:
+            '''@g : vector'''
+            g = zeros([self.order+1])
+            return g
+        
+        @testclassmethod
+        def getVRF(self, n : int) -> array:
+            return zeros([self.order+1, self.order+1])
+        
+        @testclassmethod
+        def getFirstVRF(self, n : int) -> float:
+            return 0.0;
+    
+        @testclassmethod
+        def getLastVRF(self, n : int) -> float:
+            return 0.0;
+        
+        @testclassmethod
+        def getDiagonalVRF(self, n : int) -> array:
+            return zeros([self.order+1, self.order+1])
+       
+       
     Y0 = array([1e4, -5e3, +1e3, -5e2, +1e2, -5e1]);
 
     def setUp(self):
@@ -94,7 +95,7 @@ class RecursivePolynomialFilter_test(unittest.TestCase):
                 actual = zeros([N, order+1]);
                 actual[0,:] = truth[0,:];
 
-                core = PurePredictCore(order)
+                core = self.PurePredictCore(order)
                 f = RecursivePolynomialFilter(order, tau, core );
                 f.start(times[0], truth[0,:]);
                 for i in range(1,N) :
@@ -147,7 +148,7 @@ class RecursivePolynomialFilter_test(unittest.TestCase):
             actual = zeros([N, order+1]);
             actual[0,:] = truth[0,:];
 
-            core = PurePredictCore(order)
+            core = self.PurePredictCore(order)
             f = RecursivePolynomialFilter(order, tau, core );
             f.start(times[0], truth[0,:]);
             for i in range(1,N) :

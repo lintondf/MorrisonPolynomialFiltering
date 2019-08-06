@@ -11,7 +11,7 @@ from typing import List;
 
 from numpy import array as vector
 from polynomialfiltering.PythonUtilities import virtual;
-from polynomialfiltering.components import AbstractRecursiveFilter
+from polynomialfiltering.Main import AbstractFilter
 from polynomialfiltering.filters import ManagedFilterBase;
 from polynomialfiltering.filters.controls.BaseScalarJudge import BaseScalarJudge
 
@@ -21,11 +21,11 @@ class ManagedScalarRecursiveFilterSet(ManagedFilterBase):
     def __init__(self):
         super().__init__(None);
         
-    '''workers : List<AbstractRecursiveFilter>'''
+    '''workers : List<AbstractFilter>'''
     '''SSRs    : List<float>'''
     '''judges  : List<IJudge>'''
         
-    def setWorkers(self, workers : List[AbstractRecursiveFilter]) -> None:
+    def setWorkers(self, workers : List[AbstractFilter]) -> None:
         self.workers = workers;
         self.worker = workers[0];
         self.SSRs = [];
@@ -34,7 +34,7 @@ class ManagedScalarRecursiveFilterSet(ManagedFilterBase):
             self.SSRs[i] = self.SSR;
             self.judges[i] = BaseScalarJudge(self);
         
-    def getWorkers(self) -> List[AbstractRecursiveFilter]:
+    def getWorkers(self) -> List[AbstractFilter]:
         return self.workers;
     
     @virtual

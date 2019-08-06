@@ -864,10 +864,8 @@ public abstract class AbstractCppTarget extends AbstractLanguageTarget {
 		case CLASS:
 			//hppIndent.writeln( declaration + ";");
 			hppPrivate.writeln( declaration + endLine);
-			if (symbol.isStatic()) {
-				cppIndent.writeln( String.format("%s %s::%s;", 
+			cppIndent.writeln( String.format("%s %s::%s;", 
 						cppType, currentScope.getLast(), symbol.getName()) );
-			}
 			break;
 		case MEMBER:
 			cppIndent.writeln( declaration + endLine);

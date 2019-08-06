@@ -10,8 +10,7 @@ from abc import abstractmethod
 
 from numpy import array, eye
 from numpy import array as vector
-from polynomialfiltering.Main import AbstractFilterWithCovariance, FilterStatus
-from polynomialfiltering.components.AbstractRecursiveFilter import AbstractRecursiveFilter
+from polynomialfiltering.Main import AbstractFilter, AbstractFilterWithCovariance, FilterStatus
 from polynomialfiltering.filters.IManagedFilter import IManagedFilter;
 from polynomialfiltering.filters.controls.IObservationErrorModel import IObservationErrorModel
 from polynomialfiltering.filters.controls.IJudge import IJudge
@@ -28,12 +27,12 @@ class ManagedFilterBase(AbstractFilterWithCovariance, IManagedFilter):
     """
 
     '''@INITIAL_SSR : float | start point for smoothed SSR '''
-    '''@ worker : AbstractRecursiveFilter | that which is managed'''
+    '''@ worker : AbstractFilter | that which is managed'''
     '''@ errorModel : IObservationErrorModel | observation covariance/precision matrix source'''
     '''@ judge : IJudge | residuals-based observation editing and goodness-of-fit evaluator'''
     '''@ monitor : IMonitor | filter state monitoring and control'''
     
-    def __init__(self, order : int, worker : AbstractRecursiveFilter):
+    def __init__(self, order : int, worker : AbstractFilter):
         super().__init__(order);
         '''
         Constructor
@@ -55,7 +54,7 @@ class ManagedFilterBase(AbstractFilterWithCovariance, IManagedFilter):
     def getState(self) -> vector:
         return self.worker.getState()
     
-    def getWorker(self) -> AbstractRecursiveFilter:
+    def getWorker(self) -> AbstractFilter:
         return self.worker;
 
     def setObservationInverseR(self, inverseR:array) -> None:

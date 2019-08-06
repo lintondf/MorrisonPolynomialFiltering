@@ -114,22 +114,16 @@ public class Transpiler {
 //		new Target(Paths.get(""), "TranspilerTest"),
 			
 		new Target(Paths.get("polynomialfiltering"), "Main"),
-		new Target(Paths.get("polynomialfiltering/components"), "AbstractRecursiveFilter"),
-//		new Target(Paths.get("polynomialfiltering/components"), "ICore", true),
-//		new Target(Paths.get("polynomialfiltering/components"), "RecursivePolynomialFilter"),
-//		new Target(Paths.get("polynomialfiltering/components"), "Emp"),
-//		new Target(Paths.get("polynomialfiltering/components"), "Fmp"),
-//		new Target(Paths.get("polynomialfiltering/components"), "FixedMemoryPolynomialFilter"),
+		new Target(Paths.get("polynomialfiltering/components"), "ICore", true),
+		new Target(Paths.get("polynomialfiltering/components"), "RecursivePolynomialFilter"),
+		new Target(Paths.get("polynomialfiltering/components"), "Emp"),
+		new Target(Paths.get("polynomialfiltering/components"), "Fmp"),
+		new Target(Paths.get("polynomialfiltering/components"), "FixedMemoryPolynomialFilter"),
 		
-		new TestTarget(Paths.get("components"), "AbstractRecursiveFilter_test"),
 //		new TestTarget(Paths.get("components"), "RecursivePolynomialFilter_test"),
-//		new TestTarget(Paths.get("components"), "Emp_test"),
+		new TestTarget(Paths.get("components"), "EMP_test"),
 //		new TestTarget(Paths.get("components"), "Fmp_test"),
 //		new TestTarget(Paths.get("components"), "FixedMemoryFilter_test"),
-////		new Target(Paths.get("polynomialfiltering/components"), "AbstractRecursiveFilter"),
-////		new Target(Paths.get("polynomialfiltering/components"), "ExpandingMemoryPolynomialFilter"),
-////		new Target(Paths.get("polynomialfiltering/components"), "FadingMemoryPolynomialFilter"),
-////		new Target(Paths.get("polynomialfiltering/components"), "EmpFmpPair"),
 ////		new Target(Paths.get("polynomialfiltering/filters/controls"), "IObservationErrorModel", true),
 ////		new Target(Paths.get("polynomialfiltering/filters/controls"), "IJudge", true),
 ////		new Target(Paths.get("polynomialfiltering/filters/controls"), "IMonitor", true),
@@ -303,6 +297,7 @@ public class Transpiler {
 		
 		List<ILanguageTarget> targets = new ArrayList<>();
 		List<ILanguageTarget> ignoring = new ArrayList<>();
+		boolean compilingTest = false;
 		
 		public TargetDispatcher() {}
 		
@@ -330,51 +325,60 @@ public class Transpiler {
 		
 		@Override
 		public void startModule(Scope scope, boolean headerOnly, boolean isTest) {
+			compilingTest = isTest;
 			for (ILanguageTarget target : targets) {
-				target.startModule(scope, headerOnly, isTest);
+				if (! (compilingTest ^ target.isTestTarget()) )
+					target.startModule(scope, headerOnly, isTest);
 			}
 		}
 
 		@Override
 		public void startClass(Scope scope) {
 			for (ILanguageTarget target : targets) {
-				target.startClass(scope);
+				if (! (compilingTest ^ target.isTestTarget()) )
+					target.startClass(scope);
 			}
 		}
 
 		@Override
 		public void finishClass(Scope scope) {
 			for (ILanguageTarget target : targets) {
-				target.finishClass(scope);
+				if (! (compilingTest ^ target.isTestTarget()) )
+					target.finishClass(scope);
 			}
 		}
 
 		@Override
 		public void startMethod(Scope scope) {
 			for (ILanguageTarget target : targets) {
-				target.startMethod(scope);
+				if (! (compilingTest ^ target.isTestTarget()) )
+					target.startMethod(scope);
 			}
 		}
 
 		@Override
 		public void finishMethod(Scope scope) {
 			for (ILanguageTarget target : targets) {
-				target.finishMethod(scope);
+				if (! (compilingTest ^ target.isTestTarget()) )
+					target.finishMethod(scope);
 			}
 		}
 
 		@Override
 		public void emitExpressionStatement(Scope scope, TranslationNode root) {
 			for (ILanguageTarget target : targets) {
-				target.emitExpressionStatement(scope, root);
+				if (! (compilingTest ^ target.isTestTarget()) )
+					target.emitExpressionStatement(scope, root);
 			}
 		}
 
 		@Override
 		public void finishModule() {
 			for (ILanguageTarget target : targets) {
-				target.finishModule();
+				if (! (compilingTest ^ target.isTestTarget()) )
+					target.finishModule();
 			}
+			compilingTest = false;
 		}
 
 		@Override
@@ -389,98 +393,117 @@ public class Transpiler {
 		@Override
 		public void emitSymbolDeclaration(Symbol symbol, String comment) {
 			for (ILanguageTarget target : targets) {
-				target.emitSymbolDeclaration(symbol, comment);
+				if (! (compilingTest ^ target.isTestTarget()) )
+					target.emitSymbolDeclaration(symbol, comment);
 			}
 		}
 
 		public void emitReturnStatement(Scope scope, ParserRuleContext ctx, TranslationNode expressionRoot) {
 			for (ILanguageTarget target : targets) {
-				target.emitReturnStatement(scope, ctx, expressionRoot);
+				if (! (compilingTest ^ target.isTestTarget()) )
+					target.emitReturnStatement(scope, ctx, expressionRoot);
 			}
 		}
 
 		@Override
 		public void emitSubExpression(Scope scope, TranslationNode root) {
 			for (ILanguageTarget target : targets) {
-				target.emitSubExpression(scope, root);
+				if (! (compilingTest ^ target.isTestTarget()) )
+					target.emitSubExpression(scope, root);
 			}
 		}
 
 		@Override
 		public void startStatement() {
 			for (ILanguageTarget target : targets) {
-				target.startStatement();
+				if (! (compilingTest ^ target.isTestTarget()) )
+					target.startStatement();
 			}
 		}
 
 		@Override
 		public void finishStatement() {
 			for (ILanguageTarget target : targets) {
-				target.finishStatement();
+				if (! (compilingTest ^ target.isTestTarget()) )
+					target.finishStatement();
 			}
 		}
 
 		@Override
 		public void closeBlock() {
 			for (ILanguageTarget target : targets) {
-				target.closeBlock();
+				if (! (compilingTest ^ target.isTestTarget()) )
+					target.closeBlock();
 			}
 		}
 
 		@Override
 		public void emitForStatement(Symbol symbol, TranslationNode expressionRoot) {
 			for (ILanguageTarget target : targets) {
-				target.emitForStatement( symbol, expressionRoot);
+				if (! (compilingTest ^ target.isTestTarget()) )
+					target.emitForStatement( symbol, expressionRoot);
 			}
 		}
 
 		@Override
 		public void addImport(Scope scope) {
 			for (ILanguageTarget target : targets) {
-				target.addImport( scope );
+				if (! (compilingTest ^ target.isTestTarget()) )
+					target.addImport( scope );
 			}
 		}
 
 		@Override
 		public void emitIfStatement(Scope scope, TranslationNode expressionRoot) {
 			for (ILanguageTarget target : targets) {
-				target.emitIfStatement( scope, expressionRoot );
+				if (! (compilingTest ^ target.isTestTarget()) )
+					target.emitIfStatement( scope, expressionRoot );
 			}
 		}
 
 		@Override
 		public void emitElseStatement() {
 			for (ILanguageTarget target : targets) {
-				target.emitElseStatement();
+				if (! (compilingTest ^ target.isTestTarget()) )
+					target.emitElseStatement();
 			}
 		}
 
 		@Override
 		public void emitRaiseStatement(String exception) {
 			for (ILanguageTarget target : targets) {
-				target.emitRaiseStatement(exception);
+				if (! (compilingTest ^ target.isTestTarget()) )
+					target.emitRaiseStatement(exception);
 			}
 		}
 
 		@Override
 		public void emitElifStatement(Scope scope, TranslationNode expressionRoot) {
 			for (ILanguageTarget target : targets) {
-				target.emitElifStatement( scope, expressionRoot );
+				if (! (compilingTest ^ target.isTestTarget()) )
+					target.emitElifStatement( scope, expressionRoot );
 			}
 		}
 
 		@Override
 		public void emitNewExpression(Scope scope, String className, TranslationNode root) {
 			for (ILanguageTarget target : targets) {
-				target.emitNewExpression( scope, className, root );
+				if (! (compilingTest ^ target.isTestTarget()) )
+					target.emitNewExpression( scope, className, root );
 			}
 		}
 
 		@Override
 		public void addParameterClass(String className) {
 			for (ILanguageTarget target : targets) {
-				target.addParameterClass( className );
+				if (! (compilingTest ^ target.isTestTarget()) )
+					target.addParameterClass( className );
 			}
+		}
+
+		@Override
+		public boolean isTestTarget() {
+			return false;
 		}
 
 	}

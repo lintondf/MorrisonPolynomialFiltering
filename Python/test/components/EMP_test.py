@@ -15,7 +15,9 @@ from numpy import arange, array2string, cov, log, var, zeros, trace, mean, std, 
 from numpy import sqrt
 from numpy.linalg import inv
 from numpy.random import randn, seed, get_state
-from numpy.testing import assert_allclose, assert_array_less
+from numpy.testing import assert_allclose
+from numpy.testing import assert_almost_equal
+from numpy.testing import assert_array_less
 from scipy.stats import kstest, chi2, lognorm, norm, anderson
 
 from runstats import Statistics
@@ -33,20 +35,31 @@ from polynomialfiltering.components.Emp import makeEmp, _makeEmpCore, nUnitLastV
 from polynomialfiltering.PythonUtilities import ignore, testcase, testclass, testclassmethod
 from polynomialfiltering.PythonUtilities import assert_not_empty
 
-@testclass
-class RecursivePolynomialFilterMock(RecursivePolynomialFilter):
-     
-    @testclassmethod
-    def __init__(self, order : int, tau : float, core : ICore):
-        super().__init__(order, tau, core)
-         
-    @testclassmethod
-    def setN(self, n : int) -> None:
-        self.n = n;
+# @testclass
+# class RecursivePolynomialFilterMock(RecursivePolynomialFilter):
+#      
+#     @testclassmethod
+#     def __init__(self, order : int, tau : float, core : ICore):
+#         super().__init__(order, tau, core)
+#          
+#     @testclassmethod
+#     def setN(self, n : int) -> None:
+#         self.n = n;
 
 
 
 class EMP_test(unittest.TestCase):
+    @testclass
+    class RecursivePolynomialFilterMock(RecursivePolynomialFilter):
+         
+        @testclassmethod
+        def __init__(self, order : int, tau : float, core : ICore):
+            super().__init__(order, tau, core)
+             
+        @testclassmethod
+        def setN(self, n : int) -> None:
+            self.n = n;
+    
 
     def setUp(self):
         pass
@@ -154,7 +167,7 @@ class EMP_test(unittest.TestCase):
                 
 #                 f = makeEmp(order, tau);
             core = _makeEmpCore(order, tau)
-            f = RecursivePolynomialFilterMock( order, tau, core )
+            f = self.RecursivePolynomialFilterMock( order, tau, core )
             for iN in range(0, N[order]) :
                 f.setN(iN)
                 if (iN > order+1 and f.getFirstVRF() > 0 and f.getFirstVRF() < 1.0) :
@@ -229,7 +242,7 @@ class EMP_test(unittest.TestCase):
             for itau in range(0,len(taus)) :
                 tau = taus[itau]
                 core = _makeEmpCore(order, tau)
-                f = RecursivePolynomialFilterMock( order, tau, core )
+                f = self.RecursivePolynomialFilterMock( order, tau, core )
                 for iN in range(order+1, N) :
                     f.setN(iN)
                     expected = concatenate([expected, f.getVRF()]);
@@ -328,7 +341,7 @@ class EMP_test(unittest.TestCase):
             for itau in range(0,len(taus)) :
                 tau = taus[itau,0]
                 core = _makeEmpCore(order, tau)
-                f = RecursivePolynomialFilterMock( order, tau, core )
+                f = self.RecursivePolynomialFilterMock( order, tau, core )
                 for iN in range(order+1, N) :
                     f.setN(iN+0)
                     V = f.getVRF();

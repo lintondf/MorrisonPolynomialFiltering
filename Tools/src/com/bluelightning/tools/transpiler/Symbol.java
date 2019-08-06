@@ -52,6 +52,7 @@ public class Symbol {
 	protected boolean isInherited = false;
 	protected boolean isReturnVariable = false;
 	protected boolean isAbstractClass = false;
+	protected boolean isStatic = false;
 	
 	public boolean isInherited() {
 		return isInherited;
@@ -131,7 +132,11 @@ public class Symbol {
 	}
 
 	public boolean isStatic() {
-		return false; //getScope().getLevel() == Scope.Level.CLASS;
+		return isStatic;
+	}
+
+	public void setStatic(boolean isStatic) {
+		this.isStatic = isStatic;
 	}
 
 	public void setInitialization(String initialization) {

@@ -6,11 +6,16 @@ package com.bluelightning.tools.transpiler.java;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.io.StringWriter;
+import java.io.Writer;
 import java.nio.file.Path;
 import java.util.ArrayList;
 
 import com.bluelightning.tools.transpiler.Indent;
 import com.bluelightning.tools.transpiler.Scope;
+import com.bluelightning.tools.transpiler.Symbol;
+import com.bluelightning.tools.transpiler.Transpiler;
+import com.bluelightning.tools.transpiler.Scope.Level;
 import com.bluelightning.tools.transpiler.java.programmer.EjmlProgrammer;
 
 import freemarker.template.Configuration;
@@ -24,37 +29,33 @@ public class JavaTestTarget extends AbstractJavaTarget {
 
 	@Override
 	public void startClass(Scope scope) {
-		if (! inTest) {
-			return;
-		}
+		System.out.println("jTT::sC " + scope);
+		Symbol symbol = Transpiler.instance().lookup(scope, scope.getLast());
+		symbol.setStatic(true);
 		super.startClass(scope);
 	}
 
 	@Override
 	public void finishClass(Scope scope) {
-		if (! inTest) {
-			return;
+		if (! currentClass.isEmpty() && currentClass.peek().getName().equals(scope.getLast()) ) {
+			System.out.println("jTT::fC " + currentClass.peek().getName() + " " + scope.getLast());
+			super.finishClass(scope);
 		}
-		super.finishClass(scope);
 	}
 
 	public JavaTestTarget(EjmlProgrammer programmer, Configuration cfg, Path baseDirectory) {
 		super(programmer, cfg, baseDirectory);
+		imports.add("java.util.ArrayList");
 		imports.add("org.ejml.data.DMatrixRMaj");
 		imports.add("org.ejml.dense.row.CommonOps_DDRM");
+		imports.add("utility.TestData");
 	}
 
-	boolean inTest = false;
 	String moduleName = null;
 	ArrayList<Scope> moduleTests = null;
 
 	@Override
 	public void startModule(Scope scope, boolean headerOnly, boolean isTest) {
-		if (! isTest) {
-			imports.clear();
-			return;
-		}
-		inTest = true;
 		ExpressionCompiler.isTest = true;
 		System.out.println(String.format("\nJava/%s test: ", programmer.getName()) + scope.toString() );
 		this.headerOnly = headerOnly;
@@ -79,16 +80,61 @@ public class JavaTestTarget extends AbstractJavaTarget {
 		templateDataModel.put("package", String.format("package %s;", modulePackage.toString()));
 		
 		templateDataModel.put("class", "");
-		//super.startModule(scope, headerOnly, isTest);
+		
+		Symbol s = Transpiler.instance().getSymbolTable().add( scope, moduleName, "<CLASS>");
+		Symbol.SuperClassInfo sci = new Symbol.SuperClassInfo();
+		s.setSuperClassInfo(sci);
+		super.startClass(scope);
 	}
 	
 	@Override
 	public void finishModule() {
-		if (! inTest) {
-			return;
+		//super.finishClass(currentScope);
+		StringBuilder sb = new StringBuilder();
+		for (String i : imports) {
+			sb.append(String.format("import %s;\n", i));
 		}
-		inTest = false;
+		templateDataModel.put("imports", sb.toString());
+		templateDataModel.put("class", indent.sb.toString() );
+		indent.sb = new StringBuilder();
+		try {
+			//System.out.println(hppFile.toString());
+			StringWriter strOut = new StringWriter();
+			java.process(templateDataModel, strOut);
+			String old = readFileToString( srcPath );
+			if (old == null || !old.equals(strOut.toString())) {
+				srcPath.toFile().getParentFile().mkdirs();
+				Writer out = new OutputStreamWriter(new FileOutputStream(srcPath.toFile()));
+				out.write(strOut.toString());
+				out.close();
+			} else {
+				System.out.println("  Unchanged: " + srcPath.toString() );
+			}
+		} catch (IOException iox ) {
+			iox.printStackTrace();
+		} catch (TemplateException e) {
+			e.printStackTrace();
+		}
 		ExpressionCompiler.isTest = false;
+	}
+
+	@Override
+	public void startMethod(Scope scope) {
+		System.out.println("jTT::sM " + scope);
+		currentScope = scope;
+		moduleTests = new ArrayList<>();
+		
+		String currentFunction = scope.getLast();
+		Symbol cls = Transpiler.instance().lookupClass(scope.getParent().getLast());
+		if (cls == null || !cls.hasDecorator("@testclass")) {
+			moduleTests.add(scope);
+		}
+		super.startMethod(scope);
+	}
+	
+	@Override
+	public boolean isTestTarget() {
+		return true;
 	}
 	
 }

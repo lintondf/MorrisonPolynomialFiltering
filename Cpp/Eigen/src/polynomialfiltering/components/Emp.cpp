@@ -16,6 +16,8 @@ namespace polynomialfiltering {
     namespace components {
         using namespace Eigen;
         
+            int CoreEmp0::order;
+            double CoreEmp0::tau;
             CoreEmp0::CoreEmp0 (const double tau) {
                 this->order = 0;
                 this->tau = tau;
@@ -64,6 +66,8 @@ namespace polynomialfiltering {
                 return V;
             }
 
+            int CoreEmp1::order;
+            double CoreEmp1::tau;
             CoreEmp1::CoreEmp1 (const double tau) {
                 this->order = 1;
                 this->tau = tau;
@@ -117,6 +121,8 @@ namespace polynomialfiltering {
                 return V;
             }
 
+            int CoreEmp2::order;
+            double CoreEmp2::tau;
             CoreEmp2::CoreEmp2 (const double tau) {
                 this->order = 2;
                 this->tau = tau;
@@ -177,6 +183,8 @@ namespace polynomialfiltering {
                 return V;
             }
 
+            int CoreEmp3::order;
+            double CoreEmp3::tau;
             CoreEmp3::CoreEmp3 (const double tau) {
                 this->order = 3;
                 this->tau = tau;
@@ -246,6 +254,8 @@ namespace polynomialfiltering {
                 return V;
             }
 
+            int CoreEmp4::order;
+            double CoreEmp4::tau;
             CoreEmp4::CoreEmp4 (const double tau) {
                 this->order = 4;
                 this->tau = tau;
@@ -326,6 +336,8 @@ namespace polynomialfiltering {
                 return V;
             }
 
+            int CoreEmp5::order;
+            double CoreEmp5::tau;
             CoreEmp5::CoreEmp5 (const double tau) {
                 this->order = 5;
                 this->tau = tau;

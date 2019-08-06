@@ -19,8 +19,6 @@
 
 #include <polynomialfiltering/PolynomialFilteringEigen.hpp>
 
-#include <TestData.hpp>
-#include <polynomialfiltering/components/RecursivePolynomialFilter.hpp>
 
 
 
@@ -35,6 +33,7 @@ namespace polynomialfiltering {
             
             class PurePredictCore : public ICore {
                 public:
+                    int PurePredictCore::order;
                     PurePredictCore (const int order) {
                         this->order = order;
                     }
@@ -95,7 +94,7 @@ namespace polynomialfiltering {
                 tau = setup(2);
                 actual = ArrayXXd::Zero(N, order + 1);
                 actual.row(0) = truth.row(0);
-                core = std::make_shared<RecursivePolynomialFilter_test::PurePredictCore>(order);
+                core = this->PurePredictCore(order);
                 f = std::make_shared<polynomialfiltering::components::RecursivePolynomialFilter>(order, tau, core);
                 f->start(times(0), truth.row(0));
                 for (int i = 1; i < N; i++) {

@@ -146,4 +146,9 @@ public class CppSrcTarget extends AbstractCppTarget {
 		}
 	}
 
+	@Override
+	public boolean isTestTarget() {
+		return false;
+	}
+
 }

@@ -96,7 +96,7 @@ public abstract class AbstractProgrammer implements IProgrammer {
 		if (type.startsWith("List[")) { 
 			type = type.substring(5, type.length()-1).trim().replaceAll(" +", "");
 			String[] fields = type.split(",");
-			String vector = "std::vector<";
+			String vector = "ArrayList<";
 			for (String field : fields) {
 				field = remapTypeString(currentScope, field);
 				vector += field;
@@ -122,7 +122,7 @@ public abstract class AbstractProgrammer implements IProgrammer {
 			if (t != null)
 				return t;
 			if (! prefix.isEmpty()) {
-				typeName = prefix.replace("/", "::") + typeName;
+				typeName = prefix.replace("/", ".") + typeName;
 			}
 			typeName = String.format("%s", typeName);
 			return typeName;			
@@ -182,8 +182,8 @@ public abstract class AbstractProgrammer implements IProgrammer {
 			String name = symbol.getName(); 
 			Symbol c = Transpiler.instance().lookupClass(name);
 			if (c != null) {
-				String prefix = c.getScope().getVisiblityPrefix(scope).replace("/", "::");
-				return prefix + name;
+				String prefix = c.getScope().getVisiblityPrefix(scope).replace("/", ".");
+				return name; // prefix + name;
 			} else {
 				return name;
 			}

@@ -163,6 +163,11 @@ public class CppTestTarget extends AbstractCppTarget {
 		return String.format("%s%s (%s)", type, name, parameters );
 	}
 
+	@Override
+	public boolean isTestTarget() {
+		return true;
+	}
+
 	
 	
 }

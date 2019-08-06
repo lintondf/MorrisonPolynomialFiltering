@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Stack;
 
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.ejml.equation.ManagerTempVariables;
@@ -40,7 +41,7 @@ import freemarker.template.Template;
  * @author lintondf
  *
  */
-public class AbstractJavaTarget extends AbstractLanguageTarget{
+public abstract class AbstractJavaTarget extends AbstractLanguageTarget{
 	
 	AbstractProgrammer programmer;
 	Path 	    srcDirectory;
@@ -55,7 +56,7 @@ public class AbstractJavaTarget extends AbstractLanguageTarget{
 
 	protected Scope currentScope = null;
 	
-	Symbol currentClass = null;
+	Stack<Symbol> currentClass = new Stack<>();
 	String currentClassName = null;
 	boolean inEnum = false;
 	boolean isAbstract = false;
@@ -86,12 +87,12 @@ public class AbstractJavaTarget extends AbstractLanguageTarget{
 		currentClassName = scope.getLast();
 		String decl = "public ";
 		Symbol symbol = Transpiler.instance().lookup(currentScope, currentClassName);
-		currentClass = symbol;
+		currentClass.push( symbol );
 		if (symbol != null) {
 			if (symbol.isPrivate())
 				decl = "private ";
-//			if (symbol.isStatic())
-//				decl += "static ";
+			if (symbol.isStatic())
+				decl += "static ";
 			if (symbol.isAbstractClass())
 				decl += "abstract ";
 			decl += "class " + currentClassName;
@@ -126,11 +127,13 @@ public class AbstractJavaTarget extends AbstractLanguageTarget{
 
 	@Override
 	public void finishClass(Scope scope) {
+		System.out.println("fC: " + scope);
 		super.finishClass(scope);
 		indent.out();
-		indent.writeln("}");
+		indent.writeln("} // class " + scope.getLast());
 		indent.writeln("");
 		inEnum = false;
+		currentClass.pop();
 	}
 	
 	boolean headerOnly = false; //TODO?
@@ -158,7 +161,7 @@ public class AbstractJavaTarget extends AbstractLanguageTarget{
 				String type = remappedType + " ";
 				Indent body = new Indent();
 				if (symbol.isConstructor()) {
-					name = currentClass.getName();
+					name = currentClass.peek().getName();
 					type = "";
 					if (! fpi.parameters.isEmpty() ) {
 						if (fpi.parameters.size() > 1 || ! fpi.parameters.get(0).getName().equals("self")) {
@@ -901,10 +904,8 @@ public class AbstractJavaTarget extends AbstractLanguageTarget{
 			break;
 		case CLASS:
 			indent.writeln( declaration + endLine);
-			if (symbol.isStatic()) {
-				indent.writeln( String.format("%s %s::%s;", 
+			indent.writeln( String.format("%s %s::%s;", 
 						remappedType, currentScope.getLast(), symbol.getName()) );
-			}
 			break;
 		case MEMBER:
 			indent.writeln( declaration + endLine);
@@ -1011,7 +1012,7 @@ public class AbstractJavaTarget extends AbstractLanguageTarget{
 	
 	@Override
 	public void addImport(Scope scope) {
-		if (scope.getLast().equals("Main"))
+		if (scope.getLast().equals("Main") || scope.getLast().equals("TestData"))
 			return;
 		StringBuilder includeFile = new StringBuilder();
 		for (int i = 0; i < scope.getLevelCount()-1; i++) {

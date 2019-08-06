@@ -10,7 +10,7 @@ from abc import abstractmethod
 from numpy import zeros
 from numpy import array as vector
 from polynomialfiltering.PythonUtilities import virtual;
-from polynomialfiltering.components import AbstractRecursiveFilter
+from polynomialfiltering.Main import AbstractFilter
 from polynomialfiltering.filters.ManagedFilterBase import ManagedFilterBase;
 from polynomialfiltering.filters.controls.BaseScalarJudge import BaseScalarJudge
 from polynomialfiltering.filters.controls.NullMonitor import NullMonitor
@@ -18,7 +18,7 @@ from polynomialfiltering.filters.controls.NullMonitor import NullMonitor
 
 class ManagedScalarRecursiveFilter(ManagedFilterBase):
     
-    def __init__(self, worker : AbstractRecursiveFilter):
+    def __init__(self, worker : AbstractFilter):
         super().__init__(worker);
         self.setJudge( BaseScalarJudge(self, 0.0 ) );  # default is base judge with no smoothing
         self.setMonitor( NullMonitor() );              # default is do-nothing monitor

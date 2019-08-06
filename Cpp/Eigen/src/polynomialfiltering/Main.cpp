@@ -15,6 +15,9 @@
 namespace polynomialfiltering {
     using namespace Eigen;
     
+        int AbstractFilter::order;
+        std::string AbstractFilter::name;
+        FilterStatus AbstractFilter::status;
         AbstractFilter::AbstractFilter (const int order, const std::string name) {
             this->setStatus(FilterStatus::IDLE);
             this->order = order;

@@ -148,5 +148,10 @@ public class JavaSrcTarget extends AbstractJavaTarget {
 		} catch (TemplateException e) {
 			e.printStackTrace();
 		}
+	}
+
+	@Override
+	public boolean isTestTarget() {
+		return false;
 	}	
 }
