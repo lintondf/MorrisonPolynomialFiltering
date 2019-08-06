@@ -1,3 +1,5 @@
+**/*.log
+testdata
 __pycache__/
 *.py[cod]
 Cpp/.vs
@@ -15,4 +17,5 @@ Java/target
 Java/moduleChecksums.obj
 Python/src/__pycache__
 Python/test/__pycache__
-testdata
+Python/test/htmlcov
+Tools/moduleChecksums.obj
