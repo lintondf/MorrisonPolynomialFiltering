@@ -48,24 +48,15 @@ public class Scope {
 			return qualifiers;
 		}
 		
+		final static String target = "/polynomialfiltering/components/Fmp_test/generateStates/Fmp_test/";
 		public Scope() {
 			levels.push( Level.IMPORT );
 //			qualifiers.push("");
 			this.qString = getScopeString();
 			scopeMap.put(this.qString, this);
+			if (this.qString.equals(target)) 
+				System.out.println(this);
 		}
-		
-//		public Scope( Scope.Level level, List<String> qualifiers) {
-//			this.level = level;
-//			this.qualifiers = qualifiers.toArray( new String[qualifiers.size()] );
-//			StringBuffer sb = new StringBuffer();
-//			for (String name : qualifiers) {
-//				sb.append(name);
-//				sb.append('/');
-//			}
-//			qString = sb.toString();			
-//			scopeMap.put(this.qString, this);
-//		}
 		
 		private Scope( Scope that, boolean copy ) {
 			if (copy) {
@@ -75,6 +66,17 @@ public class Scope {
 				levels.push( Level.IMPORT );				
 			}
 			this.qString = this.getScopeString();
+		}
+		
+		static public Scope reparent( Scope that, String moduleName ) {
+			Scope out = new Scope(that, true);
+			out.qualifiers.add(0, moduleName);
+			out.levels.add(1, Level.MODULE);
+			out.qString = out.getScopeString();
+			scopeMap.put(out.qString, out);
+			if (out.qString.equals(target)) 
+				System.out.println(out);
+			return out;
 		}
 		
 		public String getLast() {
@@ -110,6 +112,8 @@ public class Scope {
 			scope.qualifiers.push(childName);
 			scope.qString = scope.getScopeString();
 			scopeMap.put(scope.qString, scope);
+			if (this.qString.equals(target)) 
+				System.out.println(this);			
 			return scope;
 		}
 		

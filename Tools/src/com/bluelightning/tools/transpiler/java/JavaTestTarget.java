@@ -26,6 +26,17 @@ import freemarker.template.TemplateException;
  *
  */
 public class JavaTestTarget extends AbstractJavaTarget {
+	
+	final String impliedParentPackage = "polynomialfiltering";
+
+	@Override
+	public void addImport(Scope scope) {
+		if (scope.getLevel(0).equals("components")) {
+			super.addImport( Scope.reparent(scope, impliedParentPackage));
+		} else {
+			super.addImport(scope);
+		}
+	}
 
 	@Override
 	public void startClass(Scope scope) {
@@ -45,10 +56,19 @@ public class JavaTestTarget extends AbstractJavaTarget {
 
 	public JavaTestTarget(EjmlProgrammer programmer, Configuration cfg, Path baseDirectory) {
 		super(programmer, cfg, baseDirectory);
+		initializeImports();
+	}
+	
+	protected void initializeImports() {
+		staticImports.clear();
+		imports.clear();
 		imports.add("java.util.ArrayList");
 		imports.add("org.ejml.data.DMatrixRMaj");
 		imports.add("org.ejml.dense.row.CommonOps_DDRM");
+		imports.add("polynomialfiltering.main.FilterStatus");
+		imports.add("static polynomialfiltering.main.Utility.*");
 		imports.add("utility.TestData");
+		imports.add("static utility.TestMain.*");
 	}
 
 	String moduleName = null;
@@ -56,6 +76,7 @@ public class JavaTestTarget extends AbstractJavaTarget {
 
 	@Override
 	public void startModule(Scope scope, boolean headerOnly, boolean isTest) {
+		initializeImports();
 		ExpressionCompiler.isTest = true;
 		System.out.println(String.format("\nJava/%s test: ", programmer.getName()) + scope.toString() );
 		this.headerOnly = headerOnly;
@@ -63,12 +84,13 @@ public class JavaTestTarget extends AbstractJavaTarget {
 		indent = new Indent();
 		moduleName = scope.getLast();
 		srcPath = srcDirectory.resolve("test");
+//TODO?		srcPath = srcPath.resolve(impliedParentPackage);
 		StringBuilder modulePackage = new StringBuilder();
+		//TODO?		modulePackage.append(impliedParentPackage);
 		for (int i = 0; i < scope.getLevelCount()-1; i++) {
 			String level = scope.getLevel(i).toLowerCase();
-			if (i > 0) {
+			if (i > 0)
 				modulePackage.append('.');
-			}
 			modulePackage.append(level);
 			srcPath = srcPath.resolve(level);
 		}

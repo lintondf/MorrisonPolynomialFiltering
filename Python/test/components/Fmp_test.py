@@ -134,17 +134,21 @@ class Fmp_test(unittest.TestCase):
         '''@itheta : int'''
         '''@thetas : array'''
         '''@n : int'''
+        '''@nThetas : int'''
+        '''@nTaus : int'''
         
         taus = array([0.01, 0.1, 1, 10, 100]);
+        nTaus = len(taus);
         thetas = array([0.90, 0.95, 0.99, 0.999])
+        nThetas = len(thetas);
         for order in range(0,5+1) :
-            for itheta in range(0, len(thetas)):
+            for itheta in range(0, nThetas):
                 theta = thetas[itheta]
-                for itau in range(0, len(taus)):
+                for itau in range(0, nTaus):
                     tau = taus[itau]
                     emp = _makeEmpCore(order, tau)
                     fmp = _makeFmpCore(order, tau, theta)
-                    n = nSwitch( order, theta )
+                    n = int(nSwitch( order, theta ))
                     assert( fmp.getFirstVRF(0)/emp.getFirstVRF(n) < 1.25 )
 #                     print('%2d, %8.3f, %7.5f, %8.1f, %6.2f, %6.2f, %6.2f' %
 #                         (order, tau, theta, n, fmp.getFirstVRF(0)/emp.getFirstVRF(n-1), fmp.getFirstVRF(0)/emp.getFirstVRF(n), fmp.getFirstVRF(0)/emp.getFirstVRF(n+1)))

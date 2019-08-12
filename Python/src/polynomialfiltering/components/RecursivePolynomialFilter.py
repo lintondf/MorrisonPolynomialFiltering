@@ -156,6 +156,10 @@ class RecursivePolynomialFilter(AbstractFilter):
             self.setStatus( FilterStatus.RUNNING )
         return innovation;
     
+    @inline
+    def getCore(self) -> ICore:
+        return self.core
+    
     @inline    
     def getN(self)->int:
         """

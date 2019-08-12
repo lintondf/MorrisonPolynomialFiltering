@@ -86,6 +86,7 @@ namespace polynomialfiltering {
                 /// self.update(t, Zstar, e )
                 /// 
                 RealVector update(const double t, const RealVector& Zstar, const double e);
+                std::shared_ptr<ICore> getCore();
 
                 ///// @brief Return the number of processed observations since start
                 /// 

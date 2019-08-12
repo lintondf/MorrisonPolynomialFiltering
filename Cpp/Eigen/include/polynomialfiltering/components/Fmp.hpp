@@ -181,7 +181,7 @@ namespace polynomialfiltering {
                 RealMatrix _getVRF(const double u, const double t);
         }; // class CoreFmp5 
 
-        std::shared_ptr<RecursivePolynomialFilter> makeFmp(const int order, const double tau, const double theta);
+        static std::shared_ptr<RecursivePolynomialFilter> makeFmp(const int order, const double tau, const double theta);
     }; // namespace components
 }; // namespace polynomialfiltering
 

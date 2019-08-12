@@ -52,6 +52,7 @@ namespace polynomialfiltering {
             int offset;
             double tau;
             std::shared_ptr<polynomialfiltering::components::ICore> core;
+            std::shared_ptr<polynomialfiltering::components::RecursivePolynomialFilter> rf;
             std::shared_ptr<RecursivePolynomialFilterMock> f;
             RealMatrix V;
             RealMatrix E;
@@ -66,8 +67,8 @@ namespace polynomialfiltering {
                 offset = 0;
                 for (int itau = 0; itau < taus->size(); itau++) {
                     tau = taus(itau, 0);
-                    core = _makeEmpCore(order, tau);
-                    f = this->RecursivePolynomialFilterMock(order, tau, core);
+                    rf = makeEmp(order, tau);
+                    f = this->RecursivePolynomialFilterMock(order, tau, rf->getCore());
                     for (int iN = order + 1; iN < N; iN++) {
                         f->setN(iN + 0);
                         V = f->getVRF();

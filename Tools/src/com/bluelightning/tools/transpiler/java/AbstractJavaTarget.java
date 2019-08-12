@@ -52,6 +52,12 @@ public abstract class AbstractJavaTarget extends AbstractLanguageTarget{
 	
 	protected List<String> imports = new ArrayList<>();
 	
+	public static class StaticImport {
+		String name;
+		String type;
+	}
+	protected List<StaticImport> staticImports = new ArrayList<>();
+	
 	Indent      indent;
 
 	protected Scope currentScope = null;
@@ -153,6 +159,10 @@ public abstract class AbstractJavaTarget extends AbstractLanguageTarget{
 		Symbol symbol = Transpiler.instance().lookup(functionScope, currentFunction);
 		if (symbol == null) {
 			Transpiler.instance().reportError("startMethod::Unknown symbol: " + currentFunction + " " + functionScope );
+			return;
+		}
+		if (symbol.getScope().getLevel() == Scope.Level.MODULE) {
+			System.out.println(symbol);
 		}
 		Symbol.FunctionParametersInfo fpi = symbol.getFunctionParametersInfo();
 		if (symbol != null && fpi != null) {
@@ -369,24 +379,46 @@ public abstract class AbstractJavaTarget extends AbstractLanguageTarget{
 				return 2;
 			}
 		}
+		boolean selfReference = false;
 		if (symbol.getName().equals("self")) {
+			selfReference = true;
 			if (child.getRightSibling() instanceof TranslationUnaryNode) {
 				TranslationUnaryNode unary = (TranslationUnaryNode) child.getRightSibling();
-				if (unary.getRhsSymbol() != null && unary.getRhsSymbol().isClassMethod()) {
-					Symbol c = Transpiler.instance().lookup(symbol.getScope(), unary.getRhsSymbol().getScope().getLast());
-					if (c != null && c.isClass()) 
-						symbol = c;
+				//System.out.println("self." + unary.getRhsSymbol());
+				if (unary.getRhsSymbol() != null) {
+					Symbol rhs = unary.getRhsSymbol();
+					if (rhs.isClassMethod()) {
+						Symbol c = Transpiler.instance().lookup(symbol.getScope(), unary.getRhsSymbol().getScope().getLast());
+						if (c != null && c.isClass()) 
+							symbol = c;
+					} else if (rhs.isClass()) { // creating object of subclass
+						if (rhs.isStatic()) {
+							out.append( "new " + rhs.getName());							
+						} else {
+							out.append( "this.new " + rhs.getName());
+						}
+						return 1;
+					}
 				}
 			}
 		}
 		Symbol c = Transpiler.instance().lookupClass(symbol.getName());
+		String rewrite = programmer.rewriteSymbol( scope, symbol );
 		if (c != null && child.getRightSibling() != null && child.getRightSibling() instanceof TranslationListNode) { // create an object
-			String rewrite = programmer.rewriteSymbol( scope, symbol );
 			emitNewExpression( scope, rewrite, child );
 			addImport( c.getScope().getChild(Level.CLASS, rewrite) );
 			out.append( "new " + rewrite);
 		} else {
-			out.append( programmer.rewriteSymbol( scope, symbol ) );
+			if (! selfReference && ! symbol.isClass() && ! symbol.isEnum() && 
+					symbol.getScope().getLevel() == Level.MODULE) {
+				while (symbol.getAncestor() != null) {
+					symbol = symbol.getAncestor();
+				}
+				addStaticImport( symbol.getScope(), symbol.getName());
+				out.append(symbol.getScope().getLast());
+				programmer.writeOperator( out, "." );
+			}
+			out.append( rewrite );
 		}
 		return -1;
 	}
@@ -621,10 +653,11 @@ public abstract class AbstractJavaTarget extends AbstractLanguageTarget{
 				}
 //				System.out.println( tln.getLeftSibling().toString() );
 //				System.out.println(tln.traverse(1)); ////@@
-				if (isListAccess)
-					programmer.openBracket(out);
-				else
-					programmer.openParenthesis( out );
+				if (isListAccess) {
+					//programmer.openBracket(out);
+					out.append(".get"); // TODO programmer
+				}
+				programmer.openParenthesis( out );
 				for (int i = 0; i < tln.getChildCount(); i++) {
 					TranslationNode subscript = tln.getChild(i);
 					if (i != 0)
@@ -642,10 +675,10 @@ public abstract class AbstractJavaTarget extends AbstractLanguageTarget{
 						emitChild(out, scope, tln.getChild(i));
 					}
 				}
-				if (isListAccess)
-					programmer.closeBracket(out);
-				else
-					programmer.closeParenthesis( out ); 
+//				if (isListAccess)
+//					programmer.closeBracket(out);
+//				else
+				programmer.closeParenthesis( out ); 
 				return 0;
 			}
 		}
@@ -753,14 +786,19 @@ public abstract class AbstractJavaTarget extends AbstractLanguageTarget{
 		if (mustCompile) {
 			Transpiler.instance().logger().info("eSE< " + out.sb.toString());
 			ExpressionCompiler compiler = new ExpressionCompiler(scope, programmer, tempManager);
+			compiler.setStaticImports(staticImports);
 			if (compiler.compile(out.sb.toString(), this.imports) ) {
 				if (! compiler.getHeader().isEmpty()) {
 					output.writeln();
 				}
 				for (String line : compiler.getHeader()) {
+					if (line.trim().isEmpty())
+						continue;
 					output.writeln(line.replace("$", "."));
 				}
 				for (String line : compiler.getCode()) {
+					if (line.trim().isEmpty())
+						continue;
 					output.writeln(line.replace("$", "."));
 				}
 				output.deleteLast(); // delete final ; and \n; will be added later
@@ -904,8 +942,8 @@ public abstract class AbstractJavaTarget extends AbstractLanguageTarget{
 			break;
 		case CLASS:
 			indent.writeln( declaration + endLine);
-			indent.writeln( String.format("%s %s::%s;", 
-						remappedType, currentScope.getLast(), symbol.getName()) );
+//			indent.writeln( String.format("%s %s; // %s", 
+//						remappedType, symbol.getName(), symbol.getScope().toString()) );
 			break;
 		case MEMBER:
 			indent.writeln( declaration + endLine);
@@ -1028,6 +1066,40 @@ public abstract class AbstractJavaTarget extends AbstractLanguageTarget{
 		includeFile.append('.');
 		includeFile.append(scope.getLast());
 		String file = includeFile.toString();
+		for (String f : imports) {
+			if (f.equals(file))
+				return;
+		}
+		imports.add(file);
+	}
+	
+	public void addStaticImport( Scope scope, String function ) {
+		if (scope.getLast().equals("Main") || scope.getLast().equals("TestData"))
+			return;
+		
+		Symbol symbol = Transpiler.instance().lookup(scope, function);
+		if (symbol != null) {
+			StaticImport si = new StaticImport();
+			si.name = scope.getLast() + "$" + function;
+			si.type = symbol.getType();
+			staticImports.add(si);
+		}
+		StringBuilder includeFile = new StringBuilder();
+		for (int i = 0; i < scope.getLevelCount()-1; i++) {
+			String level = scope.getLevel(i);
+			if (scope.getLevelKind(i) == Level.IMPORT || scope.getLevelKind(i) == Level.MODULE) {
+				level = level.toLowerCase() + "";
+			}
+			if (i > 0) {
+				includeFile.append('.');
+			}
+			includeFile.append(level);
+		}
+		includeFile.append('.');
+		includeFile.append(scope.getLast());
+		includeFile.append('.');
+		includeFile.append(function);
+		String file = "static " + includeFile.toString();
 		for (String f : imports) {
 			if (f.equals(file))
 				return;

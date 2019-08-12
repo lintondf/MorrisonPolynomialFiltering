@@ -253,7 +253,7 @@ namespace polynomialfiltering {
         ///  @return   @return		n	estimated crossover sample number
         /// 
         /// 
-        double nSwitch(const int order, const double theta);
+        static double nSwitch(const int order, const double theta);
 
         ///// @brief Estimate the sample number when the final VRF diagonal value is one or less
         /// 
@@ -267,8 +267,8 @@ namespace polynomialfiltering {
         /// 
         ///  @return   @return		n	estimated sample number
         /// 
-        int nUnitLastVRF(const int order, const double tau);
-        std::shared_ptr<RecursivePolynomialFilter> makeEmp(const int order, const double tau);
+        static int nUnitLastVRF(const int order, const double tau);
+        static std::shared_ptr<RecursivePolynomialFilter> makeEmp(const int order, const double tau);
     }; // namespace components
 }; // namespace polynomialfiltering
 

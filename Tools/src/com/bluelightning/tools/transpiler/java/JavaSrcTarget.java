@@ -30,8 +30,16 @@ public class JavaSrcTarget extends AbstractJavaTarget {
 
 	public JavaSrcTarget(EjmlProgrammer programmer, Configuration cfg, Path baseDirectory) {
 		super(programmer, cfg, baseDirectory);
+		initializeImports();
+	}
+	
+	protected void initializeImports() {
+		staticImports.clear();
+		imports.clear();
 		imports.add("org.ejml.data.DMatrixRMaj");
 		imports.add("org.ejml.dense.row.CommonOps_DDRM");
+		imports.add("polynomialfiltering.main.FilterStatus");
+		imports.add("static polynomialfiltering.main.Utility.*");
 	}
 
 	boolean inTest = false;
@@ -45,6 +53,7 @@ public class JavaSrcTarget extends AbstractJavaTarget {
 			ExpressionCompiler.isTest = true;
 			return;
 		}
+		initializeImports();
 		System.out.println(String.format("\nJava/%s src: ", programmer.getName()) + scope.toAnnotatedString() );
 		int containedClasses = 0;
 		int staticFunctions = 0;

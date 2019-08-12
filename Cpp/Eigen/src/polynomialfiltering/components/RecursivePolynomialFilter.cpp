@@ -98,6 +98,10 @@ namespace polynomialfiltering {
                 return innovation;
             }
 
+            std::shared_ptr<ICore> RecursivePolynomialFilter::getCore () {
+                return this->core;
+            }
+
             int RecursivePolynomialFilter::getN () {
                 return this->n;
             }

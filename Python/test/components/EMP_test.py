@@ -165,8 +165,8 @@ class EMP_test(unittest.TestCase):
                 errors = self.driver(order, tau, N[order], R )[1]
                 E[:, iM,:] = errors
                 
-#                 f = makeEmp(order, tau);
-            core = _makeEmpCore(order, tau)
+            f = makeEmp(order, tau);
+            core = f.getCore()
             f = self.RecursivePolynomialFilterMock( order, tau, core )
             for iN in range(0, N[order]) :
                 f.setN(iN)
@@ -325,6 +325,7 @@ class EMP_test(unittest.TestCase):
         '''@itau : int'''
         '''@tau : float'''
         '''@core : ICore'''
+        '''@rf : RecursivePolynomialFilter'''
         '''@f : RecursivePolynomialFilterMock'''
         '''@iN : int'''
         '''@V : array'''
@@ -340,8 +341,8 @@ class EMP_test(unittest.TestCase):
             offset = 0;
             for itau in range(0,len(taus)) :
                 tau = taus[itau,0]
-                core = _makeEmpCore(order, tau)
-                f = self.RecursivePolynomialFilterMock( order, tau, core )
+                rf = makeEmp(order, tau)
+                f = self.RecursivePolynomialFilterMock( order, tau, rf.getCore() )
                 for iN in range(order+1, N) :
                     f.setN(iN+0)
                     V = f.getVRF();

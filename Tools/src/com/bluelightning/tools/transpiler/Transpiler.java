@@ -120,9 +120,9 @@ public class Transpiler {
 		new Target(Paths.get("polynomialfiltering/components"), "Fmp"),
 		new Target(Paths.get("polynomialfiltering/components"), "FixedMemoryPolynomialFilter"),
 		
-//		new TestTarget(Paths.get("components"), "RecursivePolynomialFilter_test"),
+		new TestTarget(Paths.get("components"), "RecursivePolynomialFilter_test"),
 		new TestTarget(Paths.get("components"), "EMP_test"),
-//		new TestTarget(Paths.get("components"), "Fmp_test"),
+		new TestTarget(Paths.get("components"), "Fmp_test"),
 //		new TestTarget(Paths.get("components"), "FixedMemoryFilter_test"),
 ////		new Target(Paths.get("polynomialfiltering/filters/controls"), "IObservationErrorModel", true),
 ////		new Target(Paths.get("polynomialfiltering/filters/controls"), "IJudge", true),
@@ -236,6 +236,8 @@ public class Transpiler {
 		if (c == null) {
 			symbolTable.add(symbol.getScope(), type.getName(), "<CLASS>");
 		}
+		if (symbol.getName().equals("self"))
+			return;
 		Scope inheritedScope = symbol.getScope().getChild(Level.CLASS, type.getName() );
 		for (Symbol i : inheritance ) {
 			if (i.getName().equals("__init__"))
@@ -673,6 +675,9 @@ public class Transpiler {
 		
 		Scope importScope = new Scope();
 		moduleScope = importScope;
+		if (isTest) {
+			moduleScope = moduleScope.getChild(Level.MODULE, "polynomialfiltering"); // TODO target?
+		}
 		for (String dot : dottedModule) {
 			moduleScope = moduleScope.getChild(Scope.Level.MODULE, dot );
 		}

@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeSet;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.dense.row.CommonOps_DDRM;
@@ -33,6 +35,7 @@ import com.bluelightning.tools.transpiler.Scope.Level;
 import com.bluelightning.tools.transpiler.Symbol;
 import com.bluelightning.tools.transpiler.SymbolTable;
 import com.bluelightning.tools.transpiler.Transpiler;
+import com.bluelightning.tools.transpiler.java.AbstractJavaTarget.StaticImport;
 import com.bluelightning.tools.transpiler.java.programmer.AbstractProgrammer;
 
 public class ExpressionCompiler {
@@ -52,59 +55,76 @@ public class ExpressionCompiler {
 			new MaxFunction().add();
 			new MinFunction().add();
 			new NumRowsFunction().add();
+			new NumElementsFunction().add();
 			new NumColsFunction().add();
 	    	new IdentityFunction().add();
 	    	new IntFunction().add();
 	    	new TransposeFunction().add();
+	    	new VoidFunction().add();
 	    	new ZerosFunction().add();
+	    	// test functions
+	    	new AssertAlmostEqualFunction().add();
 		}
 		
 		void add( GenericMethodFunction gmf ) {
 			addN( gmf.opName(), gmf, gmf );
 		}
 		
-		public void mapFunctions( Scope scope, SymbolTable symbolTable ) {
-			while (scope.getLevelCount() > 0) {
-//				System.out.println("AT: " + scope.toString());
-				for (Symbol symbol : symbolTable.atScope(scope)) {
-					if (symbol.getType().equals("array")) {
-//						System.out.printf("    builtin %s: %s\n", symbol.getName(), "array");
-						for (IProgrammer.Pair pair : programmer.getMatrixMethods()) {
-							String name = programmer.rewriteSymbol(symbol.getScope(), symbol) + "$" + pair.methodName;
-//							System.out.printf("      method %s: %s\n", name, pair.methodType);
-					    	GenericMethodFunction gmf = new GenericMethodFunction(name, pair.methodType, tempManager);
-					    	add( gmf );
-						}
-					} else if (symbol.getType().equals("vector")) {
-//						System.out.printf("    builtin %s: %s\n", symbol.getName(), "vector");
-						for (IProgrammer.Pair pair : programmer.getVectorMethods()) {
-							String name = programmer.rewriteSymbol(symbol.getScope(), symbol) + "$" + pair.methodName;
-//							System.out.printf("      method %s: %s\n", name, pair.methodType);
-					    	GenericMethodFunction gmf = new GenericMethodFunction(name, pair.methodType, tempManager);
-					    	add( gmf );
-						}						
-					} else {
-						Symbol c = Transpiler.instance().lookupClass(symbol.getType());
-						if (c != null) {
-//							System.out.printf("    object %s: %s\n", symbol.getName(), c.toString());
-							Scope objectClass = c.getScope().getChild(Level.CLASS, c.getName());
-							for (Symbol method : symbolTable.atScope(objectClass)) {
-								if (method.isFunction()) {
-									if (method.getName().equals("__init__"))
-										continue;
-									String name = programmer.rewriteSymbol(symbol.getScope(), symbol) + "$" + method.getName();
-//									System.out.printf("      method %s: %s\n", name, method.getType());
-							    	GenericMethodFunction gmf = new GenericMethodFunction(name, method.getType(), tempManager);
-							    	if (gmf.output != null) {
-							    		add( gmf );
-							    	}
-								}
-							}
+		
+		private boolean printMapping = false; 
+		
+		protected void mapUsage( Symbol symbol, SymbolTable symbolTable ) {
+			if (symbol.getType().equals("array")) {
+//				System.out.printf("    builtin %s: %s\n", symbol.getName(), "array");
+				for (IProgrammer.Pair pair : programmer.getMatrixMethods()) {
+					String name = programmer.rewriteSymbol(symbol.getScope(), symbol) + "$" + pair.methodName;
+//					System.out.printf("      method %s: %s\n", name, pair.methodType);
+			    	GenericMethodFunction gmf = new GenericMethodFunction(name, pair.methodType);
+			    	add( gmf );
+				}
+			} else if (symbol.getType().equals("vector")) {
+//				System.out.printf("    builtin %s: %s\n", symbol.getName(), "vector");
+				for (IProgrammer.Pair pair : programmer.getVectorMethods()) {
+					String name = programmer.rewriteSymbol(symbol.getScope(), symbol) + "$" + pair.methodName;
+//					System.out.printf("      method %s: %s\n", name, pair.methodType);
+			    	GenericMethodFunction gmf = new GenericMethodFunction(name, pair.methodType);
+			    	add( gmf );
+				}						
+			} else {
+				Symbol c = Transpiler.instance().lookupClass(symbol.getType());
+				if (c != null) {
+					if (printMapping) System.out.printf("    object %s: %s\n", symbol.getName(), c.toString());
+					Scope objectClass = c.getScope().getChild(Level.CLASS, c.getName());
+					for (Symbol method : symbolTable.atScope(objectClass)) {
+						if (method.isFunction()) {
+							if (method.getName().equals("__init__"))
+								continue;
+							String name = programmer.rewriteSymbol(symbol.getScope(), symbol) + "$" + method.getName();
+							if (printMapping) System.out.printf("      method %s: %s\n", name, method.getType());
+					    	GenericMethodFunction gmf = new GenericMethodFunction(name, method.getType());
+				    		add( gmf );
 						}
 					}
-//					if (symbol.isFunction()) {
-//						JavaTargetManagerFunctions.GenericMethodFunction function = mgr.new GenericMethodFunction(scope.getLast());
-//					}
+				}
+			}
+		}
+		
+		public void mapFunctions( Scope scope, SymbolTable symbolTable ) {
+//			printMapping = scope.toString().equals("/polynomialfiltering/components/Fmp_test/test9NSwitch/");
+			while (scope.getLevelCount() > 0) {
+				if (printMapping) System.out.println("AT: " + scope.toString());
+				for (Symbol symbol : symbolTable.atScope(scope)) {
+					if (printMapping) System.out.println( (symbol.isFunction() ? "  FUNCTION: " : "  SYMBOL: ") + symbol.getName() );
+					if (symbol.isFunction()) {
+						for (Symbol local : symbolTable.atScope(symbol.getScope())) {
+							if (local.isFunction())
+								continue;
+							if (printMapping) System.out.println("    LOCAL: " + local.getName());
+							mapUsage( local, symbolTable );
+						}
+					} else {
+						mapUsage( symbol, symbolTable );						
+					}
 				}
 				scope = scope.getParent();
 			} // while ascending levels
@@ -119,11 +139,8 @@ public class ExpressionCompiler {
 						continue;
 					String name = programmer.rewriteSymbol(method.getScope().getParent(), symbol) + "$" + method.getName();
 	//				System.out.printf("      method %s: %s\n", name, method.getType());
-			    	GenericMethodFunction gmf = new GenericMethodFunction(name, method.getType(), tempManager);
-			    	if (gmf.output != null) {
-			    		add( gmf );
-			    	}
-					
+			    	GenericMethodFunction gmf = new GenericMethodFunction(name, method.getType());
+		    		add( gmf );
 				}
 			}
 		}
@@ -148,30 +165,15 @@ public class ExpressionCompiler {
 		}
 		
 		
-		
 		public class GenericMethodFunction implements ManagerFunctions.InputN, ManagerFunctions.Coder {
 			
-			String name;
-			Variable output;
+			private String name;
+			private String type;
+			//private Variable output;
 			
-			public GenericMethodFunction(String name, String type, ManagerTempVariables tempManager ) {
+			public GenericMethodFunction(String name, String type ) {
 				this.name = name;
-				switch (type) {
-				case "int":
-					output = tempManager.createInteger();
-					break;
-				case "float":
-					output = tempManager.createDouble();
-					break;
-				case "array":
-					output = tempManager.createMatrix();
-					break;
-				case "vector":
-					output = tempManager.createMatrix();
-					break;
-				default:
-					output = null;
-				}
+				this.type = type;
 			}
 
 			@Override
@@ -180,8 +182,10 @@ public class ExpressionCompiler {
 				if (info.output.isTemp()) {
 					sb.append( declare(info.output) );
 				}
-				sb.append(info.output.getOperand());
-				sb.append(" = ");
+				if ( ! info.output.getOperand().equals("void")) {
+					sb.append(info.output.getOperand());
+					sb.append(" = ");
+				}
 				sb.append(name);
 				sb.append("(");
 				for (int i = 0; i < info.input.size(); i++) {
@@ -202,7 +206,22 @@ public class ExpressionCompiler {
 			@Override
 			public Info create(List<Variable> inputs, ManagerTempVariables manager) {
 				final Info info = new Info(inputs);
-				info.output = output;
+				switch (type) {
+				case "int":
+					info.output = tempManager.createInteger();
+					break;
+				case "float":
+					info.output = tempManager.createDouble();
+					break;
+				case "array":
+					info.output = tempManager.createMatrix();
+					break;
+				case "vector":
+					info.output = tempManager.createMatrix();
+					break;
+				default:
+					info.output = tempManager.createIntegerConstant(0, "void");
+				}
 				info.op = info.new Operation(opName()) {
 					@Override
 					public void process() {
@@ -273,6 +292,58 @@ public class ExpressionCompiler {
 	    }
 		 */
 		
+		
+	    public class AssertAlmostEqualFunction extends CodedFunctionN {
+	    	
+	    	String opname;
+	    	
+	    	AssertAlmostEqualFunction() {
+				super("assert_almost_equal");
+			}
+	    	
+			@Override
+			public Info create(List<Variable> inputs, ManagerTempVariables manager) {
+		    	final Info info = new Info();
+		    	info.input = inputs;
+		    	if (info.input.size() == 2) {
+		    		info.output = manager.createIntegerConstant(0, "void");
+		    		info.op = info.new Operation(opName()) {
+						@Override
+						public void process() {
+						}
+		    		};
+		    	} else {
+		    		throw new RuntimeException("assert_almost_equal requires exactly two parameters");
+		    	}
+	    		return info;
+			}
+
+			@Override
+			public String code(Info info) {
+				Variable A = info.input.get(0);
+				StringBuilder sb = new StringBuilder();
+				sb.append( String.format("assert_almost_equal(%s, %s);\n",
+						info.input.get(0).getOperand(),
+						info.input.get(1).getOperand() ) );
+				return sb.toString();
+			}
+
+			@Override
+			public String opName() {
+				return opname;
+			}
+
+			@Override
+			public void add() {
+				String[] opnames = {"assert_almost_equal-ss", "assert_almost_equal-mm"};
+				for (String n : opnames) {
+					opname = n;
+					super.add();
+				}
+			}
+	    }
+	    
+	    
 	    public class CopyFunction extends CodedFunction1 {
 	    	CopyFunction() {
 				super("copy");
@@ -391,6 +462,7 @@ public class ExpressionCompiler {
 				return sb.toString();
 			}
 	    }
+	    
 	    public class MaxFunction extends CodedFunctionN {
 	    	MaxFunction() {
 				super("max");
@@ -524,6 +596,43 @@ public class ExpressionCompiler {
 			}
 	    }
 	    
+	    public class NumElementsFunction extends CodedFunction1 {
+	    	NumElementsFunction() {
+				super("numElements");
+			}
+
+			@Override
+			public String opName() {
+				return "$numElements-m";
+			} 
+
+			@Override
+			public Info create(Variable A, ManagerTempVariables manager) {
+		    	final Info info = new Info(A);
+		    	if( A instanceof VariableMatrix ) {
+		    		info.output = manager.createInteger();
+		    		info.op = info.new Operation(opName()) {
+						@Override
+						public void process() {
+		                    CommonOps_DDRM.setIdentity(info.outputMatrix().matrix);
+		                    info.outputInteger().value = ((VariableMatrix) info.A()).matrix.getNumElements();
+						}
+		    		};
+		    	} else {
+		    		throw new RuntimeException("numElements only takes one matrix parameter");
+		    	}
+	    		return info;
+			}
+
+			@Override
+			public String code(Info info) {
+				Variable A = info.input.get(0);
+				StringBuilder sb = new StringBuilder();
+				sb.append( String.format("%s = %s.getNumElements();\n", info.output.getOperand(), A.getOperand()) );
+				return sb.toString();
+			}
+	    }
+	    
 	    public class NumRowsFunction extends CodedFunction1 {
 	    	NumRowsFunction() {
 				super("numRows");
@@ -603,6 +712,56 @@ public class ExpressionCompiler {
 			}
 	    }
 	    
+	    public class VoidFunction extends CodedFunction1 {
+	    	
+	    	String opname;
+	    	Pattern variablePattern = Pattern.compile("\\w");
+	    	
+	    	@Override
+			public void add() {
+	    		String[] opnames = {"$void-s", "void-m"};
+	    		for (String n : opnames) {
+	    			opname = n;
+	    			super.add();
+	    		}
+			}
+
+			VoidFunction() {
+				super("void");
+			}
+
+			@Override
+			public String opName() {
+				return opname;
+			} 
+
+			@Override
+			public Info create(Variable A, ManagerTempVariables manager) {
+		    	final Info info = new Info(A);
+		    	if( info.input.size() == 1 ) {
+		    		info.output = manager.createInteger();
+		    		info.op = info.new Operation(opName()) {
+						@Override
+						public void process() {
+						}
+		    		};
+		    	} else {
+		    		throw new RuntimeException("void() only takes one parameter");
+		    	}
+	    		return info;
+			}
+
+			@Override
+			public String code(Info info) {
+				Variable A = info.input.get(0);
+				StringBuilder sb = new StringBuilder();
+//				if (! info.A().getOperand().equals("void")) {
+//					sb.append(String.format("%s;\n", info.A().getOperand()));
+//				}
+				return sb.toString();
+			}
+	    }
+	    
 	    public class ZerosFunction extends CodedFunctionN {
 			ZerosFunction() {
 				super("zeros");
@@ -673,6 +832,7 @@ public class ExpressionCompiler {
 	AbstractProgrammer programmer;
 	IEmitOperation coder;
 	GenerateEquationCode codeGenerator;
+	JavaTargetManagerFunctions mf;
 	
 	public ExpressionCompiler( Scope scope, AbstractProgrammer programmer, ManagerTempVariables tempManager ) {
 		this.programmer = programmer;
@@ -681,7 +841,7 @@ public class ExpressionCompiler {
 		eq = new Equation();
 		eq.setManagerTemp( tempManager );
 		OperationCodeFactory factory = new OperationCodeFactory();
-		JavaTargetManagerFunctions mf = new JavaTargetManagerFunctions(factory, tempManager, programmer);
+		mf = new JavaTargetManagerFunctions(factory, tempManager, programmer);
 		coder = new EmitJavaOperation( mf );
 		eq.setManagerFunctions(mf);
 		mf.mapFunctions( scope, Transpiler.instance().getSymbolTable() );
@@ -692,6 +852,13 @@ public class ExpressionCompiler {
 			} catch (Exception x) {
 				System.out.println(x.getMessage() + ": " + name);
 			}
+		}
+	}
+	
+	public void setStaticImports(List<StaticImport> staticImports) {
+		for (StaticImport si : staticImports) {
+			JavaTargetManagerFunctions.GenericMethodFunction gmf = mf.new GenericMethodFunction(si.name, si.type);
+			mf.add(gmf);
 		}
 	}
 	
@@ -711,15 +878,37 @@ public class ExpressionCompiler {
 			new EjmlImports("MatrixFeatures_DDRM", "org.ejml.dense.row.MatrixFeatures_DDRM"),
 	};
 	
+
+	final String dummyPrefix = "asssignment$dummy = void";
+	
 	public boolean compile(String expression, List<String> imports ) {
-//		System.out.println("==== compile: " + expression );
+		boolean isVoid = false;
+		if (expression.indexOf('=') < 0) {
+			isVoid = true;
+			expression = dummyPrefix + "(" + expression + ")";
+		}
+		System.out.print("==== compile: " + expression );
 		TreeSet<String> declaredTemps = new TreeSet<>();
 		codeGenerator = new GenerateEquationCode(eq, coder, null, null, declaredTemps);
-		if (! codeGenerator.generate(expression, false) )
+		if (! codeGenerator.generate(expression, false) ) {
+			System.out.println(" -X: " + codeGenerator.getLastError().getMessage());
 			return false;
-//		System.out.println(codeGenerator.toString());
-//		System.out.println(codeGenerator.getHeader().toString());
-//		codeGenerator.getCode().forEach(System.out::println);
+		}
+		if (codeGenerator.getCode().isEmpty() || 
+			(codeGenerator.getCode().size() == 1 && codeGenerator.getCode().get(0).trim().startsWith("//"))) {
+			System.out.println(" -Z");
+			return false;			
+		}
+		if (codeGenerator.getCode().get(0).contains("// " + dummyPrefix)) {
+			codeGenerator.getCode().set(0, codeGenerator.getCode().get(0).replace(dummyPrefix, ""));
+		}
+		if (isVoid) {
+			String line = codeGenerator.getCode().get(0);
+			int i = line.indexOf(" = ");
+			if (i > 0) {
+				codeGenerator.getCode().set(0, line.substring(i+3));
+			}
+		}
 		for (String line : codeGenerator.getCode()) {
 			for (EjmlImports match : ejmlImports) {
 				if (line.contains(match.keyword)) {
@@ -727,6 +916,7 @@ public class ExpressionCompiler {
 				}
 			}
 		}
+		System.out.println(" -> " + codeGenerator.getCode());
 		return true;
 	}
 	
