@@ -44,7 +44,7 @@ namespace polynomialfiltering {
                 ///  @param		order	integer polynomial order
                 ///  @param		n	float sample number
                 /// 
-                static double effectiveTheta(const int order, const double n);
+                double effectiveTheta(const int order, const double n);
 
                 ///// @brief Copy the state of another filter into this filter.
                 /// 

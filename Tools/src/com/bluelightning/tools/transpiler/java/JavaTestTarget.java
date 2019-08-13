@@ -17,6 +17,8 @@ import com.bluelightning.tools.transpiler.Symbol;
 import com.bluelightning.tools.transpiler.Transpiler;
 import com.bluelightning.tools.transpiler.Scope.Level;
 import com.bluelightning.tools.transpiler.java.programmer.EjmlProgrammer;
+import com.google.googlejavaformat.java.Formatter;
+import com.google.googlejavaformat.java.FormatterException;
 
 import freemarker.template.Configuration;
 import freemarker.template.TemplateException;
@@ -40,7 +42,6 @@ public class JavaTestTarget extends AbstractJavaTarget {
 
 	@Override
 	public void startClass(Scope scope) {
-		System.out.println("jTT::sC " + scope);
 		Symbol symbol = Transpiler.instance().lookup(scope, scope.getLast());
 		symbol.setStatic(true);
 		super.startClass(scope);
@@ -49,7 +50,6 @@ public class JavaTestTarget extends AbstractJavaTarget {
 	@Override
 	public void finishClass(Scope scope) {
 		if (! currentClass.isEmpty() && currentClass.peek().getName().equals(scope.getLast()) ) {
-			System.out.println("jTT::fC " + currentClass.peek().getName() + " " + scope.getLast());
 			super.finishClass(scope);
 		}
 	}
@@ -123,6 +123,12 @@ public class JavaTestTarget extends AbstractJavaTarget {
 			//System.out.println(hppFile.toString());
 			StringWriter strOut = new StringWriter();
 			java.process(templateDataModel, strOut);
+//			try {
+//				String pretty = new Formatter().formatSource(strOut.toString());
+//				strOut = new StringWriter();
+//				strOut.append( pretty );
+//			} catch (FormatterException e) {
+//			}
 			String old = readFileToString( srcPath );
 			if (old == null || !old.equals(strOut.toString())) {
 				srcPath.toFile().getParentFile().mkdirs();
@@ -142,7 +148,6 @@ public class JavaTestTarget extends AbstractJavaTarget {
 
 	@Override
 	public void startMethod(Scope scope) {
-		System.out.println("jTT::sM " + scope);
 		currentScope = scope;
 		moduleTests = new ArrayList<>();
 		

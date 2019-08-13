@@ -898,19 +898,19 @@
       {/polynomialfiltering/components/Emp/CoreEmp5/getVRF/::_getVRF_return_value : array}[MEMBER]
   {_makeEmpCore}
     {/polynomialfiltering/components/Emp/}
-      {/polynomialfiltering/components/Emp/::_makeEmpCore : ICore; params(/polynomialfiltering/components/Emp/_makeEmpCore/::order : int,/polynomialfiltering/components/Emp/_makeEmpCore/::tau : float, | @classmethod;)}[MODULE]
+      {/polynomialfiltering/components/Emp/::_makeEmpCore : ICore; params(/polynomialfiltering/components/Emp/_makeEmpCore/::order : int,/polynomialfiltering/components/Emp/_makeEmpCore/::tau : float, | )}[MODULE]
     {/polynomialfiltering/components/Fmp_test/}
-      {/polynomialfiltering/components/Fmp_test/::_makeEmpCore : ICore; params(/polynomialfiltering/components/Emp/_makeEmpCore/::order : int,/polynomialfiltering/components/Emp/_makeEmpCore/::tau : float, | @classmethod;) INHERITED; }[MODULE]
+      {/polynomialfiltering/components/Fmp_test/::_makeEmpCore : ICore; params(/polynomialfiltering/components/Emp/_makeEmpCore/::order : int,/polynomialfiltering/components/Emp/_makeEmpCore/::tau : float, | ) INHERITED; }[MODULE]
     {/polynomialfiltering/components/EMP_test/}
-      {/polynomialfiltering/components/EMP_test/::_makeEmpCore : ICore; params(/polynomialfiltering/components/Emp/_makeEmpCore/::order : int,/polynomialfiltering/components/Emp/_makeEmpCore/::tau : float, | @classmethod;) INHERITED; }[MODULE]
+      {/polynomialfiltering/components/EMP_test/::_makeEmpCore : ICore; params(/polynomialfiltering/components/Emp/_makeEmpCore/::order : int,/polynomialfiltering/components/Emp/_makeEmpCore/::tau : float, | ) INHERITED; }[MODULE]
   {_makeEmp_return_value}
     {/polynomialfiltering/components/Emp/makeEmp/}
       {/polynomialfiltering/components/Emp/makeEmp/::_makeEmp_return_value : RecursivePolynomialFilter}[FUNCTION]
   {_makeFmpCore}
     {/polynomialfiltering/components/Fmp_test/}
-      {/polynomialfiltering/components/Fmp_test/::_makeFmpCore : ICore; params(/polynomialfiltering/components/Fmp/_makeFmpCore/::order : int,/polynomialfiltering/components/Fmp/_makeFmpCore/::tau : float,/polynomialfiltering/components/Fmp/_makeFmpCore/::theta : float, | @classmethod;) INHERITED; }[MODULE]
+      {/polynomialfiltering/components/Fmp_test/::_makeFmpCore : ICore; params(/polynomialfiltering/components/Fmp/_makeFmpCore/::order : int,/polynomialfiltering/components/Fmp/_makeFmpCore/::tau : float,/polynomialfiltering/components/Fmp/_makeFmpCore/::theta : float, | ) INHERITED; }[MODULE]
     {/polynomialfiltering/components/Fmp/}
-      {/polynomialfiltering/components/Fmp/::_makeFmpCore : ICore; params(/polynomialfiltering/components/Fmp/_makeFmpCore/::order : int,/polynomialfiltering/components/Fmp/_makeFmpCore/::tau : float,/polynomialfiltering/components/Fmp/_makeFmpCore/::theta : float, | @classmethod;)}[MODULE]
+      {/polynomialfiltering/components/Fmp/::_makeFmpCore : ICore; params(/polynomialfiltering/components/Fmp/_makeFmpCore/::order : int,/polynomialfiltering/components/Fmp/_makeFmpCore/::tau : float,/polynomialfiltering/components/Fmp/_makeFmpCore/::theta : float, | )}[MODULE]
   {_makeFmp_return_value}
     {/polynomialfiltering/components/Fmp/makeFmp/}
       {/polynomialfiltering/components/Fmp/makeFmp/::_makeFmp_return_value : RecursivePolynomialFilter}[FUNCTION]
@@ -1308,29 +1308,29 @@
       {/polynomialfiltering/components/EMP_test/test2CheckStates/::e : float}[MEMBER]
   {effectiveTheta}
     {/polynomialfiltering/components/EMP_test/RecursivePolynomialFilterMock/}
-      {/polynomialfiltering/components/EMP_test/RecursivePolynomialFilterMock/::effectiveTheta : float; params(/polynomialfiltering/components/RecursivePolynomialFilter/effectiveTheta/::self : RecursivePolynomialFilter,/polynomialfiltering/components/RecursivePolynomialFilter/effectiveTheta/::order : int,/polynomialfiltering/components/RecursivePolynomialFilter/effectiveTheta/::n : float, | @classmethod;) INHERITED; }[CLASS]
+      {/polynomialfiltering/components/EMP_test/RecursivePolynomialFilterMock/::effectiveTheta : float; params(/polynomialfiltering/components/RecursivePolynomialFilter/effectiveTheta/::order : int,/polynomialfiltering/components/RecursivePolynomialFilter/effectiveTheta/::n : float, | @staticmethod;) INHERITED; }[CLASS]
     {/polynomialfiltering/components/Fmp_test/RecursivePolynomialFilter/}
-      {/polynomialfiltering/components/Fmp_test/RecursivePolynomialFilter/::effectiveTheta : float; params(/polynomialfiltering/components/RecursivePolynomialFilter/effectiveTheta/::self : RecursivePolynomialFilter,/polynomialfiltering/components/RecursivePolynomialFilter/effectiveTheta/::order : int,/polynomialfiltering/components/RecursivePolynomialFilter/effectiveTheta/::n : float, | @classmethod;) INHERITED; }[CLASS]
+      {/polynomialfiltering/components/Fmp_test/RecursivePolynomialFilter/::effectiveTheta : float; params(/polynomialfiltering/components/RecursivePolynomialFilter/effectiveTheta/::order : int,/polynomialfiltering/components/RecursivePolynomialFilter/effectiveTheta/::n : float, | @staticmethod;) INHERITED; }[CLASS]
     {/polynomialfiltering/components/Emp/RecursivePolynomialFilter/}
-      {/polynomialfiltering/components/Emp/RecursivePolynomialFilter/::effectiveTheta : float; params(/polynomialfiltering/components/RecursivePolynomialFilter/effectiveTheta/::self : RecursivePolynomialFilter,/polynomialfiltering/components/RecursivePolynomialFilter/effectiveTheta/::order : int,/polynomialfiltering/components/RecursivePolynomialFilter/effectiveTheta/::n : float, | @classmethod;) INHERITED; }[CLASS]
+      {/polynomialfiltering/components/Emp/RecursivePolynomialFilter/::effectiveTheta : float; params(/polynomialfiltering/components/RecursivePolynomialFilter/effectiveTheta/::order : int,/polynomialfiltering/components/RecursivePolynomialFilter/effectiveTheta/::n : float, | @staticmethod;) INHERITED; }[CLASS]
     {/polynomialfiltering/components/RecursivePolynomialFilter/copyState/RecursivePolynomialFilter/}
-      {/polynomialfiltering/components/RecursivePolynomialFilter/copyState/RecursivePolynomialFilter/::effectiveTheta : float; params(/polynomialfiltering/components/RecursivePolynomialFilter/effectiveTheta/::self : RecursivePolynomialFilter,/polynomialfiltering/components/RecursivePolynomialFilter/effectiveTheta/::order : int,/polynomialfiltering/components/RecursivePolynomialFilter/effectiveTheta/::n : float, | @classmethod;) INHERITED; }[CLASS]
+      {/polynomialfiltering/components/RecursivePolynomialFilter/copyState/RecursivePolynomialFilter/::effectiveTheta : float; params(/polynomialfiltering/components/RecursivePolynomialFilter/effectiveTheta/::order : int,/polynomialfiltering/components/RecursivePolynomialFilter/effectiveTheta/::n : float, | @staticmethod;) INHERITED; }[CLASS]
     {/polynomialfiltering/components/EMP_test/test2CheckStates/RecursivePolynomialFilter/}
-      {/polynomialfiltering/components/EMP_test/test2CheckStates/RecursivePolynomialFilter/::effectiveTheta : float; params(/polynomialfiltering/components/RecursivePolynomialFilter/effectiveTheta/::self : RecursivePolynomialFilter,/polynomialfiltering/components/RecursivePolynomialFilter/effectiveTheta/::order : int,/polynomialfiltering/components/RecursivePolynomialFilter/effectiveTheta/::n : float, | @classmethod;) INHERITED; }[CLASS]
+      {/polynomialfiltering/components/EMP_test/test2CheckStates/RecursivePolynomialFilter/::effectiveTheta : float; params(/polynomialfiltering/components/RecursivePolynomialFilter/effectiveTheta/::order : int,/polynomialfiltering/components/RecursivePolynomialFilter/effectiveTheta/::n : float, | @staticmethod;) INHERITED; }[CLASS]
     {/polynomialfiltering/components/RecursivePolynomialFilter_test/RecursivePolynomialFilter/}
-      {/polynomialfiltering/components/RecursivePolynomialFilter_test/RecursivePolynomialFilter/::effectiveTheta : float; params(/polynomialfiltering/components/RecursivePolynomialFilter/effectiveTheta/::self : RecursivePolynomialFilter,/polynomialfiltering/components/RecursivePolynomialFilter/effectiveTheta/::order : int,/polynomialfiltering/components/RecursivePolynomialFilter/effectiveTheta/::n : float, | @classmethod;) INHERITED; }[CLASS]
+      {/polynomialfiltering/components/RecursivePolynomialFilter_test/RecursivePolynomialFilter/::effectiveTheta : float; params(/polynomialfiltering/components/RecursivePolynomialFilter/effectiveTheta/::order : int,/polynomialfiltering/components/RecursivePolynomialFilter/effectiveTheta/::n : float, | @staticmethod;) INHERITED; }[CLASS]
     {/polynomialfiltering/components/EMP_test/test1CheckVRF/RecursivePolynomialFilter/}
-      {/polynomialfiltering/components/EMP_test/test1CheckVRF/RecursivePolynomialFilter/::effectiveTheta : float; params(/polynomialfiltering/components/RecursivePolynomialFilter/effectiveTheta/::self : RecursivePolynomialFilter,/polynomialfiltering/components/RecursivePolynomialFilter/effectiveTheta/::order : int,/polynomialfiltering/components/RecursivePolynomialFilter/effectiveTheta/::n : float, | @classmethod;) INHERITED; }[CLASS]
+      {/polynomialfiltering/components/EMP_test/test1CheckVRF/RecursivePolynomialFilter/::effectiveTheta : float; params(/polynomialfiltering/components/RecursivePolynomialFilter/effectiveTheta/::order : int,/polynomialfiltering/components/RecursivePolynomialFilter/effectiveTheta/::n : float, | @staticmethod;) INHERITED; }[CLASS]
     {/polynomialfiltering/components/EMP_test/RecursivePolynomialFilter/}
-      {/polynomialfiltering/components/EMP_test/RecursivePolynomialFilter/::effectiveTheta : float; params(/polynomialfiltering/components/RecursivePolynomialFilter/effectiveTheta/::self : RecursivePolynomialFilter,/polynomialfiltering/components/RecursivePolynomialFilter/effectiveTheta/::order : int,/polynomialfiltering/components/RecursivePolynomialFilter/effectiveTheta/::n : float, | @classmethod;) INHERITED; }[CLASS]
+      {/polynomialfiltering/components/EMP_test/RecursivePolynomialFilter/::effectiveTheta : float; params(/polynomialfiltering/components/RecursivePolynomialFilter/effectiveTheta/::order : int,/polynomialfiltering/components/RecursivePolynomialFilter/effectiveTheta/::n : float, | @staticmethod;) INHERITED; }[CLASS]
     {/polynomialfiltering/components/RecursivePolynomialFilter_test/test1PurePredict/RecursivePolynomialFilter/}
-      {/polynomialfiltering/components/RecursivePolynomialFilter_test/test1PurePredict/RecursivePolynomialFilter/::effectiveTheta : float; params(/polynomialfiltering/components/RecursivePolynomialFilter/effectiveTheta/::self : RecursivePolynomialFilter,/polynomialfiltering/components/RecursivePolynomialFilter/effectiveTheta/::order : int,/polynomialfiltering/components/RecursivePolynomialFilter/effectiveTheta/::n : float, | @classmethod;) INHERITED; }[CLASS]
+      {/polynomialfiltering/components/RecursivePolynomialFilter_test/test1PurePredict/RecursivePolynomialFilter/::effectiveTheta : float; params(/polynomialfiltering/components/RecursivePolynomialFilter/effectiveTheta/::order : int,/polynomialfiltering/components/RecursivePolynomialFilter/effectiveTheta/::n : float, | @staticmethod;) INHERITED; }[CLASS]
     {/polynomialfiltering/components/EMP_test/test1CheckVRF/RecursivePolynomialFilterMock/}
-      {/polynomialfiltering/components/EMP_test/test1CheckVRF/RecursivePolynomialFilterMock/::effectiveTheta : float; params(/polynomialfiltering/components/RecursivePolynomialFilter/effectiveTheta/::self : RecursivePolynomialFilter,/polynomialfiltering/components/RecursivePolynomialFilter/effectiveTheta/::order : int,/polynomialfiltering/components/RecursivePolynomialFilter/effectiveTheta/::n : float, | @classmethod;) INHERITED; }[CLASS]
+      {/polynomialfiltering/components/EMP_test/test1CheckVRF/RecursivePolynomialFilterMock/::effectiveTheta : float; params(/polynomialfiltering/components/RecursivePolynomialFilter/effectiveTheta/::order : int,/polynomialfiltering/components/RecursivePolynomialFilter/effectiveTheta/::n : float, | @staticmethod;) INHERITED; }[CLASS]
     {/polynomialfiltering/components/RecursivePolynomialFilter/}
-      {/polynomialfiltering/components/RecursivePolynomialFilter/::effectiveTheta : float; params(/polynomialfiltering/components/RecursivePolynomialFilter/effectiveTheta/::self : RecursivePolynomialFilter,/polynomialfiltering/components/RecursivePolynomialFilter/effectiveTheta/::order : int,/polynomialfiltering/components/RecursivePolynomialFilter/effectiveTheta/::n : float, | @classmethod;)}[CLASS]
+      {/polynomialfiltering/components/RecursivePolynomialFilter/::effectiveTheta : float; params(/polynomialfiltering/components/RecursivePolynomialFilter/effectiveTheta/::order : int,/polynomialfiltering/components/RecursivePolynomialFilter/effectiveTheta/::n : float, | @staticmethod;)}[CLASS]
     {/polynomialfiltering/components/Fmp/RecursivePolynomialFilter/}
-      {/polynomialfiltering/components/Fmp/RecursivePolynomialFilter/::effectiveTheta : float; params(/polynomialfiltering/components/RecursivePolynomialFilter/effectiveTheta/::self : RecursivePolynomialFilter,/polynomialfiltering/components/RecursivePolynomialFilter/effectiveTheta/::order : int,/polynomialfiltering/components/RecursivePolynomialFilter/effectiveTheta/::n : float, | @classmethod;) INHERITED; }[CLASS]
+      {/polynomialfiltering/components/Fmp/RecursivePolynomialFilter/::effectiveTheta : float; params(/polynomialfiltering/components/RecursivePolynomialFilter/effectiveTheta/::order : int,/polynomialfiltering/components/RecursivePolynomialFilter/effectiveTheta/::n : float, | @staticmethod;) INHERITED; }[CLASS]
   {emp}
     {/polynomialfiltering/components/Fmp_test/test9NSwitch/}
       {/polynomialfiltering/components/Fmp_test/test9NSwitch/::emp : ICore}[MEMBER]
@@ -2217,16 +2217,16 @@
       {/polynomialfiltering/components/EMP_test/test1CheckVRF/TestData/::make : TestData INHERITED; }[CLASS]
   {makeEmp}
     {/polynomialfiltering/components/Emp/}
-      {/polynomialfiltering/components/Emp/::makeEmp : RecursivePolynomialFilter; params(/polynomialfiltering/components/Emp/makeEmp/::order : int,/polynomialfiltering/components/Emp/makeEmp/::tau : float, | @classmethod;)}[MODULE]
+      {/polynomialfiltering/components/Emp/::makeEmp : RecursivePolynomialFilter; params(/polynomialfiltering/components/Emp/makeEmp/::order : int,/polynomialfiltering/components/Emp/makeEmp/::tau : float, | )}[MODULE]
     {/polynomialfiltering/components/Fmp_test/}
-      {/polynomialfiltering/components/Fmp_test/::makeEmp : RecursivePolynomialFilter; params(/polynomialfiltering/components/Emp/makeEmp/::order : int,/polynomialfiltering/components/Emp/makeEmp/::tau : float, | @classmethod;) INHERITED; }[MODULE]
+      {/polynomialfiltering/components/Fmp_test/::makeEmp : RecursivePolynomialFilter; params(/polynomialfiltering/components/Emp/makeEmp/::order : int,/polynomialfiltering/components/Emp/makeEmp/::tau : float, | ) INHERITED; }[MODULE]
     {/polynomialfiltering/components/EMP_test/}
-      {/polynomialfiltering/components/EMP_test/::makeEmp : RecursivePolynomialFilter; params(/polynomialfiltering/components/Emp/makeEmp/::order : int,/polynomialfiltering/components/Emp/makeEmp/::tau : float, | @classmethod;) INHERITED; }[MODULE]
+      {/polynomialfiltering/components/EMP_test/::makeEmp : RecursivePolynomialFilter; params(/polynomialfiltering/components/Emp/makeEmp/::order : int,/polynomialfiltering/components/Emp/makeEmp/::tau : float, | ) INHERITED; }[MODULE]
   {makeFmp}
     {/polynomialfiltering/components/Fmp_test/}
-      {/polynomialfiltering/components/Fmp_test/::makeFmp : RecursivePolynomialFilter; params(/polynomialfiltering/components/Fmp/makeFmp/::order : int,/polynomialfiltering/components/Fmp/makeFmp/::tau : float,/polynomialfiltering/components/Fmp/makeFmp/::theta : float, | @classmethod;) INHERITED; }[MODULE]
+      {/polynomialfiltering/components/Fmp_test/::makeFmp : RecursivePolynomialFilter; params(/polynomialfiltering/components/Fmp/makeFmp/::order : int,/polynomialfiltering/components/Fmp/makeFmp/::tau : float,/polynomialfiltering/components/Fmp/makeFmp/::theta : float, | ) INHERITED; }[MODULE]
     {/polynomialfiltering/components/Fmp/}
-      {/polynomialfiltering/components/Fmp/::makeFmp : RecursivePolynomialFilter; params(/polynomialfiltering/components/Fmp/makeFmp/::order : int,/polynomialfiltering/components/Fmp/makeFmp/::tau : float,/polynomialfiltering/components/Fmp/makeFmp/::theta : float, | @classmethod;)}[MODULE]
+      {/polynomialfiltering/components/Fmp/::makeFmp : RecursivePolynomialFilter; params(/polynomialfiltering/components/Fmp/makeFmp/::order : int,/polynomialfiltering/components/Fmp/makeFmp/::tau : float,/polynomialfiltering/components/Fmp/makeFmp/::theta : float, | )}[MODULE]
   {matches}
     {/polynomialfiltering/components/RecursivePolynomialFilter_test/test1PurePredict/}
       {/polynomialfiltering/components/RecursivePolynomialFilter_test/test1PurePredict/::matches : List[str]}[MEMBER]
@@ -2471,9 +2471,9 @@
       {/polynomialfiltering/components/Emp/CoreEmp5/getGamma/::n4 : float}[MEMBER]
   {nSwitch}
     {/polynomialfiltering/components/Emp/}
-      {/polynomialfiltering/components/Emp/::nSwitch : float; params(/polynomialfiltering/components/Emp/nSwitch/::order : int,/polynomialfiltering/components/Emp/nSwitch/::theta : float, | @classmethod;)}[MODULE]
+      {/polynomialfiltering/components/Emp/::nSwitch : float; params(/polynomialfiltering/components/Emp/nSwitch/::order : int,/polynomialfiltering/components/Emp/nSwitch/::theta : float, | )}[MODULE]
     {/polynomialfiltering/components/Fmp_test/}
-      {/polynomialfiltering/components/Fmp_test/::nSwitch : float; params(/polynomialfiltering/components/Emp/nSwitch/::order : int,/polynomialfiltering/components/Emp/nSwitch/::theta : float, | @classmethod;) INHERITED; }[MODULE]
+      {/polynomialfiltering/components/Fmp_test/::nSwitch : float; params(/polynomialfiltering/components/Emp/nSwitch/::order : int,/polynomialfiltering/components/Emp/nSwitch/::theta : float, | ) INHERITED; }[MODULE]
   {nTaus}
     {/polynomialfiltering/components/Fmp_test/test9NSwitch/}
       {/polynomialfiltering/components/Fmp_test/test9NSwitch/::nTaus : int}[MEMBER]
@@ -2482,11 +2482,11 @@
       {/polynomialfiltering/components/Fmp_test/test9NSwitch/::nThetas : int}[MEMBER]
   {nUnitLastVRF}
     {/polynomialfiltering/components/Emp/}
-      {/polynomialfiltering/components/Emp/::nUnitLastVRF : int; params(/polynomialfiltering/components/Emp/nUnitLastVRF/::order : int,/polynomialfiltering/components/Emp/nUnitLastVRF/::tau : float, | @classmethod;)}[MODULE]
+      {/polynomialfiltering/components/Emp/::nUnitLastVRF : int; params(/polynomialfiltering/components/Emp/nUnitLastVRF/::order : int,/polynomialfiltering/components/Emp/nUnitLastVRF/::tau : float, | )}[MODULE]
     {/polynomialfiltering/components/Fmp_test/}
-      {/polynomialfiltering/components/Fmp_test/::nUnitLastVRF : int; params(/polynomialfiltering/components/Emp/nUnitLastVRF/::order : int,/polynomialfiltering/components/Emp/nUnitLastVRF/::tau : float, | @classmethod;) INHERITED; }[MODULE]
+      {/polynomialfiltering/components/Fmp_test/::nUnitLastVRF : int; params(/polynomialfiltering/components/Emp/nUnitLastVRF/::order : int,/polynomialfiltering/components/Emp/nUnitLastVRF/::tau : float, | ) INHERITED; }[MODULE]
     {/polynomialfiltering/components/EMP_test/}
-      {/polynomialfiltering/components/EMP_test/::nUnitLastVRF : int; params(/polynomialfiltering/components/Emp/nUnitLastVRF/::order : int,/polynomialfiltering/components/Emp/nUnitLastVRF/::tau : float, | @classmethod;) INHERITED; }[MODULE]
+      {/polynomialfiltering/components/EMP_test/::nUnitLastVRF : int; params(/polynomialfiltering/components/Emp/nUnitLastVRF/::order : int,/polynomialfiltering/components/Emp/nUnitLastVRF/::tau : float, | ) INHERITED; }[MODULE]
   {name}
     {/polynomialfiltering/components/EMP_test/RecursivePolynomialFilterMock/}
       {/polynomialfiltering/components/EMP_test/RecursivePolynomialFilterMock/::name : str INHERITED; }[CLASS]
@@ -2907,8 +2907,6 @@
       {/polynomialfiltering/components/Fmp/CoreFmp3/getGamma/::self : CoreFmp3}[MEMBER]
     {/polynomialfiltering/components/Fmp_test/test9NSwitch/}
       {/polynomialfiltering/components/Fmp_test/test9NSwitch/::self : Fmp_test}[MEMBER]
-    {/polynomialfiltering/components/RecursivePolynomialFilter/effectiveTheta/}
-      {/polynomialfiltering/components/RecursivePolynomialFilter/effectiveTheta/::self : RecursivePolynomialFilter}[MEMBER]
     {/polynomialfiltering/Main/AbstractFilter/setStatus/}
       {/polynomialfiltering/Main/AbstractFilter/setStatus/::self : AbstractFilter}[MEMBER]
     {/polynomialfiltering/components/Fmp/AbstractCoreFmp/getLastVRF/}

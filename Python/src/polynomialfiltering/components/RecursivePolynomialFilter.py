@@ -56,8 +56,8 @@ class RecursivePolynomialFilter(AbstractFilter):
         for d in range(0,self.order+1):
             self.D[d] = pow(self.tau, d)
       
-    @classmethod            
-    def effectiveTheta(self, order : int, n : float) -> float:
+    @staticmethod            
+    def effectiveTheta(order : int, n : float) -> float:
         """
         Estimate of the FMP fading factor theta to match 0th variance of an EMP
         

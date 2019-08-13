@@ -133,7 +133,6 @@ public abstract class AbstractJavaTarget extends AbstractLanguageTarget{
 
 	@Override
 	public void finishClass(Scope scope) {
-		System.out.println("fC: " + scope);
 		super.finishClass(scope);
 		indent.out();
 		indent.writeln("} // class " + scope.getLast());
@@ -161,9 +160,9 @@ public abstract class AbstractJavaTarget extends AbstractLanguageTarget{
 			Transpiler.instance().reportError("startMethod::Unknown symbol: " + currentFunction + " " + functionScope );
 			return;
 		}
-		if (symbol.getScope().getLevel() == Scope.Level.MODULE) {
-			System.out.println(symbol);
-		}
+//		if (symbol.getScope().getLevel() == Scope.Level.MODULE) {
+//			System.out.println(symbol);
+//		}
 		Symbol.FunctionParametersInfo fpi = symbol.getFunctionParametersInfo();
 		if (symbol != null && fpi != null) {
 				String name = symbol.getName();
@@ -221,7 +220,8 @@ public abstract class AbstractJavaTarget extends AbstractLanguageTarget{
 					type = "public " + type;					
 				}
 				
-				if (fpi.decorators.contains("@classmethod")) {
+				if (fpi.decorators.contains("@classmethod") ||
+					symbol.getScope().getLevel() == Level.MODULE) {
 					type = "static " + type;
 				} else if (fpi.decorators.contains("@abstractmethod")) {
 					isAbstract = true;
@@ -1077,6 +1077,9 @@ public abstract class AbstractJavaTarget extends AbstractLanguageTarget{
 		if (scope.getLast().equals("Main") || scope.getLast().equals("TestData"))
 			return;
 		
+		if (scope.toString().equals(currentScope.getParent().toString()))
+			return;
+	
 		Symbol symbol = Transpiler.instance().lookup(scope, function);
 		if (symbol != null) {
 			StaticImport si = new StaticImport();

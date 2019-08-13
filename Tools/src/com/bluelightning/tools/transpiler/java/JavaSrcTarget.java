@@ -66,10 +66,14 @@ public class JavaSrcTarget extends AbstractJavaTarget {
 		}
 		if (containedClasses > 1  && ! scope.getLast().equals("Main")) {
 			packageName = scope.getLast().toLowerCase();
-			System.out.println("PACKAGE: " + packageName);
+			System.out.print("PACKAGE: " + packageName);
+		} else {
+			System.out.print("CLASS: " + scope.getLast());
 		}
 		if (staticFunctions > 0) {
-			System.out.printf("%s: %d classes; %d static functions\n", packageName, containedClasses, staticFunctions);
+			System.out.printf(": %d classes; %d static functions\n", containedClasses, staticFunctions);
+		} else {
+			System.out.printf(": %d classes\n", containedClasses);
 		}
 	}
 	

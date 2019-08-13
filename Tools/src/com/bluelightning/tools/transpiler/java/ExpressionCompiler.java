@@ -887,16 +887,15 @@ public class ExpressionCompiler {
 			isVoid = true;
 			expression = dummyPrefix + "(" + expression + ")";
 		}
-		System.out.print("==== compile: " + expression );
 		TreeSet<String> declaredTemps = new TreeSet<>();
 		codeGenerator = new GenerateEquationCode(eq, coder, null, null, declaredTemps);
 		if (! codeGenerator.generate(expression, false) ) {
-			System.out.println(" -X: " + codeGenerator.getLastError().getMessage());
+			Transpiler.instance().logger().info(String.format("Compile: %s -X: %s", expression, codeGenerator.getLastError().getMessage()));
 			return false;
 		}
 		if (codeGenerator.getCode().isEmpty() || 
 			(codeGenerator.getCode().size() == 1 && codeGenerator.getCode().get(0).trim().startsWith("//"))) {
-			System.out.println(" -Z");
+			Transpiler.instance().logger().info(String.format("Compile: %s -Z", expression));
 			return false;			
 		}
 		if (codeGenerator.getCode().get(0).contains("// " + dummyPrefix)) {
@@ -916,7 +915,7 @@ public class ExpressionCompiler {
 				}
 			}
 		}
-		System.out.println(" -> " + codeGenerator.getCode());
+		Transpiler.instance().logger().info(String.format("Compile: %s ->: %s", expression, codeGenerator.getCode().toString()));
 		return true;
 	}
 	

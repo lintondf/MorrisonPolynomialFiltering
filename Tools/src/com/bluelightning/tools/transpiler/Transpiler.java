@@ -123,7 +123,7 @@ public class Transpiler {
 		new TestTarget(Paths.get("components"), "RecursivePolynomialFilter_test"),
 		new TestTarget(Paths.get("components"), "EMP_test"),
 		new TestTarget(Paths.get("components"), "Fmp_test"),
-//		new TestTarget(Paths.get("components"), "FixedMemoryFilter_test"),
+		//TODO finish Python test		new TestTarget(Paths.get("components"), "FixedMemoryFilter_test"),
 ////		new Target(Paths.get("polynomialfiltering/filters/controls"), "IObservationErrorModel", true),
 ////		new Target(Paths.get("polynomialfiltering/filters/controls"), "IJudge", true),
 ////		new Target(Paths.get("polynomialfiltering/filters/controls"), "IMonitor", true),
