@@ -266,8 +266,11 @@ def scaleVRFEMP( V : array, t : float, n : float ) -> array:
             S[i,j] = S[i,j-1] / (t*n);
     return S * V;
     
-    
-def generateTestPolynomial( order : int, N : int, t0 : float, tau : float, minY : float = -1e6, maxY : float = 1e6):
+
+def generateConsistentPolynomial( tau : float, V : array) -> array:
+    pass
+     
+def generateTestPolynomial( order : int, N : int, t0 : float, tau : float, minY : float = -1e6, maxY : float = 1e6) -> array:
     tn = t0 + (N-1)*tau
     if (order == 0) :
         XY = (array([t0]), array([uniform(minY, maxY)]))

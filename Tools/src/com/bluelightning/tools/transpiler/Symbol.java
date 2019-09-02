@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
+import com.bluelightning.tools.transpiler.Symbol.FunctionParametersInfo;
+
 public class Symbol {
 	
 	public static class SuperClassInfo {
@@ -239,5 +241,13 @@ public class Symbol {
 
 	public boolean isFunction() {
 		return getFunctionParametersInfo() != null;
+	}
+	
+	public void setFunction(boolean tf) {
+		if (tf) {
+			this.setFunctionParametersInfo(new Symbol.FunctionParametersInfo());
+		} else {
+			this.setFunctionParametersInfo(null);
+		}
 	}
 }

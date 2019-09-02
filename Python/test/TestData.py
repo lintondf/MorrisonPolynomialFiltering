@@ -26,8 +26,11 @@ from polynomialfiltering.PythonUtilities import fdistCdf, fdistPpf, chi2Cdf,\
     chi2Ppf
 from numpy.matlib import randn
 from polynomialfiltering.Main import AbstractFilter
-from netCDF4 import Dataset
+from netCDF4 import Dataset, Group
 from typing import List;
+from TestSuite import testDataPath;
+from TestUtilities import createTestGroup, writeTestVariable, A2S
+from builtins import classmethod
 
 
 
@@ -52,12 +55,67 @@ class TestData :
                 results.append(group)
         return results;
     
+    def getMatchingSubGroups(self, parent: Group, prefix : str) -> List[str]:
+        results = []
+        for group in parent.groups :
+            if (group.startswith(prefix)) :
+                results.append(group)
+        return results;
+    
+    def getGroup(self, groupName :str)-> Group:
+        return self.cdf.groups[groupName];
+    
+    def getSubGroup(self, group : Group, subGroupName: str)-> Group:
+        return group.groups[subGroupName];
+    
     def getGroupVariable(self, groupName : str, variableName : str) -> array:
         group = self.cdf.groups[groupName];
         return group.variables[variableName][:];
     
+    def getSubGroupVariable(self, groupName : str, subgroup : str, variableName : str) -> array:
+        group = self.cdf.groups[groupName];
+        sub = group.groups[subgroup];
+        return sub.variables[variableName][:];
+        
     def close(self) -> None:
         self.cdf.close()
+        
+        
+    def putInteger(self, group : Group, variableName: str, variable : int):
+        self.putScalar(group, variableName, variable)
+        
+    def putScalar(self, group : Group, variableName: str, variable : float):
+        v = group.createVariable(variableName, 'd')
+        v[:] = variable;
+        
+    def getInteger(self, group : Group, variableName : str) -> int:
+        return int(self.getScalar(group, variableName))
+    
+    def getScalar(self, group : Group, variableName : str) -> float:
+        v = group.variables[variableName];
+        return v.getValue().item(0);
+    
+    def putArray(self, group: Group, name: str, data: array):
+        dims = data.shape;
+        if (len(dims) == 0) :
+            self.putScalar(group, name, data)
+            return
+        elif (len(dims) == 1) :
+            nDim = '%s_N' % name;
+            group.createDimension(nDim, dims[0]);
+            v = group.createVariable(name, 'd', (nDim))
+            v[:] = data;
+        else :
+            nDim = '%s_N' % name;
+            mDim = '%s_M' % name;
+            group.createDimension(nDim, dims[0]);
+            group.createDimension(mDim, dims[1]);
+            v = group.createVariable(name, 'd', (nDim, mDim))
+            v[:] = data;
+        
+    def getArray(self, group: Group, name : str) -> array:
+        v = group.variables[name];
+        return v[:];
         
     @classmethod
     def make(cls, filename : str) -> 'TestData':
@@ -547,12 +605,33 @@ def fadingChi2():
             
 if __name__ == '__main__':
     pass
+    path = testDataPath('testTestData.nc');
+    cdf = Dataset(path, "w", format="NETCDF4");
+    group = createTestGroup(cdf, 'Test')
+    x = 3.14;
+    TestData.putScalar(group, "x", x);
+    v = array([1,2,3])
+    m = array([[4,5],[6,7]])
+    TestData.putArray(group, "v", v)
+    TestData.putArray(group, "m", m)
+    cdf.close()
+    
+    testData = TestData('testTestData.nc')
+    group = testData.getGroup('Test')
+    y = testData.getScalar(group, "x")
+    print(y)
+    v = testData.getArray(group, "v")
+    print(v)
+    m = testData.getArray(group, "m")
+    print(m)
+    
+
 #     fadingChi2();
-    for i in range(0,100) :
-        for l in [25] : # [10, 20, 30, 40] :
-            for p in [0.750] : #[0.50, 0.60, 0.70, 0.80, 0.90] :
-    #             seed(1)
-                testEMPSet(l, p)
+#     for i in range(0,100) :
+#         for l in [25] : # [10, 20, 30, 40] :
+#             for p in [0.750] : #[0.50, 0.60, 0.70, 0.80, 0.90] :
+#     #             seed(1)
+#                 testEMPSet(l, p)
 #     for n in range(3,100,10) :
 #         print(n)
 #         EmpVrfCorrelation(n)

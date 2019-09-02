@@ -62,12 +62,13 @@ public class JavaTestTarget extends AbstractJavaTarget {
 	protected void initializeImports() {
 		staticImports.clear();
 		imports.clear();
-		imports.add("java.util.ArrayList");
+		imports.add("java.util.List");
 		imports.add("org.ejml.data.DMatrixRMaj");
 		imports.add("org.ejml.dense.row.CommonOps_DDRM");
 		imports.add("polynomialfiltering.main.FilterStatus");
 		imports.add("static polynomialfiltering.main.Utility.*");
 		imports.add("utility.TestData");
+		imports.add("ucar.nc2.Group");
 		imports.add("static utility.TestMain.*");
 	}
 

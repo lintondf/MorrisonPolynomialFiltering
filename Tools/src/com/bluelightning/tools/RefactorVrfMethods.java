@@ -80,7 +80,7 @@ public class RefactorVrfMethods {
 				if (Character.isAlphabetic(line.charAt(i-1)))
 					continue;
 				boolean hasPoint = false;
-				if (line.charAt(i-2) == '*' && line.charAt(i-1) == '*')
+				if (i > 1 && line.charAt(i-2) == '*' && line.charAt(i-1) == '*')
 					hasPoint = true;
 				i++;
 				while (i < line.length()) {

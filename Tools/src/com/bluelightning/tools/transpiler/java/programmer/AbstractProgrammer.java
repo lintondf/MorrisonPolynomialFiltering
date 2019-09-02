@@ -96,7 +96,7 @@ public abstract class AbstractProgrammer implements IProgrammer {
 		if (type.startsWith("List[")) { 
 			type = type.substring(5, type.length()-1).trim().replaceAll(" +", "");
 			String[] fields = type.split(",");
-			String vector = "ArrayList<";
+			String vector = "List<";
 			for (String field : fields) {
 				field = remapTypeString(currentScope, field);
 				vector += field;

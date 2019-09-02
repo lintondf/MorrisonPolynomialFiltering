@@ -9,6 +9,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.util.Date;
 import java.util.logging.Level;
 
@@ -145,6 +146,68 @@ public class Execute {
 			e.printStackTrace();
 			return "";
 		}
+	}
+
+	Process p;
+	OutputStreamWriter writer;
+	InputStreamReader  reader;
+	
+	public Execute(String[] cmd) {
+		ProcessBuilder pb = new ProcessBuilder(cmd);
+		pb.redirectErrorStream(true);
+		try {
+			p = pb.start();
+			writer = new OutputStreamWriter( p.getOutputStream() );
+			reader = new InputStreamReader( p.getInputStream() );
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+	}
+	
+	public void close() {
+		try {
+			writer.append((char) 4 ); // EOT CTRL-D
+			writer.flush();
+			writer.close();
+			int r = p.waitFor(); // Let the process finish.
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public String send(String input ) {
+		try {
+			writer.append(input);
+			writer.append('\n');
+			writer.flush();
+			BufferedReader br = new BufferedReader(reader);
+			return br.readLine();
+		} catch (Exception x) {
+			x.printStackTrace();
+			return null;
+		}
+	}
+	
+	public static Execute openMathematicaServer() {
+		String[] cmd = {
+				"/Applications/Mathematica.app/Contents/MacOS/MathKernel",
+				"-noprompt"
+		};
+		Execute execute = new Execute(cmd);
+		return execute;
+	}
+	
+	public static void main(String[] args ) {
+		String[] cmd = {
+				"/Applications/Mathematica.app/Contents/MacOS/MathKernel",
+				"-noprompt"
+		};
+		Execute execute = new Execute(cmd);
+		System.out.println(  execute.send("HornerForm[1+2*t+4*t^2]") );
+		execute.close();
 	}
 
 } // class Execute

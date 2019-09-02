@@ -93,8 +93,12 @@ public class ExpressionCompiler {
 			} else {
 				Symbol c = Transpiler.instance().lookupClass(symbol.getType());
 				if (c != null) {
-					if (printMapping) System.out.printf("    object %s: %s\n", symbol.getName(), c.toString());
 					Scope objectClass = c.getScope().getChild(Level.CLASS, c.getName());
+					if (printMapping) System.out.printf("    object %s: %s; %s\n", symbol.getName(), c.toString(), objectClass.toString());
+//					if (symbol.getScope().toString().contains("Fmp_test") &&
+//							symbol.getName().equals("testData")) {
+//						System.out.println(objectClass.toAnnotatedString());
+//					}
 					for (Symbol method : symbolTable.atScope(objectClass)) {
 						if (method.isFunction()) {
 							if (method.getName().equals("__init__"))
@@ -110,7 +114,7 @@ public class ExpressionCompiler {
 		}
 		
 		public void mapFunctions( Scope scope, SymbolTable symbolTable ) {
-//			printMapping = scope.toString().equals("/polynomialfiltering/components/Fmp_test/test9NSwitch/");
+			//printMapping = scope.toString().equals("/polynomialfiltering/components/Fmp_test/test1CheckStates/");
 			while (scope.getLevelCount() > 0) {
 				if (printMapping) System.out.println("AT: " + scope.toString());
 				for (Symbol symbol : symbolTable.atScope(scope)) {
@@ -123,6 +127,7 @@ public class ExpressionCompiler {
 							mapUsage( local, symbolTable );
 						}
 					} else {
+						if (printMapping) System.out.println("    VARIABLE: " + symbol.getName());
 						mapUsage( symbol, symbolTable );						
 					}
 				}
@@ -891,6 +896,8 @@ public class ExpressionCompiler {
 		codeGenerator = new GenerateEquationCode(eq, coder, null, null, declaredTemps);
 		if (! codeGenerator.generate(expression, false) ) {
 			Transpiler.instance().logger().info(String.format("Compile: %s -X: %s", expression, codeGenerator.getLastError().getMessage()));
+			System.out.println(codeGenerator.getLastError().getMessage() + ": " + expression);
+			//eq.getVariables().keySet().forEach(System.out::println);
 			return false;
 		}
 		if (codeGenerator.getCode().isEmpty() || 
@@ -928,6 +935,31 @@ public class ExpressionCompiler {
 	}
 	
 	
+	protected static void declareVariable( HashMap<String, Object> variables, String qualifiedName, Symbol symbol) {
+		switch (symbol.getType()) {
+		case "int":
+			variables.put(qualifiedName, new Integer(0));
+			break;
+		case "float":
+			variables.put(qualifiedName, new Double(0));
+			break;
+		case "array":
+			variables.put(qualifiedName, new DMatrixRMaj(1,1));
+			break;
+		case "vector":
+			variables.put(qualifiedName, new DMatrixRMaj(1));
+			break;
+		default:
+			if (symbol.isClass() || symbol.isEnum() ) {
+			} else if (symbol.isFunction()) {
+			} else if (symbol.getType().contains("test")) {
+			} else {
+				//System.out.println("Unhandled type: " + symbol.toString() ); //throw new RuntimeException
+			}
+		}
+		
+	}
+	
 	public static Map<String, Object> mapVariables( Scope scope, SymbolTable symbolTable ) {
 		HashMap<String, Object> variables = new HashMap<>();
 		
@@ -938,28 +970,7 @@ public class ExpressionCompiler {
 					continue;
 				String qualifiedName = prefix + symbol.getName();
 				if (! variables.containsKey(qualifiedName)) {
-					switch (symbol.getType()) {
-					case "int":
-						variables.put(qualifiedName, new Integer(0));
-						break;
-					case "float":
-						variables.put(qualifiedName, new Double(0));
-						break;
-					case "array":
-						variables.put(qualifiedName, new DMatrixRMaj(1,1));
-						break;
-					case "vector":
-						variables.put(qualifiedName, new DMatrixRMaj(1));
-						break;
-					default:
-						if (symbol.isClass() || symbol.isEnum() ) {
-						} else if (symbol.isFunction()) {
-						} else if (symbol.getType().contains("test")) {
-						} else {
-							//System.out.println("Unhandled type: " + symbol.toString() ); //throw new RuntimeException
-						}
-					}
-					
+					declareVariable( variables, qualifiedName, symbol );
 				}
 			}
 			prefix = "this$";

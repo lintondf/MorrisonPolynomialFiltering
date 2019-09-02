@@ -72,7 +72,7 @@ class DeclarationsListener extends LcdPythonBaseListener {
 		protected Symbol declareSymbol( Token token, String declaration ) {
 			declaration = declaration.trim().replaceAll(" +", " ");
 //			if (declaration.contains("testData"))
-//				System.out.println(declaration); //TODO
+//				System.out.println(declaration);
 			String[] fields = declaration.split(":");
 			if (fields.length >= 2) {
 				Scope currentScope = scopeStack.peek();
@@ -97,8 +97,8 @@ class DeclarationsListener extends LcdPythonBaseListener {
 				if (fields.length > 2) {
 					addSymbolDimensions( symbol, fields );
 				}
-//				if (declaration.contains("testData"))
-//					System.out.println(symbol.toString());
+				if (declaration.contains("testData"))
+					System.out.println(symbol.toString());
 				return symbol;
 			} else {
 				this.transpiler.reportError(token, "Ill-formed declaration: " + declaration );

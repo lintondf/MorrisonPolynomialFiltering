@@ -430,6 +430,9 @@ namespace polynomialfiltering {
             }
 
         double nSwitch (const int order, const double theta) {
+            if (1.0 - theta <= 0.0) {
+                return 0.0;
+            }
             if (order == 0) {
                 return 2.0 / (1.0 - theta);
             } else if (order == 1.0) {

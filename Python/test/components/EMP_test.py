@@ -1,7 +1,9 @@
 '''
 Created on Apr 19, 2019
 
-@author: NOOK
+@author: D. F. Linton
+
+
 '''
 
 import unittest
@@ -34,18 +36,6 @@ from polynomialfiltering.components.Emp import makeEmp, _makeEmpCore, nUnitLastV
 
 from polynomialfiltering.PythonUtilities import ignore, testcase, testclass, testclassmethod
 from polynomialfiltering.PythonUtilities import assert_not_empty
-
-# @testclass
-# class RecursivePolynomialFilterMock(RecursivePolynomialFilter):
-#      
-#     @testclassmethod
-#     def __init__(self, order : int, tau : float, core : ICore):
-#         super().__init__(order, tau, core)
-#          
-#     @testclassmethod
-#     def setN(self, n : int) -> None:
-#         self.n = n;
-
 
 
 class EMP_test(unittest.TestCase):
@@ -251,7 +241,6 @@ class EMP_test(unittest.TestCase):
 
     
     def generateStates(self, cdf : Dataset) -> None:
-        print("generateStates", chi2.ppf(0.95,df=1))
         R = 10.0
         N = array([64, 128, 512, 512, 1024, 2048])
         setup = array([
@@ -330,6 +319,7 @@ class EMP_test(unittest.TestCase):
         '''@iN : int'''
         '''@V : array'''
         '''@E : array'''
+#         print("test1CheckVRF")
         testData = TestData('testEMP.nc')
         matches = testData.getMatchingGroups('VRF_')
         assert_not_empty(matches)
@@ -372,6 +362,7 @@ class EMP_test(unittest.TestCase):
         '''@i : int'''
         '''@j : int'''
         '''@e : float'''
+#         print("test2CheckStates")
         testData = TestData('testEMP.nc')
         matches = testData.getMatchingGroups('States')
         assert_not_empty(matches)
@@ -399,6 +390,7 @@ class EMP_test(unittest.TestCase):
         '''@core : ICore'''
         '''@corehalf : ICore'''
         '''@coredouble : ICore'''
+#         print("test9CoreBasic")
         core = _makeEmpCore(3, 1.0)
         corehalf = _makeEmpCore(3, 2.0)
         coredouble = _makeEmpCore(3, 0.5)
@@ -415,6 +407,7 @@ class EMP_test(unittest.TestCase):
         '''@itau : int'''
         '''@taus : array'''
         '''@n : int'''
+#         print("test9NUnitLastVRF")
         taus = array([0.01, 0.1, 1, 10, 100]);
         for order in range(0,5+1) :
             for itau in range(0, len(taus)):
@@ -425,7 +418,7 @@ class EMP_test(unittest.TestCase):
 
         
     def test9CrossSectionChi2(self):
-        print("test9CrossSectionChi2")
+#         print("test9CrossSectionChi2")
         self.crossSectionChi2()
 #         if (slow()) :
 #             self.crossSectionChi2()

@@ -647,13 +647,24 @@ public class Transpiler {
 		if (isTest) {
 			if (Transpiler.instance().lookupClass("TestData") == null) {
 				Scope scope = new Scope();
+//				Transpiler.instance().symbolTable.add(scope, "Group", "<CLASS>");
 				Transpiler.instance().symbolTable.add(scope, "TestData", "<CLASS>");
 				scope = scope.getChild(Level.CLASS, "TestData");
-				Transpiler.instance().symbolTable.add(scope, "testDataPath", "str");
-				Transpiler.instance().symbolTable.add(scope, "getMatchingGroups", "List[str]");
-				Transpiler.instance().symbolTable.add(scope, "getGroupVariable", "array");
-				Transpiler.instance().symbolTable.add(scope, "close", "None");
+				Transpiler.instance().symbolTable.add(scope, "testDataPath", "str").setFunction(true);
+				Transpiler.instance().symbolTable.add(scope, "getMatchingGroups", "List[str]").setFunction(true);
+				Transpiler.instance().symbolTable.add(scope, "getMatchingSubGroups", "List[str]").setFunction(true);
+				Transpiler.instance().symbolTable.add(scope, "getGroup", "Group").setFunction(true);
+				Transpiler.instance().symbolTable.add(scope, "getSubGroup", "Group").setFunction(true);
+				Transpiler.instance().symbolTable.add(scope, "getGroupVariable", "array").setFunction(true);
+				Transpiler.instance().symbolTable.add(scope, "getSubGroupVariable", "array").setFunction(true);
+				Transpiler.instance().symbolTable.add(scope, "getInteger", "int").setFunction(true);
+				Transpiler.instance().symbolTable.add(scope, "getScalar", "float").setFunction(true);
+				Transpiler.instance().symbolTable.add(scope, "getArray", "array").setFunction(true);
+				Transpiler.instance().symbolTable.add(scope, "putScalar", "None").setFunction(true);
+				Transpiler.instance().symbolTable.add(scope, "putArray", "None").setFunction(true);
+				Transpiler.instance().symbolTable.add(scope, "close", "None").setFunction(true);
 				Symbol make = Transpiler.instance().symbolTable.add(scope, "make", "TestData");
+				make.setFunction(true);
 			}			
 		}
 		

@@ -1,5 +1,5 @@
 /**
- * 
+ * Runs on Mac with Mathematica installed
  */
 package com.bluelightning.tools;
 
@@ -12,6 +12,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Stack;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -180,8 +181,116 @@ public class TranslateOctaveDiary {
 		}
 	}
 	
+	protected String toHorner( int[] coef) {
+		int iLast;
+		for (iLast = coef.length-1; iLast >= 0; iLast--) {
+			if (coef[iLast] != 0)
+				break;
+		}
+		StringBuilder sb = new StringBuilder();
+		for (int ic = 0; ic < iLast; ic++) {
+			sb.append("{");
+		}
+		sb.append(String.format("%d*t}", coef[iLast]));
+		for (int j = iLast-1; j > 0; j--) {
+			sb.append(String.format("+%d}*t", coef[j]));
+		}
+		sb.append(String.format("+%d", coef[0]));
+		return sb.toString();
+	}
+	
+	final Pattern polyFirstTerm = Pattern.compile("([\\-|\\+]?)(\\d+\\*)?t\\*\\*(\\d+)");
+	final Pattern polyTerm = Pattern.compile("([\\-|\\+]?)(\\d+)?(\\*)?(t)?(\\*\\*(\\d+))?");
+	
+	protected String scanTerm( String term ) {
+		if (term.charAt(0) != '(')
+			return term;
+		StringBuilder sb = new StringBuilder();
+		sb.append('(');
+		Stack<Integer> j = new Stack<>();
+		Stack<Integer> k = new Stack<>();
+		j.push(1);
+		k.push(sb.length());
+		for (int i = 1; i < term.length(); i++) {
+			if (term.charAt(i) == ')') {
+				String inside = term.substring(j.pop(), i);
+				Matcher matcher0 = polyFirstTerm.matcher(inside);
+				if (matcher0.find()) { //this is a polynomial
+					int[] coef = new int[20];
+					Matcher matcher = polyTerm.matcher(inside);
+					while (matcher.find()) {
+//						System.out.print("  [");
+//						for (int g = 1; g <= matcher.groupCount(); g++)
+//							System.out.printf(" %d:{%s}, ", g, matcher.group(g));
+//						System.out.println("]");
+						if (matcher.group(2) != null || matcher.group(4) != null) {
+							if (matcher.group(4) != null) { // is a t term
+								String factor = "";
+								if (matcher.group(1) != null)
+									factor += matcher.group(1);
+								if (matcher.group(2) != null)
+									factor += matcher.group(2);
+								else
+									factor += "1";
+								if (matcher.group(5) != null) { // t ** n
+									coef[Integer.parseInt(matcher.group(6))] = Integer.parseInt(factor);
+								} else {
+									coef[1] = Integer.parseInt(factor);
+								}
+							} else {
+								coef[0] = Integer.parseInt(matcher.group(2));
+							}
+						}
+					}
+					sb.replace(k.pop(), sb.length(), toHorner(coef));
+				}
+			}
+			if (term.charAt(i) == '(') {
+				j.push( i+1 );
+				k.push( sb.length()+1 );
+			}
+			sb.append(term.charAt(i));
+		}
+		String out = sb.toString();
+		out = out.replace("{",  "(").replace("}",  ")");
+		return out;
+	}
+	
+	final Pattern prefix = Pattern.compile("^\\(?\\-?\\d+(\\.0)\\/\\d+(\\.0)\\)?\\*");
+	
+	protected String hornerizeLower(String term) {
+		String cmd = String.format("HornerForm[%s]", term.replace("**", "^"));
+		String out = kernel.send(cmd);
+		return out.trim().replace("^", "**");
+	}
+	
+	protected String hornerizeUpper(String term) {
+		String cmd = String.format("HornerForm[%s /. t -> (1 - s)]", term.replace("**", "^"));
+		String out = kernel.send(cmd);
+		return out.trim().replace("^", "**");
+	}
+	
+	public String hornerize(String line) {
+		int iEqual = line.indexOf('=');
+		if (iEqual < 0 || line.charAt(iEqual+1) == 'V')
+			return line;
+		String lhs = line.substring(0, iEqual+1);
+		String rhs = line.substring(iEqual+1);
+		String term = hornerizeLower(rhs);
+		term = RefactorVrfMethods.floatConstants(term,0);
+		lower.add( "\t\t\t" + lhs + term );
+		term = hornerizeUpper(rhs);
+		term = RefactorVrfMethods.floatConstants(term,0);
+		upper.add( "\t\t\t" + lhs + term );
+		return lhs + term;
+	}
+	
+	ArrayList<String> lower;
+	ArrayList<String> upper;
 	
 	public void refactorFmpLines(Iterator<String> it) {
+		lower = new ArrayList<>();
+		upper = new ArrayList<>();
 		String line = null;
 		while (it.hasNext()) {
 			line = it.next().trim();
@@ -189,7 +298,12 @@ public class TranslateOctaveDiary {
 			if (match.find()) {
 				int iStart = line.indexOf('=');
 				if (line.charAt(iStart+1) != 'V') {
-					line = RefactorVrfMethods.floatConstants(line, iStart+1);
+//					System.out.println(line);
+					line = hornerize(line);
+//					line = RefactorVrfMethods.floatConstants(line, iStart+1);
+				} else {
+					lower.add("\t\t\t" + line);
+					upper.add("\t\t\t" + line);
 				}
 				System.out.println(line);
 			}
@@ -206,15 +320,23 @@ public class TranslateOctaveDiary {
 				break;
 			System.out.println(key);
 			refactorFmpLines(block.iterator());
+			System.out.println();
+			System.out.println(key);
+			System.out.println("        if (t < 0.5) :");
+			lower.forEach(System.out::println);
+			System.out.println("        else :\n" + 
+					"            s = 1.0 - t;");
+			upper.forEach(System.out::println);
 			order++;
 		}
 	}
 	
 	
-	
+	Execute kernel;
 	
 	public TranslateOctaveDiary(String classBase, String which, String diaryPath, String srcPath ) {
 		try {
+			kernel = Execute.openMathematicaServer();
 			byte[] bytes = Files.readAllBytes( Paths.get(diaryPath) );
 			diary = Arrays.asList( new String( bytes, "UTF-8" ).split("\n") );
 			loadCodeBlocks();
@@ -226,12 +348,12 @@ public class TranslateOctaveDiary {
 	}
 
 	/**
-	 * @param args
+	 * @param argsx
 	 */
 	public static void main(String[] args) {
 		new TranslateOctaveDiary( "FMP", FMP_ONESTEP, 
-				"C:\\Users\\NOOK\\GITHUB\\MorrisonPolynomialFiltering\\Java\\data\\FMP_diary.txt",
-				"C:\\Users\\NOOK\\GITHUB\\MorrisonPolynomialFiltering\\Python\\src\\PolynomialFiltering\\Components\\FadingMemoryPolynomialFilter.py" );
+				"/Users/lintondf/GITHUB/MorrisonPolynomialFiltering/Tools/data/FMP_diary.txt",
+				"/Users/lintondf/GITHUB/MorrisonPolynomialFiltering/Python/src/PolynomialFiltering/Components/FadingMemoryPolynomialFilter.py" );
 //		new TranslateOctaveDiary( "EMP", EMP_ONESTEP, 
 //				"C:\\Users\\NOOK\\GITHUB\\MorrisonPolynomialFiltering\\Java\\data\\EMP_diary.txt",
 //				"C:\\Users\\NOOK\\GITHUB\\MorrisonPolynomialFiltering\\Python\\src\\PolynomialFiltering\\Components\\ExpandingMemoryPolynomialFilter.py" );

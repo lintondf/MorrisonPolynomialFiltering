@@ -494,6 +494,8 @@ def nSwitch(order : int, theta : float) -> float:
        
     """
     
+    if (1.0 - theta <= 0.0) :
+        return 0.0;
     if (order == 0) :
         return 2.0/(1.0-theta)
     elif (order == 1.0) :
