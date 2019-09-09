@@ -24,13 +24,11 @@ public class EjmlProgrammer extends AbstractProgrammer {
 	@Override //Eigen?
 	public void writeSpecialTerm(Indent out, String operator, Indent lhs, Indent rhs) {
 		switch (operator) {
-//		case "*":
-//			out.append("arrayTimes(");
-//			out.append(lhs.sb.toString());
-//			out.append(", ");
-//			out.append(rhs.sb.toString());
-//			out.append(")");
-//			break;
+		case "*":
+			out.append(lhs.sb.toString());
+			out.append(" .* ");
+			out.append(rhs.sb.toString());
+			break;
 		case "/":
 			out.append(lhs.sb.toString());
 			out.append(" ./ ");

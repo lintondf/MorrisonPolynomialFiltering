@@ -233,6 +233,9 @@ public abstract class AbstractJavaTarget extends AbstractLanguageTarget{
 					writeOptionalParameterAliases( indent, currentClassName, type, name, handling );
 				}
 				
+				if (Transpiler.instance().isTestCaseMethod()) {
+					indent.writeln("@Test");					
+				}
 				String decl = generateBodyDeclaration( type, currentClassName, name, body.sb.toString() );
 				if (fpi.decorators.contains("@abstractmethod")) {
 					indent.writeln( decl + ";");
@@ -275,10 +278,17 @@ public abstract class AbstractJavaTarget extends AbstractLanguageTarget{
 		}		
 		indent.in();
 		if (! fpi.decorators.contains("@abstractmethod")) {
-			if (! symbol.getType().equals("None") && ! symbol.getName().equals("__init__") ) {
-				Symbol retVar = Transpiler.instance().getSymbolTable().add(scope, String.format("_%s_return_value", symbol.getName()), symbol.getType());
-				retVar.setReturnVariable(true);
-				emitSymbolDeclaration( retVar, "auto-generated return variable");
+			if (! symbol.getName().equals("__init__") ) {
+				switch (symbol.getType()) {
+				case "None":
+				case "float":
+				case "int":
+					break;
+				default:
+					Symbol retVar = Transpiler.instance().getSymbolTable().add(scope, String.format("_%s_return_value", symbol.getName()), symbol.getType());
+					retVar.setReturnVariable(true);
+					emitSymbolDeclaration( retVar, "auto-generated return variable");
+				}
 			}
 		}
 	}
@@ -524,119 +534,152 @@ public abstract class AbstractJavaTarget extends AbstractLanguageTarget{
 					Transpiler.instance().reportError(tln.getTop(), "Bracket list follows non-symbol");
 					return 0;
 				}
-				//Symbol slice = programmer.getSliceSymbol(array.getType());
-				//programmer.writeOperator(out, ".");
-				switch (tln.getChildCount()) {
-				case 0: 
-					break;
-					
-				case 1: // [i] || [:]
-					//out.append( programmer.rewriteSymbol( scope, slice ) );
-					programmer.openParenthesis( out );
-					if (tln.getChild(0) instanceof TranslationOperatorNode) {  //->programmer
-						// [:] -> block(0,0,rows(),cols()) / segment(0,size())
-						if (array.getType().equals("vector")) {
-							out.append(":");
-//							out.append("0, ");
-//							out.append(programmer.getMeasurement(array.getName(), Measurement.NUMBER_OF_ELEMENTS));
-						} else {
-							out.append(":, :");
-//							out.append("0, 0, ");
-//							out.append(programmer.getMeasurement(array.getName(), Measurement.NUMBER_OF_ROWS));
-//							out.append(", "); 								
-//							out.append(programmer.getMeasurement(array.getName(), Measurement.NUMBER_OF_COLUMNS));
-						}
-					} else {  //->programmer
-						// [i:m] -> block(i,0,m,1) / segment(i,m)
-						TranslationNode subscript = tln.getChild(0);							
-						if (array.getType().equals("vector")) {
-							emitChild(out, scope, subscript.getChild(0));
-							out.append(", ");
-							emitChild(out, scope, subscript.getChild(2));
-						} else {
-							emitChild(out, scope, subscript.getChild(0));
-							out.append(", 0, ");
-							emitChild(out, scope, subscript.getChild(2));
-							out.append(", "); 								
-							out.append("1 ");						
-						}
+				// [...] -> (...) Python slice to Matlab-style slice used by EJML
+				programmer.openParenthesis(out);
+				for (int i = 0; i < tln.getChildCount(); i++) {
+					if (i > 0) {
+						out.append(", ");
 					}
-					break;
-					
-				case 2: // [:,j] || [i,:] || [i:n,j] || [i,j:m] || [i:n,j:m]
-					if (tln.getChild(0) instanceof TranslationOperatorNode) {  // [:,j] - get column; [:,j:k] - get slice
-						//Symbol which = programmer.getRowColSymbol("1");
-						//out.append( programmer.rewriteSymbol( scope, which ) );
-						programmer.openParenthesis( out );
-						out.append(":, ");
-						emitChild(out, scope, tln.getChild(1));							
-					} else if (tln.getChild(1) instanceof TranslationOperatorNode) {  // [i,:] - get row; [j:k,:] - get slice
-						if (tln.getChild(0).getChildCount() > 0) { // [i:n,:]
-							//out.append( programmer.rewriteSymbol( scope, slice ) );
-							programmer.openParenthesis( out );
-							TranslationNode subscript0 = tln.getChild(0);
-							emitChild(out, scope, subscript0.getChild(0));
-							out.append(", "); //->programmer
-							out.append(":");
-//							out.append(", "); //->programmer
-//							emitChild(out, scope, subscript0.getChild(2));
-//							TranslationOperatorNode minus = new TranslationOperatorNode(tln.getParserRuleContext(), null, "-");
-//							emitChild(out, scope, minus);
-//							emitChild(out, scope, subscript0.getChild(0));								
-//							out.append(", "); 	 //->programmer															
-//							out.append(programmer.getMeasurement(array.getName(), Measurement.NUMBER_OF_COLUMNS));
-						} else {
-//							Symbol which = programmer.getRowColSymbol("0");
-//							out.append( programmer.rewriteSymbol( scope, which ) );
-							programmer.openParenthesis( out );
-							emitChild(out, scope, tln.getChild(0));
-							out.append(", :");
+					TranslationNode subscript = tln.getChild(i);
+//					System.out.println(subscript.traverse(0));
+					switch (subscript.getChildCount()) {
+					default:
+						emitChild(out, scope, subscript);
+						break;
+					case 2:  // [a:] or [:b]
+						emitChild(out, scope, subscript.getChild(0));
+						if (subscript.getChild(0) instanceof TranslationOperatorNode) {
+							out.append("(");
 						}
-					} else { 
-						/* [i:n,j]   LIST[2]{subscript[3]{expr,:,expr}, expr}
-						 *    -> block(i, j, n, 1)
-						 * [i,j:m]   LIST[2]{expr, subscript[3]{expr,:,expr}}
-						 *    -> block(i, j, 1, m)
-						 * [i:n,j:m] LIST[2]{subscript[3]{expr,:,expr}, subscript[3]{expr,:,expr}}
-						 *    -> block(i,j,n,m)
-						 */
-						//out.append( programmer.rewriteSymbol( scope, slice ) );
-						programmer.openParenthesis( out );
-						if (tln.getChild(0).getChildCount() > 0 && tln.getChild(1).getChildCount() > 0) { // [i:n,j:m]
-							TranslationNode subscript0 = tln.getChild(0);
-							TranslationNode subscript1 = tln.getChild(1);
-							emitChild(out, scope, subscript0.getChild(0));
-							out.append(":"); //->programmer
-							emitChild(out, scope, subscript0.getChild(2));
-							out.append(", "); //->programmer
-							emitChild(out, scope, subscript1.getChild(0));								
-							out.append(":"); //->programmer
-							emitChild(out, scope, subscript1.getChild(2));
-						} else if (tln.getChild(0).getChildCount() > 0) { // [i:n,j]
-							TranslationNode subscript0 = tln.getChild(0);
-							TranslationNode subscript1 = tln.getChild(1);
-							emitChild(out, scope, subscript0.getChild(0));
-							out.append(": "); //->programmer
-							emitChild(out, scope, subscript0.getChild(2));
-							out.append(", "); //->programmer
-							emitChild(out, scope, subscript1);
-						} else if (tln.getChild(1).getChildCount() > 0) { // [i,j:m]
-							TranslationNode subscript0 = tln.getChild(0);
-							TranslationNode subscript1 = tln.getChild(1);
-							//out.append( programmer.rewriteSymbol( scope, slice ) );
-							programmer.openParenthesis( out );
-							emitChild(out, scope, subscript0);
-							out.append(", "); //->programmer
-							emitChild(out, scope, subscript1.getChild(0));								
-							out.append(":"); //->programmer
-							emitChild(out, scope, subscript1.getChild(2));
-						} else {
-							Transpiler.instance().reportError(tln.getParserRuleContext(), "Impossible slice/non-slice");
+						emitChild(out, scope, subscript.getChild(1));							
+						if (subscript.getChild(0) instanceof TranslationOperatorNode) {
+							out.append("-1)");
 						}
+						break;
+					case 3: // [a:b]
+						emitChild(out, scope, subscript.getChild(0));
+						emitChild(out, scope, subscript.getChild(1));
+						out.append("(");
+						emitChild(out, scope, subscript.getChild(2));
+						out.append("-1)");
+						break;
 					}
-					break;
+					
 				}
-				programmer.closeParenthesis( out );
+				programmer.closeParenthesis(out);
+//				//Symbol slice = programmer.getSliceSymbol(array.getType());
+//				//programmer.writeOperator(out, ".");
+//				switch (tln.getChildCount()) {
+//				case 0: 
+//					break;
+//					
+//				case 1: // [i] || [:]
+//					//out.append( programmer.rewriteSymbol( scope, slice ) );
+//					programmer.openParenthesis( out );
+//					if (tln.getChild(0) instanceof TranslationOperatorNode) {  //->programmer
+//						// [:] -> block(0,0,rows(),cols()) / segment(0,size())
+//						if (array.getType().equals("vector")) {
+//							out.append(":");
+////							out.append("0, ");
+////							out.append(programmer.getMeasurement(array.getName(), Measurement.NUMBER_OF_ELEMENTS));
+//						} else {
+//							out.append(":, :");
+////							out.append("0, 0, ");
+////							out.append(programmer.getMeasurement(array.getName(), Measurement.NUMBER_OF_ROWS));
+////							out.append(", "); 								
+////							out.append(programmer.getMeasurement(array.getName(), Measurement.NUMBER_OF_COLUMNS));
+//						}
+//					} else {  //->programmer
+//						// [i:m] -> block(i,0,m,1) / segment(i,m)
+//						TranslationNode subscript = tln.getChild(0);							
+//						if (array.getType().equals("vector")) {
+//							emitChild(out, scope, subscript.getChild(0));
+//							out.append(", ");
+//							emitChild(out, scope, subscript.getChild(2));
+//						} else {
+//							emitChild(out, scope, subscript.getChild(0));
+//							out.append(", 0, ");
+//							emitChild(out, scope, subscript.getChild(2));
+//							out.append(", "); 								
+//							out.append("1 ");						
+//						}
+//					}
+//					break;
+//					
+//				case 2: // [:,j] || [i,:] || [i:n,j] || [i,j:m] || [i:n,j:m]
+//					if (tln.getChild(0) instanceof TranslationOperatorNode) {  // [:,j] - get column; [:,j:k] - get slice
+//						//Symbol which = programmer.getRowColSymbol("1");
+//						//out.append( programmer.rewriteSymbol( scope, which ) );
+//						programmer.openParenthesis( out );
+//						out.append(":, ");
+//						emitChild(out, scope, tln.getChild(1));							
+//					} else if (tln.getChild(1) instanceof TranslationOperatorNode) {  // [i,:] - get row; [j:k,:] - get slice
+//						if (tln.getChild(0).getChildCount() > 0) { // [i:n,:]
+//							//out.append( programmer.rewriteSymbol( scope, slice ) );
+//							programmer.openParenthesis( out );
+//							TranslationNode subscript0 = tln.getChild(0);
+//							emitChild(out, scope, subscript0.getChild(0));
+//							out.append(", "); //->programmer
+//							out.append(":");
+////							out.append(", "); //->programmer
+////							emitChild(out, scope, subscript0.getChild(2));
+////							TranslationOperatorNode minus = new TranslationOperatorNode(tln.getParserRuleContext(), null, "-");
+////							emitChild(out, scope, minus);
+////							emitChild(out, scope, subscript0.getChild(0));								
+////							out.append(", "); 	 //->programmer															
+////							out.append(programmer.getMeasurement(array.getName(), Measurement.NUMBER_OF_COLUMNS));
+//						} else {
+////							Symbol which = programmer.getRowColSymbol("0");
+////							out.append( programmer.rewriteSymbol( scope, which ) );
+//							programmer.openParenthesis( out );
+//							emitChild(out, scope, tln.getChild(0));
+//							out.append(", :");
+//						}
+//					} else { 
+//						/* [i:n,j]   LIST[2]{subscript[3]{expr,:,expr}, expr}
+//						 *    -> block(i, j, n, 1)
+//						 * [i,j:m]   LIST[2]{expr, subscript[3]{expr,:,expr}}
+//						 *    -> block(i, j, 1, m)
+//						 * [i:n,j:m] LIST[2]{subscript[3]{expr,:,expr}, subscript[3]{expr,:,expr}}
+//						 *    -> block(i,j,n,m)
+//						 */
+//						//out.append( programmer.rewriteSymbol( scope, slice ) );
+//						programmer.openParenthesis( out );
+//						if (tln.getChild(0).getChildCount() > 0 && tln.getChild(1).getChildCount() > 0) { // [i:n,j:m]
+//							TranslationNode subscript0 = tln.getChild(0);
+//							TranslationNode subscript1 = tln.getChild(1);
+//							emitChild(out, scope, subscript0.getChild(0));
+//							out.append(":"); //->programmer
+//							emitChild(out, scope, subscript0.getChild(2));
+//							out.append(", "); //->programmer
+//							emitChild(out, scope, subscript1.getChild(0));								
+//							out.append(":"); //->programmer
+//							emitChild(out, scope, subscript1.getChild(2));
+//						} else if (tln.getChild(0).getChildCount() > 0) { // [i:n,j]
+//							TranslationNode subscript0 = tln.getChild(0);
+//							TranslationNode subscript1 = tln.getChild(1);
+//							emitChild(out, scope, subscript0.getChild(0));
+//							out.append(": "); //->programmer
+//							emitChild(out, scope, subscript0.getChild(2));
+//							out.append(", "); //->programmer
+//							emitChild(out, scope, subscript1);
+//						} else if (tln.getChild(1).getChildCount() > 0) { // [i,j:m]
+//							TranslationNode subscript0 = tln.getChild(0);
+//							TranslationNode subscript1 = tln.getChild(1);
+//							//out.append( programmer.rewriteSymbol( scope, slice ) );
+//							programmer.openParenthesis( out );
+//							emitChild(out, scope, subscript0);
+//							out.append(", "); //->programmer
+//							emitChild(out, scope, subscript1.getChild(0));								
+//							out.append(":"); //->programmer
+//							emitChild(out, scope, subscript1.getChild(2));
+//						} else {
+//							Transpiler.instance().reportError(tln.getParserRuleContext(), "Impossible slice/non-slice");
+//						}
+//					}
+//					break;
+//				}
+//				programmer.closeParenthesis( out );
 				return 0;
 			} else if (tln.getLeftSibling() != null) {  // non-slice access
 				boolean isListAccess = false;
@@ -961,6 +1004,22 @@ public abstract class AbstractJavaTarget extends AbstractLanguageTarget{
 		}
 		indent.write("throw new " + exception );
 	}
+	
+	protected String dollarize(String expr) {
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < expr.length(); i++) {
+			if (expr.charAt(i) == '.') {
+				if (Character.isAlphabetic(expr.charAt(i-1))) {
+					sb.append('$');
+				} else {
+					sb.append(expr.charAt(i));					
+				}
+			} else {
+				sb.append(expr.charAt(i));
+			}
+		}
+		return sb.toString();
+	}
 
 	@Override
 	public void emitReturnStatement(Scope scope, ParserRuleContext ctx, TranslationNode expressionRoot) {
@@ -982,9 +1041,26 @@ public abstract class AbstractJavaTarget extends AbstractLanguageTarget{
 					return;
 				}
 			}
-			indent.write("return ");
+			//indent.write("return ");
 			emitSubExpression(scope, expressionRoot);
-			indent.append(";\n");
+			int lastEol = indent.sb.lastIndexOf("\n");
+			System.out.println(indent.sb.substring(lastEol+1));
+			String str = indent.sb.substring(lastEol+1);
+			int iEqual = str.indexOf('=');
+			if (iEqual >= 0) {
+				str = str.substring(iEqual+1);
+			}
+			indent.sb.replace(lastEol+1, indent.sb.length(), "");
+			ExpressionCompiler compiler = new ExpressionCompiler(scope, programmer, tempManager);
+			compiler.setStaticImports(staticImports);
+			String expr = "asssignment$dummy = return (" + str + ")";
+			if (compiler.compile(dollarize(expr), this.imports) ) {
+				for (String line : compiler.getCode()) {
+					indent.writeln(line.replace("$", "."));
+				}
+			} else {
+				indent.writeln("return " + str + ";");
+			}
 			
 		} else {
 			indent.write("return");

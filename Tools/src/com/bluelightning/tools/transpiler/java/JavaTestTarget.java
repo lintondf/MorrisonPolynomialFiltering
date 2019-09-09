@@ -62,6 +62,7 @@ public class JavaTestTarget extends AbstractJavaTarget {
 	protected void initializeImports() {
 		staticImports.clear();
 		imports.clear();
+		imports.add("org.junit.Test");
 		imports.add("java.util.List");
 		imports.add("org.ejml.data.DMatrixRMaj");
 		imports.add("org.ejml.dense.row.CommonOps_DDRM");
@@ -70,6 +71,7 @@ public class JavaTestTarget extends AbstractJavaTarget {
 		imports.add("utility.TestData");
 		imports.add("ucar.nc2.Group");
 		imports.add("static utility.TestMain.*");
+		
 	}
 
 	String moduleName = null;
@@ -130,11 +132,13 @@ public class JavaTestTarget extends AbstractJavaTarget {
 //				strOut.append( pretty );
 //			} catch (FormatterException e) {
 //			}
+			String outStr = strOut.toString();
+			outStr = outStr.replace("this.assertGreaterEqual", "assertGreaterEqual");
 			String old = readFileToString( srcPath );
-			if (old == null || !old.equals(strOut.toString())) {
+			if (old == null || !old.equals(outStr)) {
 				srcPath.toFile().getParentFile().mkdirs();
 				Writer out = new OutputStreamWriter(new FileOutputStream(srcPath.toFile()));
-				out.write(strOut.toString());
+				out.write(outStr);
 				out.close();
 			} else {
 				System.out.println("  Unchanged: " + srcPath.toString() );

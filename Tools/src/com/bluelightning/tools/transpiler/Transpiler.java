@@ -138,6 +138,22 @@ public class Transpiler {
 ////		new TestTarget(Paths.get("filters/controls"), "ConstantObservationErrorModel_test"),
 	};
 	
+	protected boolean isTestCaseMethod = false;
+	
+	/**
+	 * @return the isTestCaseMethod
+	 */
+	public boolean isTestCaseMethod() {
+		return isTestCaseMethod;
+	}
+
+	/**
+	 * @param isTestCaseMethod the isTestCaseMethod to set
+	 */
+	public void setTestCaseMethod(boolean isTestCaseMethod) {
+		this.isTestCaseMethod = isTestCaseMethod;
+	}
+
 	protected Logger logger;
 	
 	public Logger logger() {
@@ -636,6 +652,8 @@ public class Transpiler {
 		symbolTable.add( importScope, "assert_almost_equal", "None");
 		symbolTable.add( importScope, "assert_array_less", "None");
 		symbolTable.add( importScope, "assert_not_empty", "None");
+		symbolTable.add( importScope, "assert_report", "float");
+		symbolTable.add( importScope, "assertGreaterEqual", "None");
 		
 		valueMap.put( TranslationUnaryNode.staticFieldReference, "::");
 

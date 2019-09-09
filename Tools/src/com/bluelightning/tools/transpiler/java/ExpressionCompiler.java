@@ -59,6 +59,7 @@ public class ExpressionCompiler {
 			new NumColsFunction().add();
 	    	new IdentityFunction().add();
 	    	new IntFunction().add();
+	    	new ReturnFunction().add();
 	    	new TransposeFunction().add();
 	    	new VoidFunction().add();
 	    	new ZerosFunction().add();
@@ -675,6 +676,54 @@ public class ExpressionCompiler {
 			}
 	    }
 	    
+	    public class ReturnFunction extends CodedFunction1 {
+	    	
+	    	String opname;
+	    	Pattern variablePattern = Pattern.compile("\\w");
+	    	
+	    	@Override
+			public void add() {
+	    		String[] opnames = {"$return-s", "$return-m"};
+	    		for (String n : opnames) {
+	    			opname = n;
+	    			super.add();
+	    		}
+			}
+
+	    	ReturnFunction() {
+				super("return");
+			}
+
+			@Override
+			public String opName() {
+				return opname;
+			} 
+
+			@Override
+			public Info create(Variable A, ManagerTempVariables manager) {
+		    	final Info info = new Info(A);
+		    	if( info.input.size() == 1 ) {
+		    		info.output = manager.createInteger();
+		    		info.op = info.new Operation(opName()) {
+						@Override
+						public void process() {
+						}
+		    		};
+		    	} else {
+		    		throw new RuntimeException("return() only takes one parameter");
+		    	}
+	    		return info;
+			}
+
+			@Override
+			public String code(Info info) {
+				Variable A = info.input.get(0);
+				StringBuilder sb = new StringBuilder();
+				sb.append(String.format("return %s;", A.getOperand()));
+				return sb.toString();
+			}
+	    }
+	    
 	    public class TransposeFunction extends CodedFunction1 {
 	    	TransposeFunction() {
 				super("transpose");
@@ -709,7 +758,7 @@ public class ExpressionCompiler {
 				Variable A = info.input.get(0);
 				StringBuilder sb = new StringBuilder();
 				if (info.output.isTemp()) {
-					sb.append( String.format("DMatrixRMaj %s = new DMatrixRMaj(%s.getNumRows(), %s.getNumCols());\n", 
+					sb.append( String.format("DMatrixRMaj %s = new DMatrixRMaj(%s.getNumCols(), %s.getNumRows());\n", 
 						info.output.getOperand(), A.getOperand(), A.getOperand()));
 				}
 				sb.append( String.format(EmitJavaOperation.formatCommonOps2, "transpose", A.getOperand(), info.output.getOperand()) );
@@ -724,7 +773,7 @@ public class ExpressionCompiler {
 	    	
 	    	@Override
 			public void add() {
-	    		String[] opnames = {"$void-s", "void-m"};
+	    		String[] opnames = {"$void-s", "$void-m"};
 	    		for (String n : opnames) {
 	    			opname = n;
 	    			super.add();
@@ -884,13 +933,13 @@ public class ExpressionCompiler {
 	};
 	
 
-	final String dummyPrefix = "asssignment$dummy = void";
+	final String dummyPrefix = "asssignment$dummy = void(";
 	
 	public boolean compile(String expression, List<String> imports ) {
 		boolean isVoid = false;
 		if (expression.indexOf('=') < 0) {
 			isVoid = true;
-			expression = dummyPrefix + "(" + expression + ")";
+			expression = dummyPrefix + expression + ")";
 		}
 		TreeSet<String> declaredTemps = new TreeSet<>();
 		codeGenerator = new GenerateEquationCode(eq, coder, null, null, declaredTemps);
@@ -905,15 +954,15 @@ public class ExpressionCompiler {
 			Transpiler.instance().logger().info(String.format("Compile: %s -Z", expression));
 			return false;			
 		}
-		if (codeGenerator.getCode().get(0).contains("// " + dummyPrefix)) {
-			codeGenerator.getCode().set(0, codeGenerator.getCode().get(0).replace(dummyPrefix, ""));
-		}
+//		if (codeGenerator.getCode().get(0).startsWith("//") && codeGenerator.getCode().get(0).contains(dummyPrefix)) {
+//			codeGenerator.getCode().set(0, codeGenerator.getCode().get(0).replace(dummyPrefix, ""));
+//		}
 		if (isVoid) {
 			String line = codeGenerator.getCode().get(0);
-			int i = line.indexOf(" = ");
-			if (i > 0) {
-				codeGenerator.getCode().set(0, line.substring(i+3));
-			}
+			line = line.replace(dummyPrefix, "");
+			if (line.startsWith("//"))
+				line = line.substring(0, line.length()-1);
+			codeGenerator.getCode().set(0, line);
 		}
 		for (String line : codeGenerator.getCode()) {
 			for (EjmlImports match : ejmlImports) {

@@ -25,6 +25,7 @@ namespace polynomialfiltering {
             RealVector RecursivePolynomialFilter::D;
             std::shared_ptr<ICore> RecursivePolynomialFilter::core;
             RecursivePolynomialFilter::RecursivePolynomialFilter (const int order, const double tau, const std::shared_ptr<ICore> core) : AbstractFilter(order) {
+                double td; ///<  tau^d 
                 if (order < 0 || order > 5) {
                     throw ValueError("Polynomial orders < 0 or > 5 are not supported");
                 }
@@ -37,7 +38,8 @@ namespace polynomialfiltering {
                 this->tau = tau;
                 this->D = ArrayXd::Zero(this->order + 1);
                 for (int d = 0; d < this->order + 1; d++) {
-                    this->D(d) = pow(this->tau, d);
+                    td = pow(this->tau, d);
+                    this->D(d) = td;
                 }
             }
 

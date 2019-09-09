@@ -40,6 +40,7 @@ class RecursivePolynomialFilter(AbstractFilter):
             order - integer polynomial orer
             tau - nominal time step
         """
+        '''@ td : float | tau^d '''
         if (order < 0 or order > 5) :
             raise ValueError("Polynomial orders < 0 or > 5 are not supported")
         self.n = 0
@@ -54,7 +55,8 @@ class RecursivePolynomialFilter(AbstractFilter):
         self.D = zeros([self.order+1])
         '''@ d : int'''
         for d in range(0,self.order+1):
-            self.D[d] = pow(self.tau, d)
+            td = pow(self.tau, d)
+            self.D[d] = td
       
     @staticmethod            
     def effectiveTheta(order : int, n : float) -> float:

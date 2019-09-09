@@ -4,6 +4,7 @@ Created on Apr 25, 2019
 @author: NOOK
 '''
 from docutils.nodes import target
+from astropy.io.ascii.tests.common import assert_almost_equal
 
 """ Taus for full range valid thetas [2e-16, 1-2e-16]
 Gamma:  {0: 1.1102230246251565e-16, 1: 1.651158036900312e-08, 2: 0.2898979485566357, 3: 0.4627475401696348, 4: 0.5697090329565893, 5: 0.6416277095878444}
@@ -21,7 +22,7 @@ from numpy import arange, array2string, cov, log, var, zeros, trace, mean, std, 
 from numpy import sqrt
 from numpy.linalg import inv
 from numpy.random import randn, seed, get_state
-from numpy.testing import assert_allclose, assert_array_less
+from numpy.testing import assert_almost_equal, assert_allclose, assert_array_less
 from scipy.stats import kstest, chi2, lognorm, norm, anderson
 from scipy.optimize.zeros import brentq
 
@@ -30,7 +31,7 @@ from runstats import Statistics
 from netCDF4 import Dataset, Group
 from TestSuite import testDataPath;
 from TestUtilities import generateTestPolynomial, generateTestData, createTestGroup, writeTestVariable, A2S,\
-    covarianceToCorrelation
+    covarianceToCorrelation, assert_report
 from TestData import TestData
 
 from polynomialfiltering.Main import AbstractFilter, FilterStatus
@@ -459,9 +460,10 @@ class Fmp_test(unittest.TestCase):
                 Zstar = f.predict(times[j,0])
                 e = observations[j] - Zstar[0]
                 f.update(times[j,0], Zstar, e)
-                actual[j,:] = f.getState();
+                actual[j,:] = transpose(f.getState());
             
             assert_allclose(actual, expected)
+        self.assertGreaterEqual(32.0, assert_report("Fmp_test/test1CheckStates"))
             
     @testcase     
     def test1CheckGammas(self) -> None:
@@ -503,6 +505,7 @@ class Fmp_test(unittest.TestCase):
             actualG = f.getCore().getGamma(0, 1.0)
             assert_allclose(nS, nSwitch(order, theta))
             assert_allclose(actualG, expectedG)
+        self.assertGreaterEqual(0.0, assert_report("Fmp_test/test1CheckGammas"))
             
             
     @testcase     
@@ -541,6 +544,7 @@ class Fmp_test(unittest.TestCase):
             f = makeFmp( order, tau, theta );
             actualV = f.getCore().getVRF(0)
             assert_allclose(actualV, expectedV)
+        self.assertGreaterEqual(0.0, assert_report("Fmp_test/test1CheckVrfs"))
     
         
         
@@ -551,6 +555,8 @@ class Fmp_test(unittest.TestCase):
         '''@core95 : ICore'''
         '''@core95half : ICore'''
         '''@core95double : ICore'''
+        '''@ad : array'''
+        '''@ah : array'''
 #         print("test9CoreBasic")
         core90 = _makeFmpCore(3, 1.0, 0.90)
         core95 = _makeFmpCore(3, 1.0, 0.95)
@@ -559,12 +565,55 @@ class Fmp_test(unittest.TestCase):
         
         assert_allclose( core90.getVRF(1), core90.getVRF(10) )  # should be time invariate
         assert_array_less( core95.getVRF(1), core90.getVRF(1))
-        assert_allclose( ones([3+1,3+1]), (core95double.getVRF(1) / core95.getVRF(1)) * (core95half.getVRF(1) / core95.getVRF(1)) )
+        
+        ad = (core95double.getVRF(1) / core95.getVRF(1))
+        ah = (core95half.getVRF(1) / core95.getVRF(1))
+        assert_allclose( ones([3+1,3+1]), ad * ah )
         
         assert_allclose( core90.getGamma(10.0, 5.0), core90.getGamma(11.0, 5.0) )
         assert_allclose( core90.getGamma(10.0, 5.0), core90.getGamma(10.0, 6.0) )
         assert_allclose( core95.getGamma(10.0, 5.0), core95half.getGamma(10.0, 5.0) ) 
         assert_allclose( core95.getGamma(10.0, 5.0), core95double.getGamma(10.0, 5.0) ) 
+        
+    @testcase
+    def test9Basic(self) -> None:
+        '''@order : int'''
+        '''@tau : float'''
+        '''@theta : float'''
+        '''@Y0 : array'''
+        '''@observations : array'''
+        '''@f : RecursivePolynomialFilter'''
+        '''@t : float'''
+        '''@Zstar : array'''
+        '''@e : float'''
+        '''@actual : array'''
+        order = 5
+        tau = 0.01
+        theta = 0.9885155283985784
+        actual = zeros([ order+1, 1])
+        Y0 = array([ -5.373000000000E+00,-1.125200000000E+01,-1.740600000000E+01,-1.565700000000E+01,-7.458400000000E+00,-1.467800000000E+00 ]);
+        observations = array([-5.2565E+00,-2.8652E+00,-1.4812E+01, 4.6590E+00, 4.7380E+00,-7.3765E+00, 1.3271E+01, 7.3593E+00, 3.4308E+00,-1.1329E+00,-1.5789E+00])
+        f = makeFmp(order, tau, theta);
+        f.start(0.0, Y0)
+        t = 0
+        Zstar = f.predict(t)
+        assert_almost_equal(Zstar, array([ -5.373000000000E+00,-1.125200000000E-01,-1.740600000000E-03,-1.565700000000E-05,-7.458400000000E-08,-1.467800000000E-10 ]))            
+        e = observations[0] - Zstar[0]
+        assert_almost_equal(e, 0.11650000000000027)
+        actual = f.update(t, Zstar, e)
+        assert_almost_equal(actual, array([ 7.800661521666E-03,2.252446577781E-04,3.468911273583E-06,3.005115515478E-08,1.388453238252E-10,2.672957382342E-13 ]))
+
+        actual = f.getState();
+        assert_almost_equal(actual, array([-5.365199338478335, -11.229475534222193, -17.37131088726417, -15.62694884484522, -7.444515467617483, -1.4651270426176584]))
+        t += 0.01
+        Zstar = f.predict(t)
+        assert_almost_equal(Zstar, array([-5.47836527e+00, -1.14039712e-01, -1.75279528e-03, -1.57014673e-05, -7.45916674e-08, -1.46512704e-10]))
+        e = observations[1] - Zstar[0]
+        assert_almost_equal(e, 2.6131652669594962)
+        f.update(t, Zstar, e)
+        actual = f.getState();
+        assert_almost_equal(actual, array([ -5.30339172, -10.89873388, -16.74985512, -15.02740172,  -7.1477283,  -1.405171  ]))
+        self.assertGreaterEqual(0.0, assert_report("Fmp_test/test9Basic"))
     
     @testcase 
     def test9NSwitch(self) -> None:

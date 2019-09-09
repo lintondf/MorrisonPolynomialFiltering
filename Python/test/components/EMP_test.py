@@ -26,7 +26,7 @@ from runstats import Statistics
 
 from netCDF4 import Dataset
 from TestSuite import testDataPath;
-from TestUtilities import generateTestPolynomial, generateTestData, createTestGroup, writeTestVariable, A2S
+from TestUtilities import generateTestPolynomial, generateTestData, createTestGroup, writeTestVariable, A2S, assert_report
 from TestData import TestData
 
 from polynomialfiltering.Main import AbstractFilterWithCovariance, FilterStatus
@@ -309,6 +309,7 @@ class EMP_test(unittest.TestCase):
         '''@setup : array'''
         '''@N : int'''
         '''@taus : array'''
+        '''@nTaus : int'''
         '''@expected : array'''
         '''@offset : int'''
         '''@itau : int'''
@@ -329,7 +330,8 @@ class EMP_test(unittest.TestCase):
             taus = testData.getGroupVariable(matches[order], 'taus')
             expected = testData.getGroupVariable(matches[order], 'expected')
             offset = 0;
-            for itau in range(0,len(taus)) :
+            nTaus = len(taus)
+            for itau in range(0,nTaus) :
                 tau = taus[itau,0]
                 rf = makeEmp(order, tau)
                 f = self.RecursivePolynomialFilterMock( order, tau, rf.getCore() )
@@ -342,6 +344,7 @@ class EMP_test(unittest.TestCase):
                     assert_allclose(V[0,0], f.getFirstVRF())
                     assert_allclose(V[-1,-1], f.getLastVRF())
                     assert_allclose(diag(V), diag(f.getDiagonalVRF()))
+        self.assertGreaterEqual(0.0, assert_report("Emp_test/test1CheckVRF"))
                 
     @testcase
     def test2CheckStates(self) -> None:
@@ -382,9 +385,10 @@ class EMP_test(unittest.TestCase):
                 Zstar = f.predict(times[j,0])
                 e = observations[j] - Zstar[0]
                 f.update(times[j,0], Zstar, e)
-                actual[j,:] = f.getState();
+                actual[j,:] = transpose(f.getState());
 #                 assert_allclose(actual[j,:], expected[j,:])
             assert_allclose(actual, expected)
+        self.assertGreaterEqual(29.2, assert_report("Emp_test/test2CheckStates"))
             
     def test9CoreBasic(self) -> None:
         '''@core : ICore'''
@@ -406,11 +410,13 @@ class EMP_test(unittest.TestCase):
         '''@tau : float'''
         '''@itau : int'''
         '''@taus : array'''
+        '''@nTaus : int'''
         '''@n : int'''
 #         print("test9NUnitLastVRF")
         taus = array([0.01, 0.1, 1, 10, 100]);
         for order in range(0,5+1) :
-            for itau in range(0, len(taus)):
+            nTaus = len(taus)
+            for itau in range(0, nTaus):
                 tau = taus[itau]
                 n = nUnitLastVRF(order, tau)
                 core = _makeEmpCore(order, tau)

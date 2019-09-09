@@ -32,6 +32,8 @@ from scipy.integrate._bvp import solve_bvp
 
 from polynomialfiltering.components.FixedMemoryPolynomialFilter import FixedMemoryFilter;
 
+def assert_report(source : str) -> float:
+    return 0.0
 
 def createTestGroup(cdf : Dataset, name : str ) -> Dataset:
     return cdf.createGroup(name);
