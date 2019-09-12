@@ -25,6 +25,12 @@ namespace polynomialfiltering {
             public:
                 ICore() {};
 
+                ///// @brief Get the number of input samples needed to start this core
+                /// 
+                ///  @return  sample count
+                /// 
+                virtual int getSamplesToStart() = 0;
+
                 ///// @brief Get the innovation scale vector
                 /// 
                 /// 

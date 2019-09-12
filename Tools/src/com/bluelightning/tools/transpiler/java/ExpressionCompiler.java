@@ -59,6 +59,7 @@ public class ExpressionCompiler {
 			new NumColsFunction().add();
 	    	new IdentityFunction().add();
 	    	new IntFunction().add();
+	    	new PrintFunction().add();
 	    	new ReturnFunction().add();
 	    	new TransposeFunction().add();
 	    	new VoidFunction().add();
@@ -676,6 +677,54 @@ public class ExpressionCompiler {
 			}
 	    }
 	    
+	    public class PrintFunction extends CodedFunction1 {
+	    	
+	    	String opname;
+	    	Pattern variablePattern = Pattern.compile("\\w");
+	    	
+	    	@Override
+			public void add() {
+	    		String[] opnames = {"$print-s", "$print-m"};
+	    		for (String n : opnames) {
+	    			opname = n;
+	    			super.add();
+	    		}
+			}
+
+	    	PrintFunction() {
+				super("print");
+			}
+
+			@Override
+			public String opName() {
+				return opname;
+			} 
+
+			@Override
+			public Info create(Variable A, ManagerTempVariables manager) {
+		    	final Info info = new Info(A);
+		    	if( info.input.size() == 1 ) {
+		    		info.output = manager.createInteger();
+		    		info.op = info.new Operation(opName()) {
+						@Override
+						public void process() {
+						}
+		    		};
+		    	} else {
+		    		throw new RuntimeException("print() only takes one parameter");
+		    	}
+	    		return info;
+			}
+
+			@Override
+			public String code(Info info) {
+				Variable A = info.input.get(0);
+				StringBuilder sb = new StringBuilder();
+				sb.append(String.format("//System.out.println( %s );", A.getOperand()));
+				return sb.toString();
+			}
+	    }
+	    
 	    public class ReturnFunction extends CodedFunction1 {
 	    	
 	    	String opname;
@@ -760,6 +809,8 @@ public class ExpressionCompiler {
 				if (info.output.isTemp()) {
 					sb.append( String.format("DMatrixRMaj %s = new DMatrixRMaj(%s.getNumCols(), %s.getNumRows());\n", 
 						info.output.getOperand(), A.getOperand(), A.getOperand()));
+				} else {
+					sb.append( String.format("%s.reshape( %s.numCols, %s.numRows );\n", info.output.getOperand(), A.getOperand(), A.getOperand()));
 				}
 				sb.append( String.format(EmitJavaOperation.formatCommonOps2, "transpose", A.getOperand(), info.output.getOperand()) );
 				return sb.toString();

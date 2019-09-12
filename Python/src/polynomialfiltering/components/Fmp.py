@@ -31,6 +31,9 @@ class AbstractCoreFmp(ICore):
         '''
         self.theta = theta;
     
+    def getSamplesToStart(self) -> int:
+        return 1
+        
     @abstractmethod # pragma: no cover
     def getGamma(self, t : float, dtau : float) -> vector:
         """

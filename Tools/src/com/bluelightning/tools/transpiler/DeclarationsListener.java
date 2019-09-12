@@ -50,7 +50,7 @@ class DeclarationsListener extends LcdPythonBaseListener {
 			switch (fields[1]) {
 			case "vector":
 				if (fields.length == 3) {
-					Integer[] dims = new Integer[]{ Integer.parseInt(fields[2].trim()) };
+					String[] dims = new String[]{ fields[2].trim() };
 					symbol.setDimensions(dims);
 				} else {
 					transpiler.reportError("Only one dimension allowed on vector: " + fields[0]);
@@ -58,7 +58,7 @@ class DeclarationsListener extends LcdPythonBaseListener {
 				break;
 			case "array":
 				if (fields.length == 4) {
-					Integer[] dims = new Integer[]{ Integer.parseInt(fields[2].trim()), Integer.parseInt(fields[3].trim()) };
+					String[] dims = new String[]{ fields[2].trim(), fields[3].trim() };
 					symbol.setDimensions(dims);
 				} else {
 					transpiler.reportError("Two dimensions required on matrix: " + fields[0]);
@@ -69,10 +69,12 @@ class DeclarationsListener extends LcdPythonBaseListener {
 			}
 		}
 		
+		
+		/*
+		 * '''@ <name> : <type> {: <dim1-str> {: <dim2-str>}} '''
+		 */
 		protected Symbol declareSymbol( Token token, String declaration ) {
 			declaration = declaration.trim().replaceAll(" +", " ");
-//			if (declaration.contains("testData"))
-//				System.out.println(declaration);
 			String[] fields = declaration.split(":");
 			if (fields.length >= 2) {
 				Scope currentScope = scopeStack.peek();
@@ -86,11 +88,6 @@ class DeclarationsListener extends LcdPythonBaseListener {
 				Symbol type = transpiler.symbolTable.lookup(currentScope, fields[1]);
 				if (type != null) {
 					if (type.isClass()) {
-//						if (declaration.contains("testData") || fields[0].trim().equals("fmp")) {
-//							System.out.println("declareSymbol: " + declaration + " @ " + currentScope.toString());
-//							System.out.println("               " + symbol );
-//							System.out.println("               " + type );
-//						}
 						transpiler.inheritClassMembers(symbol, type);
 					}
 				}
@@ -187,6 +184,7 @@ class DeclarationsListener extends LcdPythonBaseListener {
 				Symbol symbol = transpiler.symbolTable.lookup(scopeStack.peek(), functionName);
 				Symbol.FunctionParametersInfo fpi = symbol.getFunctionParametersInfo();
 				fpi.decorators.add(decoration);
+//				System.out.printf("DECORATE: %s %s\n", functionName, decoration );
 				if (decoration.equals("@abstractmethod")) {
 					symbol = transpiler.lookupClass(symbol.getScope().getLast());
 					if (symbol != null) {

@@ -26,6 +26,7 @@ namespace polynomialfiltering {
         class AbstractCoreFmp : public ICore {
             public:
                 AbstractCoreFmp(const double tau, const double theta);
+                int getSamplesToStart();
 
                 ///// @brief Get the innovation scale vector
                 /// 

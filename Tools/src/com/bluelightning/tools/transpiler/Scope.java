@@ -1,11 +1,19 @@
 package com.bluelightning.tools.transpiler;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Stack;
 
 
 public class Scope {
+	
+//		final List<String> ignoredModules = Arrays.asList( new String[]{
+//				"Main",
+//				"ExpandingMemoryPolynomialFilter",
+//				"FadingMemoryPolynomialFilter",
+//				"FixedMemoryFilter"
+//		});
 	
 		protected static HashMap<String, Scope> scopeMap = new HashMap<>();
 		
@@ -148,14 +156,13 @@ public class Scope {
 		public Scope.Level getLevelKind(int level) {
 			return levels.elementAt(level+1);
 		}
+		
 		public String getVisiblityPrefix(Scope currentScope) {
 			StringBuilder sb = new StringBuilder();
 			for (int i = 0; i < qualifiers.size(); i++) {
 				if (i >= currentScope.qualifiers.size()) {
 					for (int j = i; j < qualifiers.size(); j++) {
-						if (qualifiers.get(j).equals("Main") ||
-							qualifiers.get(j).equals("ExpandingMemoryPolynomialFilter") ||
-							qualifiers.get(j).equals("FadingMemoryPolynomialFilter") )
+						if (Transpiler.instance().getIgnoredModules().contains(qualifiers.get(j)))
 							continue;
 						sb.append(qualifiers.get(j));
 						sb.append("/");
@@ -164,9 +171,7 @@ public class Scope {
 				} if (levels.get(i+1) != currentScope.levels.get(i+1) || 
 					  !qualifiers.get(i).equals(currentScope.qualifiers.get(i))) {
 					for (int j = i; j < qualifiers.size(); j++) {
-						if (qualifiers.get(j).equals("Main") ||
-							qualifiers.get(j).equals("ExpandingMemoryPolynomialFilter") ||
-							qualifiers.get(j).equals("FadingMemoryPolynomialFilter") )
+						if (Transpiler.instance().getIgnoredModules().contains(qualifiers.get(j)))
 							continue;
 						sb.append(qualifiers.get(j));
 						sb.append("/");

@@ -26,6 +26,7 @@ from polynomialfiltering.PythonUtilities import assert_not_empty
 
 
 from polynomialfiltering.components.RecursivePolynomialFilter import RecursivePolynomialFilter, ICore
+from polynomialfiltering.Main import FilterStatus
 
 class RecursivePolynomialFilter_test(unittest.TestCase):
 
@@ -38,6 +39,10 @@ class RecursivePolynomialFilter_test(unittest.TestCase):
         def __init__(self, order : int):
             self.order = order;
             pass
+        
+        @testclassmethod
+        def getSamplesToStart(self) -> int:
+            return 1
         
         @testclassmethod
         def getGamma(self, t : float, dtau : float) -> vector:
@@ -70,6 +75,10 @@ class RecursivePolynomialFilter_test(unittest.TestCase):
         def __init__(self, order : int):
             self.order = order;
             pass
+        
+        @testclassmethod
+        def getSamplesToStart(self) -> int:
+            return 2
         
         @testclassmethod
         def getGamma(self, t : float, dtau : float) -> vector:
@@ -303,6 +312,57 @@ class RecursivePolynomialFilter_test(unittest.TestCase):
         self.assertGreaterEqual(22.0, assert_report("RecursivePolynomialFilter_test/test1PureObservation"))         
         testData.close()
 
+    @testcase
+    def test9Coverage(self):
+        '''@core : ICore'''
+        '''@f : RecursivePolynomialFilter'''
+        '''@g : RecursivePolynomialFilter'''
+        '''@name : str'''
+        '''@Zstar : vector'''
+        '''@I : array'''
+        core = self.PureObservationCore(2)
+        f = RecursivePolynomialFilter(2, 1.0, core );
+        self.assertEqual(2, f.getOrder())
+        self.assertEqual(1.0, f.getTau())
+        f.setName('hello')
+        name = f.getName()
+        self.assertEqual(f.getStatus(), FilterStatus.IDLE);
+        f.start(0.0, array([1.0,2.0,3.0]))
+        self.assertEqual(f.getStatus(), FilterStatus.IDLE);
+        self.assertEqual(f.getFirstVRF(), 0.0)
+        self.assertEqual(f.getLastVRF(), 0.0)
+        I = zeros([2+1, 2+1])
+        assert_almost_equal(f.getDiagonalVRF(), I)
+        Zstar = f.predict(1.0)
+        f.update(1.0, Zstar, 0.0)
+        self.assertEqual(f.getStatus(), FilterStatus.INITIALIZING);
+        Zstar = f.predict(2.0)
+        f.update(2.0, Zstar, 0.0)
+        self.assertEqual(f.getStatus(), FilterStatus.RUNNING);
+        assert_almost_equal(f.getState(), array([11.0, 8.0, 3.0]))
+        assert_almost_equal(f.transitionState(4.0), array([33.0, 14.0, 3.0]))
+        self.assertEqual(2, f.getN())
+        self.assertEqual(f.effectiveTheta(2, 0), 0)
+        assert_almost_equal(f.effectiveTheta(2, 10), 0.56673)
+        
+        g = RecursivePolynomialFilter(2, 1.0, core );
+        g.copyState(f)
+        assert_almost_equal(g.getState(), array([11.0, 8.0, 3.0]))
+        
+    
+    class TestCase(unittest.TestCase):
+    
+        def setUp(self):
+            unittest.TestCase.setUp(self)
+    
+        def tearDown(self):
+            unittest.TestCase.tearDown(self)
+    
+        def testMet1(self):
+            pass
+    
+    if __name__ == '__main__':
+        unittest.main()
 
 if __name__ == "__main__":
     #import sys;sys.argv = ['', 'Test.test0Generate']

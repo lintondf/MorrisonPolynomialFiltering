@@ -49,7 +49,7 @@ public class Symbol {
 	protected SuperClassInfo superClassInfo = null;
 	protected FunctionParametersInfo functionParametersInfo = null;
 	protected Symbol ancestor = null;
-	protected Integer[] dimensions;
+	protected String[] dimensions;
 	protected boolean isClassRef = false;
 	protected boolean isInherited = false;
 	protected boolean isReturnVariable = false;
@@ -181,11 +181,11 @@ public class Symbol {
 		return this.functionParametersInfo.decorators.contains("@classmethod");
 	}
 
-	public void setDimensions(Integer[] dims) {
+	public void setDimensions(String[] dims) {
 		this.dimensions = dims;
 	}
 	
-	public Integer[] getDimensions() {
+	public String[] getDimensions() {
 		return this.dimensions;
 	}
 

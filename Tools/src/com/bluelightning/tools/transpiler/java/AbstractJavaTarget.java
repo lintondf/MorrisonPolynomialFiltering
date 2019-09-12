@@ -283,6 +283,7 @@ public abstract class AbstractJavaTarget extends AbstractLanguageTarget{
 				case "None":
 				case "float":
 				case "int":
+				case "str":
 					break;
 				default:
 					Symbol retVar = Transpiler.instance().getSymbolTable().add(scope, String.format("_%s_return_value", symbol.getName()), symbol.getType());
@@ -792,7 +793,23 @@ public abstract class AbstractJavaTarget extends AbstractLanguageTarget{
 		boolean mustCompile = false;
 		if (root instanceof TranslationExpressionNode || root instanceof TranslationSubexpressionNode) {
 			mustCompile = true;
-			Transpiler.instance().logger().info("eSE> " + root.getClass().getSimpleName() + " :: " + root.toString());
+			if (root.getChildCount() >= 3 && root.getChild(0) instanceof TranslationSymbolNode && root.getChild(1) instanceof TranslationOperatorNode) {
+				TranslationSymbolNode tsn = (TranslationSymbolNode) root.getChild(0);
+				TranslationOperatorNode ton = (TranslationOperatorNode) root.getChild(1);
+				if (ton.getOperator().equals("=")) {
+					switch (tsn.getSymbol().getType()) {
+					case "int":
+					case "float":
+					case "array":
+					case "vector":
+						Transpiler.instance().logger().info("eSE> " + root.getClass().getSimpleName() + " :: " + root.toString());
+						break;
+					default:
+						Transpiler.instance().logger().info("eSE! " + root.getClass().getSimpleName() + " :: " + root.toString());
+						mustCompile = false;
+					}
+				}
+			}
 		}
 		Indent out = new Indent(output);
 		programmer.startExpression(out);
@@ -938,6 +955,7 @@ public abstract class AbstractJavaTarget extends AbstractLanguageTarget{
 		if (remappedType == null) {
 			remappedType = symbol.getType();
 		}
+		remappedType += "";
 		Symbol c = Transpiler.instance().lookupClassOrEnum(remappedType);
 		if (c != null) {
 			addImport( c.getScope().getChild(Level.CLASS, remappedType));
@@ -956,13 +974,13 @@ public abstract class AbstractJavaTarget extends AbstractLanguageTarget{
 		String initializer = programmer.getTypeInitializer(remappedType);
 		if (initializer != null) {
 			declaration += " = " + initializer;
-			Integer[] dims = symbol.getDimensions();
+			String[] dims = symbol.getDimensions();
 			if (dims != null) {
 				declaration += "(";
-				declaration += dims[0].toString();
+				declaration += dims[0];
 				if (dims.length > 1) {
 					declaration += ", ";
-					declaration += dims[1].toString();
+					declaration += dims[1];
 				} else {
 					declaration += ", 1";
 				}
@@ -1007,9 +1025,10 @@ public abstract class AbstractJavaTarget extends AbstractLanguageTarget{
 	
 	protected String dollarize(String expr) {
 		StringBuilder sb = new StringBuilder();
-		for (int i = 0; i < expr.length(); i++) {
+		sb.append(expr.charAt(0));
+		for (int i = 1; i < expr.length()-1; i++) {
 			if (expr.charAt(i) == '.') {
-				if (Character.isAlphabetic(expr.charAt(i-1))) {
+				if (Character.isAlphabetic(expr.charAt(i-1)) && Character.isAlphabetic(expr.charAt(i+1))) {
 					sb.append('$');
 				} else {
 					sb.append(expr.charAt(i));					
@@ -1018,6 +1037,7 @@ public abstract class AbstractJavaTarget extends AbstractLanguageTarget{
 				sb.append(expr.charAt(i));
 			}
 		}
+		sb.append(expr.charAt(expr.length()-1));
 		return sb.toString();
 	}
 
@@ -1044,7 +1064,7 @@ public abstract class AbstractJavaTarget extends AbstractLanguageTarget{
 			//indent.write("return ");
 			emitSubExpression(scope, expressionRoot);
 			int lastEol = indent.sb.lastIndexOf("\n");
-			System.out.println(indent.sb.substring(lastEol+1));
+//			System.out.println(indent.sb.substring(lastEol+1));
 			String str = indent.sb.substring(lastEol+1);
 			int iEqual = str.indexOf('=');
 			if (iEqual >= 0) {

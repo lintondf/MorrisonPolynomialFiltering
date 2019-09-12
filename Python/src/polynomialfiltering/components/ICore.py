@@ -18,6 +18,15 @@ class ICore(ABC):
     def __init__(self):
         pass
     
+    @abstractmethod # pragma: no cover
+    def getSamplesToStart(self) -> int:
+        """
+        Get the number of input samples needed to start this core
+
+        Returns:
+            sample count
+        """
+        pass   
 
     @abstractmethod # pragma: no cover   
     def getGamma(self, t : float, dtau : float) -> vector:

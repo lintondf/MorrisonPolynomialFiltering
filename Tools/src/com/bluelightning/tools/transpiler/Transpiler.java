@@ -24,6 +24,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeSet;
 import java.util.zip.CRC32;
 import java.util.zip.Checksum;
@@ -123,7 +124,7 @@ public class Transpiler {
 		new TestTarget(Paths.get("components"), "RecursivePolynomialFilter_test"),
 		new TestTarget(Paths.get("components"), "EMP_test"),
 		new TestTarget(Paths.get("components"), "Fmp_test"),
-		//TODO finish Python test		new TestTarget(Paths.get("components"), "FixedMemoryFilter_test"),
+		new TestTarget(Paths.get("components"), "FixedMemoryFilter_test"),
 ////		new Target(Paths.get("polynomialfiltering/filters/controls"), "IObservationErrorModel", true),
 ////		new Target(Paths.get("polynomialfiltering/filters/controls"), "IJudge", true),
 ////		new Target(Paths.get("polynomialfiltering/filters/controls"), "IMonitor", true),
@@ -138,6 +139,17 @@ public class Transpiler {
 ////		new TestTarget(Paths.get("filters/controls"), "ConstantObservationErrorModel_test"),
 	};
 	
+	final Set<String> ignoredModules = new TreeSet<String>( Arrays.asList( new String[]{
+			"Main",
+			"ExpandingMemoryPolynomialFilter",
+			"FadingMemoryPolynomialFilter",
+			"FixedMemoryPolynomialFilter"
+	}));
+	
+	public Set<String> getIgnoredModules() {
+		return ignoredModules;
+	}
+
 	protected boolean isTestCaseMethod = false;
 	
 	/**
@@ -654,6 +666,8 @@ public class Transpiler {
 		symbolTable.add( importScope, "assert_not_empty", "None");
 		symbolTable.add( importScope, "assert_report", "float");
 		symbolTable.add( importScope, "assertGreaterEqual", "None");
+		symbolTable.add( importScope, "assertEqual", "None");
+		symbolTable.add( importScope, "print", "None");
 		
 		valueMap.put( TranslationUnaryNode.staticFieldReference, "::");
 

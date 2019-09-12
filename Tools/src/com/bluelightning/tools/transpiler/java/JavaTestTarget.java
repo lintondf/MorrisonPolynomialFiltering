@@ -49,6 +49,7 @@ public class JavaTestTarget extends AbstractJavaTarget {
 
 	@Override
 	public void finishClass(Scope scope) {
+		//System.out.println( currentClass + " : " + scope.toString());
 		if (! currentClass.isEmpty() && currentClass.peek().getName().equals(scope.getLast()) ) {
 			super.finishClass(scope);
 		}
@@ -133,9 +134,9 @@ public class JavaTestTarget extends AbstractJavaTarget {
 //			} catch (FormatterException e) {
 //			}
 			String outStr = strOut.toString();
-			outStr = outStr.replace("this.assertGreaterEqual", "assertGreaterEqual");
+			outStr = outStr.replace("this.assert", "assert"); // convert calls to self.assert* methods to TestMain imports
 			String old = readFileToString( srcPath );
-			if (old == null || !old.equals(outStr)) {
+			if (true || old == null || !old.equals(outStr)) {
 				srcPath.toFile().getParentFile().mkdirs();
 				Writer out = new OutputStreamWriter(new FileOutputStream(srcPath.toFile()));
 				out.write(outStr);

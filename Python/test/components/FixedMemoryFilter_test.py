@@ -22,53 +22,47 @@ from scipy.stats._continuous_distns import chi2
 from polynomialfiltering.components.FixedMemoryPolynomialFilter import FixedMemoryFilter;
 
 from TestSuite import testDataPath;
+from TestData import TestData
+from polynomialfiltering.PythonUtilities import ignore, testcase, testmethod, testclass, testclassmethod
+from polynomialfiltering.PythonUtilities import assert_not_empty
 
-class TestFixedMemoryFiltering(unittest.TestCase):
+
+class FixedMemoryFilter_test(unittest.TestCase):
+    '''@testData : TestData'''
     
-    cdf = None;
-
     @classmethod
     def setUpClass(self):
-        path = testDataPath('FixedMemoryFiltering.nc');
-        self.cdf = Dataset(path, "w", format="NETCDF4");
-
+        self.Y0 = array([1e4, 1e3, 1e2, 1e1, 1e0, 1e-1]);
+ 
     @classmethod
     def tearDownClass(self):
-        self.cdf.close()
-
-    Y0 = array([1e4, 1e3, 1e2, 1e1, 1e0, 1e-1]);
-    
-    def createTestGroup(self, cdf : Dataset, name : str ) -> Dataset:
-        return cdf.createGroup(name);
-    
-    def writeTestVariable(self, group : Dataset, name : str, data : array) -> None:
-        dims = data.shape;
-        if (len(dims) == 1) :
-            dims = (dims[0], 1);
-        nDim = '%s_N' % name;
-        mDim = '%s_M' % name;
-        group.createDimension(nDim, dims[0]);
-        group.createDimension(mDim, dims[1]);
-        v = group.createVariable(name, 'd', (nDim, mDim))
-        v[:] = data;
-
+        pass
+ 
+     
+ 
+    @testmethod
     def executeEstimatedState(self, setup : array, data : array ) -> array:
+        '''@order : int'''
+        '''@window : int'''
+        '''@M : int'''
+        '''@iCheck : int'''
+        '''@times : array'''
+        '''@observations : array'''
+        '''@fixed : FixedMemoryFilter'''
+        '''@i : int'''
         order = int(setup[0]);
         window = int(setup[1]);
         M = int(setup[2]);
         iCheck = int(setup[3]);
         times = data[:,0:1];
-        data = data[:,1:];
-        observations = data[:,0:1];
-        data = data[:,1:];
-#         print(order, window, M, iCheck, times[iCheck]);
+        observations = data[:,1:2];
         fixed = FixedMemoryFilter(order, window);
         for i in range(0,M) :
             fixed.add(times[i], observations[i]);
         return fixed.transitionState(times[iCheck]);
-                
-                
-    def testPerfect(self):
+                 
+                 
+    def generatePerfect(self, testData : TestData ) -> None:
         setup = array([None, 11, 12, 11]);
         tau = 0.1;
         N = 25;
@@ -76,19 +70,19 @@ class TestFixedMemoryFiltering(unittest.TestCase):
             setup[0] = order; 
             (times, truth, observations, noise) = generateTestData(order, N, 0.0, self.Y0[0:order+1], tau, sigma=0.0)
             data = concatenate([times, observations], axis=1);
-            group = self.createTestGroup(self.cdf, 'testPerfect_%d' % order );
-            self.writeTestVariable(group, 'setup', setup);
-            self.writeTestVariable(group, 'data', data);
+            group = testData.createTestGroup( 'testPerfect_%d' % order );
+            testData.putArray(group, 'setup', setup);
+            testData.putArray(group, 'data', data);
 #             print('setup ',setup)
 #             print('data ',data)
-            
+             
             expected = self.executeEstimatedState(setup, data);
 #             print(order, expected)
-            
-            self.writeTestVariable(group, 'expected', expected);
+             
+            testData.putArray(group, 'expected', expected);
             assert_allclose( expected, truth[11,:], atol=0, rtol=1e-3 )
-
-    def testNoisy(self):
+ 
+    def generateNoisy(self, testData : TestData ) -> None:
         setup = array([None, 11, 12, 11]);
         tau = 0.1;
         N = 25;
@@ -96,17 +90,17 @@ class TestFixedMemoryFiltering(unittest.TestCase):
             setup[0] = order; 
             (times, truth, observations, noise) = generateTestData(order, N, 0.0, self.Y0[0:order+1], tau, sigma=1.0)
             data = concatenate([times, observations], axis=1);
-            group = self.createTestGroup(self.cdf, 'testNoisy_%d' % order );
-            self.writeTestVariable(group, 'setup', setup);
-            self.writeTestVariable(group, 'data', data);
-            
+            group = testData.createTestGroup('testNoisy_%d' % order );
+            testData.putArray(group, 'setup', setup);
+            testData.putArray(group, 'data', data);
+             
             expected = self.executeEstimatedState(setup, data);
-            
-            self.writeTestVariable(group, 'expected', expected);
+             
+            testData.putArray(group, 'expected', expected);
             #assert_allclose( expected, truth[11,:], atol=0, rtol=1e-2 )
-
-    
-    def testMidpoints(self):
+ 
+     
+    def generateMidpoints(self, testData : TestData ) -> None:
         tau = 0.1;
         N = 25;
         order = 2;
@@ -117,32 +111,39 @@ class TestFixedMemoryFiltering(unittest.TestCase):
             setup = array([order, window, M, iCheck]);
             fixed = FixedMemoryFilter(order, window);
             (times, truth, observations, noise) = generateTestData(fixed.order, N, 0.0, self.Y0[0:fixed.order+1], tau, sigma=0.0)
-            
+             
             data = concatenate([times, observations], axis=1);
-            group = self.createTestGroup(self.cdf, 'testMidpoints_%d' % iCheck );
-            self.writeTestVariable(group, 'setup', setup);
-            self.writeTestVariable(group, 'data', data);
-            
+            group = testData.createTestGroup( 'testMidpoints_%d' % iCheck );
+            testData.putArray(group, 'setup', setup);
+            testData.putArray(group, 'data', data);
+             
             expected = self.executeEstimatedState(setup, data);
-            
-            self.writeTestVariable(group, 'expected', expected);
+             
+            testData.putArray(group, 'expected', expected);
             assert_allclose( truth[iCheck,:], expected );
-            
+             
+    @testmethod
     def executeVRF(self, setup : array, data : array ) -> array:
+        '''@order : int'''
+        '''@window : int'''
+        '''@M : int'''
+        '''@iCheck : int'''
+        '''@times : array'''
+        '''@observations : array'''
+        '''@fixed : FixedMemoryFilter'''
+        '''@i : int'''
         order = int(setup[0]);
         window = int(setup[1]);
         M = int(setup[2]);
         iCheck = int(setup[3]);
         times = data[:,0:1];
-        data = data[:,1:];
-        observations = data[:,0:1];
-        data = data[:,1:];
+        observations = data[:,1:2];
         fixed = FixedMemoryFilter(order, window);
         for i in range(0,M) :
             fixed.add(times[i], observations[i]);
         return fixed.getCovariance();
-                
-    def testVRF(self) :
+                 
+    def generateVRF(self, testData : TestData ) -> None:
         tau = 0.1;
         N = 25;
         window = 11;
@@ -152,17 +153,17 @@ class TestFixedMemoryFiltering(unittest.TestCase):
             setup = array([order, window, M, iCheck]);
             fixed = FixedMemoryFilter(order, window);
             (times, truth, observations, noise) = generateTestData(fixed.order, N, 0.0, self.Y0[0:fixed.order+1], tau, sigma=0.0)
-            
+             
             data = concatenate([times, observations], axis=1);
-            group = self.createTestGroup(self.cdf, 'testVRF%d' % order );
-            self.writeTestVariable(group, 'setup', setup);
-            self.writeTestVariable(group, 'data', data);
-            
+            group = testData.createTestGroup('testVRF_%d' % order );
+            testData.putArray(group, 'setup', setup);
+            testData.putArray(group, 'data', data);
+             
             expected = self.executeVRF(setup, data);
-            
-            self.writeTestVariable(group, 'expected', expected);
-        
-        
+             
+            testData.putArray(group, 'expected', expected);
+         
+         
     def xtestVRFStatistics(self):
         '''
          This extended numeric test validates the computed VRF matrix
@@ -190,13 +191,167 @@ class TestFixedMemoryFiltering(unittest.TestCase):
             c = cov(results,rowvar=False);
             C[k,:] = c.flatten();
             V = fixed.getCovariance();
-            
+             
         E = mean(C,axis=0) / V.flatten()
         print( A2S( E ) );
         assert_allclose( E, ones([(order+1)**2]), atol=1e-2 )
+         
+ 
+    def test0Generate(self):
+        testData = TestData('FixedMemoryFiltering.nc', 'w')
         
+        self.generatePerfect(testData)
+        self.generateNoisy(testData)
+        self.generateMidpoints(testData)
+        self.generateVRF(testData)
+        
+        testData.close()
 
+    @testcase
+    def test1CheckPerfect(self):
+        '''@matches : List[str]'''
+        '''@tau : float'''
+        '''@N : int'''
+        '''@i : int'''
+        '''@group : Group'''
+        '''@setup : vector'''
+        '''@order : int'''
+        '''@data : array'''
+        '''@actual : array'''
+        '''@expected : array'''
+        '''@testData : TestData'''
+        
+        testData = TestData('FixedMemoryFiltering.nc')
+        matches = testData.getMatchingGroups('testPerfect_')
+        assert_not_empty(matches)
+        tau = 0.1;
+        N = 25;
+        for i in range(0, len(matches)) :
+            group = testData.getGroup(matches[i])
+            setup = testData.getArray(group, 'setup')
+            order = int(setup[0]) 
+            data = testData.getArray(group, 'data');
+            actual = self.executeEstimatedState(setup, data);
+            expected = testData.getArray(group, 'expected');
+            assert_allclose( expected, actual )
+        testData.close()
 
+    @testcase
+    def test1CheckNoisy(self):
+        '''@matches : List[str]'''
+        '''@tau : float'''
+        '''@N : int'''
+        '''@i : int'''
+        '''@group : Group'''
+        '''@setup : vector'''
+        '''@order : int'''
+        '''@data : array'''
+        '''@actual : array'''
+        '''@expected : array'''
+        '''@testData : TestData'''
+        
+        testData = TestData('FixedMemoryFiltering.nc')
+        matches = testData.getMatchingGroups('testNoisy_')
+        assert_not_empty(matches)
+        tau = 0.1;
+        N = 25;
+        for i in range(0, len(matches)) :
+            group = testData.getGroup(matches[i])
+            setup = testData.getArray(group, 'setup')
+            order = int(setup[0]) 
+            data = testData.getArray(group, 'data');
+            actual = self.executeEstimatedState(setup, data);
+            expected = testData.getArray(group, 'expected');
+            assert_allclose( expected, actual )
+        testData.close()
+
+    @testcase
+    def test1CheckMidpoints(self):
+        '''@matches : List[str]'''
+        '''@tau : float'''
+        '''@N : int'''
+        '''@M : int'''
+        '''@window : int'''
+        '''@iCheck : int'''
+        '''@i : int'''
+        '''@group : Group'''
+        '''@setup : vector'''
+        '''@offset : int'''
+        '''@order : int'''
+        '''@data : array'''
+        '''@actual : array'''
+        '''@expected : array'''
+        '''@testData : TestData'''
+        
+        testData = TestData('FixedMemoryFiltering.nc')
+        matches = testData.getMatchingGroups('testMidpoints_')
+        assert_not_empty(matches)
+        tau = 0.1;
+        N = 25;
+        order = 2;
+        window = 11;
+        M = 12; # number of points to input
+        offset = M - window;
+        for i in range(0, len(matches)) :
+            group = testData.getGroup(matches[i])
+            setup = testData.getArray(group, 'setup')
+            order = int(setup[0])
+            window = int(setup[1])
+            M = int(setup[2])
+            iCheck = int(setup[3])
+            data = testData.getArray(group, 'data');
+            actual = self.executeEstimatedState(setup, data);
+            expected = testData.getArray(group, 'expected');
+            assert_allclose( expected, actual )
+        testData.close()
+    
+    @testcase
+    def test1CheckVrfs(self):
+        '''@matches : List[str]'''
+        '''@tau : float'''
+        '''@N : int'''
+        '''@M : int'''
+        '''@window : int'''
+        '''@iCheck : int'''
+        '''@i : int'''
+        '''@group : Group'''
+        '''@setup : vector'''
+        '''@order : int'''
+        '''@offset : int'''
+        '''@data : array'''
+        '''@actual : array'''
+        '''@expected : array'''
+        '''@testData : TestData'''
+        
+        testData = TestData('FixedMemoryFiltering.nc')
+        matches = testData.getMatchingGroups('testVRF_')
+        assert_not_empty(matches)
+        tau = 0.1;
+        N = 25;
+        order = 2;
+        window = 11;
+        M = 12; # number of points to input
+        offset = M - window;
+        for i in range(0, len(matches)) :
+            group = testData.getGroup(matches[i])
+            setup = testData.getArray(group, 'setup')
+            order = int(setup[0])
+            window = int(setup[1])
+            M = int(setup[2])
+            iCheck = int(setup[3])
+            data = testData.getArray(group, 'data');
+            actual = self.executeVRF(setup, data);
+            expected = testData.getArray(group, 'expected');
+            assert_allclose( expected, actual )
+        testData.close()
+
+    @testcase
+    def test9Regresssion(self):
+        '''@fixed : FixedMemoryFilter'''
+        fixed = FixedMemoryFilter(4)
+        self.assertEqual(fixed.order, 4)
+        self.assertEqual(fixed.L, 51)
+           
 if __name__ == "__main__":
     #import sys;sys.argv = ['', 'Test.testName']
     unittest.main()

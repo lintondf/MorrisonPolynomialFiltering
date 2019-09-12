@@ -49,8 +49,9 @@ public class TestCompilationListener extends LcdPythonBaseListener {
 		scope = Transpiler.instance().scopeMap.get(ctx.getPayload());
 		Symbol func = Transpiler.instance().lookup(scope.getParent(), scope.getLast());
 		if (func != null) {
-			if (func.hasDecorator("@testcase")) {
-				Transpiler.instance().setTestCaseMethod(true);
+			if (func.hasDecorator("@testcase") || 
+				func.hasDecorator("@testmethod")) {
+				Transpiler.instance().setTestCaseMethod(func.hasDecorator("@testcase"));
 //				System.out.println("TESTCASE: " + func.toString() );
 //				System.out.println("          " + scope.toString());
 //				Symbol symbol = Transpiler.instance().symbolTable.add(scope, "testData", "TestData");

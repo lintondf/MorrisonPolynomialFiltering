@@ -48,6 +48,12 @@ def testcase(funcobj):
     '''
     return funcobj;
 
+def testmethod(funcobj):
+    '''
+    Function marked @testmethod are transpiled into the test template when in test generation mode
+    '''
+    return funcobj;
+
 def testclass(funcobj):
     '''
     Classes marked @testclass are transpiled into the test template when in test generation mode

@@ -36,6 +36,7 @@ namespace polynomialfiltering {
                 ///  @param		tau	nominal time step
                 /// 
                 CoreEmp0(const double tau);
+                int getSamplesToStart();
 
                 ///// @brief Get the innovation scale vector
                 /// 
@@ -72,6 +73,7 @@ namespace polynomialfiltering {
                 ///  @param		tau	nominal time step
                 /// 
                 CoreEmp1(const double tau);
+                int getSamplesToStart();
 
                 ///// @brief Get the innovation scale vector
                 /// 
@@ -108,6 +110,7 @@ namespace polynomialfiltering {
                 ///  @param		tau	nominal time step
                 /// 
                 CoreEmp2(const double tau);
+                int getSamplesToStart();
 
                 ///// @brief Get the innovation scale vector
                 /// 
@@ -144,6 +147,7 @@ namespace polynomialfiltering {
                 ///  @param		tau	nominal time step
                 /// 
                 CoreEmp3(const double tau);
+                int getSamplesToStart();
 
                 ///// @brief Get the innovation scale vector
                 /// 
@@ -180,6 +184,7 @@ namespace polynomialfiltering {
                 ///  @param		tau	nominal time step
                 /// 
                 CoreEmp4(const double tau);
+                int getSamplesToStart();
 
                 ///// @brief Get the innovation scale vector
                 /// 
@@ -216,6 +221,7 @@ namespace polynomialfiltering {
                 ///  @param		tau	nominal time step
                 /// 
                 CoreEmp5(const double tau);
+                int getSamplesToStart();
 
                 ///// @brief Get the innovation scale vector
                 /// 

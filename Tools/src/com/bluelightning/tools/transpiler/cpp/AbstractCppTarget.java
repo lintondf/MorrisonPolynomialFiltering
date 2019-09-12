@@ -840,13 +840,13 @@ public abstract class AbstractCppTarget extends AbstractLanguageTarget {
 //			cppType = String.format("std::shared_ptr<%s>", cppType );
 //		}
 		String declaration = String.format("%s %s", cppType, symbol.getName() );
-		Integer[] dims = symbol.getDimensions();
+		String[] dims = symbol.getDimensions();
 		if (dims != null) {
 			declaration += "(";
-			declaration += dims[0].toString();
+			declaration += dims[0];
 			if (dims.length > 1) {
 				declaration += ", ";
-				declaration += dims[1].toString();
+				declaration += dims[1];
 			}
 			declaration += ")";
 		}

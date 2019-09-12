@@ -34,6 +34,9 @@ class CoreEmp0(ICore) :
         self.order = 0;
         self.tau = tau;
         
+    def getSamplesToStart(self) -> int:
+        return self.order + 2
+        
     def getGamma(self, n : float, dtau : float) -> vector:
         """@super"""
         
@@ -90,6 +93,9 @@ class CoreEmp1(ICore) :
         """
         self.order = 1;
         self.tau = tau;
+        
+    def getSamplesToStart(self) -> int:
+        return self.order + 2
         
     def getGamma(self, n : float, dtau : float) -> vector: #
         """@super"""
@@ -153,6 +159,9 @@ class CoreEmp2(ICore) :
         """
         self.order = 2;
         self.tau = tau;
+        
+    def getSamplesToStart(self) -> int:
+        return self.order + 2
         
     def getGamma(self, n : float, dtau : float) -> vector: #
         """@super"""
@@ -223,6 +232,9 @@ class CoreEmp3(ICore) :
         """
         self.order = 3;
         self.tau = tau;
+        
+    def getSamplesToStart(self) -> int:
+        return self.order + 2
         
     def getGamma(self, n : float, dtau : float) -> vector: #
         """@super"""
@@ -302,6 +314,9 @@ class CoreEmp4(ICore) :
         """
         self.order = 4;
         self.tau = tau;
+        
+    def getSamplesToStart(self) -> int:
+        return self.order + 2
         
     def getGamma(self, n : float, dtau : float) -> vector: # 
         """@super"""
@@ -393,6 +408,9 @@ class CoreEmp5(ICore) :
         """
         self.order = 5;
         self.tau = tau;
+        
+    def getSamplesToStart(self) -> int:
+        return self.order + 2
         
     def getGamma(self, n : float, dtau : float) -> vector:
         """@super"""

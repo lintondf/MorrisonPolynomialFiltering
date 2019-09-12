@@ -152,7 +152,7 @@ class RecursivePolynomialFilter(AbstractFilter):
         self.Z = (Zstar + innovation)
         self.t = t
         self.n += 1;
-        if (self.n < self.order+2) :
+        if (self.n < self.core.getSamplesToStart()) :
             self.setStatus( FilterStatus.INITIALIZING )
         else :
             self.setStatus( FilterStatus.RUNNING )
@@ -220,19 +220,19 @@ class RecursivePolynomialFilter(AbstractFilter):
     
     @inline
     def getFirstVRF(self) -> float:
-        if (self.n < self.order+1) :
+        if (self.n < self.core.getSamplesToStart()) :
             return 0.0;
         return self.core.getFirstVRF(self.n)
 
     @inline
     def getLastVRF(self) -> float:
-        if (self.n < self.order+1) :
+        if (self.n < self.core.getSamplesToStart()) :
             return 0.0;
         return self.core.getLastVRF(self.n)
     
     @inline
     def getDiagonalVRF(self) -> array:
-        if (self.n < self.order+1) :
+        if (self.n < self.core.getSamplesToStart()) :
             return zeros([self.order + 1, self.order + 1]);
         return self.core.getDiagonalVRF(self.n)
 

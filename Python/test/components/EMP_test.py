@@ -17,7 +17,7 @@ from numpy import arange, array2string, cov, log, var, zeros, trace, mean, std, 
 from numpy import sqrt
 from numpy.linalg import inv
 from numpy.random import randn, seed, get_state
-from numpy.testing import assert_allclose
+from numpy.testing import assert_allclose 
 from numpy.testing import assert_almost_equal
 from numpy.testing import assert_array_less
 from scipy.stats import kstest, chi2, lognorm, norm, anderson
@@ -293,7 +293,7 @@ class EMP_test(unittest.TestCase):
             writeTestVariable(case, 'observations', observations)
             writeTestVariable(case, 'expected', expected)
        
-    def test0Generate(self):
+    def xtest0Generate(self):
         print("test0Generate")
         path = testDataPath('testEMP.nc');
         cdf = Dataset(path, "w", format="NETCDF4");
@@ -341,9 +341,10 @@ class EMP_test(unittest.TestCase):
                     E = expected[offset:offset+order+1,:]
                     assert_allclose(V, E)
                     offset += order+1
-                    assert_allclose(V[0,0], f.getFirstVRF())
-                    assert_allclose(V[-1,-1], f.getLastVRF())
-                    assert_allclose(diag(V), diag(f.getDiagonalVRF()))
+                    if (iN > f.getCore().getSamplesToStart()) :
+                        assert_allclose(V[0,0], f.getFirstVRF())
+                        assert_allclose(V[-1,-1], f.getLastVRF())
+                        assert_allclose(diag(V), diag(f.getDiagonalVRF()))
         self.assertGreaterEqual(0.0, assert_report("Emp_test/test1CheckVRF"))
                 
     @testcase

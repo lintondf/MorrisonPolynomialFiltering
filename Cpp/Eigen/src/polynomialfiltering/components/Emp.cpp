@@ -23,6 +23,10 @@ namespace polynomialfiltering {
                 this->tau = tau;
             }
 
+            int CoreEmp0::getSamplesToStart () {
+                return this->order + 2;
+            }
+
             RealVector CoreEmp0::getGamma (const double n, const double dtau) {
                 RealVector g(1);
                 g = (RealVector1() << 1.0 / (1.0 + n)).finished();
@@ -71,6 +75,10 @@ namespace polynomialfiltering {
             CoreEmp1::CoreEmp1 (const double tau) {
                 this->order = 1;
                 this->tau = tau;
+            }
+
+            int CoreEmp1::getSamplesToStart () {
+                return this->order + 2;
             }
 
             RealVector CoreEmp1::getGamma (const double n, const double dtau) {
@@ -126,6 +134,10 @@ namespace polynomialfiltering {
             CoreEmp2::CoreEmp2 (const double tau) {
                 this->order = 2;
                 this->tau = tau;
+            }
+
+            int CoreEmp2::getSamplesToStart () {
+                return this->order + 2;
             }
 
             RealVector CoreEmp2::getGamma (const double n, const double dtau) {
@@ -188,6 +200,10 @@ namespace polynomialfiltering {
             CoreEmp3::CoreEmp3 (const double tau) {
                 this->order = 3;
                 this->tau = tau;
+            }
+
+            int CoreEmp3::getSamplesToStart () {
+                return this->order + 2;
             }
 
             RealVector CoreEmp3::getGamma (const double n, const double dtau) {
@@ -259,6 +275,10 @@ namespace polynomialfiltering {
             CoreEmp4::CoreEmp4 (const double tau) {
                 this->order = 4;
                 this->tau = tau;
+            }
+
+            int CoreEmp4::getSamplesToStart () {
+                return this->order + 2;
             }
 
             RealVector CoreEmp4::getGamma (const double n, const double dtau) {
@@ -341,6 +361,10 @@ namespace polynomialfiltering {
             CoreEmp5::CoreEmp5 (const double tau) {
                 this->order = 5;
                 this->tau = tau;
+            }
+
+            int CoreEmp5::getSamplesToStart () {
+                return this->order + 2;
             }
 
             RealVector CoreEmp5::getGamma (const double n, const double dtau) {

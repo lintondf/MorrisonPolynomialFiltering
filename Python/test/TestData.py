@@ -36,9 +36,10 @@ from builtins import classmethod
 
 class TestData :
     
-    def __init__(self, filename : str):
+    def __init__(self, filename : str = '', mode : str = 'r'):
         path = self.testDataPath(filename);
-        self.cdf = Dataset(path, "r", format="NETCDF4");
+        if (len(filename) > 0) :
+            self.cdf = Dataset(path, mode, format="NETCDF4");
        
     
     def testDataPath(self, filename : str) -> str:
@@ -47,6 +48,10 @@ class TestData :
         i = path.find("Python/test")
         path = path[0:i] + "testdata/"
         return path + filename;
+    
+    def createTestGroup(self, name : str ) -> Dataset:
+        return self.cdf.createGroup(name);
+
     
     def getMatchingGroups(self, prefix : str) -> List[str]:
         results = []

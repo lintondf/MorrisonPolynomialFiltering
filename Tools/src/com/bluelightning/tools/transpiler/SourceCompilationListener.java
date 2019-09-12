@@ -92,10 +92,12 @@ public class SourceCompilationListener extends LcdPythonBaseListener {
 					parent.setType( node.getType() );
 					return node;
 				} else if (ctx.getChildCount() == 2) {
-//					transpiler.dumpChildren(ctx);
+					if (!(ctx.getChild(0).getPayload() instanceof CommonToken))
+						transpiler.dumpChildren(ctx);
 //					String lhValue = (Transpiler.instance().getValue(ctx.getChild(0).getPayload()));
 //					String rhValue = (Transpiler.instance().getValue(ctx.getChild(1).getPayload()));
-					TranslationNode node = new TranslationUnaryNode( ctx, parent, 
+					//TODO "data = data[:,2:];" breaks this; not a CommonToken at 0 -> 0: "2"; 1: CommonToken':'
+					/*TranslationNode node = */new TranslationUnaryNode( ctx, parent, 
 							(CommonToken) ctx.getChild(0).getPayload(), 
 							translateMap.get(ctx.getChild(1).getPayload()));
 				} else {
@@ -216,9 +218,12 @@ public class SourceCompilationListener extends LcdPythonBaseListener {
 			//transpiler.dumpChildren(ctx);			
 			scope = this.transpiler.scopeMap.get(ctx.getPayload());
 			Symbol func = transpiler.lookup(scope.getParent(), scope.getLast());
+//			System.out.printf("FUNCDEF %s %s\n", scope.toString(), func );
 			if (func != null) {
 				if (this.isTest) {
-					if (func.hasDecorator("@testcase") || func.hasDecorator("@testclassmethod")) {
+					if (func.hasDecorator("@testcase") || 
+						func.hasDecorator("@testmethod") ||
+						func.hasDecorator("@testclassmethod")) {
 						transpiler.dispatcher.setIgnoring(false);
 					} else {
 						transpiler.dispatcher.setIgnoring(true);

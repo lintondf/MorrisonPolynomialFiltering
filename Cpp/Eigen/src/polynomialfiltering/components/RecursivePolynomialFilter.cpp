@@ -92,7 +92,7 @@ namespace polynomialfiltering {
                 this->Z = (Zstar + innovation);
                 this->t = t;
                 this->n += 1;
-                if (this->n < this->order + 2) {
+                if (this->n < this->core->getSamplesToStart()) {
                     this->setStatus(FilterStatus::INITIALIZING);
                 } else {
                     this->setStatus(FilterStatus::RUNNING);
@@ -121,21 +121,21 @@ namespace polynomialfiltering {
             }
 
             double RecursivePolynomialFilter::getFirstVRF () {
-                if (this->n < this->order + 1) {
+                if (this->n < this->core->getSamplesToStart()) {
                     return 0.0;
                 }
                 return this->core->getFirstVRF(this->n);
             }
 
             double RecursivePolynomialFilter::getLastVRF () {
-                if (this->n < this->order + 1) {
+                if (this->n < this->core->getSamplesToStart()) {
                     return 0.0;
                 }
                 return this->core->getLastVRF(this->n);
             }
 
             RealMatrix RecursivePolynomialFilter::getDiagonalVRF () {
-                if (this->n < this->order + 1) {
+                if (this->n < this->core->getSamplesToStart()) {
                     return ArrayXXd::Zero(this->order + 1, this->order + 1);
                 }
                 return this->core->getDiagonalVRF(this->n);

@@ -99,7 +99,7 @@ namespace polynomialfiltering {
                 RealVector C;
                 double fact;
                 Tn = ArrayXXd::Zero(dt.size(), this->order + 1);
-                Tn.col(0) = ones(dt.size());
+                Tn.col(0) = ones(dt.size(), 1);
                 C = copy(dt);
                 fact = 1.0;
                 for (int i = 1; i < this->order + 1; i++) {

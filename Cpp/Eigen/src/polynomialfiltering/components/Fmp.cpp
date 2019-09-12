@@ -22,6 +22,10 @@ namespace polynomialfiltering {
                 this->theta = theta;
             }
 
+            int AbstractCoreFmp::getSamplesToStart () {
+                return 1;
+            }
+
             RealMatrix AbstractCoreFmp::getVRF (const int n) {
                 return this->VRF;
             }

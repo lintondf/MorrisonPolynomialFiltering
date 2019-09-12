@@ -84,6 +84,7 @@ class Fmp_test(unittest.TestCase):
             [5, 0.01],[5, 0.1], [5, 1.0], [5, 10.0]
             ])
 
+        testData = TestData()
         nPass = 0
         nFail = 0
         group = createTestGroup(cdf, 'States')
@@ -120,13 +121,13 @@ class Fmp_test(unittest.TestCase):
 #                     D = sqrt(diag(V))
                     Y0 = multivariate_normal(Y, V); # Y + D * randn(Y.shape[0]) # 
                     if (it == 0) :
-                        TestData.putScalar(caseGroup, 'order', order)
-                        TestData.putScalar(caseGroup, 'tau', tau)
-                        TestData.putScalar(caseGroup, 'theta', theta)
-                        TestData.putArray(caseGroup, 'Y0', Y0)
-                        TestData.putArray(caseGroup, 'times', times)
-                        TestData.putArray(caseGroup, 'observations', observations)
-                        TestData.putArray(caseGroup, 'truth', truth)
+                        testData.putInteger(caseGroup, 'order', order)
+                        testData.putScalar(caseGroup, 'tau', tau)
+                        testData.putScalar(caseGroup, 'theta', theta)
+                        testData.putArray(caseGroup, 'Y0', Y0)
+                        testData.putArray(caseGroup, 'times', times)
+                        testData.putArray(caseGroup, 'observations', observations)
+                        testData.putArray(caseGroup, 'truth', truth)
                     f.start(0.0, Y0)
 #                     tchi2 = chi2.ppf(0.95, df=order+1)
                     for j in range(0,times.shape[0]) :
@@ -137,7 +138,7 @@ class Fmp_test(unittest.TestCase):
                         residuals[j,:] = f.getState() - truth[j,:]
 #                     print(A2S(residuals))
                     if (it == 0) :
-                        TestData.putArray(caseGroup, 'expected', expected)
+                        testData.putArray(caseGroup, 'expected', expected)
                     C = cov(residuals, rowvar=False)
 #                     if (it == 0) :
 #                         print(A2S(V))
@@ -172,6 +173,7 @@ class Fmp_test(unittest.TestCase):
         Gamma:  {0: 1.1102230246251565e-16, 1: 1.651158036900312e-08, 2: 0.2898979485566357, 3: 0.4627475401696348, 4: 0.5697090329565893, 5: 0.6416277095878444}
         """
         self.gammaTaus = {new_list: [] for new_list in range(0,5+1)}
+        testData = TestData()
         
         def isValid(G : array) -> bool:
             return (1 - max(G)) >= 0.0 and min(G) > 0.0
@@ -199,11 +201,11 @@ class Fmp_test(unittest.TestCase):
                 return G
             caseGroup = createTestGroup(group, 'Case_%d' % self.iCase)
             self.iCase += 1
-            TestData.putScalar(caseGroup, 'order', order)
-            TestData.putScalar(caseGroup, 'tau', tau)
-            TestData.putScalar(caseGroup, 'theta', theta)
-            TestData.putScalar(caseGroup, 'nS', nSwitch(order, theta))
-            TestData.putArray(caseGroup, 'G', G)
+            testData.putInteger(caseGroup, 'order', order)
+            testData.putScalar(caseGroup, 'tau', tau)
+            testData.putScalar(caseGroup, 'theta', theta)
+            testData.putScalar(caseGroup, 'nS', nSwitch(order, theta))
+            testData.putArray(caseGroup, 'G', G)
             print('%2d %8.2g %15.8g %15.8g %s  %s %s' % (order, nSwitch(order, theta), theta, 1-theta, A2S(G), q, v))
             return G;
         
@@ -272,6 +274,7 @@ class Fmp_test(unittest.TestCase):
         {0: 3.0518509447574615e-05, 1: 1.4142135623842478, 2: 2.5495097571983933, 3: 3.8369548115879297, 4: 5.583955190144479, 5: 8.241797269321978}
         """
         print('test8VRF')
+        testData = TestData()
         self.vrfTaus = {new_list: [0.0] for new_list in range(0,5+1)}
         group = createTestGroup(cdf, 'Vrfs')
         self.iCase = 0;
@@ -367,10 +370,10 @@ class Fmp_test(unittest.TestCase):
                     V = f.getCore().getVRF(0)
                     caseGroup = createTestGroup(group, 'Case_%d' % self.iCase)
                     self.iCase += 1
-                    TestData.putScalar(caseGroup, 'order', order)
-                    TestData.putScalar(caseGroup, 'tau', tau)
-                    TestData.putScalar(caseGroup, 'theta', theta)
-                    TestData.putArray(caseGroup, 'V', V)
+                    testData.putInteger(caseGroup, 'order', order)
+                    testData.putScalar(caseGroup, 'tau', tau)
+                    testData.putScalar(caseGroup, 'theta', theta)
+                    testData.putArray(caseGroup, 'V', V)
                     print(order, tau, theta, isDecreasing(V))
                 
 #             tauFullRange = self.vrfTaus[order]
