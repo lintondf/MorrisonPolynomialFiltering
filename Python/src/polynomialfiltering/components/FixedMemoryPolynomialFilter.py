@@ -7,14 +7,15 @@
 '''
 
 from abc import abstractmethod
+from polynomialfiltering.PythonUtilities import virtual, inline;
 
 from numpy import array, copy, eye, ones, zeros, transpose
 from numpy import array as vector
 from numpy.linalg.linalg import solve, lstsq, inv
 
-from polynomialfiltering.Main import AbstractFilterWithCovariance, FilterStatus
+from polynomialfiltering.Main import AbstractFilter, FilterStatus
 
-class FixedMemoryFilter(AbstractFilterWithCovariance) :
+class FixedMemoryFilter(AbstractFilter) :
     """
     Equally-weighted, fixed memory size, irregularly spaced data filter
     
@@ -85,10 +86,20 @@ class FixedMemoryFilter(AbstractFilterWithCovariance) :
         self.yRing[ idx ] = y;
         self.n += 1;    
     
-    def getCovariance(self) -> array:
-        return self.transitionCovariance(self.t)
+    def getVRF(self) -> array:
+        if (self.n < self.L) :
+            return zeros([self.order+1, self.order+1])
+        return self._transitionVrf(self.t)
     
-    def transitionCovariance(self, t : float) -> array:
+    @inline
+    def getFirstVRF(self) -> float:
+        return self.getVRF(self.n)[0,0]
+
+    @inline
+    def getLastVRF(self) -> float:
+        return self.getVRF(self.n)[-1, -1]
+    
+    def _transitionVrf(self, t : float) -> array:
         '''@dt : vector'''
         '''@Tn : array'''
         dt = self.tRing - t;
@@ -101,7 +112,7 @@ class FixedMemoryFilter(AbstractFilterWithCovariance) :
         '''@fact : float'''
         '''@i : int'''
         Tn = zeros( [dt.shape[0], self.order+1] );
-        Tn[:,0] = ones([dt.shape[0],1]);
+        Tn[:,0:1] = ones([dt.shape[0],1]);
         C = copy(dt);
         fact = 1.0
         for i in range(1, self.order+1) :

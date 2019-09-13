@@ -231,12 +231,6 @@ class RecursivePolynomialFilter(AbstractFilter):
         return self.core.getLastVRF(self.n)
     
     @inline
-    def getDiagonalVRF(self) -> array:
-        if (self.n < self.core.getSamplesToStart()) :
-            return zeros([self.order + 1, self.order + 1]);
-        return self.core.getDiagonalVRF(self.n)
-
-    @inline
     def getVRF(self) -> array:
         """
         Get the variance reduction factor matrix

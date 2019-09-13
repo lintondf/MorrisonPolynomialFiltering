@@ -210,6 +210,37 @@ class AbstractFilter(ABC):
         """
         pass
     
+    @abstractmethod   # pragma: no cover
+    def getFirstVRF(self) -> float:
+        """
+        Get the variance reduction factor for the 0th derivative
+        
+        Arguments:
+            None
+        
+        Returns:
+            0th derivative input to output variance ratio
+        """
+        pass
+
+    @abstractmethod   # pragma: no cover
+    def getLastVRF(self) -> float:
+        """
+        Get the variance reduction factor for the 'order'th derivative
+        
+        Arguments:
+            None
+        
+        Returns:
+            'order'th derivative input to output variance ratio
+        """
+        pass
+    
+    @abstractmethod   # pragma: no cover
+    def getVRF(self) -> array:
+        pass
+    
+    
     
 class AbstractFilterWithCovariance(AbstractFilter) :
     """

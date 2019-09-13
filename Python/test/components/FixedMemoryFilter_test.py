@@ -141,7 +141,7 @@ class FixedMemoryFilter_test(unittest.TestCase):
         fixed = FixedMemoryFilter(order, window);
         for i in range(0,M) :
             fixed.add(times[i], observations[i]);
-        return fixed.getCovariance();
+        return fixed.getVRF();
                  
     def generateVRF(self, testData : TestData ) -> None:
         tau = 0.1;
@@ -345,12 +345,27 @@ class FixedMemoryFilter_test(unittest.TestCase):
             assert_allclose( expected, actual )
         testData.close()
 
+    @testclass
+    class TestFixedMemoryFilter(FixedMemoryFilter): 
+        @testclassmethod
+        def __init__(self, order : int):
+            super().__init__(order)
+        
+        @testclassmethod
+        def getOrder(self) -> int:
+            return self.order
+        
+        @testclassmethod
+        def getL(self) -> int:
+            return self.L
+        
+
     @testcase
     def test9Regresssion(self):
-        '''@fixed : FixedMemoryFilter'''
-        fixed = FixedMemoryFilter(4)
-        self.assertEqual(fixed.order, 4)
-        self.assertEqual(fixed.L, 51)
+        '''@fixed : TestFixedMemoryFilter'''
+        fixed = self.TestFixedMemoryFilter(4)
+        self.assertEqual(fixed.getOrder(), 4)
+        self.assertEqual(fixed.getL(), 51)
            
 if __name__ == "__main__":
     #import sys;sys.argv = ['', 'Test.testName']

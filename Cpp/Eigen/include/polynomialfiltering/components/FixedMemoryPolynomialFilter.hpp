@@ -23,12 +23,12 @@
 namespace polynomialfiltering {
     namespace components {
 
-        ///// @class /polynomialfiltering/components/FixedMemoryPolynomialFilter/::FixedMemoryFilter : <CLASS>; supers(AbstractFilterWithCovariance,)
+        ///// @class /polynomialfiltering/components/FixedMemoryPolynomialFilter/::FixedMemoryFilter : <CLASS>; supers(AbstractFilter,)
         /// @brief Equally-weighted, fixed memory size, irregularly spaced data filter
         /// 
         /// Same units between state and observations
         /// 
-        class FixedMemoryFilter : public AbstractFilterWithCovariance {
+        class FixedMemoryFilter : public AbstractFilter {
             public:
                 FixedMemoryFilter(const int order, const int memorySize=51);
                 int getN();
@@ -37,8 +37,7 @@ namespace polynomialfiltering {
                 RealVector transitionState(const double t);
                 RealVector getState();
                 void add(const double t, const double y, const std::string observationId="");
-                RealMatrix getCovariance();
-                RealMatrix transitionCovariance(const double t);
+                RealMatrix getVrf();
             protected:
                 int order; ///<  order of fitted polynomial
                 int L; ///<  number of samples in memory window
@@ -50,6 +49,7 @@ namespace polynomialfiltering {
                 RealVector Z; ///<  UNNORMALIZED (external units) state vector
                 RealVector tRing; ///<  ring buffer holding times of observations
                 RealVector yRing; ///<  ring buffer holding values of observations
+                RealMatrix _transitionVrf(const double t);
                 RealMatrix _getTn(const RealVector& dt);
         }; // class FixedMemoryFilter 
 

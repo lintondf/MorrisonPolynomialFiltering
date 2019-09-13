@@ -26,7 +26,7 @@ namespace polynomialfiltering {
             RealVector FixedMemoryFilter::Z;
             RealVector FixedMemoryFilter::tRing;
             RealVector FixedMemoryFilter::yRing;
-            FixedMemoryFilter::FixedMemoryFilter (const int order, const int memorySize) : AbstractFilterWithCovariance(order) {
+            FixedMemoryFilter::FixedMemoryFilter (const int order, const int memorySize) : AbstractFilter(order) {
                 if (order < 0 || order > 5) {
                     throw ValueError("Polynomial orders < 1 or > 5 are not supported");
                 }
@@ -82,11 +82,11 @@ namespace polynomialfiltering {
                 this->n += 1;
             }
 
-            RealMatrix FixedMemoryFilter::getCovariance () {
-                return this->transitionCovariance(this->t);
+            RealMatrix FixedMemoryFilter::getVrf () {
+                return this->_transitionVrf(this->t);
             }
 
-            RealMatrix FixedMemoryFilter::transitionCovariance (const double t) {
+            RealMatrix FixedMemoryFilter::_transitionVrf (const double t) {
                 RealVector dt;
                 RealMatrix Tn;
                 dt = this->tRing - t;
@@ -99,7 +99,7 @@ namespace polynomialfiltering {
                 RealVector C;
                 double fact;
                 Tn = ArrayXXd::Zero(dt.size(), this->order + 1);
-                Tn.col(0) = ones(dt.size(), 1);
+                Tn.col(0 : 1) = ones(dt.size(), 1);
                 C = copy(dt);
                 fact = 1.0;
                 for (int i = 1; i < this->order + 1; i++) {

@@ -62,9 +62,6 @@ class RecursivePolynomialFilter_test(unittest.TestCase):
         def getLastVRF(self, n : int) -> float:
             return 0.0;
         
-        @testclassmethod
-        def getDiagonalVRF(self, n : int) -> array:
-            return zeros([self.order+1, self.order+1])
        
     """ PureObservationCore ignores predictions producing a results solely from the observation update"""
     @testclass
@@ -97,11 +94,7 @@ class RecursivePolynomialFilter_test(unittest.TestCase):
         @testclassmethod
         def getLastVRF(self, n : int) -> float:
             return 0.0;
-        
-        @testclassmethod
-        def getDiagonalVRF(self, n : int) -> array:
-            return zeros([self.order+1, self.order+1])
-       
+               
        
     Y0 = array([1e4, -5e3, +1e3, -5e2, +1e2, -5e1]);
 
@@ -331,8 +324,6 @@ class RecursivePolynomialFilter_test(unittest.TestCase):
         self.assertEqual(f.getStatus(), FilterStatus.IDLE);
         self.assertEqual(f.getFirstVRF(), 0.0)
         self.assertEqual(f.getLastVRF(), 0.0)
-        I = zeros([2+1, 2+1])
-        assert_almost_equal(f.getDiagonalVRF(), I)
         Zstar = f.predict(1.0)
         f.update(1.0, Zstar, 0.0)
         self.assertEqual(f.getStatus(), FilterStatus.INITIALIZING);

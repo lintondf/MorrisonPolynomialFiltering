@@ -341,10 +341,6 @@ class EMP_test(unittest.TestCase):
                     E = expected[offset:offset+order+1,:]
                     assert_allclose(V, E)
                     offset += order+1
-                    if (iN > f.getCore().getSamplesToStart()) :
-                        assert_allclose(V[0,0], f.getFirstVRF())
-                        assert_allclose(V[-1,-1], f.getLastVRF())
-                        assert_allclose(diag(V), diag(f.getDiagonalVRF()))
         self.assertGreaterEqual(0.0, assert_report("Emp_test/test1CheckVRF"))
                 
     @testcase

@@ -85,18 +85,6 @@ class AbstractCoreFmp(ICore):
         """
         return self.VRF[-1,-1]
     
-    def getDiagonalVRF(self, n : int) -> array:
-        """
-        Get the variance reduction matrix diagonal vector for the 'order'th derivative
-        
-        Arguments:
-            None
-        
-        Returns:
-            'order'th derivative input to output variance ratio
-        """
-        return diag(diag(self.VRF))
-    
     @abstractmethod # pragma: no cover
     def _getVRF(self, tau : float, theta : float) -> array:
         pass
