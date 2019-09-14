@@ -68,15 +68,6 @@ namespace polynomialfiltering {
                 ///  @return  'order'th derivative input to output variance ratio
                 /// 
                 virtual double getLastVRF(const int n) = 0;
-
-                ///// @brief Get the variance reduction matrix diagonal vector for the 'order'th derivative
-                /// 
-                /// 
-                ///  @param		None
-                /// 
-                ///  @return  'order'th derivative input to output variance ratio
-                /// 
-                virtual RealMatrix getDiagonalVRF(const int n) = 0;
         }; // class ICore 
 
     }; // namespace components

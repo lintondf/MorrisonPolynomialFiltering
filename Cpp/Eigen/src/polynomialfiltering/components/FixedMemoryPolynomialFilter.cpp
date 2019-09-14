@@ -36,10 +36,11 @@ namespace polynomialfiltering {
                 this->n0 = memorySize;
                 this->t0 = 0.0;
                 this->t = 0.0;
-                this->tau = 1.0;
+                this->tau = 0.0;
                 this->Z = ArrayXd::Zero(this->order + 1);
                 this->tRing = ArrayXd::Zero(memorySize);
                 this->yRing = ArrayXd::Zero(memorySize);
+                this->status = FilterStatus::IDLE;
             }
 
             int FixedMemoryFilter::getN () {
@@ -80,10 +81,30 @@ namespace polynomialfiltering {
                 this->tRing(idx) = t;
                 this->yRing(idx) = y;
                 this->n += 1;
+                if (this->n > this->L) {
+                    this->status = FilterStatus::RUNNING;
+                } else {
+                    this->status = FilterStatus::INITIALIZING;
+                }
             }
 
-            RealMatrix FixedMemoryFilter::getVrf () {
+            RealMatrix FixedMemoryFilter::getVRF () {
+                if (this->n < this->L) {
+                    return ArrayXXd::Zero(this->order + 1, this->order + 1);
+                }
                 return this->_transitionVrf(this->t);
+            }
+
+            double FixedMemoryFilter::getFirstVRF () {
+                RealMatrix V;
+                V = this->getVRF();
+                return V(0, 0);
+            }
+
+            double FixedMemoryFilter::getLastVRF () {
+                RealMatrix V;
+                V = this->getVRF();
+                return V(this->order, this->order);
             }
 
             RealMatrix FixedMemoryFilter::_transitionVrf (const double t) {

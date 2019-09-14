@@ -65,15 +65,6 @@ namespace polynomialfiltering {
                 ///  @return  'order'th derivative input to output variance ratio
                 /// 
                 double getLastVRF(const int n);
-
-                ///// @brief Get the variance reduction matrix diagonal vector for the 'order'th derivative
-                /// 
-                /// 
-                ///  @param		None
-                /// 
-                ///  @return  'order'th derivative input to output variance ratio
-                /// 
-                RealMatrix getDiagonalVRF(const int n);
             protected:
                 double theta;
                 RealMatrix VRF;

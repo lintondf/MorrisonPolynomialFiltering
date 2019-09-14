@@ -134,13 +134,6 @@ namespace polynomialfiltering {
                 return this->core->getLastVRF(this->n);
             }
 
-            RealMatrix RecursivePolynomialFilter::getDiagonalVRF () {
-                if (this->n < this->core->getSamplesToStart()) {
-                    return ArrayXXd::Zero(this->order + 1, this->order + 1);
-                }
-                return this->core->getDiagonalVRF(this->n);
-            }
-
             RealMatrix RecursivePolynomialFilter::getVRF () {
                 RealMatrix V;
                 if (this->n < this->order + 1) {

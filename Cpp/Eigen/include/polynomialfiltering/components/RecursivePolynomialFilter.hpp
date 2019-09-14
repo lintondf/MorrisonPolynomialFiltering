@@ -129,7 +129,6 @@ namespace polynomialfiltering {
                 RealVector getState();
                 double getFirstVRF();
                 double getLastVRF();
-                RealMatrix getDiagonalVRF();
 
                 ///// @brief Get the variance reduction factor matrix
                 /// 

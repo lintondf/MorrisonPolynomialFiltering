@@ -15,6 +15,7 @@ from numpy.linalg.linalg import solve, lstsq, inv
 
 from polynomialfiltering.Main import AbstractFilter, FilterStatus
 
+
 class FixedMemoryFilter(AbstractFilter) :
     """
     Equally-weighted, fixed memory size, irregularly spaced data filter
@@ -43,10 +44,11 @@ class FixedMemoryFilter(AbstractFilter) :
         self.n0 = memorySize;
         self.t0 = 0.0;
         self.t = 0.0;
-        self.tau = 1.0;
+        self.tau = 0.0;
         self.Z = zeros([self.order+1]);
         self.tRing = zeros([memorySize]);
         self.yRing = zeros([memorySize]);
+        self.status = FilterStatus.IDLE
         
     def getN(self)->int:
         return self.n
@@ -85,6 +87,10 @@ class FixedMemoryFilter(AbstractFilter) :
         self.tRing[ idx ] = t;    
         self.yRing[ idx ] = y;
         self.n += 1;    
+        if (self.n > self.L) :
+            self.status = FilterStatus.RUNNING
+        else :
+            self.status = FilterStatus.INITIALIZING
     
     def getVRF(self) -> array:
         if (self.n < self.L) :
@@ -93,11 +99,15 @@ class FixedMemoryFilter(AbstractFilter) :
     
     @inline
     def getFirstVRF(self) -> float:
-        return self.getVRF(self.n)[0,0]
+        '''@V : array'''
+        V = self.getVRF()
+        return V[0,0]
 
     @inline
     def getLastVRF(self) -> float:
-        return self.getVRF(self.n)[-1, -1]
+        '''@V : array'''
+        V = self.getVRF()
+        return V[self.order, self.order]
     
     def _transitionVrf(self, t : float) -> array:
         '''@dt : vector'''

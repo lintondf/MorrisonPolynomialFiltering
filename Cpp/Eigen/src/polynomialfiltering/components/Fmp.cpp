@@ -38,10 +38,6 @@ namespace polynomialfiltering {
                 return this->VRF(VRF->rows()-1, VRF->columns()-1);
             }
 
-            RealMatrix AbstractCoreFmp::getDiagonalVRF (const int n) {
-                return diag(diag(this->VRF));
-            }
-
             CoreFmp0::CoreFmp0 (const double tau, const double theta) : AbstractCoreFmp(tau,theta) {
                 this->VRF = this->_getVRF(tau, theta);
             }

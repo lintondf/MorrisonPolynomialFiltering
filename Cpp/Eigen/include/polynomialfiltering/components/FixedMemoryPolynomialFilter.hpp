@@ -37,7 +37,9 @@ namespace polynomialfiltering {
                 RealVector transitionState(const double t);
                 RealVector getState();
                 void add(const double t, const double y, const std::string observationId="");
-                RealMatrix getVrf();
+                RealMatrix getVRF();
+                double getFirstVRF();
+                double getLastVRF();
             protected:
                 int order; ///<  order of fitted polynomial
                 int L; ///<  number of samples in memory window

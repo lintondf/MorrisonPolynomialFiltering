@@ -137,6 +137,25 @@ namespace polynomialfiltering {
             ///  @return  State vector (order+1 elements)
             /// 
             virtual RealVector getState() = 0;
+
+            ///// @brief Get the variance reduction factor for the 0th derivative
+            /// 
+            /// 
+            ///  @param		None
+            /// 
+            ///  @return  0th derivative input to output variance ratio
+            /// 
+            virtual double getFirstVRF() = 0;
+
+            ///// @brief Get the variance reduction factor for the 'order'th derivative
+            /// 
+            /// 
+            ///  @param		None
+            /// 
+            ///  @return  'order'th derivative input to output variance ratio
+            /// 
+            virtual double getLastVRF() = 0;
+            virtual RealMatrix getVRF() = 0;
         protected:
             int order; ///<  polynomial order
             std::string name; ///<  name of this filter
