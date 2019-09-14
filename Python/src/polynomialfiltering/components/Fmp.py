@@ -101,7 +101,7 @@ class CoreFmp0(AbstractCoreFmp):
         return array([1-self.theta])
     
     def _getVRF(self, u : float, t : float) -> array:
-        '''@V : array'''
+        '''@ V : array : 1 : 1'''
         V = zeros([0+1,0+1])
         V[0,0]=(-t+1.0)/(t+1.0)
         return V;
@@ -124,7 +124,7 @@ class CoreFmp1(AbstractCoreFmp):
                       mt2])
     
     def _getVRF(self, u : float, t : float) -> array:
-        '''@V : array'''
+        '''@ V : array : 2 : 2'''
         '''@s : float'''
         V = zeros([1+1,1+1])
         if (t < 0.5) :
@@ -163,7 +163,7 @@ class CoreFmp2(AbstractCoreFmp):
                       (2*1)*1.0/2.0*mt3])  # 2! * 1-T^3 ?
     
     def _getVRF(self, u : float, t : float) -> array:
-        '''@V : array'''
+        '''@ V : array : 3 : 3'''
         '''@s : float'''
         V = zeros([2+1,2+1])
         if (t < 0.5) :
@@ -217,7 +217,7 @@ class CoreFmp3(AbstractCoreFmp):
                       (3*2*1)*1.0/6.0*mt4]) # ?
     
     def _getVRF(self, u : float, t : float) -> array:
-        '''@V : array'''
+        '''@ V : array : 4 : 4'''
         '''@s : float'''
         V = zeros([3+1,3+1])
         if (t < 0.5) :
@@ -289,7 +289,7 @@ class CoreFmp4(AbstractCoreFmp):
                       (4*3*2*1)*1.0/24.0*mt5])
     
     def _getVRF(self, u : float, t : float) -> array:
-        '''@V : array'''
+        '''@ V : array : 5 : 5'''
         '''@s : float'''
         V = zeros([4+1,4+1])
         if (t < 0.5) :
@@ -391,7 +391,7 @@ class CoreFmp5(AbstractCoreFmp):
 #                       s**6])     
     
     def _getVRF(self, u : float, t : float) -> array:
-        '''@V : array'''
+        '''@ V : array : 6 : 6'''
         '''@s : float'''
         V = zeros([5+1,5+1])
         if (t < 0.5) :

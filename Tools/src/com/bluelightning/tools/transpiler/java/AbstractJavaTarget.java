@@ -284,6 +284,8 @@ public abstract class AbstractJavaTarget extends AbstractLanguageTarget{
 				case "float":
 				case "int":
 				case "str":
+				case "array":
+				case "vector":
 					break;
 				default:
 					Symbol retVar = Transpiler.instance().getSymbolTable().add(scope, String.format("_%s_return_value", symbol.getName()), symbol.getType());
@@ -847,7 +849,7 @@ public abstract class AbstractJavaTarget extends AbstractLanguageTarget{
 			Transpiler.instance().logger().info("eSE< " + out.sb.toString());
 			ExpressionCompiler compiler = new ExpressionCompiler(scope, programmer, tempManager);
 			compiler.setStaticImports(staticImports);
-			if (compiler.compile(out.sb.toString(), this.imports) ) {
+			if (compiler.compile(out.sb.toString(), this.imports, currentScope) ) {
 				if (! compiler.getHeader().isEmpty()) {
 					output.writeln();
 				}
@@ -1074,7 +1076,7 @@ public abstract class AbstractJavaTarget extends AbstractLanguageTarget{
 			ExpressionCompiler compiler = new ExpressionCompiler(scope, programmer, tempManager);
 			compiler.setStaticImports(staticImports);
 			String expr = "asssignment$dummy = return (" + str + ")";
-			if (compiler.compile(dollarize(expr), this.imports) ) {
+			if (compiler.compile(dollarize(expr), this.imports, currentScope) ) {
 				for (String line : compiler.getCode()) {
 					indent.writeln(line.replace("$", "."));
 				}

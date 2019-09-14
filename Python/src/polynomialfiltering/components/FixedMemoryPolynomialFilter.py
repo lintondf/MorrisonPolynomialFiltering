@@ -93,9 +93,12 @@ class FixedMemoryFilter(AbstractFilter) :
             self.status = FilterStatus.INITIALIZING
     
     def getVRF(self) -> array:
+        '''@V : array'''
         if (self.n < self.L) :
-            return zeros([self.order+1, self.order+1])
-        return self._transitionVrf(self.t)
+            V = zeros([self.order+1, self.order+1])
+        else :
+            V = self._transitionVrf(self.t)
+        return V
     
     @inline
     def getFirstVRF(self) -> float:
@@ -112,9 +115,11 @@ class FixedMemoryFilter(AbstractFilter) :
     def _transitionVrf(self, t : float) -> array:
         '''@dt : vector'''
         '''@Tn : array'''
+        '''@V : array'''
         dt = self.tRing - t;
         Tn = self._getTn(dt);
-        return inv(transpose(Tn) @ Tn);
+        V = inv(transpose(Tn) @ Tn);
+        return V
     
     def _getTn(self, dt : vector ) -> array:
         '''@Tn : array'''

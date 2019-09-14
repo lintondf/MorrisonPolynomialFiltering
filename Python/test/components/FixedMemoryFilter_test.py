@@ -370,6 +370,7 @@ class FixedMemoryFilter_test(unittest.TestCase):
         '''@f : TestFixedMemoryFilter'''
         '''@fixed : FixedMemoryFilter'''
         '''@i : int'''
+        '''@Z : array'''
         f = self.TestFixedMemoryFilter(4)
         self.assertEqual(f.getOrder(), 4)
         self.assertEqual(f.getL(), 51)
@@ -377,14 +378,18 @@ class FixedMemoryFilter_test(unittest.TestCase):
         fixed = FixedMemoryFilter(0,5)
         self.assertEqual(fixed.getTau(), 0.0)
         self.assertEqual(fixed.getStatus(), FilterStatus.IDLE)
+        Z = zeros([1, 1])
+        assert_almost_equal(Z, fixed.getVRF())
+        self.assertEqual(fixed.getFirstVRF(), 0)
+        self.assertEqual(fixed.getLastVRF(), 0)
         for i in range(0,5) :
+            self.assertEqual( fixed.getN(), i)
             fixed.add(i, i)
             self.assertEqual(fixed.getStatus(), FilterStatus.INITIALIZING)
         fixed.add(10,10)
         self.assertEqual(fixed.getStatus(), FilterStatus.RUNNING)
         self.assertEqual(fixed.getTime(), 10 )
         assert_almost_equal(fixed.getState(), array([4.0]))
-        
             
 #     def xtest9ValidVRF(self):
 #         '''

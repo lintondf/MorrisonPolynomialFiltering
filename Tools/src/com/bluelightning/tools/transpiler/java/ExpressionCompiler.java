@@ -3,6 +3,7 @@ package com.bluelightning.tools.transpiler.java;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeSet;
@@ -985,8 +986,10 @@ public class ExpressionCompiler {
 	
 
 	final String dummyPrefix = "asssignment$dummy = void(";
+	final static Pattern reshapePattern = Pattern.compile("(\\w+)\\.reshape\\((.+),(.+)\\)");
+
 	
-	public boolean compile(String expression, List<String> imports ) {
+	public boolean compile(String expression, List<String> imports, Scope currentScope ) {
 		boolean isVoid = false;
 		if (expression.indexOf('=') < 0) {
 			isVoid = true;
@@ -1005,9 +1008,6 @@ public class ExpressionCompiler {
 			Transpiler.instance().logger().info(String.format("Compile: %s -Z", expression));
 			return false;			
 		}
-//		if (codeGenerator.getCode().get(0).startsWith("//") && codeGenerator.getCode().get(0).contains(dummyPrefix)) {
-//			codeGenerator.getCode().set(0, codeGenerator.getCode().get(0).replace(dummyPrefix, ""));
-//		}
 		if (isVoid) {
 			String line = codeGenerator.getCode().get(0);
 			line = line.replace(dummyPrefix, "");
@@ -1015,10 +1015,22 @@ public class ExpressionCompiler {
 				line = line.substring(0, line.length()-1);
 			codeGenerator.getCode().set(0, line);
 		}
-		for (String line : codeGenerator.getCode()) {
+		Iterator<String> it = codeGenerator.getCode().iterator();
+		while (it.hasNext()) {
+			String line = it.next();
 			for (EjmlImports match : ejmlImports) {
 				if (line.contains(match.keyword)) {
 					imports.add(match.importText);
+				}
+			}
+			Matcher matcher = reshapePattern.matcher(line);
+			if (matcher.find()) {
+				String target = matcher.group(1);
+				Symbol array = Transpiler.instance().lookup(currentScope, target);
+				if (array != null) {
+					if (array.getDimensions() != null) {
+						it.remove();
+					}
 				}
 			}
 		}

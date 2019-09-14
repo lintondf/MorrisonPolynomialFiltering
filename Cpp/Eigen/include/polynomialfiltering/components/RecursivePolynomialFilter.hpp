@@ -145,8 +145,8 @@ namespace polynomialfiltering {
                 double t0; ///<  filter start time
                 double tau; ///<  nominal scaled time step
                 double t; ///<   time of the last input
-                RealVector Z; ///<  NORMALIZED state vector at time of last input
-                RealVector D; ///<  noralization/denormalization scaling vector; D(tau) = [tau^-0, tau^-1,...tau^-order]
+                RealVector Z(order+1); ///<  NORMALIZED state vector at time of last input
+                RealVector D(order+1); ///<  noralization/denormalization scaling vector; D(tau) = [tau^-0, tau^-1,...tau^-order]
                 std::shared_ptr<ICore> core; ///<  provider of core expanding / fading functions
                 
                 ///// @brief Matches an input state vector to the filter order

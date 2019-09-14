@@ -75,7 +75,7 @@ class AbstractFilter(ABC):
         Returns:
             conformed state vector with order+1 elements        
         """
-        '''@Z : vector'''
+        '''@Z : vector : order+1'''
         '''@m : int'''
         Z = zeros([order+1])
         m = min( order+1, state.shape[0] )
@@ -99,7 +99,7 @@ class AbstractFilter(ABC):
         Returns:
             N by N state transition matrix
         """
-        '''@B: array'''
+        '''@B: array : N : N'''
         '''@i : int'''
         '''@j : int'''
         '''@x : float'''
@@ -176,9 +176,11 @@ class AbstractFilter(ABC):
         """        
         '''@ dt : float'''
         '''@ F : array'''
+        '''@ Z : vector : order+1'''
         dt = t - self.getTime()
         F = self.stateTransitionMatrix(self.order+1, dt );
-        return F @ self.getState();
+        Z = F @ self.getState();
+        return Z
         
     @abstractmethod   # pragma: no cover
     def getN(self) -> int:
@@ -270,8 +272,10 @@ class AbstractFilterWithCovariance(AbstractFilter) :
             N x N covariance matrix
         """
         '''@ F : array'''
+        '''@ C : array'''
         F = AbstractFilter.stateTransitionMatrix(int(V.shape[0]), dt );
-        return (F) @ V @ transpose(F);
+        C = (F) @ V @ transpose(F);
+        return C
 
     @virtual
     def transitionCovariance(self, t : float ) -> array:

@@ -52,7 +52,9 @@ class RecursivePolynomialFilter_test(unittest.TestCase):
         
         @testclassmethod
         def getVRF(self, n : int) -> array:
-            return zeros([self.order+1, self.order+1])
+            '''@Z  : array'''
+            Z = zeros([self.order+1, self.order+1])
+            return Z
         
         @testclassmethod
         def getFirstVRF(self, n : int) -> float:
@@ -85,7 +87,9 @@ class RecursivePolynomialFilter_test(unittest.TestCase):
         
         @testclassmethod
         def getVRF(self, n : int) -> array:
-            return zeros([self.order+1, self.order+1])
+            '''@Z  : array'''
+            Z = zeros([self.order+1, self.order+1])
+            return Z
         
         @testclassmethod
         def getFirstVRF(self, n : int) -> float:

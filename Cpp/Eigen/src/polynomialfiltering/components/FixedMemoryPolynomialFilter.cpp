@@ -89,10 +89,13 @@ namespace polynomialfiltering {
             }
 
             RealMatrix FixedMemoryFilter::getVRF () {
+                RealMatrix V;
                 if (this->n < this->L) {
-                    return ArrayXXd::Zero(this->order + 1, this->order + 1);
+                    V = ArrayXXd::Zero(this->order + 1, this->order + 1);
+                } else {
+                    V = this->_transitionVrf(this->t);
                 }
-                return this->_transitionVrf(this->t);
+                return V;
             }
 
             double FixedMemoryFilter::getFirstVRF () {
@@ -110,9 +113,11 @@ namespace polynomialfiltering {
             RealMatrix FixedMemoryFilter::_transitionVrf (const double t) {
                 RealVector dt;
                 RealMatrix Tn;
+                RealMatrix V;
                 dt = this->tRing - t;
                 Tn = this->_getTn(dt);
-                return inv(transpose(Tn) * Tn);
+                V = inv(transpose(Tn) * Tn);
+                return V;
             }
 
             RealMatrix FixedMemoryFilter::_getTn (const RealVector& dt) {

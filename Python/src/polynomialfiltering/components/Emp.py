@@ -63,13 +63,13 @@ class CoreEmp0(ICore) :
         return 1.0/(n+1.0)
 
     def _getDiagonalVRF(self, n : float, tau : float ) -> array:
-        '''@ V : array'''
+        '''@ V : array : order + 1 : order + 1'''
         V = zeros([self.order + 1, self.order + 1]);
         V[0,0]=self._getFirstVRF(n, tau);
         return V;
 
     def _getVRF(self, n : float, tau : float ) -> array:
-        '''@ V : array'''
+        '''@ V : array : order + 1 : order + 1'''
         V = self._getDiagonalVRF(n, tau)
         return V;
 
@@ -104,7 +104,8 @@ class CoreEmp1(ICore) :
         denom = 1.0/((n+2)*(n+1))
         g = array([2.0*(2.0*n+1.0), 
                             6.0])
-        return denom*g;
+        g = denom*g;
+        return g;
         
     def getFirstVRF(self, n : int) -> float:
         return self._getFirstVRF(n, self.tau)
@@ -125,14 +126,14 @@ class CoreEmp1(ICore) :
         return 12.0/(n*tau**2*(n+1.0)*(n+2.0));
 
     def _getDiagonalVRF(self, n : float, tau : float ) -> array:
-        '''@ V : array'''
+        '''@ V : array : 2 : 2'''
         V = zeros([self.order+1, self.order+1]);
         V[0,0]=self._getFirstVRF(n, tau);
         V[1,1]=self._getLastVRF(n, tau);
         return V;
 
     def _getVRF(self, n : float, tau : float ) -> array:
-        '''@ V : array'''
+        '''@ V : array : 2 : 2'''
         V = self._getDiagonalVRF(n, tau)
         V[0,1]=6.0/(n*tau*(n+1.0))
         V[1,0]=V[0,1];
@@ -173,7 +174,8 @@ class CoreEmp2(ICore) :
         g = array([3.0*(3.0*n2+3.0*n+2.0), 
                             18.0*(2.0*n+1.0), 
                             (2.0*1.0)*30.0])
-        return denom*g;
+        g = denom*g;
+        return g;        
     
     def getFirstVRF(self, n : int) -> float:
         return self._getFirstVRF(n, self.tau)
@@ -194,7 +196,7 @@ class CoreEmp2(ICore) :
         return 720.0/(n*tau**4*(n-1.0)*(n+1.0)*(n+2.0)*(n+3.0));
 
     def _getDiagonalVRF(self, n : float, tau : float ) -> array:
-        '''@ V : array'''
+        '''@ V : array : order + 1 : order + 1'''
         V = zeros([self.order+1, self.order+1]);
         V[0,0]=self._getFirstVRF(n, tau);
         V[1,1]=12.0*((n-1.0)*(n+3.0)+15.0*(n+2.0)**2)/(n*tau**2*(n-1.0)*(n+1.0)*(n+2.0)*(n+3.0))
@@ -202,7 +204,7 @@ class CoreEmp2(ICore) :
         return V;
 
     def _getVRF(self, n : float, tau : float ) -> array:
-        '''@ V : array'''
+        '''@ V : array : order + 1 : order + 1'''
         V = self._getDiagonalVRF(n, tau)
         V[0,1]=18.0*(2.0*n+3.0)/(n*tau*(n**2-1.0))
         V[1,0]=V[0,1];
@@ -249,7 +251,8 @@ class CoreEmp3(ICore) :
                             20.0*(6.0*n2+6.0*n+5.0), 
                             (2.0*1.0)*120.0*(2.0*n+1.0), # 
                             (3.0*2.0*1.0)*140.0])   # 
-        return denom*g;
+        g = denom*g;
+        return g;
     
     def getFirstVRF(self, n : int) -> float:
         return self._getFirstVRF(n, self.tau)
@@ -270,7 +273,7 @@ class CoreEmp3(ICore) :
         return 100800.0/(n*tau**6*(n-2.0)*(n-1.0)*(n+1.0)*(n+2.0)*(n+3.0)*(n+4.0));
 
     def _getDiagonalVRF(self, n : float, tau : float ) -> array:
-        '''@ V : array'''
+        '''@ V : array : order + 1 : order + 1'''
         V = zeros([self.order+1, self.order+1]);
         V[0,0]=self._getFirstVRF(n, tau);
         V[1,1]=200.0*(6.0*n**4+51.0*n**3+159.0*n**2+219.0*n+116.0)/(n*tau**2*(n**6+7.0*n**5+7.0*n**4-35.0*n**3-56.0*n**2+28.0*n+48.0))
@@ -279,7 +282,7 @@ class CoreEmp3(ICore) :
         return V;
 
     def _getVRF(self, n : float, tau : float ) -> array:
-        '''@ V : array'''
+        '''@ V : array : order + 1 : order + 1'''
         V = self._getDiagonalVRF(n, tau)
         V[0,1]=20.0*(6.0*n**2+18.0*n+17.0)/(n*tau*(n**3-2.0*n**2-n+2.0))
         V[1,0]=V[0,1];
@@ -334,7 +337,8 @@ class CoreEmp4(ICore) :
                             (2.0*1.0)*1050.0*(n2+n+1.0), # 
                             (3.0*2.0*1.0)*700.0*(2.0*n+1.0),  # 
                             (4.0*3.0*2.0*1.0)*630.0]) #
-        return denom*g;
+        g = denom*g;
+        return g;
     
     def getFirstVRF(self, n : int) -> float:
         return self._getFirstVRF(n, self.tau)
@@ -355,7 +359,7 @@ class CoreEmp4(ICore) :
         return 25401600.0/(n*tau**8*(n-3.0)*(n-2.0)*(n-1.0)*(n+1.0)*(n+2.0)*(n+3.0)*(n+4.0)*(n+5.0));
 
     def _getDiagonalVRF(self, n : float, tau : float ) -> array:
-        '''@ V : array'''
+        '''@ V : array : order + 1 : order + 1'''
         V = zeros([self.order+1, self.order+1]);
         V[0,0]=self._getFirstVRF(n, tau);
         V[1,1]=100.0*(48.0*n**6+666.0*n**5+3843.0*n**4+11982.0*n**3+21727.0*n**2+21938.0*n+9516.0)/(n*tau**2*(n**8+9.0*n**7+6.0*n**6-126.0*n**5-231.0*n**4+441.0*n**3+944.0*n**2-324.0*n-720.0))
@@ -365,7 +369,7 @@ class CoreEmp4(ICore) :
         return V;
 
     def _getVRF(self, n : float, tau : float ) -> array:
-        '''@ V : array'''
+        '''@ V : array : order + 1 : order + 1'''
         V = self._getDiagonalVRF(n, tau)
         V[0,1]=50.0*(6.0*n**3+27.0*n**2+59.0*n+48.0)/(n*tau*(n**4-5.0*n**3+5.0*n**2+5.0*n-6.0))
         V[1,0]=V[0,1];
@@ -429,7 +433,8 @@ class CoreEmp5(ICore) :
                             (3.0*2.0*1.0)*1260.0*(6.0*n2+6.0*n+7.0), #  
                             (4.0*3.0*2.0*1.0)*3780.0*(2.0*n+1.0),  # 
                             (5.0*4.0*3.0*2.0*1.0)*2772.0]) #
-        return denom*g;
+        g = denom*g;
+        return g;
            
     def getFirstVRF(self, n : int) -> float:
         return self._getFirstVRF(n, self.tau)
@@ -450,7 +455,7 @@ class CoreEmp5(ICore) :
         return 10059033600.0/(n*tau**10.0*(n-4.0)*(n-3.0)*(n-2.0)*(n-1.0)*(n+1.0)*(n+2.0)*(n+3.0)*(n+4.0)*(n+5.0)*(n+6.0));
 
     def _getDiagonalVRF(self, n : float, tau : float ) -> array:
-        '''@ V : array'''
+        '''@ V : array : order + 1 : order + 1'''
         V = zeros([self.order+1, self.order+1]);
         V[0,0]=self._getFirstVRF(n, tau);
         V[1,1]=588.0*(25.0*n**8+500.0*n**7+4450.0*n**6+23300.0*n**5+79585.0*n**4+181760.0*n**3+267180.0*n**2+226920.0*n+84528.0)/(n*tau**2*(n**10.0+11.0*n**9-330.0*n**7-627.0*n**6+3003.0*n**5+7370.0*n**4-9020.0*n**3-24024.0*n**2+6336.0*n+17280.0))
@@ -461,7 +466,7 @@ class CoreEmp5(ICore) :
         return V;
 
     def _getVRF(self, n : float, tau : float ) -> array:
-        '''@ V : array'''
+        '''@ V : array : order + 1 : order + 1'''
         V = self._getDiagonalVRF(n, tau)
         V[0,1]=126.0*(5.0*n**4+30.0*n**3+115.0*n**2+210.0*n+148.0)/(n*tau*(n**5-9.0*n**4+25.0*n**3-15.0*n**2-26.0*n+24.0))
         V[1,0]=V[0,1];

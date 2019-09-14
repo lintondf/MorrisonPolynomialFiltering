@@ -69,10 +69,10 @@ namespace polynomialfiltering {
             }
 
             RealVector RecursivePolynomialFilter::predict (const double t) {
-                RealVector Zstar;
+                RealVector Zstar(order+1);
                 double dt;
                 double dtau;
-                RealMatrix F;
+                RealMatrix F(order+1, order+1);
                 dt = t - this->t;
                 dtau = this->_normalizeDeltaTime(dt);
                 F = RecursivePolynomialFilter::stateTransitionMatrix(this->order + 1, dtau);
@@ -83,8 +83,8 @@ namespace polynomialfiltering {
             RealVector RecursivePolynomialFilter::update (const double t, const RealVector& Zstar, const double e) {
                 double dt;
                 double dtau;
-                RealVector gamma;
-                RealVector innovation;
+                RealVector gamma(order+1);
+                RealVector innovation(order+1);
                 dt = t - this->t;
                 dtau = this->_normalizeDeltaTime(dt);
                 gamma = this->core->getGamma(this->_normalizeTime(t), dtau);
@@ -135,9 +135,10 @@ namespace polynomialfiltering {
             }
 
             RealMatrix RecursivePolynomialFilter::getVRF () {
-                RealMatrix V;
+                RealMatrix V(order+1, order+1);
                 if (this->n < this->order + 1) {
-                    return ArrayXXd::Zero(this->order + 1, this->order + 1);
+                    V = ArrayXXd::Zero(this->order + 1, this->order + 1);
+                    return V;
                 }
                 V = this->core->getVRF(this->n);
                 return V;
@@ -157,11 +158,15 @@ namespace polynomialfiltering {
             }
 
             RealVector RecursivePolynomialFilter::_normalizeState (const RealVector& Z) {
-                return arrayTimes(Z, this->D);
+                RealVector R(order+1);
+                R = arrayTimes(Z, this->D);
+                return R;
             }
 
             RealVector RecursivePolynomialFilter::_denormalizeState (const RealVector& Z) {
-                return arrayDivide(Z, this->D);
+                RealVector R(order+1);
+                R = arrayDivide(Z, this->D);
+                return R;
             }
 
     }; // namespace components

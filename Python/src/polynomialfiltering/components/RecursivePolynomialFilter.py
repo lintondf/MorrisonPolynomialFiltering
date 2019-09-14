@@ -27,8 +27,8 @@ class RecursivePolynomialFilter(AbstractFilter):
     '''@ t0 : float | filter start time'''
     '''@ tau : float | nominal scaled time step'''
     '''@ t : float |  time of the last input'''
-    '''@ Z : vector | NORMALIZED state vector at time of last input'''
-    '''@ D : vector | noralization/denormalization scaling vector; D(tau) = [tau^-0, tau^-1,...tau^-order]'''
+    '''@ Z : vector : order+1 | NORMALIZED state vector at time of last input'''
+    '''@ D : vector : order+1 | noralization/denormalization scaling vector; D(tau) = [tau^-0, tau^-1,...tau^-order]'''
     '''@ core : ICore | provider of core expanding / fading functions'''
             
     def __init__(self, order : int, tau : float, core : ICore ) :
@@ -114,10 +114,10 @@ class RecursivePolynomialFilter(AbstractFilter):
             predicted state INTERNAL UNITS
             
         """
-        '''@ Zstar : vector'''
+        '''@ Zstar : vector : order+1'''
         '''@ dt : float'''
         '''@ dtau : float'''
-        '''@ F : array'''
+        '''@ F : array : order+1 : order+1 '''
         dt = t - self.t
         dtau = self._normalizeDeltaTime(dt)
         F = self.stateTransitionMatrix(self.order+1, dtau)
@@ -143,8 +143,8 @@ class RecursivePolynomialFilter(AbstractFilter):
         """
         '''@ dt : float'''
         '''@ dtau : float'''
-        '''@ gamma : vector'''
-        '''@ innovation : vector'''
+        '''@ gamma : vector : order+1'''
+        '''@ innovation : vector : order+1'''
         dt = t - self.t
         dtau = self._normalizeDeltaTime(dt)
         gamma = self.core.getGamma(self._normalizeTime(t), dtau)
@@ -242,9 +242,10 @@ class RecursivePolynomialFilter(AbstractFilter):
             Square matrix (order+1) of input to output variance ratios
         
         """
-        '''@ V : array'''
+        '''@ V : array : order+1 : order+1'''
         if (self.n < self.order+1) :
-            return zeros([self.order + 1, self.order + 1]);
+            V = zeros([self.order + 1, self.order + 1]);
+            return V
         V = self.core.getVRF(self.n)
         return V;
 
@@ -307,7 +308,9 @@ class RecursivePolynomialFilter(AbstractFilter):
             state vector in internal units
         
         """
-        return Z * self.D
+        '''@R : vector : order+1'''
+        R = Z * self.D
+        return R
     
     @inline
     def _denormalizeState(self, Z : vector) -> vector:
@@ -323,4 +326,6 @@ class RecursivePolynomialFilter(AbstractFilter):
             state vector in external units
         
         """
-        return Z / self.D
+        '''@R : vector : order+1'''
+        R = Z / self.D
+        return R

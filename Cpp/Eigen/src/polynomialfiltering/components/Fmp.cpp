@@ -47,7 +47,7 @@ namespace polynomialfiltering {
             }
 
             RealMatrix CoreFmp0::_getVRF (const double u, const double t) {
-                RealMatrix V;
+                RealMatrix V(1, 1);
                 V = ArrayXXd::Zero(0 + 1, 0 + 1);
                 V(0, 0) = ( - t + 1.0) / (t + 1.0);
                 return V;
@@ -68,7 +68,7 @@ namespace polynomialfiltering {
             }
 
             RealMatrix CoreFmp1::_getVRF (const double u, const double t) {
-                RealMatrix V;
+                RealMatrix V(2, 2);
                 double s;
                 V = ArrayXXd::Zero(1 + 1, 1 + 1);
                 if (t < 0.5) {
@@ -105,7 +105,7 @@ namespace polynomialfiltering {
             }
 
             RealMatrix CoreFmp2::_getVRF (const double u, const double t) {
-                RealMatrix V;
+                RealMatrix V(3, 3);
                 double s;
                 V = ArrayXXd::Zero(2 + 1, 2 + 1);
                 if (t < 0.5) {
@@ -156,7 +156,7 @@ namespace polynomialfiltering {
             }
 
             RealMatrix CoreFmp3::_getVRF (const double u, const double t) {
-                RealMatrix V;
+                RealMatrix V(4, 4);
                 double s;
                 V = ArrayXXd::Zero(3 + 1, 3 + 1);
                 if (t < 0.5) {
@@ -223,7 +223,7 @@ namespace polynomialfiltering {
             }
 
             RealMatrix CoreFmp4::_getVRF (const double u, const double t) {
-                RealMatrix V;
+                RealMatrix V(5, 5);
                 double s;
                 V = ArrayXXd::Zero(4 + 1, 4 + 1);
                 if (t < 0.5) {
@@ -313,7 +313,7 @@ namespace polynomialfiltering {
             }
 
             RealMatrix CoreFmp5::_getVRF (const double u, const double t) {
-                RealMatrix V;
+                RealMatrix V(6, 6);
                 double s;
                 V = ArrayXXd::Zero(5 + 1, 5 + 1);
                 if (t < 0.5) {

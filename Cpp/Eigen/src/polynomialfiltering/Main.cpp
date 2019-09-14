@@ -25,7 +25,7 @@ namespace polynomialfiltering {
         }
 
         RealVector AbstractFilter::conformState (const int order, const RealVector& state) {
-            RealVector Z;
+            RealVector Z(order+1);
             int m;
             Z = ArrayXd::Zero(order + 1);
             m = min(order + 1, state.size());
@@ -34,7 +34,7 @@ namespace polynomialfiltering {
         }
 
         RealMatrix AbstractFilter::stateTransitionMatrix (const int N, const double dt) {
-            RealMatrix B;
+            RealMatrix B(N, N);
             int ji;
             double fji;
             B = identity(N);
@@ -74,9 +74,11 @@ namespace polynomialfiltering {
         RealVector AbstractFilter::transitionState (const double t) {
             double dt;
             RealMatrix F;
+            RealVector Z(order+1);
             dt = t - this->getTime();
             F = AbstractFilter::stateTransitionMatrix(this->order + 1, dt);
-            return F * this->getState();
+            Z = F * this->getState();
+            return Z;
         }
 
         AbstractFilterWithCovariance::AbstractFilterWithCovariance (const int order, const std::string name) : AbstractFilter(order,name) {
@@ -84,8 +86,10 @@ namespace polynomialfiltering {
 
         RealMatrix AbstractFilterWithCovariance::transitionCovarianceMatrix (const double dt, const RealMatrix& V) {
             RealMatrix F;
+            RealMatrix C;
             F = AbstractFilter::stateTransitionMatrix(int(V.rows()), dt);
-            return (F) * V;
+            C = (F) * V;
+            return C;
         }
 
         RealMatrix AbstractFilterWithCovariance::transitionCovariance (const double t) {

@@ -42,6 +42,8 @@
   {C}
     {/polynomialfiltering/components/FixedMemoryPolynomialFilter/FixedMemoryFilter/_getTn/}
       {/polynomialfiltering/components/FixedMemoryPolynomialFilter/FixedMemoryFilter/_getTn/::C : vector}[MEMBER]
+    {/polynomialfiltering/Main/AbstractFilterWithCovariance/transitionCovarianceMatrix/}
+      {/polynomialfiltering/Main/AbstractFilterWithCovariance/transitionCovarianceMatrix/::C : array}[MEMBER]
   {COASTING}
     {/polynomialfiltering/components/FixedMemoryFilter_test/FilterStatus/}
       {/polynomialfiltering/components/FixedMemoryFilter_test/FilterStatus/::COASTING : enum INHERITED; }[CLASS]
@@ -339,6 +341,10 @@
     {/polynomialfiltering/components/RecursivePolynomialFilter_test/}
       {/polynomialfiltering/components/RecursivePolynomialFilter_test/::PurePredictCore : <CLASS>; supers(ICore,); params( | @testclass;)}[CLASS]
   {R}
+    {/polynomialfiltering/components/RecursivePolynomialFilter/_denormalizeState/}
+      {/polynomialfiltering/components/RecursivePolynomialFilter/_denormalizeState/::R : vector}[MEMBER]
+    {/polynomialfiltering/components/RecursivePolynomialFilter/_normalizeState/}
+      {/polynomialfiltering/components/RecursivePolynomialFilter/_normalizeState/::R : vector}[MEMBER]
     {/polynomialfiltering/components/EMP_test/oneCrossSectionChi2/}
       {/polynomialfiltering/components/EMP_test/oneCrossSectionChi2/::R : float}[MEMBER]
     {/polynomialfiltering/components/EMP_test/driver/}
@@ -463,10 +469,14 @@
       {/polynomialfiltering/Main/AbstractFilterWithCovariance/transitionCovarianceMatrix/::V : array}[MEMBER]
     {/polynomialfiltering/components/Emp/CoreEmp2/_getDiagonalVRF/}
       {/polynomialfiltering/components/Emp/CoreEmp2/_getDiagonalVRF/::V : array}[MEMBER]
+    {/polynomialfiltering/components/FixedMemoryPolynomialFilter/FixedMemoryFilter/_transitionVrf/}
+      {/polynomialfiltering/components/FixedMemoryPolynomialFilter/FixedMemoryFilter/_transitionVrf/::V : array}[MEMBER]
     {/polynomialfiltering/Main/AbstractFilterWithCovariance/getFirstVariance/}
       {/polynomialfiltering/Main/AbstractFilterWithCovariance/getFirstVariance/::V : array}[MEMBER]
     {/polynomialfiltering/components/Fmp/CoreFmp1/_getVRF/}
       {/polynomialfiltering/components/Fmp/CoreFmp1/_getVRF/::V : array}[MEMBER]
+    {/polynomialfiltering/components/FixedMemoryPolynomialFilter/FixedMemoryFilter/getVRF/}
+      {/polynomialfiltering/components/FixedMemoryPolynomialFilter/FixedMemoryFilter/getVRF/::V : array}[MEMBER]
     {/polynomialfiltering/components/Emp/CoreEmp1/_getDiagonalVRF/}
       {/polynomialfiltering/components/Emp/CoreEmp1/_getDiagonalVRF/::V : array}[MEMBER]
     {/polynomialfiltering/components/FixedMemoryPolynomialFilter/FixedMemoryFilter/getLastVRF/}
@@ -524,6 +534,8 @@
       {/polynomialfiltering/components/EMP_test/test1CheckVRF/RecursivePolynomialFilter/::Z : vector INHERITED; }[CLASS]
     {/polynomialfiltering/components/EMP_test/test1CheckVRF/RecursivePolynomialFilterMock/}
       {/polynomialfiltering/components/EMP_test/test1CheckVRF/RecursivePolynomialFilterMock/::Z : vector INHERITED; }[CLASS]
+    {/polynomialfiltering/components/FixedMemoryFilter_test/test9Regresssion/}
+      {/polynomialfiltering/components/FixedMemoryFilter_test/test9Regresssion/::Z : array}[MEMBER]
     {/polynomialfiltering/components/Fmp/RecursivePolynomialFilter/}
       {/polynomialfiltering/components/Fmp/RecursivePolynomialFilter/::Z : vector INHERITED; }[CLASS]
     {/polynomialfiltering/components/FixedMemoryFilter_test/test9Regresssion/FixedMemoryFilter/}
@@ -542,6 +554,8 @@
       {/polynomialfiltering/components/RecursivePolynomialFilter_test/test1PureObservation/RecursivePolynomialFilter/::Z : vector INHERITED; }[CLASS]
     {/polynomialfiltering/Main/AbstractFilter/conformState/}
       {/polynomialfiltering/Main/AbstractFilter/conformState/::Z : vector}[MEMBER]
+    {/polynomialfiltering/Main/AbstractFilter/transitionState/}
+      {/polynomialfiltering/Main/AbstractFilter/transitionState/::Z : vector}[MEMBER]
     {/polynomialfiltering/components/RecursivePolynomialFilter_test/test1PurePredict/RecursivePolynomialFilter/}
       {/polynomialfiltering/components/RecursivePolynomialFilter_test/test1PurePredict/RecursivePolynomialFilter/::Z : vector INHERITED; }[CLASS]
     {/polynomialfiltering/components/Fmp_test/test1CheckStates/RecursivePolynomialFilter/}
@@ -552,6 +566,8 @@
       {/polynomialfiltering/components/Fmp_test/test1CheckVRF/RecursivePolynomialFilter/::Z : vector INHERITED; }[CLASS]
     {/polynomialfiltering/components/RecursivePolynomialFilter/copyState/RecursivePolynomialFilter/}
       {/polynomialfiltering/components/RecursivePolynomialFilter/copyState/RecursivePolynomialFilter/::Z : vector INHERITED; }[CLASS]
+    {/polynomialfiltering/components/RecursivePolynomialFilter_test/PurePredictCore/getVRF/}
+      {/polynomialfiltering/components/RecursivePolynomialFilter_test/PurePredictCore/getVRF/::Z : array}[MEMBER]
     {/polynomialfiltering/components/EMP_test/RecursivePolynomialFilter/}
       {/polynomialfiltering/components/EMP_test/RecursivePolynomialFilter/::Z : vector INHERITED; }[CLASS]
     {/polynomialfiltering/components/FixedMemoryFilter_test/executeEstimatedState/FixedMemoryFilter/}
@@ -568,6 +584,8 @@
       {/polynomialfiltering/components/Fmp_test/test9Basic/RecursivePolynomialFilter/::Z : vector INHERITED; }[CLASS]
     {/polynomialfiltering/components/RecursivePolynomialFilter/_normalizeState/}
       {/polynomialfiltering/components/RecursivePolynomialFilter/_normalizeState/::Z : vector}[MEMBER]
+    {/polynomialfiltering/components/RecursivePolynomialFilter_test/PureObservationCore/getVRF/}
+      {/polynomialfiltering/components/RecursivePolynomialFilter_test/PureObservationCore/getVRF/::Z : array}[MEMBER]
     {/polynomialfiltering/components/RecursivePolynomialFilter/start/}
       {/polynomialfiltering/components/RecursivePolynomialFilter/start/::Z : vector}[MEMBER]
     {/polynomialfiltering/components/RecursivePolynomialFilter/}
@@ -596,53 +614,6 @@
   {Zstars}
     {/polynomialfiltering/components/RecursivePolynomialFilter_test/test1PureObservation/}
       {/polynomialfiltering/components/RecursivePolynomialFilter_test/test1PureObservation/::Zstars : array}[MEMBER]
-  {__conformState_return_value}
-    {/polynomialfiltering/components/RecursivePolynomialFilter/_conformState/}
-      {/polynomialfiltering/components/RecursivePolynomialFilter/_conformState/::__conformState_return_value : vector}[MEMBER]
-  {__denormalizeState_return_value}
-    {/polynomialfiltering/components/RecursivePolynomialFilter/_denormalizeState/}
-      {/polynomialfiltering/components/RecursivePolynomialFilter/_denormalizeState/::__denormalizeState_return_value : vector}[MEMBER]
-  {__getDiagonalVRF_return_value}
-    {/polynomialfiltering/components/Emp/CoreEmp3/_getDiagonalVRF/}
-      {/polynomialfiltering/components/Emp/CoreEmp3/_getDiagonalVRF/::__getDiagonalVRF_return_value : array}[MEMBER]
-    {/polynomialfiltering/components/Emp/CoreEmp4/_getDiagonalVRF/}
-      {/polynomialfiltering/components/Emp/CoreEmp4/_getDiagonalVRF/::__getDiagonalVRF_return_value : array}[MEMBER]
-    {/polynomialfiltering/components/Emp/CoreEmp2/_getDiagonalVRF/}
-      {/polynomialfiltering/components/Emp/CoreEmp2/_getDiagonalVRF/::__getDiagonalVRF_return_value : array}[MEMBER]
-    {/polynomialfiltering/components/Emp/CoreEmp0/_getDiagonalVRF/}
-      {/polynomialfiltering/components/Emp/CoreEmp0/_getDiagonalVRF/::__getDiagonalVRF_return_value : array}[MEMBER]
-    {/polynomialfiltering/components/Emp/CoreEmp1/_getDiagonalVRF/}
-      {/polynomialfiltering/components/Emp/CoreEmp1/_getDiagonalVRF/::__getDiagonalVRF_return_value : array}[MEMBER]
-    {/polynomialfiltering/components/Emp/CoreEmp5/_getDiagonalVRF/}
-      {/polynomialfiltering/components/Emp/CoreEmp5/_getDiagonalVRF/::__getDiagonalVRF_return_value : array}[MEMBER]
-  {__getTn_return_value}
-    {/polynomialfiltering/components/FixedMemoryPolynomialFilter/FixedMemoryFilter/_getTn/}
-      {/polynomialfiltering/components/FixedMemoryPolynomialFilter/FixedMemoryFilter/_getTn/::__getTn_return_value : array}[MEMBER]
-  {__getVRF_return_value}
-    {/polynomialfiltering/components/Emp/CoreEmp4/_getVRF/}
-      {/polynomialfiltering/components/Emp/CoreEmp4/_getVRF/::__getVRF_return_value : array}[MEMBER]
-    {/polynomialfiltering/components/Fmp/CoreFmp0/_getVRF/}
-      {/polynomialfiltering/components/Fmp/CoreFmp0/_getVRF/::__getVRF_return_value : array}[MEMBER]
-    {/polynomialfiltering/components/Fmp/CoreFmp3/_getVRF/}
-      {/polynomialfiltering/components/Fmp/CoreFmp3/_getVRF/::__getVRF_return_value : array}[MEMBER]
-    {/polynomialfiltering/components/Fmp/CoreFmp5/_getVRF/}
-      {/polynomialfiltering/components/Fmp/CoreFmp5/_getVRF/::__getVRF_return_value : array}[MEMBER]
-    {/polynomialfiltering/components/Fmp/CoreFmp1/_getVRF/}
-      {/polynomialfiltering/components/Fmp/CoreFmp1/_getVRF/::__getVRF_return_value : array}[MEMBER]
-    {/polynomialfiltering/components/Emp/CoreEmp5/_getVRF/}
-      {/polynomialfiltering/components/Emp/CoreEmp5/_getVRF/::__getVRF_return_value : array}[MEMBER]
-    {/polynomialfiltering/components/Emp/CoreEmp1/_getVRF/}
-      {/polynomialfiltering/components/Emp/CoreEmp1/_getVRF/::__getVRF_return_value : array}[MEMBER]
-    {/polynomialfiltering/components/Emp/CoreEmp3/_getVRF/}
-      {/polynomialfiltering/components/Emp/CoreEmp3/_getVRF/::__getVRF_return_value : array}[MEMBER]
-    {/polynomialfiltering/components/Fmp/CoreFmp2/_getVRF/}
-      {/polynomialfiltering/components/Fmp/CoreFmp2/_getVRF/::__getVRF_return_value : array}[MEMBER]
-    {/polynomialfiltering/components/Emp/CoreEmp0/_getVRF/}
-      {/polynomialfiltering/components/Emp/CoreEmp0/_getVRF/::__getVRF_return_value : array}[MEMBER]
-    {/polynomialfiltering/components/Fmp/CoreFmp4/_getVRF/}
-      {/polynomialfiltering/components/Fmp/CoreFmp4/_getVRF/::__getVRF_return_value : array}[MEMBER]
-    {/polynomialfiltering/components/Emp/CoreEmp2/_getVRF/}
-      {/polynomialfiltering/components/Emp/CoreEmp2/_getVRF/::__getVRF_return_value : array}[MEMBER]
   {__init__}
     {/polynomialfiltering/components/EMP_test/RecursivePolynomialFilterMock/}
       {/polynomialfiltering/components/EMP_test/RecursivePolynomialFilterMock/::__init__ : super().__init__(order,tau,core); params(/polynomialfiltering/components/EMP_test/RecursivePolynomialFilterMock/__init__/::self : RecursivePolynomialFilterMock,/polynomialfiltering/components/EMP_test/RecursivePolynomialFilterMock/__init__/::order : int,/polynomialfiltering/components/EMP_test/RecursivePolynomialFilterMock/__init__/::tau : float,/polynomialfiltering/components/EMP_test/RecursivePolynomialFilterMock/__init__/::core : ICore ClassRef; , | @superClassConstructor;@testclassmethod;)}[CLASS]
@@ -744,12 +715,6 @@
   {__makeFmpCore_return_value}
     {/polynomialfiltering/components/Fmp/_makeFmpCore/}
       {/polynomialfiltering/components/Fmp/_makeFmpCore/::__makeFmpCore_return_value : ICore}[FUNCTION]
-  {__normalizeState_return_value}
-    {/polynomialfiltering/components/RecursivePolynomialFilter/_normalizeState/}
-      {/polynomialfiltering/components/RecursivePolynomialFilter/_normalizeState/::__normalizeState_return_value : vector}[MEMBER]
-  {__transitionVrf_return_value}
-    {/polynomialfiltering/components/FixedMemoryPolynomialFilter/FixedMemoryFilter/_transitionVrf/}
-      {/polynomialfiltering/components/FixedMemoryPolynomialFilter/FixedMemoryFilter/_transitionVrf/::__transitionVrf_return_value : array}[MEMBER]
   {_conformState}
     {/polynomialfiltering/components/EMP_test/RecursivePolynomialFilterMock/}
       {/polynomialfiltering/components/EMP_test/RecursivePolynomialFilterMock/::_conformState : vector; params(/polynomialfiltering/components/RecursivePolynomialFilter/_conformState/::self : RecursivePolynomialFilter,/polynomialfiltering/components/RecursivePolynomialFilter/_conformState/::state : vector, | ) INHERITED; }[CLASS]
@@ -785,9 +750,6 @@
       {/polynomialfiltering/components/Fmp_test/test1CheckStates/RecursivePolynomialFilter/::_conformState : vector; params(/polynomialfiltering/components/RecursivePolynomialFilter/_conformState/::self : RecursivePolynomialFilter,/polynomialfiltering/components/RecursivePolynomialFilter/_conformState/::state : vector, | ) INHERITED; }[CLASS]
     {/polynomialfiltering/components/RecursivePolynomialFilter/}
       {/polynomialfiltering/components/RecursivePolynomialFilter/::_conformState : vector; params(/polynomialfiltering/components/RecursivePolynomialFilter/_conformState/::self : RecursivePolynomialFilter,/polynomialfiltering/components/RecursivePolynomialFilter/_conformState/::state : vector, | )}[CLASS]
-  {_conformState_return_value}
-    {/polynomialfiltering/Main/AbstractFilter/conformState/}
-      {/polynomialfiltering/Main/AbstractFilter/conformState/::_conformState_return_value : vector}[MEMBER]
   {_denormalizeState}
     {/polynomialfiltering/components/EMP_test/RecursivePolynomialFilterMock/}
       {/polynomialfiltering/components/EMP_test/RecursivePolynomialFilterMock/::_denormalizeState : vector; params(/polynomialfiltering/components/RecursivePolynomialFilter/_denormalizeState/::self : RecursivePolynomialFilter,/polynomialfiltering/components/RecursivePolynomialFilter/_denormalizeState/::Z : vector, | @inline;) INHERITED; }[CLASS]
@@ -839,19 +801,6 @@
       {/polynomialfiltering/components/Emp/CoreEmp1/::_getDiagonalVRF : array; params(/polynomialfiltering/components/Emp/CoreEmp1/_getDiagonalVRF/::self : CoreEmp1,/polynomialfiltering/components/Emp/CoreEmp1/_getDiagonalVRF/::n : float,/polynomialfiltering/components/Emp/CoreEmp1/_getDiagonalVRF/::tau : float, | )}[CLASS]
     {/polynomialfiltering/components/Emp/CoreEmp5/}
       {/polynomialfiltering/components/Emp/CoreEmp5/::_getDiagonalVRF : array; params(/polynomialfiltering/components/Emp/CoreEmp5/_getDiagonalVRF/::self : CoreEmp5,/polynomialfiltering/components/Emp/CoreEmp5/_getDiagonalVRF/::n : float,/polynomialfiltering/components/Emp/CoreEmp5/_getDiagonalVRF/::tau : float, | )}[CLASS]
-  {_getDiagonalVRF_return_value}
-    {/polynomialfiltering/components/Emp/CoreEmp1/getDiagonalVRF/}
-      {/polynomialfiltering/components/Emp/CoreEmp1/getDiagonalVRF/::_getDiagonalVRF_return_value : array}[MEMBER]
-    {/polynomialfiltering/components/Emp/CoreEmp4/getDiagonalVRF/}
-      {/polynomialfiltering/components/Emp/CoreEmp4/getDiagonalVRF/::_getDiagonalVRF_return_value : array}[MEMBER]
-    {/polynomialfiltering/components/Emp/CoreEmp3/getDiagonalVRF/}
-      {/polynomialfiltering/components/Emp/CoreEmp3/getDiagonalVRF/::_getDiagonalVRF_return_value : array}[MEMBER]
-    {/polynomialfiltering/components/Emp/CoreEmp0/getDiagonalVRF/}
-      {/polynomialfiltering/components/Emp/CoreEmp0/getDiagonalVRF/::_getDiagonalVRF_return_value : array}[MEMBER]
-    {/polynomialfiltering/components/Emp/CoreEmp5/getDiagonalVRF/}
-      {/polynomialfiltering/components/Emp/CoreEmp5/getDiagonalVRF/::_getDiagonalVRF_return_value : array}[MEMBER]
-    {/polynomialfiltering/components/Emp/CoreEmp2/getDiagonalVRF/}
-      {/polynomialfiltering/components/Emp/CoreEmp2/getDiagonalVRF/::_getDiagonalVRF_return_value : array}[MEMBER]
   {_getFirstVRF}
     {/polynomialfiltering/components/Emp/CoreEmp0/}
       {/polynomialfiltering/components/Emp/CoreEmp0/::_getFirstVRF : float; params(/polynomialfiltering/components/Emp/CoreEmp0/_getFirstVRF/::self : CoreEmp0,/polynomialfiltering/components/Emp/CoreEmp0/_getFirstVRF/::n : float,/polynomialfiltering/components/Emp/CoreEmp0/_getFirstVRF/::tau : float, | )}[CLASS]
@@ -865,35 +814,6 @@
       {/polynomialfiltering/components/Emp/CoreEmp1/::_getFirstVRF : float; params(/polynomialfiltering/components/Emp/CoreEmp1/_getFirstVRF/::self : CoreEmp1,/polynomialfiltering/components/Emp/CoreEmp1/_getFirstVRF/::n : float,/polynomialfiltering/components/Emp/CoreEmp1/_getFirstVRF/::tau : float, | )}[CLASS]
     {/polynomialfiltering/components/Emp/CoreEmp5/}
       {/polynomialfiltering/components/Emp/CoreEmp5/::_getFirstVRF : float; params(/polynomialfiltering/components/Emp/CoreEmp5/_getFirstVRF/::self : CoreEmp5,/polynomialfiltering/components/Emp/CoreEmp5/_getFirstVRF/::n : float,/polynomialfiltering/components/Emp/CoreEmp5/_getFirstVRF/::tau : float, | )}[CLASS]
-  {_getGamma_return_value}
-    {/polynomialfiltering/components/Emp/CoreEmp0/getGamma/}
-      {/polynomialfiltering/components/Emp/CoreEmp0/getGamma/::_getGamma_return_value : vector}[MEMBER]
-    {/polynomialfiltering/components/Emp/CoreEmp2/getGamma/}
-      {/polynomialfiltering/components/Emp/CoreEmp2/getGamma/::_getGamma_return_value : vector}[MEMBER]
-    {/polynomialfiltering/components/Emp/CoreEmp3/getGamma/}
-      {/polynomialfiltering/components/Emp/CoreEmp3/getGamma/::_getGamma_return_value : vector}[MEMBER]
-    {/polynomialfiltering/components/RecursivePolynomialFilter_test/PureObservationCore/getGamma/}
-      {/polynomialfiltering/components/RecursivePolynomialFilter_test/PureObservationCore/getGamma/::_getGamma_return_value : vector}[MEMBER]
-    {/polynomialfiltering/components/Fmp/CoreFmp3/getGamma/}
-      {/polynomialfiltering/components/Fmp/CoreFmp3/getGamma/::_getGamma_return_value : vector}[MEMBER]
-    {/polynomialfiltering/components/RecursivePolynomialFilter_test/PurePredictCore/getGamma/}
-      {/polynomialfiltering/components/RecursivePolynomialFilter_test/PurePredictCore/getGamma/::_getGamma_return_value : vector}[MEMBER]
-    {/polynomialfiltering/components/Emp/CoreEmp4/getGamma/}
-      {/polynomialfiltering/components/Emp/CoreEmp4/getGamma/::_getGamma_return_value : vector}[MEMBER]
-    {/polynomialfiltering/components/Fmp/CoreFmp2/getGamma/}
-      {/polynomialfiltering/components/Fmp/CoreFmp2/getGamma/::_getGamma_return_value : vector}[MEMBER]
-    {/polynomialfiltering/components/Fmp/CoreFmp4/getGamma/}
-      {/polynomialfiltering/components/Fmp/CoreFmp4/getGamma/::_getGamma_return_value : vector}[MEMBER]
-    {/polynomialfiltering/components/Emp/CoreEmp5/getGamma/}
-      {/polynomialfiltering/components/Emp/CoreEmp5/getGamma/::_getGamma_return_value : vector}[MEMBER]
-    {/polynomialfiltering/components/Fmp/CoreFmp5/getGamma/}
-      {/polynomialfiltering/components/Fmp/CoreFmp5/getGamma/::_getGamma_return_value : vector}[MEMBER]
-    {/polynomialfiltering/components/Fmp/CoreFmp1/getGamma/}
-      {/polynomialfiltering/components/Fmp/CoreFmp1/getGamma/::_getGamma_return_value : vector}[MEMBER]
-    {/polynomialfiltering/components/Emp/CoreEmp1/getGamma/}
-      {/polynomialfiltering/components/Emp/CoreEmp1/getGamma/::_getGamma_return_value : vector}[MEMBER]
-    {/polynomialfiltering/components/Fmp/CoreFmp0/getGamma/}
-      {/polynomialfiltering/components/Fmp/CoreFmp0/getGamma/::_getGamma_return_value : vector}[MEMBER]
   {_getLastVRF}
     {/polynomialfiltering/components/Emp/CoreEmp0/}
       {/polynomialfiltering/components/Emp/CoreEmp0/::_getLastVRF : float; params(/polynomialfiltering/components/Emp/CoreEmp0/_getLastVRF/::self : CoreEmp0,/polynomialfiltering/components/Emp/CoreEmp0/_getLastVRF/::n : float,/polynomialfiltering/components/Emp/CoreEmp0/_getLastVRF/::tau : float, | )}[CLASS]
@@ -907,11 +827,6 @@
       {/polynomialfiltering/components/Emp/CoreEmp1/::_getLastVRF : float; params(/polynomialfiltering/components/Emp/CoreEmp1/_getLastVRF/::self : CoreEmp1,/polynomialfiltering/components/Emp/CoreEmp1/_getLastVRF/::n : float,/polynomialfiltering/components/Emp/CoreEmp1/_getLastVRF/::tau : float, | )}[CLASS]
     {/polynomialfiltering/components/Emp/CoreEmp5/}
       {/polynomialfiltering/components/Emp/CoreEmp5/::_getLastVRF : float; params(/polynomialfiltering/components/Emp/CoreEmp5/_getLastVRF/::self : CoreEmp5,/polynomialfiltering/components/Emp/CoreEmp5/_getLastVRF/::n : float,/polynomialfiltering/components/Emp/CoreEmp5/_getLastVRF/::tau : float, | )}[CLASS]
-  {_getState_return_value}
-    {/polynomialfiltering/components/FixedMemoryPolynomialFilter/FixedMemoryFilter/getState/}
-      {/polynomialfiltering/components/FixedMemoryPolynomialFilter/FixedMemoryFilter/getState/::_getState_return_value : vector}[MEMBER]
-    {/polynomialfiltering/components/RecursivePolynomialFilter/getState/}
-      {/polynomialfiltering/components/RecursivePolynomialFilter/getState/::_getState_return_value : vector}[MEMBER]
   {_getStatus_return_value}
     {/polynomialfiltering/Main/AbstractFilter/getStatus/}
       {/polynomialfiltering/Main/AbstractFilter/getStatus/::_getStatus_return_value : FilterStatus}[MEMBER]
@@ -957,29 +872,6 @@
       {/polynomialfiltering/components/Fmp/CoreFmp3/::_getVRF : array; params(/polynomialfiltering/components/Fmp/CoreFmp3/_getVRF/::self : CoreFmp3,/polynomialfiltering/components/Fmp/CoreFmp3/_getVRF/::u : float,/polynomialfiltering/components/Fmp/CoreFmp3/_getVRF/::t : float, | )}[CLASS]
     {/polynomialfiltering/components/Fmp/CoreFmp4/}
       {/polynomialfiltering/components/Fmp/CoreFmp4/::_getVRF : array; params(/polynomialfiltering/components/Fmp/CoreFmp4/_getVRF/::self : CoreFmp4,/polynomialfiltering/components/Fmp/CoreFmp4/_getVRF/::u : float,/polynomialfiltering/components/Fmp/CoreFmp4/_getVRF/::t : float, | )}[CLASS]
-  {_getVRF_return_value}
-    {/polynomialfiltering/components/Emp/CoreEmp1/getVRF/}
-      {/polynomialfiltering/components/Emp/CoreEmp1/getVRF/::_getVRF_return_value : array}[MEMBER]
-    {/polynomialfiltering/components/Fmp/AbstractCoreFmp/getVRF/}
-      {/polynomialfiltering/components/Fmp/AbstractCoreFmp/getVRF/::_getVRF_return_value : array}[MEMBER]
-    {/polynomialfiltering/components/RecursivePolynomialFilter/getVRF/}
-      {/polynomialfiltering/components/RecursivePolynomialFilter/getVRF/::_getVRF_return_value : array}[MEMBER]
-    {/polynomialfiltering/components/Emp/CoreEmp4/getVRF/}
-      {/polynomialfiltering/components/Emp/CoreEmp4/getVRF/::_getVRF_return_value : array}[MEMBER]
-    {/polynomialfiltering/components/FixedMemoryPolynomialFilter/FixedMemoryFilter/getVRF/}
-      {/polynomialfiltering/components/FixedMemoryPolynomialFilter/FixedMemoryFilter/getVRF/::_getVRF_return_value : array}[MEMBER]
-    {/polynomialfiltering/components/RecursivePolynomialFilter_test/PurePredictCore/getVRF/}
-      {/polynomialfiltering/components/RecursivePolynomialFilter_test/PurePredictCore/getVRF/::_getVRF_return_value : array}[MEMBER]
-    {/polynomialfiltering/components/RecursivePolynomialFilter_test/PureObservationCore/getVRF/}
-      {/polynomialfiltering/components/RecursivePolynomialFilter_test/PureObservationCore/getVRF/::_getVRF_return_value : array}[MEMBER]
-    {/polynomialfiltering/components/Emp/CoreEmp3/getVRF/}
-      {/polynomialfiltering/components/Emp/CoreEmp3/getVRF/::_getVRF_return_value : array}[MEMBER]
-    {/polynomialfiltering/components/Emp/CoreEmp0/getVRF/}
-      {/polynomialfiltering/components/Emp/CoreEmp0/getVRF/::_getVRF_return_value : array}[MEMBER]
-    {/polynomialfiltering/components/Emp/CoreEmp2/getVRF/}
-      {/polynomialfiltering/components/Emp/CoreEmp2/getVRF/::_getVRF_return_value : array}[MEMBER]
-    {/polynomialfiltering/components/Emp/CoreEmp5/getVRF/}
-      {/polynomialfiltering/components/Emp/CoreEmp5/getVRF/::_getVRF_return_value : array}[MEMBER]
   {_makeEmpCore}
     {/polynomialfiltering/components/Emp/}
       {/polynomialfiltering/components/Emp/::_makeEmpCore : ICore; params(/polynomialfiltering/components/Emp/_makeEmpCore/::order : int,/polynomialfiltering/components/Emp/_makeEmpCore/::tau : float, | )}[MODULE]
@@ -1105,23 +997,6 @@
       {/polynomialfiltering/components/Fmp_test/test1CheckStates/RecursivePolynomialFilter/::_normalizeTime : float; params(/polynomialfiltering/components/RecursivePolynomialFilter/_normalizeTime/::self : RecursivePolynomialFilter,/polynomialfiltering/components/RecursivePolynomialFilter/_normalizeTime/::t : float, | @inline;) INHERITED; }[CLASS]
     {/polynomialfiltering/components/RecursivePolynomialFilter/}
       {/polynomialfiltering/components/RecursivePolynomialFilter/::_normalizeTime : float; params(/polynomialfiltering/components/RecursivePolynomialFilter/_normalizeTime/::self : RecursivePolynomialFilter,/polynomialfiltering/components/RecursivePolynomialFilter/_normalizeTime/::t : float, | @inline;)}[CLASS]
-  {_predict_return_value}
-    {/polynomialfiltering/components/RecursivePolynomialFilter/predict/}
-      {/polynomialfiltering/components/RecursivePolynomialFilter/predict/::_predict_return_value : vector}[MEMBER]
-  {_stateTransitionMatrix_return_value}
-    {/polynomialfiltering/Main/AbstractFilter/stateTransitionMatrix/}
-      {/polynomialfiltering/Main/AbstractFilter/stateTransitionMatrix/::_stateTransitionMatrix_return_value : array}[MEMBER]
-  {_transitionCovarianceMatrix_return_value}
-    {/polynomialfiltering/Main/AbstractFilterWithCovariance/transitionCovarianceMatrix/}
-      {/polynomialfiltering/Main/AbstractFilterWithCovariance/transitionCovarianceMatrix/::_transitionCovarianceMatrix_return_value : array}[MEMBER]
-  {_transitionCovariance_return_value}
-    {/polynomialfiltering/Main/AbstractFilterWithCovariance/transitionCovariance/}
-      {/polynomialfiltering/Main/AbstractFilterWithCovariance/transitionCovariance/::_transitionCovariance_return_value : array}[MEMBER]
-  {_transitionState_return_value}
-    {/polynomialfiltering/components/FixedMemoryPolynomialFilter/FixedMemoryFilter/transitionState/}
-      {/polynomialfiltering/components/FixedMemoryPolynomialFilter/FixedMemoryFilter/transitionState/::_transitionState_return_value : vector}[MEMBER]
-    {/polynomialfiltering/Main/AbstractFilter/transitionState/}
-      {/polynomialfiltering/Main/AbstractFilter/transitionState/::_transitionState_return_value : vector}[MEMBER]
   {_transitionVrf}
     {/polynomialfiltering/components/FixedMemoryFilter_test/test9Regresssion/FixedMemoryFilter/}
       {/polynomialfiltering/components/FixedMemoryFilter_test/test9Regresssion/FixedMemoryFilter/::_transitionVrf : array; params(/polynomialfiltering/components/FixedMemoryPolynomialFilter/FixedMemoryFilter/_transitionVrf/::self : FixedMemoryFilter,/polynomialfiltering/components/FixedMemoryPolynomialFilter/FixedMemoryFilter/_transitionVrf/::t : float, | ) INHERITED; }[CLASS]
@@ -1137,9 +1012,6 @@
       {/polynomialfiltering/components/FixedMemoryFilter_test/FixedMemoryFilter/::_transitionVrf : array; params(/polynomialfiltering/components/FixedMemoryPolynomialFilter/FixedMemoryFilter/_transitionVrf/::self : FixedMemoryFilter,/polynomialfiltering/components/FixedMemoryPolynomialFilter/FixedMemoryFilter/_transitionVrf/::t : float, | ) INHERITED; }[CLASS]
     {/polynomialfiltering/components/FixedMemoryFilter_test/executeVRF/FixedMemoryFilter/}
       {/polynomialfiltering/components/FixedMemoryFilter_test/executeVRF/FixedMemoryFilter/::_transitionVrf : array; params(/polynomialfiltering/components/FixedMemoryPolynomialFilter/FixedMemoryFilter/_transitionVrf/::self : FixedMemoryFilter,/polynomialfiltering/components/FixedMemoryPolynomialFilter/FixedMemoryFilter/_transitionVrf/::t : float, | ) INHERITED; }[CLASS]
-  {_update_return_value}
-    {/polynomialfiltering/components/RecursivePolynomialFilter/update/}
-      {/polynomialfiltering/components/RecursivePolynomialFilter/update/::_update_return_value : vector}[MEMBER]
   {abs}
     {/}
       {/::abs : array}[IMPORT]
