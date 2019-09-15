@@ -3,6 +3,10 @@ package com.bluelightning.tools.transpiler;
 import java.util.AbstractMap;
 import java.util.List;
 
+import org.ejml.equation.ManagerTempVariables;
+
+import com.bluelightning.tools.transpiler.java.AbstractJavaTarget.StaticImport;
+import com.bluelightning.tools.transpiler.java.programmer.AbstractProgrammer;
 import com.bluelightning.tools.transpiler.nodes.TranslationConstantNode;
 import com.bluelightning.tools.transpiler.nodes.TranslationNode;
 
@@ -76,5 +80,14 @@ public interface IProgrammer {
 	List<Pair> getVectorMethods();
 	
 	List<Pair> getMatrixMethods();
+	
+	public interface IExpressionCompiler {
+		public void setStaticImports(List<StaticImport> staticImports);
+		public boolean compile(String expression, List<String> imports, Scope currentScope );
+		public List<String> getHeader();
+		public List<String> getCode();
+	}
+	
+	IExpressionCompiler getExpressionCompiler( Scope scope, ManagerTempVariables tempManager, boolean isTestTarget );
 
 }

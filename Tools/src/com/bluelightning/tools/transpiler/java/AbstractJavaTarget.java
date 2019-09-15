@@ -22,6 +22,7 @@ import com.bluelightning.tools.transpiler.Scope.Level;
 import com.bluelightning.tools.transpiler.SourceCompilationListener;
 import com.bluelightning.tools.transpiler.Symbol;
 import com.bluelightning.tools.transpiler.Transpiler;
+import com.bluelightning.tools.transpiler.IProgrammer.IExpressionCompiler;
 import com.bluelightning.tools.transpiler.IProgrammer.Measurement;
 import com.bluelightning.tools.transpiler.java.programmer.AbstractProgrammer;
 import com.bluelightning.tools.transpiler.java.programmer.EjmlProgrammer;
@@ -53,8 +54,8 @@ public abstract class AbstractJavaTarget extends AbstractLanguageTarget{
 	protected List<String> imports = new ArrayList<>();
 	
 	public static class StaticImport {
-		String name;
-		String type;
+		public String name;
+		public String type;
 	}
 	protected List<StaticImport> staticImports = new ArrayList<>();
 	
@@ -847,7 +848,7 @@ public abstract class AbstractJavaTarget extends AbstractLanguageTarget{
 		programmer.finishExpression(out);
 		if (mustCompile) {
 			Transpiler.instance().logger().info("eSE< " + out.sb.toString());
-			ExpressionCompiler compiler = new ExpressionCompiler(scope, programmer, tempManager);
+			IExpressionCompiler compiler = programmer.getExpressionCompiler( scope, tempManager, isTestTarget() );
 			compiler.setStaticImports(staticImports);
 			if (compiler.compile(out.sb.toString(), this.imports, currentScope) ) {
 				if (! compiler.getHeader().isEmpty()) {
@@ -1073,7 +1074,7 @@ public abstract class AbstractJavaTarget extends AbstractLanguageTarget{
 				str = str.substring(iEqual+1);
 			}
 			indent.sb.replace(lastEol+1, indent.sb.length(), "");
-			ExpressionCompiler compiler = new ExpressionCompiler(scope, programmer, tempManager);
+			IExpressionCompiler compiler = programmer.getExpressionCompiler( scope, tempManager, isTestTarget() );
 			compiler.setStaticImports(staticImports);
 			String expr = "asssignment$dummy = return (" + str + ")";
 			if (compiler.compile(dollarize(expr), this.imports, currentScope) ) {

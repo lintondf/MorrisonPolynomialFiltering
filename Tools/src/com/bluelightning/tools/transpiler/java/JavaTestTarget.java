@@ -81,7 +81,6 @@ public class JavaTestTarget extends AbstractJavaTarget {
 	@Override
 	public void startModule(Scope scope, boolean headerOnly, boolean isTest) {
 		initializeImports();
-		ExpressionCompiler.isTest = true;
 		System.out.println(String.format("\nJava/%s test: ", programmer.getName()) + scope.toString() );
 		this.headerOnly = headerOnly;
 		currentScope = scope;
@@ -149,7 +148,6 @@ public class JavaTestTarget extends AbstractJavaTarget {
 		} catch (TemplateException e) {
 			e.printStackTrace();
 		}
-		ExpressionCompiler.isTest = false;
 	}
 
 	@Override

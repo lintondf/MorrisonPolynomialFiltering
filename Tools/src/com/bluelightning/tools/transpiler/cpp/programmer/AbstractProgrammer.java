@@ -7,7 +7,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
 
+import org.ejml.equation.ManagerTempVariables;
+
 import com.bluelightning.tools.transpiler.IProgrammer;
+import com.bluelightning.tools.transpiler.IProgrammer.IExpressionCompiler;
 import com.bluelightning.tools.transpiler.Indent;
 import com.bluelightning.tools.transpiler.Scope;
 import com.bluelightning.tools.transpiler.Symbol;
@@ -20,6 +23,11 @@ import com.bluelightning.tools.transpiler.nodes.TranslationConstantNode;
  */
 public abstract class AbstractProgrammer implements IProgrammer {
 	
+	@Override
+	public IExpressionCompiler getExpressionCompiler( Scope scope, ManagerTempVariables tempManager, boolean isTestTarget ) {
+		return null;
+	}
+
 	public AbstractProgrammer() {
 		typeRemap.put("None", "void");
 		typeRemap.put("int", "int");

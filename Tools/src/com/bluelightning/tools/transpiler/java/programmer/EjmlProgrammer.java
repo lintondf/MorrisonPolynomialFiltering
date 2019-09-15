@@ -6,6 +6,8 @@ package com.bluelightning.tools.transpiler.java.programmer;
 import java.util.Arrays;
 import java.util.List;
 
+import org.ejml.equation.ManagerTempVariables;
+
 import com.bluelightning.tools.transpiler.Indent;
 import com.bluelightning.tools.transpiler.Scope;
 import com.bluelightning.tools.transpiler.Symbol;
@@ -183,5 +185,11 @@ public class EjmlProgrammer extends AbstractProgrammer {
 	@Override
 	public List<Pair> getMatrixMethods() {
 		return matrixMethods;
+	}
+
+	@Override
+	public IExpressionCompiler getExpressionCompiler( Scope scope, ManagerTempVariables tempManager, boolean isTestTarget ) {
+		EjmlExpressionCompiler compiler = new EjmlExpressionCompiler(scope, this, tempManager, isTestTarget );
+		return compiler;
 	}	
 }

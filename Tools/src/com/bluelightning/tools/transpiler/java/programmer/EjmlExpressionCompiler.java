@@ -1,4 +1,4 @@
-package com.bluelightning.tools.transpiler.java;
+package com.bluelightning.tools.transpiler.java.programmer;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -31,17 +31,16 @@ import org.ejml.equation.VariableScalar;
 import org.ejml.equation.Info.Operation;
 
 import com.bluelightning.tools.transpiler.IProgrammer;
+import com.bluelightning.tools.transpiler.IProgrammer.IExpressionCompiler;
 import com.bluelightning.tools.transpiler.Scope;
 import com.bluelightning.tools.transpiler.Scope.Level;
 import com.bluelightning.tools.transpiler.Symbol;
 import com.bluelightning.tools.transpiler.SymbolTable;
 import com.bluelightning.tools.transpiler.Transpiler;
+import com.bluelightning.tools.transpiler.java.AbstractJavaTarget;
 import com.bluelightning.tools.transpiler.java.AbstractJavaTarget.StaticImport;
-import com.bluelightning.tools.transpiler.java.programmer.AbstractProgrammer;
 
-public class ExpressionCompiler {
-	
-	public static boolean isTest = false;
+public class EjmlExpressionCompiler implements IExpressionCompiler {
 	
 	private static class JavaTargetManagerFunctions extends ManagerFunctions {
 		
@@ -116,7 +115,7 @@ public class ExpressionCompiler {
 			}
 		}
 		
-		public void mapFunctions( Scope scope, SymbolTable symbolTable ) {
+		public void mapFunctions( Scope scope, SymbolTable symbolTable, boolean isTest ) {
 			//printMapping = scope.toString().equals("/polynomialfiltering/components/Fmp_test/test1CheckStates/");
 			while (scope.getLevelCount() > 0) {
 				if (printMapping) System.out.println("AT: " + scope.toString());
@@ -940,7 +939,7 @@ public class ExpressionCompiler {
 	GenerateEquationCode codeGenerator;
 	JavaTargetManagerFunctions mf;
 	
-	public ExpressionCompiler( Scope scope, AbstractProgrammer programmer, ManagerTempVariables tempManager ) {
+	public EjmlExpressionCompiler( Scope scope, AbstractProgrammer programmer, ManagerTempVariables tempManager, boolean isTestTarget ) {
 		this.programmer = programmer;
 		Map<String, Object> variables = mapVariables(scope, Transpiler.instance().getSymbolTable());
 		this.tempManager = tempManager;
@@ -950,7 +949,7 @@ public class ExpressionCompiler {
 		mf = new JavaTargetManagerFunctions(factory, tempManager, programmer);
 		coder = new EmitJavaOperation( mf );
 		eq.setManagerFunctions(mf);
-		mf.mapFunctions( scope, Transpiler.instance().getSymbolTable() );
+		mf.mapFunctions( scope, Transpiler.instance().getSymbolTable(), isTestTarget );
 		
 		for (String name : variables.keySet()) {
 			try {

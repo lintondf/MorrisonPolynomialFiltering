@@ -51,7 +51,6 @@ public class JavaSrcTarget extends AbstractJavaTarget {
 	public void startModule(Scope scope, boolean headerOnly, boolean isTest) {
 		if (isTest) {
 			inTest = true;
-			ExpressionCompiler.isTest = true;
 			return;
 		}
 		initializeImports();
@@ -82,7 +81,6 @@ public class JavaSrcTarget extends AbstractJavaTarget {
 	public void finishModule() {
 		if (inTest) {
 			inTest = false;
-			ExpressionCompiler.isTest = false;
 			return;
 		}
 		if (packageName != null) {
