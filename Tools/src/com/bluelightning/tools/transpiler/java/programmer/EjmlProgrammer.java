@@ -191,5 +191,10 @@ public class EjmlProgrammer extends AbstractProgrammer {
 	public IExpressionCompiler getExpressionCompiler( Scope scope, ManagerTempVariables tempManager, boolean isTestTarget ) {
 		EjmlExpressionCompiler compiler = new EjmlExpressionCompiler(scope, this, tempManager, isTestTarget );
 		return compiler;
+	}
+
+	public void addImports(List<String> imports) {
+		imports.add("org.ejml.data.DMatrixRMaj");
+		imports.add("org.ejml.dense.row.CommonOps_DDRM");
 	}	
 }

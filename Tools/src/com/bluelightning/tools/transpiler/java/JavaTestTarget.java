@@ -65,8 +65,7 @@ public class JavaTestTarget extends AbstractJavaTarget {
 		imports.clear();
 		imports.add("org.junit.Test");
 		imports.add("java.util.List");
-		imports.add("org.ejml.data.DMatrixRMaj");
-		imports.add("org.ejml.dense.row.CommonOps_DDRM");
+		((EjmlProgrammer) programmer).addImports(imports);
 		imports.add("polynomialfiltering.main.FilterStatus");
 		imports.add("static polynomialfiltering.main.Utility.*");
 		imports.add("utility.TestData");

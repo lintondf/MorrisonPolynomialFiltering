@@ -37,8 +37,7 @@ public class JavaSrcTarget extends AbstractJavaTarget {
 		staticImports.clear();
 		imports.clear();
 		imports.add("java.util.stream.IntStream");
-		imports.add("org.ejml.data.DMatrixRMaj");
-		imports.add("org.ejml.dense.row.CommonOps_DDRM");
+		((EjmlProgrammer) programmer).addImports(imports);
 		imports.add("polynomialfiltering.main.FilterStatus");
 		imports.add("static polynomialfiltering.main.Utility.*");
 	}
