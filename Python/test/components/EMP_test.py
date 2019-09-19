@@ -26,15 +26,15 @@ from runstats import Statistics
 
 from netCDF4 import Dataset
 from TestSuite import testDataPath;
-from TestUtilities import generateTestPolynomial, generateTestData, createTestGroup, writeTestVariable, A2S, assert_report
+from TestUtilities import generateTestPolynomial, generateTestData, createTestGroup, writeTestVariable, A2S, assert_clear, assert_report
 from TestData import TestData
 
 from polynomialfiltering.Main import AbstractFilterWithCovariance, FilterStatus
 from polynomialfiltering.components.RecursivePolynomialFilter import RecursivePolynomialFilter
 from polynomialfiltering.components.ICore import ICore
-from polynomialfiltering.components.Emp import makeEmp, _makeEmpCore, nUnitLastVRF
+from polynomialfiltering.components.Emp import makeEmp, makeEmpCore, nUnitLastVRF, nSwitch
 
-from polynomialfiltering.PythonUtilities import ignore, testcase, testclass, testclassmethod
+from polynomialfiltering.PythonUtilities import ignore, testcase, testmethod, testclass, testclassmethod
 from polynomialfiltering.PythonUtilities import assert_not_empty
 
 
@@ -231,7 +231,7 @@ class EMP_test(unittest.TestCase):
             expected = zeros([0, order+1]);
             for itau in range(0,len(taus)) :
                 tau = taus[itau]
-                core = _makeEmpCore(order, tau)
+                core = makeEmpCore(order, tau)
                 f = self.RecursivePolynomialFilterMock( order, tau, core )
                 for iN in range(order+1, N) :
                     f.setN(iN)
@@ -321,6 +321,7 @@ class EMP_test(unittest.TestCase):
         '''@V : array'''
         '''@E : array'''
 #         print("test1CheckVRF")
+        assert_clear()
         testData = TestData('testEMP.nc')
         matches = testData.getMatchingGroups('VRF_')
         assert_not_empty(matches)
@@ -341,6 +342,7 @@ class EMP_test(unittest.TestCase):
                     E = expected[offset:offset+order+1,:]
                     assert_allclose(V, E)
                     offset += order+1
+        testData.close()
         self.assertGreaterEqual(0.0, assert_report("Emp_test/test1CheckVRF"))
                 
     @testcase
@@ -363,6 +365,7 @@ class EMP_test(unittest.TestCase):
         '''@j : int'''
         '''@e : float'''
 #         print("test2CheckStates")
+        assert_clear()
         testData = TestData('testEMP.nc')
         matches = testData.getMatchingGroups('States')
         assert_not_empty(matches)
@@ -385,6 +388,7 @@ class EMP_test(unittest.TestCase):
                 actual[j,:] = transpose(f.getState());
 #                 assert_allclose(actual[j,:], expected[j,:])
             assert_allclose(actual, expected)
+        testData.close()
         self.assertGreaterEqual(29.2, assert_report("Emp_test/test2CheckStates"))
             
     def test9CoreBasic(self) -> None:
@@ -392,13 +396,15 @@ class EMP_test(unittest.TestCase):
         '''@corehalf : ICore'''
         '''@coredouble : ICore'''
 #         print("test9CoreBasic")
-        core = _makeEmpCore(3, 1.0)
-        corehalf = _makeEmpCore(3, 2.0)
-        coredouble = _makeEmpCore(3, 0.5)
+        core = makeEmpCore(3, 1.0)
+        corehalf = makeEmpCore(3, 2.0)
+        coredouble = makeEmpCore(3, 0.5)
         
         assert_array_less( core.getVRF(5), core.getVRF(4))
         assert_allclose( ones([3+1,3+1]), (coredouble.getVRF(5) / core.getVRF(5)) * (corehalf.getVRF(5) / core.getVRF(5)) )
         assert_allclose( core.getGamma(10.0, 5.0), core.getGamma(10.0, 6.0) )
+            
+    
 
     @testcase 
     def test9NUnitLastVRF(self) -> None:
@@ -416,13 +422,24 @@ class EMP_test(unittest.TestCase):
             for itau in range(0, nTaus):
                 tau = taus[itau]
                 n = nUnitLastVRF(order, tau)
-                core = _makeEmpCore(order, tau)
+                core = makeEmpCore(order, tau)
                 assert( core.getLastVRF(n)< 2.0 )
 
+    @testcase 
+    def test9Coverage(self) -> None:
+        self.assertEqual(0.0, nSwitch(0, 2.0))
+            
+#         try :
+#             nSwitch(-1, 0.5)
+#         except ValueError:
+#             pass
+#         except :
+#             self.assertTrue(False, "Exception expected")            
         
-    def test9CrossSectionChi2(self):
+        
+#     def xtest9CrossSectionChi2(self):
 #         print("test9CrossSectionChi2")
-        self.crossSectionChi2()
+#         self.crossSectionChi2()
 #         if (slow()) :
 #             self.crossSectionChi2()
 #         else :

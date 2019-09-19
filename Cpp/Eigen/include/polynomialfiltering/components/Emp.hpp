@@ -274,6 +274,16 @@ namespace polynomialfiltering {
         ///  @return   @return		n	estimated sample number
         /// 
         int nUnitLastVRF(const int order, const double tau);
+
+        ///// @brief Factory for expanding memory polynomial filters
+        /// 
+        /// 
+        ///  @param		order	integer polynomial orer
+        ///  @param		tau	nominal time step
+        /// 
+        ///  @return  expanding memory filter object
+        /// 
+        std::shared_ptr<ICore> makeEmpCore(const int order, const double tau);
         std::shared_ptr<RecursivePolynomialFilter> makeEmp(const int order, const double tau);
     }; // namespace components
 }; // namespace polynomialfiltering

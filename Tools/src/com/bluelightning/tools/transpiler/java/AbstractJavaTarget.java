@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Stack;
+import java.util.TreeSet;
 
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.ejml.equation.ManagerTempVariables;
@@ -50,6 +51,7 @@ public abstract class AbstractJavaTarget extends AbstractLanguageTarget{
 	Template    java;
 	Map<String, Object> templateDataModel = new HashMap<>();
 	ManagerTempVariables         tempManager;
+	TreeSet<String> declaredTemps = new TreeSet<>();
 	
 	protected List<String> imports = new ArrayList<>();
 	
@@ -150,9 +152,41 @@ public abstract class AbstractJavaTarget extends AbstractLanguageTarget{
 		Indent value;
 	};
 	
+	String lastConstructorClass = "";
+	
+	protected String getSuperClassInitializers( Symbol symbol, String className, Scope superScope) {
+		Symbol c = Transpiler.instance().lookup(superScope, className);
+		String superTag = "super().__init__(";
+		String scInitializers = null;
+		if (symbol.getType().startsWith(superTag)) {
+			scInitializers = symbol.getType().substring(superTag.length());
+			int iClose = -1;
+			int nesting = 0;
+			for (int i = 0; i < scInitializers.length(); i++) {
+				if (scInitializers.charAt(i) == '(')
+					nesting++;
+				else if (scInitializers.charAt(i) == ')') {
+					if (nesting == 0) {
+						iClose = i;
+						break;
+					} else {
+						nesting--;
+					}
+				}
+			}
+			if (iClose < 0) {
+				Transpiler.instance().reportError("Bad function declaration: " + symbol.toString() );
+				iClose = scInitializers.length();
+			}
+			scInitializers = scInitializers.substring(0, iClose);
+		}
+		return scInitializers;
+	}
+	
 	@Override
 	public void startMethod(Scope scope) {
 		tempManager = new ManagerTempVariables();
+		declaredTemps.clear();
 		currentScope = scope;
 		String currentFunction = scope.getLast();
 		Scope functionScope = scope.getParent();
@@ -173,8 +207,9 @@ public abstract class AbstractJavaTarget extends AbstractLanguageTarget{
 				if (symbol.isConstructor()) {
 					name = currentClass.peek().getName();
 					type = "";
-					if (! fpi.parameters.isEmpty() ) {
+					if (! name.equals(lastConstructorClass) && ! fpi.parameters.isEmpty() ) {
 						if (fpi.parameters.size() > 1 || ! fpi.parameters.get(0).getName().equals("self")) {
+							lastConstructorClass = name;
 							indent.writeln();
 							indent.writeln(String.format("public %s() {}  // auto-generated null constructor\n", name) );
 						}
@@ -242,23 +277,19 @@ public abstract class AbstractJavaTarget extends AbstractLanguageTarget{
 					indent.writeln( decl + ";");
 				} else {
 					if (currentClass != null) {
-						if (fpi.decorators.contains("@superClassConstructor")) { // decorator inserted by Declarations listener; not in Python source
-							String className = symbol.getScope().getLast();
-							Scope superScope = symbol.getScope().getParent();
-							Symbol c = Transpiler.instance().lookup(superScope, className);
-							String scInitializers = "";
-							String superTag = "super().__init__(";
-							if (symbol.getType().startsWith(superTag)) {
-								scInitializers = symbol.getType().substring(superTag.length());
-								int iClose = scInitializers.indexOf(')');
-								if (iClose < 0) {
-									Transpiler.instance().reportError("Bad function declaration: " + symbol.toString() );
-									iClose = scInitializers.length();
-								}
-								scInitializers = scInitializers.substring(0, iClose);
-							}
+						String manualSuper = Transpiler.instance().getManualScope(symbol.getScope().toString(), "Java");
+						if (manualSuper != null && name.equals(currentClassName)) {
 							indent.writeln( decl + " {");
 							indent.in();
+							indent.writeln(manualSuper);
+							indent.out(); // will be reversed below
+						} else if (fpi.decorators.contains("@superClassConstructor")) { // decorator inserted by Declarations listener; not in Python source
+							String className = symbol.getScope().getLast();
+							Scope superScope = symbol.getScope().getParent();
+							String scInitializers = getSuperClassInitializers( symbol, className, superScope );
+							indent.writeln( decl + " {");
+							indent.in();
+							Symbol c = Transpiler.instance().lookup(superScope, className);
 							for (String sc : c.getSuperClassInfo().superClasses) {
 								if (sc.charAt(0) != 'I' || Character.isLowerCase(sc.charAt(1))) { // ignore interfaces
 									decl = "super";
@@ -282,6 +313,7 @@ public abstract class AbstractJavaTarget extends AbstractLanguageTarget{
 			if (! symbol.getName().equals("__init__") ) {
 				switch (symbol.getType()) {
 				case "None":
+				case "bool":
 				case "float":
 				case "int":
 				case "str":
@@ -297,9 +329,9 @@ public abstract class AbstractJavaTarget extends AbstractLanguageTarget{
 		}
 	}
 
-	protected void writeOptionalParameterAliases(Indent indent, String currentClassName, String type, String name,
+	protected void writeOptionalParameterAliases(Indent indent, String currentClassName, String accessAndType, String name,
 			ArrayList<ParameterHandling> handling) {
-		indent.write( String.format("%s%s(", type, name) );
+		indent.write( String.format("%s%s(", accessAndType, name) );
 		boolean addComma = false;
 		for (int j = 0; j < handling.size(); j++) {
 			if (handling.get(j).value == null) {
@@ -322,10 +354,15 @@ public abstract class AbstractJavaTarget extends AbstractLanguageTarget{
 		}
 		indent.append(") {\n");
 		indent.in();
+		indent.write("");
+		String[] fields = accessAndType.split(" ");
+		if (fields.length > 1 && !fields[1].equals("void")) {
+			indent.append("return "); // //
+		}
 		if (name.equals(currentClassName)) {
-			indent.write("this(");
+			indent.append("this(");
 		} else {
-			indent.write(name + "(");
+			indent.append(name + "(");
 		}
 		for (int j = 0; j < handling.size(); j++) {
 			if (j > 0)
@@ -849,8 +886,10 @@ public abstract class AbstractJavaTarget extends AbstractLanguageTarget{
 		if (mustCompile) {
 			Transpiler.instance().logger().info("eSE< " + out.sb.toString());
 			IExpressionCompiler compiler = programmer.getExpressionCompiler( scope, tempManager, isTestTarget() );
+			compiler.setTemporaries(declaredTemps);			
 			compiler.setStaticImports(staticImports);
 			if (compiler.compile(out.sb.toString(), this.imports, currentScope) ) {
+//				System.out.println(out.sb.toString() + " : " + declaredTemps.toString());
 				if (! compiler.getHeader().isEmpty()) {
 					output.writeln();
 				}
@@ -864,12 +903,12 @@ public abstract class AbstractJavaTarget extends AbstractLanguageTarget{
 						continue;
 					output.writeln(line.replace("$", "."));
 				}
-				output.deleteLast(); // delete final ; and \n; will be added later
-				output.deleteLast();
+				output.deleteLast('\n'); // delete final ; and \n; will be added later
+				output.deleteLast(';');
 				return;
 			}
 		}
-		output.append(out.sb.toString().replace("$", "."));
+		output.append(out.sb.toString().replace("$", ".").replace("super()", "super"));
 	}
 
 	
@@ -1075,6 +1114,7 @@ public abstract class AbstractJavaTarget extends AbstractLanguageTarget{
 			}
 			indent.sb.replace(lastEol+1, indent.sb.length(), "");
 			IExpressionCompiler compiler = programmer.getExpressionCompiler( scope, tempManager, isTestTarget() );
+			compiler.setTemporaries(declaredTemps);
 			compiler.setStaticImports(staticImports);
 			String expr = "asssignment$dummy = return (" + str + ")";
 			if (compiler.compile(dollarize(expr), this.imports, currentScope) ) {

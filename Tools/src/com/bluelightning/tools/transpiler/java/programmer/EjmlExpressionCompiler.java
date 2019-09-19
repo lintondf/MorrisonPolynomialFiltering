@@ -42,7 +42,7 @@ import com.bluelightning.tools.transpiler.java.AbstractJavaTarget.StaticImport;
 
 public class EjmlExpressionCompiler implements IExpressionCompiler {
 	
-	private static class JavaTargetManagerFunctions extends ManagerFunctions {
+	private class JavaTargetManagerFunctions extends ManagerFunctions {
 		
 		AbstractProgrammer programmer;
 		ManagerTempVariables tempManager;
@@ -187,6 +187,7 @@ public class EjmlExpressionCompiler implements IExpressionCompiler {
 			public String code(Info info) {
 				StringBuilder sb = new StringBuilder();
 				if (info.output.isTemp()) {
+					declaredTemps.add(info.output.getOperand());
 					sb.append( declare(info.output) );
 				}
 				if ( ! info.output.getOperand().equals("void")) {
@@ -226,8 +227,11 @@ public class EjmlExpressionCompiler implements IExpressionCompiler {
 				case "vector":
 					info.output = tempManager.createMatrix();
 					break;
-				default:
+				case "None":
 					info.output = tempManager.createIntegerConstant(0, "void");
+					break;
+				default:
+					info.output = tempManager.createInteger(); //
 				}
 				info.op = info.new Operation(opName()) {
 					@Override
@@ -384,7 +388,8 @@ public class EjmlExpressionCompiler implements IExpressionCompiler {
 			public String code(Info info) {
 				Variable A = info.input.get(0);
 				StringBuilder sb = new StringBuilder();
-				if (info.output.isTemp()) {
+				if (info.output.isTemp() && ! declaredTemps.contains(info.output.getOperand())) {
+					declaredTemps.add(info.output.getOperand());
 					sb.append( String.format("DMatrixRMaj %s = new DMatrixRMaj(%s);\n", 
 						info.output.getOperand(), A.getOperand()));
 				} else {
@@ -806,9 +811,10 @@ public class EjmlExpressionCompiler implements IExpressionCompiler {
 			public String code(Info info) {
 				Variable A = info.input.get(0);
 				StringBuilder sb = new StringBuilder();
-				if (info.output.isTemp()) {
+				if (info.output.isTemp() && ! declaredTemps.contains(info.output.getOperand())) {
 					sb.append( String.format("DMatrixRMaj %s = new DMatrixRMaj(%s.getNumCols(), %s.getNumRows());\n", 
 						info.output.getOperand(), A.getOperand(), A.getOperand()));
+					declaredTemps.add(info.output.getOperand());
 				} else {
 					sb.append( String.format("%s.reshape( %s.numCols, %s.numRows );\n", info.output.getOperand(), A.getOperand(), A.getOperand()));
 				}
@@ -986,7 +992,12 @@ public class EjmlExpressionCompiler implements IExpressionCompiler {
 
 	final String dummyPrefix = "asssignment$dummy = void(";
 	final static Pattern reshapePattern = Pattern.compile("(\\w+)\\.reshape\\((.+),(.+)\\)");
-
+	TreeSet<String> declaredTemps = new TreeSet<>();
+	
+	
+	public void setTemporaries(TreeSet<String> declaredTemps) {
+		this.declaredTemps = declaredTemps;
+	}
 	
 	public boolean compile(String expression, List<String> imports, Scope currentScope ) {
 		boolean isVoid = false;
@@ -994,7 +1005,7 @@ public class EjmlExpressionCompiler implements IExpressionCompiler {
 			isVoid = true;
 			expression = dummyPrefix + expression + ")";
 		}
-		TreeSet<String> declaredTemps = new TreeSet<>();
+		
 		codeGenerator = new GenerateEquationCode(eq, coder, null, null, declaredTemps);
 		if (! codeGenerator.generate(expression, false) ) {
 			Transpiler.instance().logger().info(String.format("Compile: %s -X: %s", expression, codeGenerator.getLastError().getMessage()));
@@ -1022,6 +1033,7 @@ public class EjmlExpressionCompiler implements IExpressionCompiler {
 					imports.add(match.importText);
 				}
 			}
+			// remove reshapes of fixed size matrices
 			Matcher matcher = reshapePattern.matcher(line);
 			if (matcher.find()) {
 				String target = matcher.group(1);

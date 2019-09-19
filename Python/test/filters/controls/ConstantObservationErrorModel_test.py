@@ -19,7 +19,7 @@ from polynomialfiltering.PythonUtilities import assert_not_empty
 
 from polynomialfiltering.filters.controls.ConstantObservationErrorModel import ConstantObservationErrorModel
 
-class TestConstantObservationErrorModel(unittest.TestCase):
+class ConstantObservationErrorModel_test(unittest.TestCase):
 
     @classmethod
     def setUpClass(self):
@@ -148,6 +148,7 @@ class TestConstantObservationErrorModel(unittest.TestCase):
         '''@i : int'''
         '''@iE : int'''
         '''@inputCovariance : array'''
+        '''@ic : float'''
         '''@inputInverse : array'''
         '''@element : vector'''
         '''@Q : array'''
@@ -161,7 +162,8 @@ class TestConstantObservationErrorModel(unittest.TestCase):
             inputCovariance = testData.getGroupVariable(matches[i], 'inputCovariance')
             inputInverse = testData.getGroupVariable(matches[i], 'inputInverse')
             iE = int(element[0]);
-            model = ConstantObservationErrorModel(inputCovariance[0,0]);
+            ic = inputCovariance[0,0];
+            model = ConstantObservationErrorModel(ic);
             Q = model.getCovarianceMatrix(None, 0.0, array([0]), iE);
             assert_almost_equal(inputCovariance[0,0], Q)
             Q = model.getPrecisionMatrix(None, 0.0, array([0]), iE);
@@ -200,7 +202,8 @@ class TestConstantObservationErrorModel(unittest.TestCase):
                 Q = model.getPrecisionMatrix(None, 0.0, array([0]), iE);
                 assert_almost_equal(inputInverse[iE, iE], Q)        
         testData.close()
+    
 
-if __name__ == "__main__": 
-    #import sys;sys.argv = ['', 'Test.testConstantObservationErrorModel']
+if __name__ == "__main__":
+    #import sys;sys.argv = ['', 'Test.testName']
     unittest.main()

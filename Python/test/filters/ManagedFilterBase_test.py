@@ -8,29 +8,36 @@ import unittest
 from numpy import array, zeros
 from numpy import array as vector;
 
-from polynomialfiltering.components import AbstractRecursiveFilter
+from polynomialfiltering.PythonUtilities import ignore, testcase, testclass, testclassmethod
+
+from polynomialfiltering.Main import AbstractFilter, AbstractFilterWithCovariance
 from polynomialfiltering.components.Emp import makeEmp
 from polynomialfiltering.filters.ManagedFilterBase import ManagedFilterBase;
 from Filtering import FilterStatus
 
-class ManagedFilterBaseMock(ManagedFilterBase):
-    
-    def __init__(self, order : int, worker : AbstractRecursiveFilter):
-        super().__init__(order, worker);
-    
-    def add(self, t:float, y:vector, observationId:int = 0) -> bool :
-        return False;
-    
-    def getCovariance(self) -> array:
-        return zeros([1,1])
+class ManagedFilterBase_test(unittest.TestCase):
 
-    def getGoodnessOfFit(self) -> float:
-        return 0.0;
+    @testclass
+    class ManagedFilterBaseMock(ManagedFilterBase):
+        
+        @testclassmethod
+        def __init__(self, order : int, worker : AbstractFilter):
+            super().__init__(order, worker);
+        
+        @testclassmethod
+        def add(self, t:float, y:vector, observationId:int = 0) -> bool :
+            return False;
+        
+        @testclassmethod
+        def getCovariance(self) -> array:
+            return zeros([1,1])
     
-
-
-class Test(unittest.TestCase):
-
+        @testclassmethod
+        def getGoodnessOfFit(self) -> float:
+            return 0.0;
+        
+    
+    
 
     def setUp(self):
         pass
@@ -42,14 +49,14 @@ class Test(unittest.TestCase):
 
     def testName(self):
         f = makeEmp(0, 0.1)
-        m = ManagedFilterBaseMock( f.getOrder(), f );
+        m = self.ManagedFilterBaseMock( f.getOrder(), f );
         assert( m.getN() == 0 )
         assert( m.getWorker().getOrder() == 0)
         assert( m.getWorker().getTau() == 0.1)
         
     def testWorkerPassthru(self):
         f = makeEmp(1, 0.2)
-        m = ManagedFilterBaseMock( f.getOrder(), f )
+        m = self.ManagedFilterBaseMock( f.getOrder(), f )
         assert( m.getWorker() == f)
         f.setStatus(FilterStatus.RESETING);
         assert( m.getStatus() == f.getStatus() )

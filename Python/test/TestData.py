@@ -52,6 +52,9 @@ class TestData :
     def createTestGroup(self, name : str ) -> Dataset:
         return self.cdf.createGroup(name);
 
+
+    def createSubGroup(self, parent : Group, name : str) -> Group:
+        return parent.createGroup(name)
     
     def getMatchingGroups(self, prefix : str) -> List[str]:
         results = []

@@ -60,11 +60,11 @@ class FixedMemoryFilter(AbstractFilter) :
         return self.t
     
     def transitionState(self, t : float) -> vector:
-        '''@dt : vector | array of delta times'''
-        '''@Tn : array'''
-        '''@Tnt : array | transpose of Tn'''
-        '''@TntTn : array'''
-        '''@TntYn : array'''
+        '''@dt : vector : L | array of delta times'''
+        '''@Tn : array : L : order+1'''
+        '''@Tnt : array : order+1 : L | transpose of Tn'''
+        '''@TntTn : array : order+1 : order+1'''
+        '''@TntYn : array : order+1 : 1'''
 #         print(self.tRing);
 #         print(self.yRing)
         dt = self.tRing - t;
@@ -75,7 +75,7 @@ class FixedMemoryFilter(AbstractFilter) :
 #         print(TntTn)
 #         print(TntYn)
         self.Z = solve(TntTn, TntYn); # lstsq(TntTn, TntYn, rcond=None)[0];
-        return self.Z;
+        return copy(self.Z);
     
     def getState(self) -> vector:
         return self.transitionState(self.t)

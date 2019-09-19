@@ -4,6 +4,7 @@
 package com.bluelightning.tools.transpiler.cpp.programmer;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 
@@ -27,9 +28,14 @@ public abstract class AbstractProgrammer implements IProgrammer {
 	public IExpressionCompiler getExpressionCompiler( Scope scope, ManagerTempVariables tempManager, boolean isTestTarget ) {
 		return null;
 	}
+	
+	@Override
+	public void addImports(List<String> imports) {
+	}
 
 	public AbstractProgrammer() {
 		typeRemap.put("None", "void");
+		typeRemap.put("bool", "bool");
 		typeRemap.put("int", "int");
 		typeRemap.put("float", "double");
 		typeRemap.put("vector", "RealVector");

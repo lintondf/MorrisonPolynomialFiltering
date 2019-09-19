@@ -67,10 +67,14 @@ import freemarker.template.TemplateExceptionHandler;
 
 /* TODO
  * -- this.transpiler -> Transpiler.instance()
- * -- Check for changes before writing sources; done for sources, add for tests
- * -- handle superclass init for multiple constructors
  * -- auto define missing variables as None?
  * -- direct return of vector of zeros fails
+ * FEATURES TO ADD
+ * -- C++/Boost
+ * -- Java/Colt
+ * -- Julia
+ * -- Rust
+ * -- Octave
  */
 /**
  * @author NOOK
@@ -116,19 +120,22 @@ public class Transpiler {
 			
 		new Target(Paths.get("polynomialfiltering"), "Main"),
 		new Target(Paths.get("polynomialfiltering/components"), "ICore", true),
+		new Target(Paths.get("polynomialfiltering/components"), "FixedMemoryPolynomialFilter"),
 		new Target(Paths.get("polynomialfiltering/components"), "RecursivePolynomialFilter"),
 		new Target(Paths.get("polynomialfiltering/components"), "Emp"),
 		new Target(Paths.get("polynomialfiltering/components"), "Fmp"),
-		new Target(Paths.get("polynomialfiltering/components"), "FixedMemoryPolynomialFilter"),
+		new Target(Paths.get("polynomialfiltering/components"), "PairedPolynomialFilter"),
 		
 		new TestTarget(Paths.get("components"), "RecursivePolynomialFilter_test"),
 		new TestTarget(Paths.get("components"), "EMP_test"),
 		new TestTarget(Paths.get("components"), "Fmp_test"),
+		new TestTarget(Paths.get("components"), "Pair_test"),
 		new TestTarget(Paths.get("components"), "FixedMemoryFilter_test"),
-		new Target(Paths.get("polynomialfiltering/filters/controls"), "IObservationErrorModel", true),
-		new Target(Paths.get("polynomialfiltering/filters/controls"), "IJudge", true),
-		new Target(Paths.get("polynomialfiltering/filters/controls"), "IMonitor", true),
-		new Target(Paths.get("polynomialfiltering/filters/controls"), "ConstantObservationErrorModel"),
+//
+//		new Target(Paths.get("polynomialfiltering/filters/controls"), "IObservationErrorModel", true),
+//		new Target(Paths.get("polynomialfiltering/filters/controls"), "IJudge", true),
+//		new Target(Paths.get("polynomialfiltering/filters/controls"), "IMonitor", true),
+//		new Target(Paths.get("polynomialfiltering/filters/controls"), "ConstantObservationErrorModel"),
 ////		new Target(Paths.get("polynomialfiltering/filters/controls"), "BaseScalarJudge"),
 ////		//new Target(Paths.get("polynomialfiltering/filters/controls"), "BaseVectorJudge"),
 ////		//new Target(Paths.get("polynomialfiltering/filters/controls"), "NullMonitor"),
@@ -136,18 +143,39 @@ public class Transpiler {
 ////		new Target(Paths.get("polynomialfiltering/filters"), "ManagedFilterBase"),
 //////		new Target(Paths.get("polynomialfiltering/filters"), "ManagedScalarRecursiveFilter"),
 //////		new Target(Paths.get("polynomialfiltering/filters"), "ManagedScalarRecursiveFilterSet"),
-		new TestTarget(Paths.get("filters/controls"), "ConstantObservationErrorModel_test"),
+//		new TestTarget(Paths.get("filters/controls"), "ConstantObservationErrorModel_test"),
 	};
 	
 	final Set<String> ignoredModules = new TreeSet<String>( Arrays.asList( new String[]{
 			"Main",
 			"ExpandingMemoryPolynomialFilter",
 			"FadingMemoryPolynomialFilter",
-			"FixedMemoryPolynomialFilter"
+			"FixedMemoryPolynomialFilter",
+			"PairedPolynomialFilter"
 	}));
 	
 	public Set<String> getIgnoredModules() {
 		return ignoredModules;
+	}
+	
+	HashMap<String, HashMap<String, String> > manualSupers = new HashMap<String, HashMap<String, String> >();
+	
+	public void addManualSuper( String scopeString, String language, String initializer ) {
+//		System.out.printf("aMS: %s : %s : %s\n", scopeString, language, initializer );
+		HashMap<String, String> forScope = manualSupers.get(scopeString);
+		if (forScope == null) {
+			forScope = new HashMap<String, String>();
+		}
+		forScope.put(language, initializer );
+		manualSupers.put(scopeString, forScope);
+	}
+	
+	public String getManualScope( String scopeString, String language ) {
+		HashMap<String, String> forScope = manualSupers.get(scopeString);
+//		System.out.println("gMS : " + scopeString + " : " + language + " : " + forScope);
+		if (forScope == null)
+			return null;
+		return forScope.get(language);
 	}
 
 	protected boolean isTestCaseMethod = false;
@@ -664,9 +692,12 @@ public class Transpiler {
 		symbolTable.add( importScope, "assert_almost_equal", "None");
 		symbolTable.add( importScope, "assert_array_less", "None");
 		symbolTable.add( importScope, "assert_not_empty", "None");
+		symbolTable.add( importScope, "assert_clear", "None");
 		symbolTable.add( importScope, "assert_report", "float");
 		symbolTable.add( importScope, "assertGreaterEqual", "None");
 		symbolTable.add( importScope, "assertEqual", "None");
+		symbolTable.add( importScope, "assertFalse", "None");
+		symbolTable.add( importScope, "assertTrue", "None");
 		symbolTable.add( importScope, "print", "None");
 		
 		valueMap.put( TranslationUnaryNode.staticFieldReference, "::");

@@ -344,7 +344,14 @@ class DeclarationsListener extends LcdPythonBaseListener {
 					if (str.startsWith("'''@")) {
 						String[] fields = str.substring(4).replaceAll("'''", "").split("\\|");
 						if (fields.length > 0) {
-							declareSymbol( token, fields[0] );
+							fields[0] = fields[0].trim().replaceAll(" +", " ");
+							if (fields[0].startsWith("!super:")) {
+								fields = fields[0].split(":");
+								Scope currentScope = scopeStack.peek().getParent();
+								Transpiler.instance().addManualSuper(currentScope.toString(), fields[1], fields[2]);
+							} else {
+								declareSymbol( token, fields[0] );
+							}
 						} else {
 							this.transpiler.reportError(ctx.start, "Ill formed declaration comment: " + str );
 						}

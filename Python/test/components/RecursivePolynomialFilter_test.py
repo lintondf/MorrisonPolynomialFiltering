@@ -20,6 +20,7 @@ from TestUtilities import *
 from TestSuite import testDataPath;
 from polynomialfiltering.PythonUtilities import ignore, testcase
 from TestData import TestData
+from TestUtilities import generateTestPolynomial, generateTestData, createTestGroup, writeTestVariable, A2S, assert_report, assert_clear
 
 from polynomialfiltering.PythonUtilities import ignore, testcase, testclass, testclassmethod
 from polynomialfiltering.PythonUtilities import assert_not_empty
@@ -211,6 +212,7 @@ class RecursivePolynomialFilter_test(unittest.TestCase):
         '''@V : array'''
         '''@i : int'''
         
+        assert_clear()
         testData = TestData('testRecursivePolynomialFilter.nc')
         matches = testData.getMatchingGroups('testPurePredict_')
         assert_not_empty(matches)
@@ -269,6 +271,7 @@ class RecursivePolynomialFilter_test(unittest.TestCase):
         '''@V : array'''
         '''@i : int'''
         
+        assert_clear()
         testData = TestData('testRecursivePolynomialFilter.nc')
         matches = testData.getMatchingGroups('testPureObservation_')
         assert_not_empty(matches)
@@ -317,6 +320,7 @@ class RecursivePolynomialFilter_test(unittest.TestCase):
         '''@name : str'''
         '''@Zstar : vector'''
         '''@I : array'''
+        assert_clear()
         core = self.PureObservationCore(2)
         f = RecursivePolynomialFilter(2, 1.0, core );
         self.assertEqual(2, f.getOrder())
@@ -343,6 +347,7 @@ class RecursivePolynomialFilter_test(unittest.TestCase):
         g = RecursivePolynomialFilter(2, 1.0, core );
         g.copyState(f)
         assert_almost_equal(g.getState(), array([11.0, 8.0, 3.0]))
+        assert_report("RecursivePolynomialFilter_test/test9Coverage")
         
     
     class TestCase(unittest.TestCase):

@@ -287,7 +287,11 @@ public abstract class AbstractCppTarget extends AbstractLanguageTarget {
 				if (! fpi.decorators.contains("@abstractmethod")) {
 					decl = generateBodyDeclaration( type, currentClassName, name, body.sb.toString() );
 					if (currentClass != null) {
-						if (fpi.decorators.contains("@superClassConstructor")) { // decorator inserted by Declarations listener; not in Python source
+						String separator = " : ";
+						String manualSuper = Transpiler.instance().getManualScope(symbol.getScope().toString(), "C++");
+						if (manualSuper != null && name.equals(currentClassName)) {
+							decl += separator + manualSuper;
+						} else if (fpi.decorators.contains("@superClassConstructor")) { // decorator inserted by Declarations listener; not in Python source
 							String className = symbol.getScope().getLast();
 							Scope superScope = symbol.getScope().getParent();
 							Symbol c = Transpiler.instance().lookup(superScope, className);
@@ -302,7 +306,6 @@ public abstract class AbstractCppTarget extends AbstractLanguageTarget {
 								}
 								scInitializers = scInitializers.substring(0, iClose);
 							}
-							String separator = " : ";
 							for (String sc : c.getSuperClassInfo().superClasses) {
 								if (sc.charAt(0) != 'I' || Character.isLowerCase(sc.charAt(1))) { // ignore interfaces
 									decl += separator + sc + "("; // TODO handle passing only relevant arguments

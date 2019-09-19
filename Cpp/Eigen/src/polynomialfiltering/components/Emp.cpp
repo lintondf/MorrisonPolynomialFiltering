@@ -495,7 +495,7 @@ namespace polynomialfiltering {
             }
         }
 
-        std::shared_ptr<ICore> _makeEmpCore (const int order, const double tau) {
+        std::shared_ptr<ICore> makeEmpCore (const int order, const double tau) {
             if (order == 0) {
                 return std::make_shared<CoreEmp0>(tau);
             } else if (order == 1.0) {
@@ -513,7 +513,7 @@ namespace polynomialfiltering {
 
         std::shared_ptr<RecursivePolynomialFilter> makeEmp (const int order, const double tau) {
             std::shared_ptr<ICore> core;
-            core = _makeEmpCore(order, tau);
+            core = makeEmpCore(order, tau);
             return std::make_shared<RecursivePolynomialFilter>(order, tau, core);
         }
 

@@ -7,7 +7,7 @@
 '''
 from polynomialfiltering.PythonUtilities import constructor, ignore
 
-from numpy import array, isscalar
+from numpy import array, isscalar, copy
 from numpy import array as vector
 from numpy.linalg import inv
 from polynomialfiltering.Main import AbstractFilterWithCovariance
@@ -69,15 +69,17 @@ class ConstantObservationErrorModel(IObservationErrorModel):
 
 
     def getPrecisionMatrix(self, f: AbstractFilterWithCovariance, t:float, y:vector, observationId:int = -1) -> array:
-        """@super"""
+        '''@ P : array'''
         if (observationId == -1) :
-            return self.iR;
+            P = copy(self.iR)
         else :
-            return self.iR[observationId:observationId+1,observationId:observationId+1]; 
+            P = self.iR[observationId:observationId+1,observationId:observationId+1];
+        return P; 
 
     def getCovarianceMatrix(self, f : AbstractFilterWithCovariance, t : float, y : vector, observationId : int = -1) -> array:
-        """@super"""
+        '''@ P : array'''
         if (observationId == -1) :
-            return self.R;
+            P = self.R;
         else :
-            return self.R[observationId:observationId+1,observationId:observationId+1]; 
+            P = self.R[observationId:observationId+1,observationId:observationId+1]; 
+        return P; 

@@ -31,18 +31,18 @@ from runstats import Statistics
 from netCDF4 import Dataset, Group
 from TestSuite import testDataPath;
 from TestUtilities import generateTestPolynomial, generateTestData, createTestGroup, writeTestVariable, A2S,\
-    covarianceToCorrelation, assert_report
+    covarianceToCorrelation, assert_report, assert_clear
 from TestData import TestData
 
 from polynomialfiltering.Main import AbstractFilter, FilterStatus
 from polynomialfiltering.components.RecursivePolynomialFilter import RecursivePolynomialFilter
 from polynomialfiltering.components.ICore import ICore
-from polynomialfiltering.components.Fmp import makeFmp, _makeFmpCore
+from polynomialfiltering.components.Fmp import makeFmp, makeFmpCore
 
 from polynomialfiltering.PythonUtilities import ignore, testcase, testclass, testclassmethod
 from polynomialfiltering.PythonUtilities import assert_not_empty
 
-from polynomialfiltering.components.Emp import makeEmp, _makeEmpCore, nSwitch, nUnitLastVRF
+from polynomialfiltering.components.Emp import makeEmp, makeEmpCore, nSwitch, nUnitLastVRF
 from numpy.random.mtrand import multivariate_normal
 from nose.tools import assert_equal
 from numpy.core.defchararray import isdecimal
@@ -66,7 +66,7 @@ class Fmp_test(unittest.TestCase):
             return 0.5;
         v = 1.0;
         def targetMaxDiag(t :float ) -> float:
-            c = _makeFmpCore(order, tau, t);
+            c = makeFmpCore(order, tau, t);
             return max(diag(c.getVRF(0))) - v;
              
         t0 = brentq( targetMaxDiag, 1e-6, 1-1e-8 );
@@ -435,6 +435,7 @@ class Fmp_test(unittest.TestCase):
         '''@e : float'''
         
 #         print("test1CheckStates")
+        assert_clear()
         testData = TestData('testFMP.nc')
         matches = testData.getMatchingGroups('States')
         assert_not_empty(matches)
@@ -467,7 +468,8 @@ class Fmp_test(unittest.TestCase):
             
             assert_allclose(actual, expected)
         self.assertGreaterEqual(32.0, assert_report("Fmp_test/test1CheckStates"))
-            
+        testData.close()
+           
     @testcase     
     def test1CheckGammas(self) -> None:
         '''@testData : TestData'''
@@ -491,6 +493,7 @@ class Fmp_test(unittest.TestCase):
         '''@f : RecursivePolynomialFilter'''
         
 #         print("test1CheckGammas")
+        assert_clear()
         testData = TestData('testFMP.nc')
         matches = testData.getMatchingGroups('Gammas')
         assert_not_empty(matches)
@@ -509,6 +512,7 @@ class Fmp_test(unittest.TestCase):
             assert_allclose(nS, nSwitch(order, theta))
             assert_allclose(actualG, expectedG)
         self.assertGreaterEqual(0.0, assert_report("Fmp_test/test1CheckGammas"))
+        testData.close()
             
             
     @testcase     
@@ -532,6 +536,7 @@ class Fmp_test(unittest.TestCase):
         '''@actualV : array'''
         '''@f : RecursivePolynomialFilter'''
 #         print("test1CheckVRF")
+        assert_clear()
         testData = TestData('testFMP.nc')
         matches = testData.getMatchingGroups('Vrfs')
         assert_not_empty(matches)
@@ -548,7 +553,7 @@ class Fmp_test(unittest.TestCase):
             actualV = f.getCore().getVRF(0)
             assert_allclose(actualV, expectedV)
         self.assertGreaterEqual(0.0, assert_report("Fmp_test/test1CheckVrfs"))
-    
+        testData.close()
         
         
         
@@ -561,10 +566,11 @@ class Fmp_test(unittest.TestCase):
         '''@ad : array'''
         '''@ah : array'''
 #         print("test9CoreBasic")
-        core90 = _makeFmpCore(3, 1.0, 0.90)
-        core95 = _makeFmpCore(3, 1.0, 0.95)
-        core95half = _makeFmpCore(3, 2.0, 0.95)
-        core95double = _makeFmpCore(3, 0.5, 0.95)
+        assert_clear()
+        core90 = makeFmpCore(3, 1.0, 0.90)
+        core95 = makeFmpCore(3, 1.0, 0.95)
+        core95half = makeFmpCore(3, 2.0, 0.95)
+        core95double = makeFmpCore(3, 0.5, 0.95)
         
         assert_allclose( core90.getVRF(1), core90.getVRF(10) )  # should be time invariate
         assert_array_less( core95.getVRF(1), core90.getVRF(1))
@@ -577,6 +583,7 @@ class Fmp_test(unittest.TestCase):
         assert_allclose( core90.getGamma(10.0, 5.0), core90.getGamma(10.0, 6.0) )
         assert_allclose( core95.getGamma(10.0, 5.0), core95half.getGamma(10.0, 5.0) ) 
         assert_allclose( core95.getGamma(10.0, 5.0), core95double.getGamma(10.0, 5.0) ) 
+        assert_report("Fmp_test/test9CoreBasic")
         
     @testcase
     def test9Basic(self) -> None:
@@ -590,6 +597,7 @@ class Fmp_test(unittest.TestCase):
         '''@Zstar : array'''
         '''@e : float'''
         '''@actual : array'''
+        assert_clear()
         order = 5
         tau = 0.01
         theta = 0.9885155283985784
@@ -634,6 +642,7 @@ class Fmp_test(unittest.TestCase):
         '''@nTaus : int'''
         
 #         print("test9NSwitch")
+        assert_clear()
         taus = array([0.01, 0.1, 1, 10, 100]);
         nTaus = len(taus);
         thetas = array([0.90, 0.95, 0.99, 0.999])
@@ -643,8 +652,8 @@ class Fmp_test(unittest.TestCase):
                 theta = thetas[itheta]
                 for itau in range(0, nTaus):
                     tau = taus[itau]
-                    emp = _makeEmpCore(order, tau)
-                    fmp = _makeFmpCore(order, tau, theta)
+                    emp = makeEmpCore(order, tau)
+                    fmp = makeFmpCore(order, tau, theta)
                     n = int(nSwitch( order, theta ))
                     assert( fmp.getFirstVRF(0)/emp.getFirstVRF(n) < 1.25 )
 #                     print('%2d, %8.3f, %7.5f, %8.1f, %6.2f, %6.2f, %6.2f' %

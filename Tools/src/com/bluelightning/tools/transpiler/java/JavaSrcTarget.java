@@ -37,8 +37,10 @@ public class JavaSrcTarget extends AbstractJavaTarget {
 		staticImports.clear();
 		imports.clear();
 		imports.add("java.util.stream.IntStream");
-		((EjmlProgrammer) programmer).addImports(imports);
+		programmer.addImports(imports);
 		imports.add("polynomialfiltering.main.FilterStatus");
+		imports.add("polynomialfiltering.main.AbstractFilter");
+		imports.add("polynomialfiltering.main.AbstractFilterWithCovariance");
 		imports.add("static polynomialfiltering.main.Utility.*");
 	}
 

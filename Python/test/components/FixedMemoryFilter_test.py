@@ -21,7 +21,7 @@ from scipy.stats._continuous_distns import chi2
 from scipy.optimize.zeros import brentq
 
 
-from polynomialfiltering.components.Fmp import makeFmp, _makeFmpCore
+from polynomialfiltering.components.Fmp import makeFmp, makeFmpCore
 from polynomialfiltering.components.FixedMemoryPolynomialFilter import FixedMemoryFilter;
 
 from polynomialfiltering.Main import FilterStatus
@@ -225,7 +225,7 @@ class FixedMemoryFilter_test(unittest.TestCase):
         '''@actual : array'''
         '''@expected : array'''
         '''@testData : TestData'''
-        
+        assert_clear()
         testData = TestData('FixedMemoryFiltering.nc')
         matches = testData.getMatchingGroups('testPerfect_')
         assert_not_empty(matches)
@@ -240,6 +240,7 @@ class FixedMemoryFilter_test(unittest.TestCase):
             expected = testData.getArray(group, 'expected');
             assert_allclose( expected, actual )
         testData.close()
+        assert_report("FixedMemoryFilter_test/test1CheckPerfect")
 
     @testcase
     def test1CheckNoisy(self):
@@ -255,6 +256,7 @@ class FixedMemoryFilter_test(unittest.TestCase):
         '''@expected : array'''
         '''@testData : TestData'''
         
+        assert_clear()
         testData = TestData('FixedMemoryFiltering.nc')
         matches = testData.getMatchingGroups('testNoisy_')
         assert_not_empty(matches)
@@ -269,6 +271,7 @@ class FixedMemoryFilter_test(unittest.TestCase):
             expected = testData.getArray(group, 'expected');
             assert_allclose( expected, actual )
         testData.close()
+        assert_report("FixedMemoryFilter_test/test1CheckNoisy")
 
     @testcase
     def test1CheckMidpoints(self):
@@ -288,6 +291,7 @@ class FixedMemoryFilter_test(unittest.TestCase):
         '''@expected : array'''
         '''@testData : TestData'''
         
+        assert_clear()
         testData = TestData('FixedMemoryFiltering.nc')
         matches = testData.getMatchingGroups('testMidpoints_')
         assert_not_empty(matches)
@@ -309,6 +313,7 @@ class FixedMemoryFilter_test(unittest.TestCase):
             expected = testData.getArray(group, 'expected');
             assert_allclose( expected, actual )
         testData.close()
+        assert_report("FixedMemoryFilter_test/test1CheckMidpoints")
     
     @testcase
     def test1CheckVrfs(self):
@@ -328,6 +333,7 @@ class FixedMemoryFilter_test(unittest.TestCase):
         '''@expected : array'''
         '''@testData : TestData'''
         
+        assert_clear()
         testData = TestData('FixedMemoryFiltering.nc')
         matches = testData.getMatchingGroups('testVRF_')
         assert_not_empty(matches)
@@ -349,6 +355,7 @@ class FixedMemoryFilter_test(unittest.TestCase):
             expected = testData.getArray(group, 'expected');
             assert_allclose( expected, actual )
         testData.close()
+        assert_report("FixedMemoryFilter_test/test1CheckVrfs")
 
     @testclass
     class TestFixedMemoryFilter(FixedMemoryFilter): 
@@ -371,6 +378,7 @@ class FixedMemoryFilter_test(unittest.TestCase):
         '''@fixed : FixedMemoryFilter'''
         '''@i : int'''
         '''@Z : array'''
+        assert_clear()
         f = self.TestFixedMemoryFilter(4)
         self.assertEqual(f.getOrder(), 4)
         self.assertEqual(f.getL(), 51)
@@ -390,6 +398,7 @@ class FixedMemoryFilter_test(unittest.TestCase):
         self.assertEqual(fixed.getStatus(), FilterStatus.RUNNING)
         self.assertEqual(fixed.getTime(), 10 )
         assert_almost_equal(fixed.getState(), array([4.0]))
+        assert_report("FixedMemoryFilter_test/test9Regresssion")
             
 #     def xtest9ValidVRF(self):
 #         '''
@@ -519,7 +528,7 @@ class FixedMemoryFilter_test(unittest.TestCase):
 #         
 #         def matchTheta(order : int, tau : float, V00 : float)  -> float:
 #             def targetTheta(t :float ) -> float:
-#                 c = _makeFmpCore(order, tau, t);
+#                 c = makeFmpCore(order, tau, t);
 #                 return max(diag(c.getVRF(0))) - V00;
 #                  
 #             t0 = brentq( targetTheta, 1e-6, 1-1e-8 );
@@ -550,7 +559,7 @@ class FixedMemoryFilter_test(unittest.TestCase):
 #                 while (N <= hi) :
 #                     V = getV( order, tau, N )
 #                     theta = matchTheta(order, tau, V[0,0])
-#                     c = _makeFmpCore(order, tau, theta);
+#                     c = makeFmpCore(order, tau, theta);
 #                     print(order, N, theta, A2S(diag(V).flatten()), A2S((diag(V)/diag(c.getVRF(0))).flatten()))
 #                     N *= 2
            

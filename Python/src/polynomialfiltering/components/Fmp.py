@@ -11,7 +11,7 @@ from abc import abstractmethod
 from polynomialfiltering.PythonUtilities import virtual, inline
 
 from math import isnan, exp, log;
-from numpy import array, diag, zeros, sqrt, transpose
+from numpy import array, diag, zeros, sqrt, transpose, copy
 from numpy import array as vector
 from polynomialfiltering.components.ICore import ICore
 from polynomialfiltering.components.RecursivePolynomialFilter import RecursivePolynomialFilter
@@ -59,7 +59,7 @@ class AbstractCoreFmp(ICore):
             Square matrix (order+1) of input to output variance ratios
         
         """
-        return self.VRF;
+        return copy(self.VRF);
     
     def getFirstVRF(self, n : int) -> float:
         """
@@ -472,7 +472,7 @@ class CoreFmp5(AbstractCoreFmp):
         return V;
 
 
-def _makeFmpCore(order : int, tau : float, theta : float) -> ICore:
+def makeFmpCore(order : int, tau : float, theta : float) -> ICore:
     """
     Factory for fading memory polynomial filter cores
     
@@ -499,5 +499,5 @@ def _makeFmpCore(order : int, tau : float, theta : float) -> ICore:
     
 def makeFmp(order : int, tau : float, theta : float) -> RecursivePolynomialFilter:
     '''@core : ICore'''
-    core = _makeFmpCore(order, tau, theta);
+    core = makeFmpCore(order, tau, theta);
     return RecursivePolynomialFilter(order, tau, core)

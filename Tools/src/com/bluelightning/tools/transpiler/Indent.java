@@ -71,6 +71,13 @@ public class Indent {
 		sb.append('\n');
 	}
 
+	public void deleteLast(char match) {
+		if (sb.length() > 0) {
+			if (sb.charAt(sb.length()-1) == match)
+				sb.deleteCharAt(sb.length()-1);
+		}
+	}
+	
 	public void deleteLast() {
 		if (sb.length() > 0) 
 			sb.deleteCharAt(sb.length()-1);

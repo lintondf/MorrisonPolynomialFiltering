@@ -562,7 +562,7 @@ def nUnitLastVRF( order : int, tau : float ) -> int:
     else :
         return 1+int(max(order, exp(-0.9108*log(tau) + 2.0805))); 
         
-def _makeEmpCore(order : int, tau : float) -> ICore:
+def makeEmpCore(order : int, tau : float) -> ICore:
     """
     Factory for expanding memory polynomial filters
     
@@ -588,7 +588,7 @@ def _makeEmpCore(order : int, tau : float) -> ICore:
     
 def makeEmp(order : int, tau : float) -> RecursivePolynomialFilter:
     '''@core : ICore'''
-    core = _makeEmpCore(order, tau);
+    core = makeEmpCore(order, tau);
     return RecursivePolynomialFilter(order, tau, core)
 
 

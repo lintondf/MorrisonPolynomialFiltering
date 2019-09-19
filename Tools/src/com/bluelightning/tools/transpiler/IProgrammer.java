@@ -2,6 +2,7 @@ package com.bluelightning.tools.transpiler;
 
 import java.util.AbstractMap;
 import java.util.List;
+import java.util.TreeSet;
 
 import org.ejml.equation.ManagerTempVariables;
 
@@ -81,7 +82,10 @@ public interface IProgrammer {
 	
 	List<Pair> getMatrixMethods();
 	
+	public void addImports(List<String> imports);
+	
 	public interface IExpressionCompiler {
+		public void setTemporaries(TreeSet<String> declaredTemps);
 		public void setStaticImports(List<StaticImport> staticImports);
 		public boolean compile(String expression, List<String> imports, Scope currentScope );
 		public List<String> getHeader();

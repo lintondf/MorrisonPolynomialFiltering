@@ -22,6 +22,7 @@ public abstract class AbstractProgrammer implements IProgrammer {
 
 	public AbstractProgrammer() {
 		typeRemap.put("None", "void");
+		typeRemap.put("bool", "boolean");
 		typeRemap.put("int", "int");
 		typeRemap.put("float", "double");
 		typeRemap.put("vector", getVectorClass());

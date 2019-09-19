@@ -56,18 +56,18 @@ namespace polynomialfiltering {
             }
 
             RealVector FixedMemoryFilter::transitionState (const double t) {
-                RealVector dt; ///<  array of delta times
-                RealMatrix Tn;
-                RealMatrix Tnt; ///<  transpose of Tn
-                RealMatrix TntTn;
-                RealMatrix TntYn;
+                RealVector dt(L); ///<  array of delta times
+                RealMatrix Tn(L, order+1);
+                RealMatrix Tnt(order+1, L); ///<  transpose of Tn
+                RealMatrix TntTn(order+1, order+1);
+                RealMatrix TntYn(order+1, 1);
                 dt = this->tRing - t;
                 Tn = this->_getTn(dt);
                 Tnt = transpose(Tn);
                 TntTn = Tnt * Tn;
                 TntYn = Tnt * this->yRing;
                 this->Z = solve(TntTn, TntYn);
-                return this->Z;
+                return copy(this->Z);
             }
 
             RealVector FixedMemoryFilter::getState () {

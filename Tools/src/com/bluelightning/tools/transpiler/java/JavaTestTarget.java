@@ -49,7 +49,7 @@ public class JavaTestTarget extends AbstractJavaTarget {
 
 	@Override
 	public void finishClass(Scope scope) {
-		//System.out.println( currentClass + " : " + scope.toString());
+		System.out.println( currentClass + " : " + scope.toString());
 		if (! currentClass.isEmpty() && currentClass.peek().getName().equals(scope.getLast()) ) {
 			super.finishClass(scope);
 		}
@@ -65,7 +65,7 @@ public class JavaTestTarget extends AbstractJavaTarget {
 		imports.clear();
 		imports.add("org.junit.Test");
 		imports.add("java.util.List");
-		((EjmlProgrammer) programmer).addImports(imports);
+		programmer.addImports(imports);
 		imports.add("polynomialfiltering.main.FilterStatus");
 		imports.add("static polynomialfiltering.main.Utility.*");
 		imports.add("utility.TestData");
