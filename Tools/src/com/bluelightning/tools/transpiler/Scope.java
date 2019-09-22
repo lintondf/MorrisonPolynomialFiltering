@@ -56,14 +56,14 @@ public class Scope {
 			return qualifiers;
 		}
 		
-		final static String target = "/polynomialfiltering/components/Fmp_test/generateStates/Fmp_test/";
+//		final static String target = "/polynomialfiltering/components/Fmp_test/generateStates/Fmp_test/";
 		public Scope() {
 			levels.push( Level.IMPORT );
 //			qualifiers.push("");
 			this.qString = getScopeString();
 			scopeMap.put(this.qString, this);
-			if (this.qString.equals(target)) 
-				System.out.println(this);
+//			if (this.qString.equals(target)) 
+//				System.out.println(this);
 		}
 		
 		private Scope( Scope that, boolean copy ) {
@@ -82,8 +82,8 @@ public class Scope {
 			out.levels.add(1, Level.MODULE);
 			out.qString = out.getScopeString();
 			scopeMap.put(out.qString, out);
-			if (out.qString.equals(target)) 
-				System.out.println(out);
+//			if (out.qString.equals(target)) 
+//				System.out.println(out);
 			return out;
 		}
 		
@@ -120,8 +120,8 @@ public class Scope {
 			scope.qualifiers.push(childName);
 			scope.qString = scope.getScopeString();
 			scopeMap.put(scope.qString, scope);
-			if (this.qString.equals(target)) 
-				System.out.println(this);			
+//			if (this.qString.equals(target)) 
+//				System.out.println(this);			
 			return scope;
 		}
 		

@@ -9,6 +9,30 @@ using namespace Eigen;
 using namespace polynomialfiltering;
 
 
+void assert_clear() {
+    //TODO
+}
+
+double assert_report( const std::string id ) {
+    return 0.0; // TODO
+}
+
+void assertEqual(double limitBits, double actualBits) {
+    CHECK(limitBits == actualBits);
+}
+
+void assertGreaterEqual(double limitBits, double actualBits) {
+    CHECK(limitBits >= actualBits);
+}
+
+void assertTrue( bool tf ) {
+    CHECK( tf );
+}
+
+void assertFalse( bool tf ) {
+    CHECK( !tf );
+}
+
 void assert_almost_equal(const RealMatrix A, const RealMatrix B) {
 	CHECK(A.isApprox(B));
 }

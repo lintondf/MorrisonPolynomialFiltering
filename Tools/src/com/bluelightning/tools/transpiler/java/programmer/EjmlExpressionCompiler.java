@@ -1009,7 +1009,7 @@ public class EjmlExpressionCompiler implements IExpressionCompiler {
 		codeGenerator = new GenerateEquationCode(eq, coder, null, null, declaredTemps);
 		if (! codeGenerator.generate(expression, false) ) {
 			Transpiler.instance().logger().info(String.format("Compile: %s -X: %s", expression, codeGenerator.getLastError().getMessage()));
-			System.out.println(codeGenerator.getLastError().getMessage() + ": " + expression);
+//			System.out.println(codeGenerator.getLastError().getMessage() + ": " + expression);
 			//eq.getVariables().keySet().forEach(System.out::println);
 			return false;
 		}

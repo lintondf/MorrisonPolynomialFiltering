@@ -58,6 +58,15 @@ namespace polynomialfiltering {
 	typedef Matrix<double, 8, 1> RealVector8;
 	typedef Matrix<double, 9, 1> RealVector9;
 	typedef Matrix<double, 10, 1> RealVector10;
+    typedef Matrix<double, 11, 1> RealVector11;
+    typedef Matrix<double, 12, 1> RealVector12;
+    typedef Matrix<double, 13, 1> RealVector13;
+    typedef Matrix<double, 14, 1> RealVector14;
+    typedef Matrix<double, 15, 1> RealVector15;
+    typedef Matrix<double, 16, 1> RealVector16;
+    typedef Matrix<double, 17, 1> RealVector17;
+    typedef Matrix<double, 18, 1> RealVector18;
+    typedef Matrix<double, 19, 1> RealVector19;
 	typedef Matrix<double, 1, 1> RealMatrix1;
 	typedef Matrix<double, 2, 2> RealMatrix2;
 	typedef Matrix<double, 3, 3> RealMatrix3;

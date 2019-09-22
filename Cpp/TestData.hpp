@@ -21,11 +21,9 @@ using namespace polynomialfiltering;
 
 void assert_almost_equal(const RealMatrix A, const RealMatrix B);
 
-void assert_almost_equal(const RealMatrix A, const RealVector B);
-
 void assert_almost_equal(const RealMatrix A, double B);
 
-void assert_almost_equal(double B, const RealMatrixx& A);
+void assert_almost_equal(double B, const RealMatrix A);
 
 void assert_almost_equal(double A, double B);
 
@@ -34,6 +32,20 @@ void assert_array_less(const RealMatrix A, const RealMatrix B);
 void assert_array_less(double A, double B);
 
 void assert_not_empty(std::vector< std::string >& list);
+
+void assert_clear();
+
+double assert_report( const std::string id );
+
+void assertEqual(double limitBits, double actualBits);
+
+void assertGreaterEqual(double limitBits, double actualBits);
+
+void assertTrue( bool tf );
+
+void assertFalse( bool tf );
+
+typedef int Group;
 
 class TestData {
 public:
@@ -81,44 +93,78 @@ public:
 		}
 		return matches;
 	}
+    
+    std::vector<std::string> getMatchingSubGroups(Group parent, std::string testName) {
+        std::vector<std::string> matches;
+        //TODO
+        return matches;
+    }
+    
+    Group getGroup( const std::string groupName ) {
+        for (int i = 0; i < groupNames.size(); i++) {
+            if (groupNames.at(i) == groupName) {
+                int gid = groupIds.at(i);
+                return gid;
+            }
+        }
+        return -1;
+    }
 
 	RealMatrix getGroupVariable(std::string groupName, std::string variableName) {
 		for (int i = 0; i < groupNames.size(); i++) {
 			if (groupNames.at(i) == groupName) {
 				int gid = groupIds.at(i);
-				int vid;
-				int status = nc_inq_varid(gid, variableName.c_str(), &vid);
-				if (status != NC_NOERR) {
-					throw ValueError("Missing test variable:" + groupName + " / " + variableName);
-				}
-
-				//int  rh_id;
-				nc_type rh_type;
-				int rh_ndims;
-				int  rh_dimids[NC_MAX_VAR_DIMS];
-				int rh_natts;
-				nc_inq_var(gid, vid, 0, &rh_type, &rh_ndims, rh_dimids, &rh_natts);
-				size_t count[2];
-				for (int j = 0; j < rh_ndims; j++) {
-					size_t dval;
-					char dname[NC_MAX_NAME];
-					nc_inq_dim(gid, rh_dimids[j], dname, &dval);
-					//std::cout << "              " << j << " " << dname << " " << dval << std::endl;
-					count[j] = dval;
-				}
-				size_t start[2] = { 0, 0 };
-				size_t numel = count[0] * count[1];
-				double* data = new double[numel];
-				nc_get_vara_double(gid, vid, start, count, data);
-				Map<RealMatrix>  m(data, count[1], count[0]);
-				RealMatrix out = m.transpose();
-				delete[] data;
-				return out;
+                return getArray( gid, variableName);
 			}
 		}
 		return RealMatrix::Zero(0, 0);
 	}
-
+    
+    RealMatrix getArray( Group gid, std::string variableName ) {
+        int vid;
+        int status = nc_inq_varid(gid, variableName.c_str(), &vid);
+        if (status != NC_NOERR) {
+            throw ValueError("Missing test variable:" + variableName);
+        }
+        
+        //int  rh_id;
+        nc_type rh_type;
+        int rh_ndims;
+        int  rh_dimids[NC_MAX_VAR_DIMS];
+        int rh_natts;
+        nc_inq_var(gid, vid, 0, &rh_type, &rh_ndims, rh_dimids, &rh_natts);
+        size_t count[2];
+        for (int j = 0; j < rh_ndims; j++) {
+            size_t dval;
+            char dname[NC_MAX_NAME];
+            nc_inq_dim(gid, rh_dimids[j], dname, &dval);
+            //std::cout << "              " << j << " " << dname << " " << dval << std::endl;
+            count[j] = dval;
+        }
+        size_t start[2] = { 0, 0 };
+        size_t numel = count[0] * count[1];
+        double* data = new double[numel];
+        nc_get_vara_double(gid, vid, start, count, data);
+        Map<RealMatrix>  m(data, count[1], count[0]);
+        RealMatrix out = m.transpose();
+        delete[] data;
+        return out;
+    }
+    
+    double getScalar( Group gid, std::string variableName ) {
+        RealMatrix m = getArray( gid, variableName );
+        return m(0, 0);
+    }
+    
+    int getInteger( Group gid, std::string variableName ) {
+        return (int) getScalar(gid, variableName);
+    }
+    
+    Group getSubGroup( Group parent, std::string groupName ) {
+        return 0; // TODO
+    }
+    
+    
 protected:
 	int   ncid;  // root netCDF dataset id
 	std::vector<std::string>  groupNames;

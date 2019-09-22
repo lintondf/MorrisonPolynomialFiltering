@@ -472,6 +472,7 @@ class CoreFmp5(AbstractCoreFmp):
         return V;
 
 
+@classmethod
 def makeFmpCore(order : int, tau : float, theta : float) -> ICore:
     """
     Factory for fading memory polynomial filter cores
@@ -497,6 +498,7 @@ def makeFmpCore(order : int, tau : float, theta : float) -> ICore:
     else : # (order == 5.0) :
         return CoreFmp5(tau, theta);
     
+@classmethod
 def makeFmp(order : int, tau : float, theta : float) -> RecursivePolynomialFilter:
     '''@core : ICore'''
     core = makeFmpCore(order, tau, theta);

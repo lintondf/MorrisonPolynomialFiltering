@@ -16,14 +16,6 @@ namespace polynomialfiltering {
     namespace components {
         using namespace Eigen;
         
-            int RecursivePolynomialFilter::n;
-            double RecursivePolynomialFilter::dtau;
-            double RecursivePolynomialFilter::t0;
-            double RecursivePolynomialFilter::tau;
-            double RecursivePolynomialFilter::t;
-            RealVector RecursivePolynomialFilter::Z;
-            RealVector RecursivePolynomialFilter::D;
-            std::shared_ptr<ICore> RecursivePolynomialFilter::core;
             RecursivePolynomialFilter::RecursivePolynomialFilter (const int order, const double tau, const std::shared_ptr<ICore> core) : AbstractFilter(order) {
                 double td; ///<  tau^d 
                 if (order < 0 || order > 5) {

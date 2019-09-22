@@ -16,72 +16,68 @@ namespace polynomialfiltering {
     namespace components {
         using namespace Eigen;
         
-            int CoreEmp0::order;
-            double CoreEmp0::tau;
-            CoreEmp0::CoreEmp0 (const double tau) {
+            Emp::CoreEmp0::CoreEmp0 (const double tau) {
                 this->order = 0;
                 this->tau = tau;
             }
 
-            int CoreEmp0::getSamplesToStart () {
+            int Emp::CoreEmp0::getSamplesToStart () {
                 return this->order + 2;
             }
 
-            RealVector CoreEmp0::getGamma (const double n, const double dtau) {
+            RealVector Emp::CoreEmp0::getGamma (const double n, const double dtau) {
                 RealVector g(1);
                 g = (RealVector1() << 1.0 / (1.0 + n)).finished();
                 return g;
             }
 
-            double CoreEmp0::getFirstVRF (const int n) {
+            double Emp::CoreEmp0::getFirstVRF (const int n) {
                 return this->_getFirstVRF(n, this->tau);
             }
 
-            double CoreEmp0::getLastVRF (const int n) {
+            double Emp::CoreEmp0::getLastVRF (const int n) {
                 return this->_getLastVRF(n, this->tau);
             }
 
-            RealMatrix CoreEmp0::getDiagonalVRF (const int n) {
+            RealMatrix Emp::CoreEmp0::getDiagonalVRF (const int n) {
                 return this->_getDiagonalVRF(n, this->tau);
             }
 
-            RealMatrix CoreEmp0::getVRF (const int n) {
+            RealMatrix Emp::CoreEmp0::getVRF (const int n) {
                 return this->_getVRF(n, this->tau);
             }
 
-            double CoreEmp0::_getFirstVRF (const double n, const double tau) {
+            double Emp::CoreEmp0::_getFirstVRF (const double n, const double tau) {
                 return 1.0 / (n + 1.0);
             }
 
-            double CoreEmp0::_getLastVRF (const double n, const double tau) {
+            double Emp::CoreEmp0::_getLastVRF (const double n, const double tau) {
                 return 1.0 / (n + 1.0);
             }
 
-            RealMatrix CoreEmp0::_getDiagonalVRF (const double n, const double tau) {
+            RealMatrix Emp::CoreEmp0::_getDiagonalVRF (const double n, const double tau) {
                 RealMatrix V(order + 1, order + 1);
                 V = ArrayXXd::Zero(this->order + 1, this->order + 1);
                 V(0, 0) = this->_getFirstVRF(n, tau);
                 return V;
             }
 
-            RealMatrix CoreEmp0::_getVRF (const double n, const double tau) {
+            RealMatrix Emp::CoreEmp0::_getVRF (const double n, const double tau) {
                 RealMatrix V(order + 1, order + 1);
                 V = this->_getDiagonalVRF(n, tau);
                 return V;
             }
 
-            int CoreEmp1::order;
-            double CoreEmp1::tau;
-            CoreEmp1::CoreEmp1 (const double tau) {
+            Emp::CoreEmp1::CoreEmp1 (const double tau) {
                 this->order = 1;
                 this->tau = tau;
             }
 
-            int CoreEmp1::getSamplesToStart () {
+            int Emp::CoreEmp1::getSamplesToStart () {
                 return this->order + 2;
             }
 
-            RealVector CoreEmp1::getGamma (const double n, const double dtau) {
+            RealVector Emp::CoreEmp1::getGamma (const double n, const double dtau) {
                 double denom;
                 RealVector g(2);
                 denom = 1.0 / ((n + 2) * (n + 1));
@@ -90,31 +86,31 @@ namespace polynomialfiltering {
                 return g;
             }
 
-            double CoreEmp1::getFirstVRF (const int n) {
+            double Emp::CoreEmp1::getFirstVRF (const int n) {
                 return this->_getFirstVRF(n, this->tau);
             }
 
-            double CoreEmp1::getLastVRF (const int n) {
+            double Emp::CoreEmp1::getLastVRF (const int n) {
                 return this->_getLastVRF(n, this->tau);
             }
 
-            RealMatrix CoreEmp1::getDiagonalVRF (const int n) {
+            RealMatrix Emp::CoreEmp1::getDiagonalVRF (const int n) {
                 return this->_getDiagonalVRF(n, this->tau);
             }
 
-            RealMatrix CoreEmp1::getVRF (const int n) {
+            RealMatrix Emp::CoreEmp1::getVRF (const int n) {
                 return this->_getVRF(n, this->tau);
             }
 
-            double CoreEmp1::_getFirstVRF (const double n, const double tau) {
+            double Emp::CoreEmp1::_getFirstVRF (const double n, const double tau) {
                 return 2.0 * (2.0 * n + 3.0) / (n * (n + 1.0));
             }
 
-            double CoreEmp1::_getLastVRF (const double n, const double tau) {
+            double Emp::CoreEmp1::_getLastVRF (const double n, const double tau) {
                 return 12.0 / (n * pow(tau, 2) * (n + 1.0) * (n + 2.0));
             }
 
-            RealMatrix CoreEmp1::_getDiagonalVRF (const double n, const double tau) {
+            RealMatrix Emp::CoreEmp1::_getDiagonalVRF (const double n, const double tau) {
                 RealMatrix V(2, 2);
                 V = ArrayXXd::Zero(this->order + 1, this->order + 1);
                 V(0, 0) = this->_getFirstVRF(n, tau);
@@ -122,7 +118,7 @@ namespace polynomialfiltering {
                 return V;
             }
 
-            RealMatrix CoreEmp1::_getVRF (const double n, const double tau) {
+            RealMatrix Emp::CoreEmp1::_getVRF (const double n, const double tau) {
                 RealMatrix V(2, 2);
                 V = this->_getDiagonalVRF(n, tau);
                 V(0, 1) = 6.0 / (n * tau * (n + 1.0));
@@ -130,18 +126,16 @@ namespace polynomialfiltering {
                 return V;
             }
 
-            int CoreEmp2::order;
-            double CoreEmp2::tau;
-            CoreEmp2::CoreEmp2 (const double tau) {
+            Emp::CoreEmp2::CoreEmp2 (const double tau) {
                 this->order = 2;
                 this->tau = tau;
             }
 
-            int CoreEmp2::getSamplesToStart () {
+            int Emp::CoreEmp2::getSamplesToStart () {
                 return this->order + 2;
             }
 
-            RealVector CoreEmp2::getGamma (const double n, const double dtau) {
+            RealVector Emp::CoreEmp2::getGamma (const double n, const double dtau) {
                 double n2;
                 double denom;
                 RealVector g(3);
@@ -152,31 +146,31 @@ namespace polynomialfiltering {
                 return g;
             }
 
-            double CoreEmp2::getFirstVRF (const int n) {
+            double Emp::CoreEmp2::getFirstVRF (const int n) {
                 return this->_getFirstVRF(n, this->tau);
             }
 
-            double CoreEmp2::getLastVRF (const int n) {
+            double Emp::CoreEmp2::getLastVRF (const int n) {
                 return this->_getLastVRF(n, this->tau);
             }
 
-            RealMatrix CoreEmp2::getDiagonalVRF (const int n) {
+            RealMatrix Emp::CoreEmp2::getDiagonalVRF (const int n) {
                 return this->_getDiagonalVRF(n, this->tau);
             }
 
-            RealMatrix CoreEmp2::getVRF (const int n) {
+            RealMatrix Emp::CoreEmp2::getVRF (const int n) {
                 return this->_getVRF(n, this->tau);
             }
 
-            double CoreEmp2::_getFirstVRF (const double n, const double tau) {
+            double Emp::CoreEmp2::_getFirstVRF (const double n, const double tau) {
                 return 3.0 * (3.0 * pow(n, 2) + 9.0 * n + 8.0) / (n * (pow(n, 2) - 1.0));
             }
 
-            double CoreEmp2::_getLastVRF (const double n, const double tau) {
+            double Emp::CoreEmp2::_getLastVRF (const double n, const double tau) {
                 return 720.0 / (n * pow(tau, 4) * (n - 1.0) * (n + 1.0) * (n + 2.0) * (n + 3.0));
             }
 
-            RealMatrix CoreEmp2::_getDiagonalVRF (const double n, const double tau) {
+            RealMatrix Emp::CoreEmp2::_getDiagonalVRF (const double n, const double tau) {
                 RealMatrix V(order + 1, order + 1);
                 V = ArrayXXd::Zero(this->order + 1, this->order + 1);
                 V(0, 0) = this->_getFirstVRF(n, tau);
@@ -185,7 +179,7 @@ namespace polynomialfiltering {
                 return V;
             }
 
-            RealMatrix CoreEmp2::_getVRF (const double n, const double tau) {
+            RealMatrix Emp::CoreEmp2::_getVRF (const double n, const double tau) {
                 RealMatrix V(order + 1, order + 1);
                 V = this->_getDiagonalVRF(n, tau);
                 V(0, 1) = 18.0 * (2.0 * n + 3.0) / (n * tau * (pow(n, 2) - 1.0));
@@ -197,18 +191,16 @@ namespace polynomialfiltering {
                 return V;
             }
 
-            int CoreEmp3::order;
-            double CoreEmp3::tau;
-            CoreEmp3::CoreEmp3 (const double tau) {
+            Emp::CoreEmp3::CoreEmp3 (const double tau) {
                 this->order = 3;
                 this->tau = tau;
             }
 
-            int CoreEmp3::getSamplesToStart () {
+            int Emp::CoreEmp3::getSamplesToStart () {
                 return this->order + 2;
             }
 
-            RealVector CoreEmp3::getGamma (const double n, const double dtau) {
+            RealVector Emp::CoreEmp3::getGamma (const double n, const double dtau) {
                 double n2;
                 double n3;
                 double denom;
@@ -221,31 +213,31 @@ namespace polynomialfiltering {
                 return g;
             }
 
-            double CoreEmp3::getFirstVRF (const int n) {
+            double Emp::CoreEmp3::getFirstVRF (const int n) {
                 return this->_getFirstVRF(n, this->tau);
             }
 
-            double CoreEmp3::getLastVRF (const int n) {
+            double Emp::CoreEmp3::getLastVRF (const int n) {
                 return this->_getLastVRF(n, this->tau);
             }
 
-            RealMatrix CoreEmp3::getDiagonalVRF (const int n) {
+            RealMatrix Emp::CoreEmp3::getDiagonalVRF (const int n) {
                 return this->_getDiagonalVRF(n, this->tau);
             }
 
-            RealMatrix CoreEmp3::getVRF (const int n) {
+            RealMatrix Emp::CoreEmp3::getVRF (const int n) {
                 return this->_getVRF(n, this->tau);
             }
 
-            double CoreEmp3::_getFirstVRF (const double n, const double tau) {
+            double Emp::CoreEmp3::_getFirstVRF (const double n, const double tau) {
                 return 8.0 * (2.0 * pow(n, 3) + 9.0 * pow(n, 2) + 19.0 * n + 15.0) / (n * (pow(n, 3) - 2.0 * pow(n, 2) - n + 2.0));
             }
 
-            double CoreEmp3::_getLastVRF (const double n, const double tau) {
+            double Emp::CoreEmp3::_getLastVRF (const double n, const double tau) {
                 return 100800.0 / (n * pow(tau, 6) * (n - 2.0) * (n - 1.0) * (n + 1.0) * (n + 2.0) * (n + 3.0) * (n + 4.0));
             }
 
-            RealMatrix CoreEmp3::_getDiagonalVRF (const double n, const double tau) {
+            RealMatrix Emp::CoreEmp3::_getDiagonalVRF (const double n, const double tau) {
                 RealMatrix V(order + 1, order + 1);
                 V = ArrayXXd::Zero(this->order + 1, this->order + 1);
                 V(0, 0) = this->_getFirstVRF(n, tau);
@@ -255,7 +247,7 @@ namespace polynomialfiltering {
                 return V;
             }
 
-            RealMatrix CoreEmp3::_getVRF (const double n, const double tau) {
+            RealMatrix Emp::CoreEmp3::_getVRF (const double n, const double tau) {
                 RealMatrix V(order + 1, order + 1);
                 V = this->_getDiagonalVRF(n, tau);
                 V(0, 1) = 20.0 * (6.0 * pow(n, 2) + 18.0 * n + 17.0) / (n * tau * (pow(n, 3) - 2.0 * pow(n, 2) - n + 2.0));
@@ -273,18 +265,16 @@ namespace polynomialfiltering {
                 return V;
             }
 
-            int CoreEmp4::order;
-            double CoreEmp4::tau;
-            CoreEmp4::CoreEmp4 (const double tau) {
+            Emp::CoreEmp4::CoreEmp4 (const double tau) {
                 this->order = 4;
                 this->tau = tau;
             }
 
-            int CoreEmp4::getSamplesToStart () {
+            int Emp::CoreEmp4::getSamplesToStart () {
                 return this->order + 2;
             }
 
-            RealVector CoreEmp4::getGamma (const double n, const double dtau) {
+            RealVector Emp::CoreEmp4::getGamma (const double n, const double dtau) {
                 double n2;
                 double n3;
                 double n4;
@@ -299,31 +289,31 @@ namespace polynomialfiltering {
                 return g;
             }
 
-            double CoreEmp4::getFirstVRF (const int n) {
+            double Emp::CoreEmp4::getFirstVRF (const int n) {
                 return this->_getFirstVRF(n, this->tau);
             }
 
-            double CoreEmp4::getLastVRF (const int n) {
+            double Emp::CoreEmp4::getLastVRF (const int n) {
                 return this->_getLastVRF(n, this->tau);
             }
 
-            RealMatrix CoreEmp4::getDiagonalVRF (const int n) {
+            RealMatrix Emp::CoreEmp4::getDiagonalVRF (const int n) {
                 return this->_getDiagonalVRF(n, this->tau);
             }
 
-            RealMatrix CoreEmp4::getVRF (const int n) {
+            RealMatrix Emp::CoreEmp4::getVRF (const int n) {
                 return this->_getVRF(n, this->tau);
             }
 
-            double CoreEmp4::_getFirstVRF (const double n, const double tau) {
+            double Emp::CoreEmp4::_getFirstVRF (const double n, const double tau) {
                 return 5.0 * (5.0 * pow(n, 4) + 30.0 * pow(n, 3) + 115.0 * pow(n, 2) + 210.0 * n + 144.0) / (n * (pow(n, 4) - 5.0 * pow(n, 3) + 5.0 * pow(n, 2) + 5.0 * n - 6.0));
             }
 
-            double CoreEmp4::_getLastVRF (const double n, const double tau) {
+            double Emp::CoreEmp4::_getLastVRF (const double n, const double tau) {
                 return 25401600.0 / (n * pow(tau, 8) * (n - 3.0) * (n - 2.0) * (n - 1.0) * (n + 1.0) * (n + 2.0) * (n + 3.0) * (n + 4.0) * (n + 5.0));
             }
 
-            RealMatrix CoreEmp4::_getDiagonalVRF (const double n, const double tau) {
+            RealMatrix Emp::CoreEmp4::_getDiagonalVRF (const double n, const double tau) {
                 RealMatrix V(order + 1, order + 1);
                 V = ArrayXXd::Zero(this->order + 1, this->order + 1);
                 V(0, 0) = this->_getFirstVRF(n, tau);
@@ -334,7 +324,7 @@ namespace polynomialfiltering {
                 return V;
             }
 
-            RealMatrix CoreEmp4::_getVRF (const double n, const double tau) {
+            RealMatrix Emp::CoreEmp4::_getVRF (const double n, const double tau) {
                 RealMatrix V(order + 1, order + 1);
                 V = this->_getDiagonalVRF(n, tau);
                 V(0, 1) = 50.0 * (6.0 * pow(n, 3) + 27.0 * pow(n, 2) + 59.0 * n + 48.0) / (n * tau * (pow(n, 4) - 5.0 * pow(n, 3) + 5.0 * pow(n, 2) + 5.0 * n - 6.0));
@@ -360,18 +350,16 @@ namespace polynomialfiltering {
                 return V;
             }
 
-            int CoreEmp5::order;
-            double CoreEmp5::tau;
-            CoreEmp5::CoreEmp5 (const double tau) {
+            Emp::CoreEmp5::CoreEmp5 (const double tau) {
                 this->order = 5;
                 this->tau = tau;
             }
 
-            int CoreEmp5::getSamplesToStart () {
+            int Emp::CoreEmp5::getSamplesToStart () {
                 return this->order + 2;
             }
 
-            RealVector CoreEmp5::getGamma (const double n, const double dtau) {
+            RealVector Emp::CoreEmp5::getGamma (const double n, const double dtau) {
                 double n2;
                 double n3;
                 double n4;
@@ -386,31 +374,31 @@ namespace polynomialfiltering {
                 return g;
             }
 
-            double CoreEmp5::getFirstVRF (const int n) {
+            double Emp::CoreEmp5::getFirstVRF (const int n) {
                 return this->_getFirstVRF(n, this->tau);
             }
 
-            double CoreEmp5::getLastVRF (const int n) {
+            double Emp::CoreEmp5::getLastVRF (const int n) {
                 return this->_getLastVRF(n, this->tau);
             }
 
-            RealMatrix CoreEmp5::getDiagonalVRF (const int n) {
+            RealMatrix Emp::CoreEmp5::getDiagonalVRF (const int n) {
                 return this->_getDiagonalVRF(n, this->tau);
             }
 
-            RealMatrix CoreEmp5::getVRF (const int n) {
+            RealMatrix Emp::CoreEmp5::getVRF (const int n) {
                 return this->_getVRF(n, this->tau);
             }
 
-            double CoreEmp5::_getFirstVRF (const double n, const double tau) {
+            double Emp::CoreEmp5::_getFirstVRF (const double n, const double tau) {
                 return 6.0 * (6.0 * pow(n, 5) + 45.0 * pow(n, 4) + 280.0 * pow(n, 3) + 855.0 * pow(n, 2) + 1334.0 * n + 840.0) / (n * (pow(n, 5) - 9.0 * pow(n, 4) + 25.0 * pow(n, 3) - 15.0 * pow(n, 2) - 26.0 * n + 24.0));
             }
 
-            double CoreEmp5::_getLastVRF (const double n, const double tau) {
+            double Emp::CoreEmp5::_getLastVRF (const double n, const double tau) {
                 return 10059033600.0 / (n * pow(tau, 10.0) * (n - 4.0) * (n - 3.0) * (n - 2.0) * (n - 1.0) * (n + 1.0) * (n + 2.0) * (n + 3.0) * (n + 4.0) * (n + 5.0) * (n + 6.0));
             }
 
-            RealMatrix CoreEmp5::_getDiagonalVRF (const double n, const double tau) {
+            RealMatrix Emp::CoreEmp5::_getDiagonalVRF (const double n, const double tau) {
                 RealMatrix V(order + 1, order + 1);
                 V = ArrayXXd::Zero(this->order + 1, this->order + 1);
                 V(0, 0) = this->_getFirstVRF(n, tau);
@@ -422,7 +410,7 @@ namespace polynomialfiltering {
                 return V;
             }
 
-            RealMatrix CoreEmp5::_getVRF (const double n, const double tau) {
+            RealMatrix Emp::CoreEmp5::_getVRF (const double n, const double tau) {
                 RealMatrix V(order + 1, order + 1);
                 V = this->_getDiagonalVRF(n, tau);
                 V(0, 1) = 126.0 * (5.0 * pow(n, 4) + 30.0 * pow(n, 3) + 115.0 * pow(n, 2) + 210.0 * n + 148.0) / (n * tau * (pow(n, 5) - 9.0 * pow(n, 4) + 25.0 * pow(n, 3) - 15.0 * pow(n, 2) - 26.0 * n + 24.0));
@@ -458,7 +446,7 @@ namespace polynomialfiltering {
                 return V;
             }
 
-        double nSwitch (const int order, const double theta) {
+        double Emp::nSwitch (const int order, const double theta) {
             if (1.0 - theta <= 0.0) {
                 return 0.0;
             }
@@ -479,7 +467,7 @@ namespace polynomialfiltering {
             }
         }
 
-        int nUnitLastVRF (const int order, const double tau) {
+        int Emp::nUnitLastVRF (const int order, const double tau) {
             if (order == 0) {
                 return 1 + 0;
             } else if (order == 1.0) {
@@ -495,7 +483,7 @@ namespace polynomialfiltering {
             }
         }
 
-        std::shared_ptr<ICore> makeEmpCore (const int order, const double tau) {
+        std::shared_ptr<ICore> Emp::makeEmpCore (const int order, const double tau) {
             if (order == 0) {
                 return std::make_shared<CoreEmp0>(tau);
             } else if (order == 1.0) {
@@ -511,9 +499,9 @@ namespace polynomialfiltering {
             }
         }
 
-        std::shared_ptr<RecursivePolynomialFilter> makeEmp (const int order, const double tau) {
+        std::shared_ptr<RecursivePolynomialFilter> Emp::makeEmp (const int order, const double tau) {
             std::shared_ptr<ICore> core;
-            core = makeEmpCore(order, tau);
+            core = Emp::makeEmpCore(order, tau);
             return std::make_shared<RecursivePolynomialFilter>(order, tau, core);
         }
 

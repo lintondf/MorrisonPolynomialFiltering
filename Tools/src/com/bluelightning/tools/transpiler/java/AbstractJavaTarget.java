@@ -277,7 +277,7 @@ public abstract class AbstractJavaTarget extends AbstractLanguageTarget{
 					indent.writeln( decl + ";");
 				} else {
 					if (currentClass != null) {
-						String manualSuper = Transpiler.instance().getManualScope(symbol.getScope().toString(), "Java");
+						String manualSuper = Transpiler.instance().getManualSuper(symbol.getScope().toString(), "Java");
 						if (manualSuper != null && name.equals(currentClassName)) {
 							indent.writeln( decl + " {");
 							indent.in();

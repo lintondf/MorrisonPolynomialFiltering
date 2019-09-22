@@ -13,6 +13,7 @@ package com.bluelightning.tools.transpiler;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -34,6 +35,9 @@ public abstract class AbstractLanguageTarget implements ILanguageTarget {
 	protected int id;
 	protected Set<String> ignoredSuperClasses = new TreeSet<>();
 	
+	// set by catalogContents
+	public int containedClasses = 0;
+	public int staticFunctions = 0;
 	
 	
 	public AbstractLanguageTarget() {
@@ -230,6 +234,31 @@ public abstract class AbstractLanguageTarget implements ILanguageTarget {
 	 */
 	@Override
 	public void closeBlock() {
+	}
+
+	public String catalogContents(Scope scope) {
+		String packageName = null;
+		containedClasses = 0;
+		staticFunctions = 0;
+		List<Symbol> syms = Transpiler.instance().getSymbolTable().atScope(scope);
+		for (Symbol s : syms) {
+			if (s.isClass() && ! s.isInherited())
+				containedClasses++;
+			if (s.isFunction() && s.getScope().getLevel() == Scope.Level.MODULE)
+				staticFunctions++;
+		}
+		if (containedClasses > 1  && ! scope.getLast().equals("Main")) {
+			packageName = scope.getLast().toLowerCase();
+			System.out.print("PACKAGE: " + packageName);
+		} else {
+			System.out.print("CLASS: " + scope.getLast());
+		}
+		if (staticFunctions > 0) {
+			System.out.printf(": %d classes; %d static functions\n", containedClasses, staticFunctions);
+		} else {
+			System.out.printf(": %d classes\n", containedClasses);
+		}
+		return packageName;
 	}
 
 	public static String readFileToString( Path path ) {

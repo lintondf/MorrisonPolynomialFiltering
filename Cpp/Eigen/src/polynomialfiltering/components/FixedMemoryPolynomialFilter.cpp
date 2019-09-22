@@ -16,16 +16,6 @@ namespace polynomialfiltering {
     namespace components {
         using namespace Eigen;
         
-            int FixedMemoryFilter::order;
-            int FixedMemoryFilter::L;
-            int FixedMemoryFilter::n;
-            int FixedMemoryFilter::n0;
-            double FixedMemoryFilter::t0;
-            double FixedMemoryFilter::t;
-            double FixedMemoryFilter::tau;
-            RealVector FixedMemoryFilter::Z;
-            RealVector FixedMemoryFilter::tRing;
-            RealVector FixedMemoryFilter::yRing;
             FixedMemoryFilter::FixedMemoryFilter (const int order, const int memorySize) : AbstractFilter(order) {
                 if (order < 0 || order > 5) {
                     throw ValueError("Polynomial orders < 1 or > 5 are not supported");
@@ -125,7 +115,7 @@ namespace polynomialfiltering {
                 RealVector C;
                 double fact;
                 Tn = ArrayXXd::Zero(dt.size(), this->order + 1);
-                Tn.col(0 : 1) = ones(dt.size(), 1);
+                Tn.col(0) = ones(dt.size(), 1);
                 C = copy(dt);
                 fact = 1.0;
                 for (int i = 1; i < this->order + 1; i++) {

@@ -6,6 +6,8 @@ import java.io.OutputStreamWriter;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.nio.file.Path;
+import java.util.Arrays;
+import java.util.TreeSet;
 
 import com.bluelightning.tools.transpiler.AbstractLanguageTarget;
 import com.bluelightning.tools.transpiler.IProgrammer;
@@ -19,6 +21,7 @@ public class CppSrcTarget extends AbstractCppTarget {
 
 	public CppSrcTarget(IProgrammer programmer, Configuration cfg, Path baseDirectory) {
 		super(programmer, cfg, baseDirectory);
+		packageAsClass = new TreeSet<String>( Arrays.asList(new String[] {"Emp", "Fmp"}));
 	}
 	
 	boolean inTest = false;
@@ -30,6 +33,8 @@ public class CppSrcTarget extends AbstractCppTarget {
 			return;
 		}
 		System.out.println(String.format("\nC++/%s src: ", programmer.getName()) + scope.toAnnotatedString() );
+		System.out.println(includeFiles.toString());
+		catalogContents( scope );
 		this.headerOnly = headerOnly;
 		
 		currentScope = scope;
@@ -92,6 +97,14 @@ public class CppSrcTarget extends AbstractCppTarget {
 		for (String using : programmer.getUsings()) {
 			cppIndent.writeln(using);
 		}
+
+		if (packageAsClass.contains(scope.getLast())) {
+			hppIndent.write(String.format("class %s {\n", scope.getLast()));
+			hppIndent.in();
+			hppIndent.writeln("public:");
+		}
+//		cppIndent.write(String.format("class %s {\n", scope.getLast()));
+//		cppIndent.in();
 		cppIndent.writeln("");
 	}
 	
@@ -102,6 +115,12 @@ public class CppSrcTarget extends AbstractCppTarget {
 			namespaceStack.clear();
 			return;
 		}
+		if (packageAsClass.contains(currentScope.getLast())) {
+			hppIndent.out();
+			hppIndent.writeln("};");
+		}
+//		cppIndent.out();
+//		cppIndent.writeln("};");
 		while (! namespaceStack.isEmpty() ) {
 			String close = namespaceStack.pop();
 			hppIndent.append( close );

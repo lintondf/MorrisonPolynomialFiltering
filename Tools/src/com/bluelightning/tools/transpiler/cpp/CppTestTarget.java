@@ -29,11 +29,13 @@ public class CppTestTarget extends AbstractCppTarget {
 	@Override
 	public void startModule(Scope scope, boolean headerOnly, boolean isTest) {
 		if (! isTest) {
+			System.out.printf("@@@@@@ %d %s\n", includeFiles.size(), scope.toString());
 			includeFiles.clear();
 			return;
 		}
 		inTest = true;
 		System.out.println(String.format("\nC++/%s test: ", programmer.getName()) + scope.toString() );
+		System.out.println(includeFiles.toString());
 		this.headerOnly = headerOnly;
 		
 		moduleTests = new ArrayList<>();
@@ -67,10 +69,10 @@ public class CppTestTarget extends AbstractCppTarget {
 		templateDataModel.put("hppDefine", define);
 		templateDataModel.put("systemIncludes", "");
 		StringBuilder localIncludes = new StringBuilder();
-		//localIncludes.append("#include <polynomialfiltering/Main.hpp>\n");
 		for (String includeFile : includeFiles) {
 			localIncludes.append(String.format("#include <%s>\n", includeFile));
 		}
+		localIncludes.append("#include <TestData.hpp>\n");
 		templateDataModel.put("localIncludes", localIncludes.toString());
 		templateDataModel.put("interfaceInclude", programmer.getInclude() + "\n");
 		
@@ -78,13 +80,14 @@ public class CppTestTarget extends AbstractCppTarget {
 		
 		StringBuilder systemIncludes = new StringBuilder();
 		systemIncludes.append("#include <math.h>\n");
+		systemIncludes.append("#include <TestData.hpp>\n");
 		
 		templateDataModel.put("systemIncludes", systemIncludes.toString());
 		templateDataModel.put("hppBody", "");
 		templateDataModel.put("cppBody", "");
 		
-		cppIndent.write(String.format("namespace %s {\n", "polynomialfiltering"));
-		namespaceStack.push(String.format("%s}; // namespace %s\n", hppIndent.get(), "polynomialfiltering"));
+//		cppIndent.write(String.format("namespace %s {\n", "polynomialfiltering"));
+//		namespaceStack.push(String.format("%s}; // namespace %s\n", hppIndent.get(), "polynomialfiltering"));
 		hppIndent.in();
 		cppIndent.in();
 		for (int i = 0; i < scope.getQualifiers().size()-1; i++) {
@@ -93,15 +96,15 @@ public class CppTestTarget extends AbstractCppTarget {
 			hppIndent.in();
 			cppIndent.in();
 		}
-		cppIndent.write(String.format("namespace %s {\n", moduleName));
-		namespaceStack.push(String.format("%s}; // namespace %s\n", cppIndent.get(), moduleName));
-		cppIndent.in();
-		
 		cppIndent.writeln("");
 		for (String using : programmer.getUsings()) {
 			cppIndent.writeln(using);
 		}
 		cppIndent.writeln("");
+		cppIndent.write(String.format("class %s {\n", moduleName));
+		namespaceStack.push(String.format("%s}; // class %s\n", cppIndent.get(), moduleName));
+		cppIndent.writeln("public:");
+		cppIndent.in();
 	}
 	
 	@Override
@@ -116,16 +119,20 @@ public class CppTestTarget extends AbstractCppTarget {
 			hppIndent.out();
 			cppIndent.out();
 		}
-		templateDataModel.put("cppBody", cppIndent.sb.toString().replaceAll("\\(\\*([^\\)]*)\\)\\.", "$1->")); //.replace("(*this).", "this->"));
+		String body = cppIndent.sb.toString().replaceAll("\\(\\*([^\\)]*)\\)\\.", "$1->"); // replace (ptr*). with ptr->
+		body = body.replace("this->assert", "assert"); // convert unittest members to globals
+		templateDataModel.put("cppBody", body); //.replace("(*this).", "this->"));
 		
 		Indent docIndent = new Indent();
 		docIndent.append(String.format("TEST_CASE(\"%s\") {\n", moduleName ) );
 		docIndent.in();
+		String testClassName = moduleTests.get(0).getParent().toString();
+		testClassName = testClassName.substring(1, testClassName.length()-1).replace("/", "::");
+		docIndent.writeln(String.format("%s test;\n", testClassName ));
 		for (Scope test : moduleTests) {
-			String qualifier = test.getParent().toString().substring(1).replace("/", "::");
 			docIndent.writeln( String.format("SUBCASE(\"%s\") {", test.getLast()));
 			docIndent.in();
-			docIndent.writeln( String.format("%s%s();", qualifier, test.getLast()  ) );
+			docIndent.writeln( String.format("test.%s();", test.getLast()  ) );
 			docIndent.out();
 			docIndent.writeln("}");
 		}
@@ -150,16 +157,19 @@ public class CppTestTarget extends AbstractCppTarget {
 		if (inTest) {
 			currentScope = scope;
 			String currentFunction = scope.getLast();
+			Symbol f = Transpiler.instance().lookup(scope.getParent(), currentFunction);
 			Symbol cls = Transpiler.instance().lookupClass(scope.getParent().getLast());
 			if (cls == null || !cls.hasDecorator("@testclass")) {
-				moduleTests.add(scope);
+				if (f.hasDecorator("@testcase")) {
+					moduleTests.add(scope);
+				}
 			}
 		}
 		super.startMethod(scope);
 	}
 	
 	@Override
-	protected String generateBodyDeclaration( String type, String currentClass, String name, String parameters ) {
+	protected String generateBodyDeclaration( String type, Symbol currentClass, String name, Scope scope, String parameters ) {
 		return String.format("%s%s (%s)", type, name, parameters );
 	}
 

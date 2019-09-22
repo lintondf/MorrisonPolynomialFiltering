@@ -75,6 +75,26 @@ import freemarker.template.TemplateExceptionHandler;
  * -- Julia
  * -- Rust
  * -- Octave
+ * 
+                        f = this->new RecursivePolynomialFilterMock(etc)
+                        f = std::make_shared<RecursivePolynomialFilterMock>(new RecursivePolynomialFilterMock(order, tau, rf->getCore()));
+
+TEST_CASE("EMP_test") {
+    polynomialfiltering::components::EMP_test test = new polynomialfiltering::components::EMP_test();
+    
+    SUBCASE("test1CheckVRF") {
+        test->test1CheckVRF();
+    }
+    SUBCASE("test2CheckStates") {
+        test->test2CheckStates();
+    }
+    SUBCASE("test9NUnitLastVRF") {
+        test->test9NUnitLastVRF();
+    }
+    SUBCASE("test9Coverage") {
+        test->test9Coverage();
+    }
+}
  */
 /**
  * @author NOOK
@@ -131,11 +151,11 @@ public class Transpiler {
 		new TestTarget(Paths.get("components"), "Fmp_test"),
 		new TestTarget(Paths.get("components"), "Pair_test"),
 		new TestTarget(Paths.get("components"), "FixedMemoryFilter_test"),
-//
-//		new Target(Paths.get("polynomialfiltering/filters/controls"), "IObservationErrorModel", true),
-//		new Target(Paths.get("polynomialfiltering/filters/controls"), "IJudge", true),
-//		new Target(Paths.get("polynomialfiltering/filters/controls"), "IMonitor", true),
-//		new Target(Paths.get("polynomialfiltering/filters/controls"), "ConstantObservationErrorModel"),
+
+		new Target(Paths.get("polynomialfiltering/filters/controls"), "IObservationErrorModel", true),
+		new Target(Paths.get("polynomialfiltering/filters/controls"), "IJudge", true),
+		new Target(Paths.get("polynomialfiltering/filters/controls"), "IMonitor", true),
+		new Target(Paths.get("polynomialfiltering/filters/controls"), "ConstantObservationErrorModel"),
 ////		new Target(Paths.get("polynomialfiltering/filters/controls"), "BaseScalarJudge"),
 ////		//new Target(Paths.get("polynomialfiltering/filters/controls"), "BaseVectorJudge"),
 ////		//new Target(Paths.get("polynomialfiltering/filters/controls"), "NullMonitor"),
@@ -143,7 +163,7 @@ public class Transpiler {
 ////		new Target(Paths.get("polynomialfiltering/filters"), "ManagedFilterBase"),
 //////		new Target(Paths.get("polynomialfiltering/filters"), "ManagedScalarRecursiveFilter"),
 //////		new Target(Paths.get("polynomialfiltering/filters"), "ManagedScalarRecursiveFilterSet"),
-//		new TestTarget(Paths.get("filters/controls"), "ConstantObservationErrorModel_test"),
+		new TestTarget(Paths.get("filters/controls"), "ConstantObservationErrorModel_test"),
 	};
 	
 	final Set<String> ignoredModules = new TreeSet<String>( Arrays.asList( new String[]{
@@ -170,7 +190,7 @@ public class Transpiler {
 		manualSupers.put(scopeString, forScope);
 	}
 	
-	public String getManualScope( String scopeString, String language ) {
+	public String getManualSuper( String scopeString, String language ) {
 		HashMap<String, String> forScope = manualSupers.get(scopeString);
 //		System.out.println("gMS : " + scopeString + " : " + language + " : " + forScope);
 		if (forScope == null)
@@ -357,6 +377,13 @@ public class Transpiler {
 		List<ILanguageTarget> ignoring = new ArrayList<>();
 		boolean compilingTest = false;
 		
+		/**
+		 * @param compilingTest the compilingTest to set
+		 */
+		public void setCompilingTest(boolean compilingTest) {
+			this.compilingTest = compilingTest;
+		}
+
 		public TargetDispatcher() {}
 		
 		public void addTarget( ILanguageTarget target ) {
@@ -506,8 +533,17 @@ public class Transpiler {
 		@Override
 		public void addImport(Scope scope) {
 			for (ILanguageTarget target : targets) {
-				if (! (compilingTest ^ target.isTestTarget()) )
-					target.addImport( scope );
+				if (compilingTest) {
+					if (target.isTestTarget()) {
+						target.addImport( scope );
+					}
+				} else {
+					if (!target.isTestTarget()) {
+						target.addImport( scope );
+					}
+				}
+//				if (! (compilingTest ^ target.isTestTarget()) )
+//					target.addImport( scope );
 			}
 		}
 
@@ -707,6 +743,7 @@ public class Transpiler {
 	HashMap<String, Long> moduleChecksums = new HashMap<>();
 	
 	public void compile(Path where, List<String> dottedModule, boolean headerOnly, boolean isTest) {
+		dispatcher.setCompilingTest(isTest);
 		if (isTest) {
 			if (Transpiler.instance().lookupClass("TestData") == null) {
 				Scope scope = new Scope();

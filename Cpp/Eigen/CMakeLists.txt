@@ -4,7 +4,7 @@ project(FilteringCpp)
 set(CMAKE_CXX_STANDARD 11)
 
 find_package(GSL REQUIRED )
-include_directories(include ${GSL_INCLUDE_DIRS}) 
+include_directories(.. include ${GSL_INCLUDE_DIRS}) 
 
 add_subdirectory( test )
 

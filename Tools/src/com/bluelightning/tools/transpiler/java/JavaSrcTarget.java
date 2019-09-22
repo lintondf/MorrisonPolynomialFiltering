@@ -10,7 +10,6 @@ import java.io.OutputStreamWriter;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.nio.file.Path;
-import java.util.List;
 
 import com.bluelightning.tools.transpiler.Indent;
 import com.bluelightning.tools.transpiler.Scope;
@@ -47,35 +46,16 @@ public class JavaSrcTarget extends AbstractJavaTarget {
 	boolean inTest = false;
 	String moduleName = null;
 	String packageName = null;
-
+	
 	@Override
 	public void startModule(Scope scope, boolean headerOnly, boolean isTest) {
 		if (isTest) {
 			inTest = true;
 			return;
 		}
+		packageName = catalogContents( scope );
 		initializeImports();
 		System.out.println(String.format("\nJava/%s src: ", programmer.getName()) + scope.toAnnotatedString() );
-		int containedClasses = 0;
-		int staticFunctions = 0;
-		List<Symbol> syms = Transpiler.instance().getSymbolTable().atScope(scope);
-		for (Symbol s : syms) {
-			if (s.isClass() && ! s.isInherited())
-				containedClasses++;
-			if (s.isFunction() && s.getScope().getLevel() == Scope.Level.MODULE)
-				staticFunctions++;
-		}
-		if (containedClasses > 1  && ! scope.getLast().equals("Main")) {
-			packageName = scope.getLast().toLowerCase();
-			System.out.print("PACKAGE: " + packageName);
-		} else {
-			System.out.print("CLASS: " + scope.getLast());
-		}
-		if (staticFunctions > 0) {
-			System.out.printf(": %d classes; %d static functions\n", containedClasses, staticFunctions);
-		} else {
-			System.out.printf(": %d classes\n", containedClasses);
-		}
 	}
 	
 	@Override
@@ -97,7 +77,7 @@ public class JavaSrcTarget extends AbstractJavaTarget {
 					indent.writeln(line);
 				}
 				finishClass(currentScope);
-				System.out.println(indent.sb.toString());
+//				System.out.println(indent.sb.toString());
 			}
 			packageName = null;
 		}

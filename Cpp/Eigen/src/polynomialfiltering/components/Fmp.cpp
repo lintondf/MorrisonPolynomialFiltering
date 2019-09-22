@@ -16,48 +16,46 @@ namespace polynomialfiltering {
     namespace components {
         using namespace Eigen;
         
-            double AbstractCoreFmp::theta;
-            RealMatrix AbstractCoreFmp::VRF;
-            AbstractCoreFmp::AbstractCoreFmp (const double tau, const double theta) {
+            Fmp::AbstractCoreFmp::AbstractCoreFmp (const double tau, const double theta) {
                 this->theta = theta;
             }
 
-            int AbstractCoreFmp::getSamplesToStart () {
+            int Fmp::AbstractCoreFmp::getSamplesToStart () {
                 return 1;
             }
 
-            RealMatrix AbstractCoreFmp::getVRF (const int n) {
+            RealMatrix Fmp::AbstractCoreFmp::getVRF (const int n) {
                 return copy(this->VRF);
             }
 
-            double AbstractCoreFmp::getFirstVRF (const int n) {
+            double Fmp::AbstractCoreFmp::getFirstVRF (const int n) {
                 return this->VRF(0, 0);
             }
 
-            double AbstractCoreFmp::getLastVRF (const int n) {
-                return this->VRF(VRF->rows()-1, VRF->columns()-1);
+            double Fmp::AbstractCoreFmp::getLastVRF (const int n) {
+                return this->VRF(VRF.rows()-1, VRF.cols()-1);
             }
 
-            CoreFmp0::CoreFmp0 (const double tau, const double theta) : AbstractCoreFmp(tau,theta) {
+            Fmp::CoreFmp0::CoreFmp0 (const double tau, const double theta) : AbstractCoreFmp(tau,theta) {
                 this->VRF = this->_getVRF(tau, theta);
             }
 
-            RealVector CoreFmp0::getGamma (const double time, const double dtau) {
+            RealVector Fmp::CoreFmp0::getGamma (const double time, const double dtau) {
                 return (RealVector1() << 1. - this->theta).finished();
             }
 
-            RealMatrix CoreFmp0::_getVRF (const double u, const double t) {
+            RealMatrix Fmp::CoreFmp0::_getVRF (const double u, const double t) {
                 RealMatrix V(1, 1);
                 V = ArrayXXd::Zero(0 + 1, 0 + 1);
                 V(0, 0) = ( - t + 1.0) / (t + 1.0);
                 return V;
             }
 
-            CoreFmp1::CoreFmp1 (const double tau, const double theta) : AbstractCoreFmp(tau,theta) {
+            Fmp::CoreFmp1::CoreFmp1 (const double tau, const double theta) : AbstractCoreFmp(tau,theta) {
                 this->VRF = this->_getVRF(tau, theta);
             }
 
-            RealVector CoreFmp1::getGamma (const double time, const double dtau) {
+            RealVector Fmp::CoreFmp1::getGamma (const double time, const double dtau) {
                 double t2;
                 double mt2;
                 double t;
@@ -67,7 +65,7 @@ namespace polynomialfiltering {
                 return (RealVector2() << 1. - t2, mt2).finished();
             }
 
-            RealMatrix CoreFmp1::_getVRF (const double u, const double t) {
+            RealMatrix Fmp::CoreFmp1::_getVRF (const double u, const double t) {
                 RealMatrix V(2, 2);
                 double s;
                 V = ArrayXXd::Zero(1 + 1, 1 + 1);
@@ -86,11 +84,11 @@ namespace polynomialfiltering {
                 return V;
             }
 
-            CoreFmp2::CoreFmp2 (const double tau, const double theta) : AbstractCoreFmp(tau,theta) {
+            Fmp::CoreFmp2::CoreFmp2 (const double tau, const double theta) : AbstractCoreFmp(tau,theta) {
                 this->VRF = this->_getVRF(tau, theta);
             }
 
-            RealVector CoreFmp2::getGamma (const double time, const double dtau) {
+            RealVector Fmp::CoreFmp2::getGamma (const double time, const double dtau) {
                 double t;
                 t = this->theta;
                 double t2;
@@ -104,7 +102,7 @@ namespace polynomialfiltering {
                 return (RealVector3() << 1. - t3, 3.0 / 2.0 * mt2 * (1. + t), (2. * 1.) * 1.0 / 2.0 * mt3).finished();
             }
 
-            RealMatrix CoreFmp2::_getVRF (const double u, const double t) {
+            RealMatrix Fmp::CoreFmp2::_getVRF (const double u, const double t) {
                 RealMatrix V(3, 3);
                 double s;
                 V = ArrayXXd::Zero(2 + 1, 2 + 1);
@@ -133,11 +131,11 @@ namespace polynomialfiltering {
                 return V;
             }
 
-            CoreFmp3::CoreFmp3 (const double tau, const double theta) : AbstractCoreFmp(tau,theta) {
+            Fmp::CoreFmp3::CoreFmp3 (const double tau, const double theta) : AbstractCoreFmp(tau,theta) {
                 this->VRF = this->_getVRF(tau, theta);
             }
 
-            RealVector CoreFmp3::getGamma (const double time, const double dtau) {
+            RealVector Fmp::CoreFmp3::getGamma (const double time, const double dtau) {
                 double t;
                 t = this->theta;
                 double t2;
@@ -155,7 +153,7 @@ namespace polynomialfiltering {
                 return (RealVector4() << 1. - t4, 1.0 / 6.0 * mt2 * (11. + 14. * t + 11. * t2), (2. * 1.) * mt3 * (1. + t), (3. * 2. * 1.) * 1.0 / 6.0 * mt4).finished();
             }
 
-            RealMatrix CoreFmp3::_getVRF (const double u, const double t) {
+            RealMatrix Fmp::CoreFmp3::_getVRF (const double u, const double t) {
                 RealMatrix V(4, 4);
                 double s;
                 V = ArrayXXd::Zero(3 + 1, 3 + 1);
@@ -198,11 +196,11 @@ namespace polynomialfiltering {
                 return V;
             }
 
-            CoreFmp4::CoreFmp4 (const double tau, const double theta) : AbstractCoreFmp(tau,theta) {
+            Fmp::CoreFmp4::CoreFmp4 (const double tau, const double theta) : AbstractCoreFmp(tau,theta) {
                 this->VRF = this->_getVRF(tau, theta);
             }
 
-            RealVector CoreFmp4::getGamma (const double time, const double dtau) {
+            RealVector Fmp::CoreFmp4::getGamma (const double time, const double dtau) {
                 double t;
                 t = this->theta;
                 double t2;
@@ -222,7 +220,7 @@ namespace polynomialfiltering {
                 return (RealVector5() << 1. - t5, 5.0 / 12.0 * mt2 * (5. + 7. * t + 7. * t2 + 5. * t3), (2. * 1.) * 5.0 / 24.0 * mt3 * (7. + 10. * t + 7. * t2), (3. * 2. * 1.) * 5.0 / 12.0 * mt4 * (1. + t), (4. * 3. * 2. * 1.) * 1.0 / 24.0 * mt5).finished();
             }
 
-            RealMatrix CoreFmp4::_getVRF (const double u, const double t) {
+            RealMatrix Fmp::CoreFmp4::_getVRF (const double u, const double t) {
                 RealMatrix V(5, 5);
                 double s;
                 V = ArrayXXd::Zero(4 + 1, 4 + 1);
@@ -283,11 +281,11 @@ namespace polynomialfiltering {
                 return V;
             }
 
-            CoreFmp5::CoreFmp5 (const double tau, const double theta) : AbstractCoreFmp(tau,theta) {
+            Fmp::CoreFmp5::CoreFmp5 (const double tau, const double theta) : AbstractCoreFmp(tau,theta) {
                 this->VRF = this->_getVRF(tau, theta);
             }
 
-            RealVector CoreFmp5::getGamma (const double time, const double dtau) {
+            RealVector Fmp::CoreFmp5::getGamma (const double time, const double dtau) {
                 double t;
                 double s;
                 t = this->theta;
@@ -312,7 +310,7 @@ namespace polynomialfiltering {
                 return (RealVector6() << 1. - t6, 1.0 / 60.0 * mt2 * (137. + 202. * t + 222. * t2 + 202. * t3 + 137. * t4), (2. * 1.) * 5.0 / 8.0 * mt3 * (3. + 5. * t + 5. * t2 + 3. * t3), (3. * 2. * 1.) * 1.0 / 24.0 * mt4 * (17. + 26. * t + 17. * t2), (4. * 3. * 2. * 1.) * 1.0 / 8.0 * mt5 * (1. + t), (5. * 4. * 3. * 2. * 1.) * mt6 / 120.0).finished();
             }
 
-            RealMatrix CoreFmp5::_getVRF (const double u, const double t) {
+            RealMatrix Fmp::CoreFmp5::_getVRF (const double u, const double t) {
                 RealMatrix V(6, 6);
                 double s;
                 V = ArrayXXd::Zero(5 + 1, 5 + 1);
@@ -395,7 +393,7 @@ namespace polynomialfiltering {
                 return V;
             }
 
-        std::shared_ptr<ICore> makeFmpCore (const int order, const double tau, const double theta) {
+        std::shared_ptr<ICore> Fmp::makeFmpCore (const int order, const double tau, const double theta) {
             if (order == 0) {
                 return std::make_shared<CoreFmp0>(tau, theta);
             } else if (order == 1.0) {
@@ -411,9 +409,9 @@ namespace polynomialfiltering {
             }
         }
 
-        std::shared_ptr<RecursivePolynomialFilter> makeFmp (const int order, const double tau, const double theta) {
+        std::shared_ptr<RecursivePolynomialFilter> Fmp::makeFmp (const int order, const double tau, const double theta) {
             std::shared_ptr<ICore> core;
-            core = makeFmpCore(order, tau, theta);
+            core = Fmp::makeFmpCore(order, tau, theta);
             return std::make_shared<RecursivePolynomialFilter>(order, tau, core);
         }
 

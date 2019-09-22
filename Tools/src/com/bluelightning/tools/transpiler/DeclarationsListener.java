@@ -94,8 +94,8 @@ class DeclarationsListener extends LcdPythonBaseListener {
 				if (fields.length > 2) {
 					addSymbolDimensions( symbol, fields );
 				}
-				if (declaration.contains("testData"))
-					System.out.println(symbol.toString());
+//				if (declaration.contains("testData"))
+//					System.out.println(symbol.toString());
 				return symbol;
 			} else {
 				this.transpiler.reportError(token, "Ill-formed declaration: " + declaration );
@@ -345,10 +345,10 @@ class DeclarationsListener extends LcdPythonBaseListener {
 						String[] fields = str.substring(4).replaceAll("'''", "").split("\\|");
 						if (fields.length > 0) {
 							fields[0] = fields[0].trim().replaceAll(" +", " ");
-							if (fields[0].startsWith("!super:")) {
-								fields = fields[0].split(":");
+							if (fields[0].startsWith("!super!")) {
+								fields = fields[0].split("!");
 								Scope currentScope = scopeStack.peek().getParent();
-								Transpiler.instance().addManualSuper(currentScope.toString(), fields[1], fields[2]);
+								Transpiler.instance().addManualSuper(currentScope.toString(), fields[2], fields[3]);
 							} else {
 								declareSymbol( token, fields[0] );
 							}

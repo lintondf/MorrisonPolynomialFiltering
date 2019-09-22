@@ -81,7 +81,9 @@ public class EigenProgrammer extends AbstractProgrammer {
 	
 	@Override //Eigen
 	public String getInclude() {
-		return "#include <polynomialfiltering/PolynomialFilteringEigen.hpp>";
+		StringBuilder sb = new StringBuilder();
+		sb.append("#include <polynomialfiltering/PolynomialFilteringEigen.hpp>\n");
+		return sb.toString();
 	}
 
 	@Override //Eigen
@@ -173,11 +175,11 @@ public class EigenProgrammer extends AbstractProgrammer {
 	public String getMeasurement(String symbol, Measurement which) {
 		switch (which) {
 		case NUMBER_OF_ELEMENTS:
-			return String.format("%s->size()", symbol);
+			return String.format("%s.size()", symbol);
 		case NUMBER_OF_ROWS:
-			return String.format("%s->rows()", symbol);
+			return String.format("%s.rows()", symbol);
 		case NUMBER_OF_COLUMNS:
-			return String.format("%s->columns()", symbol);
+			return String.format("%s.cols()", symbol);
 		default:
 			return null;
 		}

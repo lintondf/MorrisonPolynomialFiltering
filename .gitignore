@@ -10,6 +10,9 @@ Cpp/Eigen/doc
 Cpp/Eigen/include/Eigen
 Cpp/GSL
 Cpp/cpptest
+Cpp/Eigen/CMakeFiles
+Cpp/Eigen/src/CMakeFiles
+Cpp/Eigen/test/CMakeFiles
 Java/*.log
 Java/bin
 Java/out

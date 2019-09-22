@@ -86,4 +86,10 @@ public class Indent {
 	public int size() {
 		return sb.length();
 	}
+
+	public void deleteLast(String string) {
+		for (int i = string.length()-1; i >= 0; i--) {
+			deleteLast(string.charAt(i));
+		}
+	}
 }

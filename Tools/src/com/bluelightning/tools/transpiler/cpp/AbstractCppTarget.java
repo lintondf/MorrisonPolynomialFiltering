@@ -53,6 +53,7 @@ public abstract class AbstractCppTarget extends AbstractLanguageTarget {
 
 	protected List<String> includeFiles = new ArrayList<>();
 
+	protected TreeSet<String> packageAsClass = new TreeSet<String>();
 
 	Map<String, Object> templateDataModel = new HashMap<>();
 	
@@ -208,6 +209,35 @@ public abstract class AbstractCppTarget extends AbstractLanguageTarget {
 	
 	protected void writeMethodDeclaration( Indent head) {} 
 
+	protected String getSuperClassInitializers( Symbol symbol, String className, Scope superScope) {
+		Symbol c = Transpiler.instance().lookup(superScope, className);
+		String superTag = "super().__init__(";
+		String scInitializers = null;
+		if (symbol.getType().startsWith(superTag)) {
+			scInitializers = symbol.getType().substring(superTag.length());
+			int iClose = -1;
+			int nesting = 0;
+			for (int i = 0; i < scInitializers.length(); i++) {
+				if (scInitializers.charAt(i) == '(')
+					nesting++;
+				else if (scInitializers.charAt(i) == ')') {
+					if (nesting == 0) {
+						iClose = i;
+						break;
+					} else {
+						nesting--;
+					}
+				}
+			}
+			if (iClose < 0) {
+				Transpiler.instance().reportError("Bad function declaration: " + symbol.toString() );
+				iClose = scInitializers.length();
+			}
+			scInitializers = scInitializers.substring(0, iClose);
+		}
+		return scInitializers;
+	}
+	
 	@Override
 	public void startMethod(Scope scope) {
 		currentScope = scope;
@@ -268,6 +298,7 @@ public abstract class AbstractCppTarget extends AbstractLanguageTarget {
 				where.write( "" );
 				String decl = String.format("%s%s(%s)", type, name, header.sb.toString() ); 
 				if (fpi.decorators.contains("@classmethod")) {
+					symbol.setStatic(true);
 					where.append("static " + decl);
 				} else if (fpi.decorators.contains("@abstractmethod") ||
 						   fpi.decorators.contains("@virtual")) {
@@ -285,27 +316,27 @@ public abstract class AbstractCppTarget extends AbstractLanguageTarget {
 				where.append(";\n");
 				
 				if (! fpi.decorators.contains("@abstractmethod")) {
-					decl = generateBodyDeclaration( type, currentClassName, name, body.sb.toString() );
+					decl = generateBodyDeclaration( type, currentClass, name, symbol.getScope(), body.sb.toString() );
 					if (currentClass != null) {
 						String separator = " : ";
-						String manualSuper = Transpiler.instance().getManualScope(symbol.getScope().toString(), "C++");
+						String manualSuper = Transpiler.instance().getManualSuper(symbol.getScope().toString(), "C++");
 						if (manualSuper != null && name.equals(currentClassName)) {
 							decl += separator + manualSuper;
 						} else if (fpi.decorators.contains("@superClassConstructor")) { // decorator inserted by Declarations listener; not in Python source
 							String className = symbol.getScope().getLast();
 							Scope superScope = symbol.getScope().getParent();
 							Symbol c = Transpiler.instance().lookup(superScope, className);
-							String scInitializers = "";
-							String superTag = "super().__init__(";
-							if (symbol.getType().startsWith(superTag)) {
-								scInitializers = symbol.getType().substring(superTag.length());
-								int iClose = scInitializers.indexOf(')');
-								if (iClose < 0) {
-									Transpiler.instance().reportError("Bad function declaration: " + symbol.toString() );
-									iClose = scInitializers.length();
-								}
-								scInitializers = scInitializers.substring(0, iClose);
-							}
+							String scInitializers = getSuperClassInitializers( symbol, className, superScope );
+//							String superTag = "super().__init__(";
+//							if (symbol.getType().startsWith(superTag)) {
+//								scInitializers = symbol.getType().substring(superTag.length());
+//								int iClose = scInitializers.indexOf(')');
+//								if (iClose < 0) {
+//									Transpiler.instance().reportError("Bad function declaration: " + symbol.toString() );
+//									iClose = scInitializers.length();
+//								}
+//								scInitializers = scInitializers.substring(0, iClose);
+//							}
 							for (String sc : c.getSuperClassInfo().superClasses) {
 								if (sc.charAt(0) != 'I' || Character.isLowerCase(sc.charAt(1))) { // ignore interfaces
 									decl += separator + sc + "("; // TODO handle passing only relevant arguments
@@ -322,9 +353,16 @@ public abstract class AbstractCppTarget extends AbstractLanguageTarget {
 		cppIndent.in();
 	}
 	
-	protected String generateBodyDeclaration( String type, String currentClass, String name, String parameters ) {
+	protected String generateBodyDeclaration( String type, Symbol currentClass, String name, Scope scope, String parameters ) {
 		if (currentClass != null) {
-			name = currentClass + "::" + name;
+			name = currentClass.getName() + "::" + name;
+			if (packageAsClass.contains(currentClass.getScope().getLast())) {
+				name = currentClass.getScope().getLast() + "::" + name;
+			}
+		} else {
+			if (packageAsClass.contains(scope.getLast())) {
+				name = scope.getLast() + "::" + name;
+			}
 		}
 		return String.format("%s%s (%s)", type, name, parameters );
 	}
@@ -389,6 +427,13 @@ public abstract class AbstractCppTarget extends AbstractLanguageTarget {
 		if (c != null && child.getRightSibling() != null && child.getRightSibling() instanceof TranslationListNode) { // create an object
 			String rewrite = programmer.rewriteSymbol( scope, symbol );
 			emitNewExpression( scope, rewrite, child );
+		} else if (symbol.isStatic()) {
+			Symbol base = symbol.getBaseSymbol();
+			if (base != null) {
+				out.append( String.format("%s::%s", symbol.getBaseSymbol().getScope().getLast(), symbol.getName()) );
+			} else {
+				out.append( String.format("%s::%s", symbol.getScope().getLast(), symbol.getName()) );				
+			}
 		} else {
 			out.append( programmer.rewriteSymbol( scope, symbol ) );
 		}
@@ -414,11 +459,21 @@ public abstract class AbstractCppTarget extends AbstractLanguageTarget {
 					}
 				} else if (unary.getLeftSibling() != null && unary.getLeftSibling() instanceof TranslationSymbolNode) {
 					TranslationSymbolNode s = (TranslationSymbolNode) unary.getLeftSibling();
-					Symbol type = Transpiler.instance().lookup(currentScope, s.getType());
-					if (type != null && type.isClass() && !type.isEnum()) {
-						programmer.writeOperator( out, "->" );
+					if (s.getSymbol().isClass()) {
+						programmer.writeOperator( out, "::" );
+					} else if (s.getSymbol().getName().equals("self") && symbol.isClass()) {
+						out.deleteLast("this");
+						out.append(String.format("std::make_shared<%s>", symbol.getName()));
+						TranslationSubexpressionNode right = (TranslationSubexpressionNode) unary.getRightSibling();
+						emitChild( out, scope, right );
+						return 1;
 					} else {
-						programmer.writeOperator( out, unary.getLhsValue() );
+						Symbol type = Transpiler.instance().lookup(currentScope, s.getType());
+						if (type != null && type.isClass() && !type.isEnum()) {
+							programmer.writeOperator( out, "->" );
+						} else {
+							programmer.writeOperator( out, unary.getLhsValue() );
+						}
 					}
 				} else if (unary.getLeftSibling() != null && unary.getLeftSibling() instanceof TranslationListNode) {
 					TranslationListNode s = (TranslationListNode) unary.getLeftSibling();
@@ -534,7 +589,11 @@ public abstract class AbstractCppTarget extends AbstractLanguageTarget {
 						Symbol which = programmer.getRowColSymbol("1");
 						out.append( programmer.rewriteSymbol( scope, which ) );
 						programmer.openParenthesis( out );
-						emitChild(out, scope, tln.getChild(1));							
+						if (tln.getChild(1).getChildCount() > 0) {
+							emitChild(out, scope, tln.getChild(1).getFirstChild());							
+						} else {
+							emitChild(out, scope, tln.getChild(1));
+						}
 					} else if (tln.getChild(1) instanceof TranslationOperatorNode) {  // [i,:] - get row; [j:k,:] - get slice
 						if (tln.getChild(0).getChildCount() > 0) { // [i:n,:]
 							out.append( programmer.rewriteSymbol( scope, slice ) );
@@ -867,8 +926,10 @@ public abstract class AbstractCppTarget extends AbstractLanguageTarget {
 		case CLASS:
 			//hppIndent.writeln( declaration + ";");
 			hppPrivate.writeln( declaration + endLine);
-			cppIndent.writeln( String.format("%s %s::%s;", 
+			if (symbol.isStatic()) {
+				cppIndent.writeln( String.format("%s %s::%s;", 
 						cppType, currentScope.getLast(), symbol.getName()) );
+			}
 			break;
 		case MEMBER:
 			cppIndent.writeln( declaration + endLine);
@@ -965,6 +1026,7 @@ public abstract class AbstractCppTarget extends AbstractLanguageTarget {
 			if (f.equals(file))
 				return;
 		}
+//		System.out.printf("INCLUDE %s\n", file);
 		includeFiles.add(file);
 	}
 

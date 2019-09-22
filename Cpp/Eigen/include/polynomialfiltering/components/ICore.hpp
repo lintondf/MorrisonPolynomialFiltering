@@ -19,6 +19,7 @@
 
 
 
+
 namespace polynomialfiltering {
     namespace components {
         class ICore {

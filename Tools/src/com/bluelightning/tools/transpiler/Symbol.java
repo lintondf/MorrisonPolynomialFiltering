@@ -71,6 +71,7 @@ public class Symbol {
 		that.functionParametersInfo = this.functionParametersInfo;
 		that.ancestor = this;
 		that.isInherited = true;
+		this.setStatic( this.isStatic() );
 		return that;
 	}
 	
@@ -132,8 +133,22 @@ public class Symbol {
 	public void setFunctionParametersInfo(FunctionParametersInfo functionParametersInfo) {
 		this.functionParametersInfo = functionParametersInfo;
 	}
+	
+	public Symbol getBaseSymbol() {
+		if (this.isInherited) {
+			Symbol current = this;
+			while (current.ancestor != null)
+				current = current.ancestor;
+			return current;			
+		}
+		return null;
+	}
 
 	public boolean isStatic() {
+		Symbol base = getBaseSymbol();
+		if (base != null) {
+			return base.isStatic;
+		}
 		return isStatic;
 	}
 

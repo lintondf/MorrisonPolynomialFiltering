@@ -19,6 +19,7 @@
 
 
 
+
 namespace polynomialfiltering {
 
     ///// @class /polynomialfiltering/Main/::FilterStatus : <ENUM>; supers(Enum,)

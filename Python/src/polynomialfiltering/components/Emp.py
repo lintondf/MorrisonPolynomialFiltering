@@ -500,6 +500,7 @@ class CoreEmp5(ICore) :
         V[5,4]=V[4,5];
         return V;
 
+@classmethod
 def nSwitch(order : int, theta : float) -> float:
     """
     Estimate the sample number when the first VRF diagonal elements of an EMP/FMP pair will match
@@ -534,6 +535,7 @@ def nSwitch(order : int, theta : float) -> float:
     else :
         raise ValueError("Polynomial orders < 0.0 or > 5.0 are not supported")
 
+@classmethod
 def nUnitLastVRF( order : int, tau : float ) -> int:
     """
     Estimate the sample number when the final VRF diagonal value is one or less
@@ -562,6 +564,7 @@ def nUnitLastVRF( order : int, tau : float ) -> int:
     else :
         return 1+int(max(order, exp(-0.9108*log(tau) + 2.0805))); 
         
+@classmethod
 def makeEmpCore(order : int, tau : float) -> ICore:
     """
     Factory for expanding memory polynomial filters
@@ -586,6 +589,7 @@ def makeEmpCore(order : int, tau : float) -> ICore:
     else : # (order == 5.0) :
         return CoreEmp5(tau);
     
+@classmethod
 def makeEmp(order : int, tau : float) -> RecursivePolynomialFilter:
     '''@core : ICore'''
     core = makeEmpCore(order, tau);

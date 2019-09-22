@@ -25,7 +25,8 @@ class PairedPolynomialFilter( RecursivePolynomialFilter ):
     
     
     def __init__(self, order : int, tau : float, theta : float ) :
-        '''@!super:Java:super(order, tau, Emp.makeEmpCore(order, tau) );'''
+        '''@!super!Java!super(order, tau, Emp.makeEmpCore(order, tau) );'''
+        '''@!super!C++!RecursivePolynomialFilter(order, tau, Emp::makeEmpCore(order, tau) )'''
         super().__init__(order, tau, makeEmpCore(order, tau) )
         self.empCore = self.core;
         self.fmpCore = makeFmpCore(order, tau, theta);
@@ -34,24 +35,17 @@ class PairedPolynomialFilter( RecursivePolynomialFilter ):
         
     def update(self, t : float, Zstar : vector, e : float) -> vector:
         '''@ i : array'''
-        i = super().update(t, Zstar, e);
+        i = RecursivePolynomialFilter.update(t, Zstar, e);
         if (self.n == self.threshold) :
             self.core = self.fmpCore;
         return i
 
     def start(self, t : float, Z : vector) -> None:
-        super().start(t, Z)
+        RecursivePolynomialFilter.start(t, Z)
         self.core = self.empCore
         
     def isFading(self) -> bool:
         '''@isF : bool'''
-        isF = (self.n == self.threshold)
+        isF = self.n == self.threshold
         return isF
         
-        
-    
-# def makePair(order : int, tau : float, theta : float) -> PairedPolynomialFilter :
-#     return PairedPolynomialFilter(order, tau, theta )
-
-if __name__ == '__main__':
-    pass

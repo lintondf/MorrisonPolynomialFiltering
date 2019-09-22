@@ -27,8 +27,8 @@ class RecursivePolynomialFilter(AbstractFilter):
     '''@ t0 : float | filter start time'''
     '''@ tau : float | nominal scaled time step'''
     '''@ t : float |  time of the last input'''
-    '''@ Z : vector : order+1 | NORMALIZED state vector at time of last input'''
-    '''@ D : vector : order+1 | noralization/denormalization scaling vector; D(tau) = [tau^-0, tau^-1,...tau^-order]'''
+    '''@ Z : vector | NORMALIZED state vector at time of last input'''
+    '''@ D : vector | noralization/denormalization scaling vector; D(tau) = [tau^-0, tau^-1,...tau^-order]'''
     '''@ core : ICore | provider of core expanding / fading functions'''
             
     def __init__(self, order : int, tau : float, core : ICore ) :
