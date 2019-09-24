@@ -1,7 +1,9 @@
 **/*.log
+**/CMakeCache.txt
 testdata
 __pycache__/
 *.py[cod]
+Cpp/Eigen/FilteringEigen
 Cpp/.vs
 Cpp/Boost/.vs
 Cpp/Boost/include/boost

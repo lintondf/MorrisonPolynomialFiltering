@@ -34,10 +34,10 @@ cmake_force:
 SHELL = /bin/sh
 
 # The CMake executable.
-CMAKE_COMMAND = /Applications/CMake.app/Contents/bin/cmake
+CMAKE_COMMAND = /usr/local/Cellar/cmake/3.15.3/bin/cmake
 
 # The command to remove a file.
-RM = /Applications/CMake.app/Contents/bin/cmake -E remove -f
+RM = /usr/local/Cellar/cmake/3.15.3/bin/cmake -E remove -f
 
 # Escaping for special characters.
 EQUALS = =
@@ -275,8 +275,6 @@ test/FilteringEigenTest: test/CMakeFiles/FilteringEigenTest.dir/polynomialfilter
 test/FilteringEigenTest: test/CMakeFiles/FilteringEigenTest.dir/testMain.cpp.o
 test/FilteringEigenTest: test/CMakeFiles/FilteringEigenTest.dir/build.make
 test/FilteringEigenTest: /usr/local/lib/libnetcdf.dylib
-test/FilteringEigenTest: /usr/local/lib/libgsl.dylib
-test/FilteringEigenTest: /usr/local/lib/libgslcblas.dylib
 test/FilteringEigenTest: test/CMakeFiles/FilteringEigenTest.dir/link.txt
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/Users/lintondf/GITHUB/MorrisonPolynomialFiltering/Cpp/Eigen/CMakeFiles --progress-num=$(CMAKE_PROGRESS_15) "Linking CXX executable FilteringEigenTest"
 	cd /Users/lintondf/GITHUB/MorrisonPolynomialFiltering/Cpp/Eigen/test && $(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/FilteringEigenTest.dir/link.txt --verbose=$(VERBOSE)

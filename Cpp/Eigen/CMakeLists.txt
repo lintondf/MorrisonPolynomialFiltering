@@ -4,7 +4,8 @@ project(FilteringCpp)
 set(CMAKE_CXX_STANDARD 11)
 
 find_package(GSL REQUIRED )
-include_directories(.. include ${GSL_INCLUDE_DIRS}) 
+include_directories(.. include ${GSL_INCLUDE_DIRS} ${Boost_INCLUDE_DIRS}) 
+
 
 add_subdirectory( test )
 
@@ -18,4 +19,4 @@ set(SOURCES  src/polynomialfiltering/Main.cpp
 	src/EigenTest.cpp) 
 #add_executable(PolynomialFilteringCpp ${SOURCES})
 add_executable(EigenTest ${SOURCES})
-target_link_libraries( EigenTest GSL::gsl ) # /Users/NOOK/GITHUB/MorrisonPolynomialFiltering/Cpp/GSL/lib/gsl/gsl.lib ) 
+target_link_libraries( EigenTest GSL::gsl  ${Boost_LIBRARIES}) # /Users/NOOK/GITHUB/MorrisonPolynomialFiltering/Cpp/GSL/lib/gsl/gsl.lib ) 

@@ -613,19 +613,22 @@ def fadingChi2():
             
 if __name__ == '__main__':
     pass
-    path = testDataPath('testTestData.nc');
-    cdf = Dataset(path, "w", format="NETCDF4");
-    group = createTestGroup(cdf, 'Test')
+    testData = TestData('test.nc', 'w')
+    group = testData.createTestGroup('Test')
+    i = 1
+    testData.putInteger(group, "i", i);
     x = 3.14;
-    TestData.putScalar(group, "x", x);
+    testData.putScalar(group, "x", x);
     v = array([1,2,3])
     m = array([[4,5],[6,7]])
-    TestData.putArray(group, "v", v)
-    TestData.putArray(group, "m", m)
-    cdf.close()
+    testData.putArray(group, "v", v)
+    testData.putArray(group, "m", m)
+    testData.close()
     
-    testData = TestData('testTestData.nc')
+    testData = TestData('test.nc')
     group = testData.getGroup('Test')
+    i = testData.getInteger(group, "i")
+    print(i)
     y = testData.getScalar(group, "x")
     print(y)
     v = testData.getArray(group, "v")

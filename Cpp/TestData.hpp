@@ -5,6 +5,8 @@
 #include <iostream>
 #include <stdlib.h>
 #include <vector>
+#include <unistd.h>
+#include <string>
 
 #include <cmath>
 
@@ -53,14 +55,16 @@ public:
 	static std::shared_ptr <TestData> make(std::string filename) {
 		return std::shared_ptr<TestData>(new TestData(filename));
 	}
+    
+    static std::string testDataPath();
 
 
 	TestData(std::string fileName) {
-		std::string filePath = "C:\\Users\\NOOK\\GITHUB\\MorrisonPolynomialFiltering\\testdata\\";
+		std::string filePath = testDataPath();
 		filePath += fileName;
 		int retval, numgrps;
 		retval = nc_open(filePath.c_str(), NC_NOWRITE, &ncid);
-		std::cout << "TestData: " << fileName << " = " << retval << std::endl;
+		std::cout << "TestData: nc_open " << filePath << " -> " << retval << std::endl;
 		if (retval == 0) {
 			nc_inq_grps(ncid, &numgrps, NULL);
 			int* grp_ncids = new int[numgrps];
@@ -95,9 +99,38 @@ public:
 	}
     
     std::vector<std::string> getMatchingSubGroups(Group parent, std::string testName) {
+        std::vector<std::string>  subgroupNames;
+        int numgrps;
+        nc_inq_grps(parent, &numgrps, NULL);
+        int* grp_ncids = new int[numgrps];
+        nc_inq_grps(parent, &numgrps, grp_ncids);
+        for (int g = 0; g < numgrps; g++) {
+            char name[NC_MAX_NAME];
+            nc_inq_grpname(grp_ncids[g], name);
+            subgroupNames.push_back(name);
+        }
         std::vector<std::string> matches;
-        //TODO
+        for (int i = 0; i < groupNames.size(); i++) {
+            if (subgroupNames.at(i).substr(0, testName.size()) == testName) {
+                matches.push_back(subgroupNames.at(i));
+            }
+        }
         return matches;
+    }
+    
+    Group getSubGroup( Group parent, std::string groupName ) {
+        int numgrps;
+        nc_inq_grps(parent, &numgrps, NULL);
+        int* grp_ncids = new int[numgrps];
+        nc_inq_grps(parent, &numgrps, grp_ncids);
+        for (int g = 0; g < numgrps; g++) {
+            char name[NC_MAX_NAME];
+            nc_inq_grpname(grp_ncids[g], name);
+            if (groupName == name) {
+                return grp_ncids[g];
+            }
+        }
+       return -1;
     }
     
     Group getGroup( const std::string groupName ) {
@@ -134,6 +167,7 @@ public:
         int rh_natts;
         nc_inq_var(gid, vid, 0, &rh_type, &rh_ndims, rh_dimids, &rh_natts);
         size_t count[2];
+        count[0] = count[1] = 1;
         for (int j = 0; j < rh_ndims; j++) {
             size_t dval;
             char dname[NC_MAX_NAME];
@@ -143,6 +177,7 @@ public:
         }
         size_t start[2] = { 0, 0 };
         size_t numel = count[0] * count[1];
+        printf("%s: %d dims %d * %d = %d\n", variableName.c_str(), rh_ndims, count[0], count[1], numel);
         double* data = new double[numel];
         nc_get_vara_double(gid, vid, start, count, data);
         Map<RealMatrix>  m(data, count[1], count[0]);
@@ -158,10 +193,6 @@ public:
     
     int getInteger( Group gid, std::string variableName ) {
         return (int) getScalar(gid, variableName);
-    }
-    
-    Group getSubGroup( Group parent, std::string groupName ) {
-        return 0; // TODO
     }
     
     

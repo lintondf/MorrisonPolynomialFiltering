@@ -168,12 +168,4 @@ public class TestData {
 		return new TestData(fileName);
 	}
 	
-	public static void main(String[] args) {
-		System.out.println( TestData.testDataPath("testFMP.nc") );
-		TestData testData = new TestData("testFMP.nc");
-		Group group = testData.getGroup("States");
-		System.out.println(group);
-		DMatrixRMaj setup = testData.getGroupVariable(group, "setup");
-		System.out.println(setup);
-	}
 }

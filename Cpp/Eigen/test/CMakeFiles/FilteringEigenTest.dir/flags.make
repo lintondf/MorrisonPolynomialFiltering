@@ -6,5 +6,5 @@ CXX_FLAGS = -g   -std=gnu++11
 
 CXX_DEFINES = 
 
-CXX_INCLUDES = -I/Users/lintondf/GITHUB/MorrisonPolynomialFiltering/Cpp/Eigen/.. -I/Users/lintondf/GITHUB/MorrisonPolynomialFiltering/Cpp/Eigen/include -I/Users/lintondf/GITHUB/MorrisonPolynomialFiltering/Cpp/Eigen/test/eigen -I/Users/lintondf/GITHUB/MorrisonPolynomialFiltering/Cpp/Eigen/test/../.. 
+CXX_INCLUDES = -I/Users/lintondf/GITHUB/MorrisonPolynomialFiltering/Cpp/Eigen/.. -I/Users/lintondf/GITHUB/MorrisonPolynomialFiltering/Cpp/Eigen/include -I/Users/lintondf/GITHUB/MorrisonPolynomialFiltering/Cpp/Eigen/test/.. -I/Users/lintondf/GITHUB/MorrisonPolynomialFiltering/Cpp/Eigen/test/include -I/Users/lintondf/GITHUB/MorrisonPolynomialFiltering/Cpp/Eigen/test/eigen -I/Users/lintondf/GITHUB/MorrisonPolynomialFiltering/Cpp/Eigen/test/../.. 
 

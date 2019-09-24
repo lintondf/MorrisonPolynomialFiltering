@@ -76,25 +76,6 @@ import freemarker.template.TemplateExceptionHandler;
  * -- Rust
  * -- Octave
  * 
-                        f = this->new RecursivePolynomialFilterMock(etc)
-                        f = std::make_shared<RecursivePolynomialFilterMock>(new RecursivePolynomialFilterMock(order, tau, rf->getCore()));
-
-TEST_CASE("EMP_test") {
-    polynomialfiltering::components::EMP_test test = new polynomialfiltering::components::EMP_test();
-    
-    SUBCASE("test1CheckVRF") {
-        test->test1CheckVRF();
-    }
-    SUBCASE("test2CheckStates") {
-        test->test2CheckStates();
-    }
-    SUBCASE("test9NUnitLastVRF") {
-        test->test9NUnitLastVRF();
-    }
-    SUBCASE("test9Coverage") {
-        test->test9Coverage();
-    }
-}
  */
 /**
  * @author NOOK
