@@ -86,7 +86,7 @@ public class RecursivePolynomialFilter extends AbstractFilter {
     ///  @param		n	float sample number
     /// 
     
-    public double effectiveTheta (final int order, final double n) {
+    static public double effectiveTheta (final int order, final double n) {
         double factor;
         if (n < 1) {
             return 0.0;
@@ -321,8 +321,8 @@ public class RecursivePolynomialFilter extends AbstractFilter {
     protected DMatrixRMaj _conformState (final DMatrixRMaj state) {
         DMatrixRMaj Z = new DMatrixRMaj();
         
-        //  asssignment.dummy = return ( RecursivePolynomialFilter.conformState(this.order, state))
-        DMatrixRMaj tm3 = RecursivePolynomialFilter.conformState(this.order, state);
+        //  asssignment.dummy = return ( AbstractFilter.conformState(this.order, state))
+        DMatrixRMaj tm3 = AbstractFilter.conformState(this.order, state);
         return tm3;
     }
     

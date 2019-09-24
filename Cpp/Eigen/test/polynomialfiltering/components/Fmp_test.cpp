@@ -67,10 +67,10 @@
                     assert_not_empty(matches);
                     setup = testData->getGroupVariable(matches[0], "setup");
                     states = testData->getGroup(matches[0]);
-                    cases = testData->getMatchingSubGroups(states, "Case_");
+                    cases = testData->getMatchingGroups("Case_");
                     for (int i = 0; i < cases.size(); i++) {
                         caseName = cases[i];
-                        caseGroup = testData->getSubGroup(states, caseName);
+                        caseGroup = testData->getGroup(caseName);
                         order = testData->getInteger(caseGroup, "order");
                         tau = testData->getScalar(caseGroup, "tau");
                         theta = testData->getScalar(caseGroup, "theta");
@@ -118,10 +118,10 @@
                     matches = testData->getMatchingGroups("Gammas");
                     assert_not_empty(matches);
                     states = testData->getGroup(matches[0]);
-                    cases = testData->getMatchingSubGroups(states, "Case_");
+                    cases = testData->getMatchingGroups("Gammas_Case_");
                     for (int i = 0; i < cases.size(); i++) {
                         caseName = cases[i];
-                        caseGroup = testData->getSubGroup(states, caseName);
+                        caseGroup = testData->getGroup(caseName);
                         order = testData->getInteger(caseGroup, "order");
                         tau = testData->getScalar(caseGroup, "tau");
                         theta = testData->getScalar(caseGroup, "theta");
@@ -159,10 +159,10 @@
                     matches = testData->getMatchingGroups("Vrfs");
                     assert_not_empty(matches);
                     states = testData->getGroup(matches[0]);
-                    cases = testData->getMatchingSubGroups(states, "Case_");
+                    cases = testData->getMatchingGroups("Vrfs_Case_");
                     for (int i = 0; i < cases.size(); i++) {
                         caseName = cases[i];
-                        caseGroup = testData->getSubGroup(states, caseName);
+                        caseGroup = testData->getGroup(caseName);
                         order = testData->getInteger(caseGroup, "order");
                         tau = testData->getScalar(caseGroup, "tau");
                         theta = testData->getScalar(caseGroup, "theta");

@@ -46,8 +46,7 @@ public class PairedPolynomialFilter extends RecursivePolynomialFilter {
     
     public DMatrixRMaj update (final double t, final DMatrixRMaj Zstar, final double e) {
         DMatrixRMaj i = new DMatrixRMaj();
-                
-        i = RecursivePolynomialFilter.update(t, Zstar, e);
+        i = super.update(t, Zstar, e);
         if (this.n == this.threshold) {
             this.core = this.fmpCore;
         }
@@ -56,8 +55,7 @@ public class PairedPolynomialFilter extends RecursivePolynomialFilter {
     
     
     public void start (final double t, final DMatrixRMaj Z) {
-                
-        RecursivePolynomialFilter.start(t, Z);
+        super.start(t, Z);
         this.core = this.empCore;
     }
     

@@ -65,10 +65,10 @@
                     assert_clear();
                     testData = std::make_shared<TestData>("testPair.nc");
                     states = testData->getGroup("States");
-                    matches = testData->getMatchingSubGroups(states, "Case_");
+                    matches = testData->getMatchingGroups("States_Case_");
                     assert_not_empty(matches);
                     for (int i = 0; i < matches.size(); i++) {
-                        caseGroup = testData->getSubGroup(states, matches[i]);
+                        caseGroup = testData->getGroup(matches[i]);
                         order = testData->getInteger(caseGroup, "order");
                         tau = testData->getScalar(caseGroup, "tau");
                         theta = testData->getScalar(caseGroup, "theta");
@@ -92,7 +92,7 @@
                         assert_almost_equal(vdiags, expectedVdiag);
                     }
                     testData->close();
-                    assertGreaterEqual(38.0, assert_report("Pair_test/test2CheckStates"));
+                    assertGreaterEqual(39.4, assert_report("Pair_test/test2CheckStates"));
                 }
 
                 void test9Coverage () {

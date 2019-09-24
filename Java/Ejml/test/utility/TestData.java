@@ -59,28 +59,9 @@ public class TestData {
 		return output;
 	}
 	
-	public List<String> getMatchingSubGroups( Group parent, String prefix ) {
-		ArrayList<String> output = new ArrayList<>();
-		List<Group> groups = parent.getGroups();
-		for (Group group : groups) {
-			if (group.getShortName().startsWith(prefix)) 
-				output.add(group.getShortName());
-		}
-		return output;
-	}
-	
 	public Group getGroup(String name) {
 		Group root = file.getRootGroup();
 		List<Group> groups = root.getGroups();
-		for (Group group : groups) {
-			if (group.getShortName().equals(name))
-				return group;
-		}
-		return null;
-	}
-
-	public Group getSubGroup(Group parent, String name) {
-		List<Group> groups = parent.getGroups();
 		for (Group group : groups) {
 			if (group.getShortName().equals(name))
 				return group;
@@ -124,10 +105,6 @@ public class TestData {
 		return null;
 	}
 	
-	
-	public DMatrixRMaj getSubGroupVariable( String parent, String subgroup, String variable) {
-		return getGroupVariable( getSubGroup( getGroup(parent), subgroup), variable);
-	}
 	
 	public double getScalar( Group group, String variable ) {
 		for (Variable v : group.getVariables()) {

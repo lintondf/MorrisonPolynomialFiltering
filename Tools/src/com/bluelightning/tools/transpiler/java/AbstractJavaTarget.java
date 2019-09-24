@@ -256,7 +256,7 @@ public abstract class AbstractJavaTarget extends AbstractLanguageTarget{
 					type = "public " + type;					
 				}
 				
-				if (fpi.decorators.contains("@classmethod") ||
+				if (fpi.decorators.contains("@staticmethod") || fpi.decorators.contains("@forcestatic") ||
 					symbol.getScope().getLevel() == Level.MODULE) {
 					type = "static " + type;
 				} else if (fpi.decorators.contains("@abstractmethod")) {
@@ -493,11 +493,22 @@ public abstract class AbstractJavaTarget extends AbstractLanguageTarget{
 					}
 				} else if (unary.getLeftSibling() != null && unary.getLeftSibling() instanceof TranslationSymbolNode) {
 					TranslationSymbolNode s = (TranslationSymbolNode) unary.getLeftSibling();
-					Symbol type = Transpiler.instance().lookup(currentScope, s.getType());
-					if (type != null && type.isClass() && !type.isEnum()) {
-						programmer.writeOperator( out, "." );
+					if (s.getSymbol().isClass()) {
+						if (unary.getRightSibling() != null && 
+						    unary.getRightSibling() instanceof TranslationListNode &&
+						    unary.getRightSibling().getFirstChild()  instanceof TranslationSymbolNode &&
+						    ((TranslationSymbolNode) unary.getRightSibling().getFirstChild()).getSymbol().getName().equals("self") ) {
+							out.deleteLast(s.getSymbol().getName());
+							out.append("super");
+						} 
+						programmer.writeOperator( out, "." );							
 					} else {
-						programmer.writeOperator( out, unary.getLhsValue() );
+						Symbol type = Transpiler.instance().lookup(currentScope, s.getType());
+						if (type != null && type.isClass() && !type.isEnum()) {
+							programmer.writeOperator( out, "." );
+						} else {
+							programmer.writeOperator( out, unary.getLhsValue() );
+						}
 					}
 				} else if (unary.getLeftSibling() != null && unary.getLeftSibling() instanceof TranslationListNode) {
 					TranslationListNode s = (TranslationListNode) unary.getLeftSibling();
@@ -1259,12 +1270,17 @@ public abstract class AbstractJavaTarget extends AbstractLanguageTarget{
 		if (open.equals("(")) {
 			programmer.openParenthesis( out );
 			for (int i = 0; i < child.getChildCount(); i++) {
+				if (i == 0 && child.getChild(0) instanceof TranslationSymbolNode) {
+					TranslationSymbolNode tsn = (TranslationSymbolNode) child.getChild(0);
+					if (tsn.getSymbol().getName().equals("self"))
+						continue;
+				}
 				if (child.getChild(i) instanceof TranslationOperatorNode)
 					continue;
-				if (i > 0) {
+				i += emitChild( out, scope, child.getChild(i));
+				if (i < child.getChildCount()-1) {
 					out.append(", "); //->programmer
 				}
-				i += emitChild( out, scope, child.getChild(i));
 			}
 			programmer.closeParenthesis( out );
 		} else {

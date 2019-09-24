@@ -72,13 +72,13 @@
                 assert_not_empty(matches);
                 for (int order = 0; order < matches.size(); order++) {
                     setup = testData->getGroupVariable(matches[order], "setup");
-                    N = int(setup(0, 0));
+                    N = int(setup(0));
                     taus = testData->getGroupVariable(matches[order], "taus");
                     expected = testData->getGroupVariable(matches[order], "expected");
                     offset = 0;
                     nTaus = taus.size();
                     for (int itau = 0; itau < nTaus; itau++) {
-                        tau = taus(itau, 0);
+                        tau = taus(itau);
                         rf = Emp::makeEmp(order, tau);
                         f = std::make_shared<RecursivePolynomialFilterMock>(order, tau, rf->getCore());
                         for (int iN = order + 1; iN < N; iN++) {
@@ -115,7 +115,7 @@
                 matches = testData->getMatchingGroups("States");
                 assert_not_empty(matches);
                 setup = testData->getGroupVariable(matches[0], "setup");
-                matches = testData->getMatchingGroups("Case_");
+                matches = testData->getMatchingGroups("States_Case_");
                 assert_not_empty(matches);
                 for (int i = 0; i < matches.size(); i++) {
                     order = int(setup(i, 0));

@@ -39,7 +39,7 @@ from polynomialfiltering.components.RecursivePolynomialFilter import RecursivePo
 from polynomialfiltering.components.ICore import ICore
 from polynomialfiltering.components.Fmp import makeFmp, makeFmpCore
 
-from polynomialfiltering.PythonUtilities import ignore, testcase, testclass, testclassmethod
+from polynomialfiltering.PythonUtilities import ignore, testcase, testclass, testclassmethod, forcestatic
 from polynomialfiltering.PythonUtilities import assert_not_empty
 
 from polynomialfiltering.components.Emp import makeEmp, makeEmpCore, nSwitch, nUnitLastVRF
@@ -72,7 +72,7 @@ class Fmp_test(unittest.TestCase):
         t0 = brentq( targetMaxDiag, 1e-6, 1-1e-8 );
         return t0
 
-    def generateStates(self, cdf : Dataset) -> None:
+    def generateStates(self, testData : TestData) -> None:
 #         print("generateStates")
 #         N = array([64, 128, 5120, 512, 1024, 2048])
         setup = array([ # order, tau
@@ -84,10 +84,9 @@ class Fmp_test(unittest.TestCase):
             [5, 0.01],[5, 0.1], [5, 1.0], [5, 10.0]
             ])
 
-        testData = TestData()
         nPass = 0
         nFail = 0
-        group = createTestGroup(cdf, 'States')
+        group = testData.createTestGroup( 'States')
         writeTestVariable(group, 'setup', setup)
         iCase = 1;
         for i in range(0,setup.shape[0]) :
@@ -102,7 +101,7 @@ class Fmp_test(unittest.TestCase):
 #                 print(order, tau, theta, n, int(nSwitch(order, theta)))
                 if (n > 1000*(order+1) ) : # skip extremely long runs
                     break;
-                caseGroup = createTestGroup(group, 'Case_%d' % iCase)
+                caseGroup = testData.createTestGroup( 'States_Case_%d' % iCase)
                 iCase += 1
                 nTrials = 25;
                 # variance of sample variances for a standard normal distribtion
@@ -166,14 +165,13 @@ class Fmp_test(unittest.TestCase):
         print('%d passed; %d failed' % (nPass, nFail))
         assert_equal(nFail,0)
         
-    def generateGammas(self, cdf : Dataset) -> None:
+    def generateGammas(self, testData : TestData) -> None:
         
         self.iCase = 0;
         """
         Gamma:  {0: 1.1102230246251565e-16, 1: 1.651158036900312e-08, 2: 0.2898979485566357, 3: 0.4627475401696348, 4: 0.5697090329565893, 5: 0.6416277095878444}
         """
         self.gammaTaus = {new_list: [] for new_list in range(0,5+1)}
-        testData = TestData()
         
         def isValid(G : array) -> bool:
             return (1 - max(G)) >= 0.0 and min(G) > 0.0
@@ -199,7 +197,7 @@ class Fmp_test(unittest.TestCase):
                 v = 'UNSTABLE'
             if (q == 'IRREGULAR' or v == 'UNSTABLE') :
                 return G
-            caseGroup = createTestGroup(group, 'Case_%d' % self.iCase)
+            caseGroup = createTestGroup(group, 'Gammas_Case_%d' % self.iCase)
             self.iCase += 1
             testData.putInteger(caseGroup, 'order', order)
             testData.putScalar(caseGroup, 'tau', tau)
@@ -209,7 +207,7 @@ class Fmp_test(unittest.TestCase):
             print('%2d %8.2g %15.8g %15.8g %s  %s %s' % (order, nSwitch(order, theta), theta, 1-theta, A2S(G), q, v))
             return G;
         
-        group = createTestGroup(cdf, 'Gammas')
+        group = testData.createTestGroup('Gammas')
         
         delta = 2.0**-32;
         while ((1-delta) != 1.0) :
@@ -269,14 +267,13 @@ class Fmp_test(unittest.TestCase):
         print('Gamma: ', self.gammaTaus )
         
         
-    def generateVrfs(self, cdf : Dataset) -> None:
+    def generateVrfs(self, testData: TestData) -> None:
         """
         {0: 3.0518509447574615e-05, 1: 1.4142135623842478, 2: 2.5495097571983933, 3: 3.8369548115879297, 4: 5.583955190144479, 5: 8.241797269321978}
         """
         print('test8VRF')
-        testData = TestData()
         self.vrfTaus = {new_list: [0.0] for new_list in range(0,5+1)}
-        group = createTestGroup(cdf, 'Vrfs')
+        group = testData.createTestGroup('Vrfs')
         self.iCase = 0;
        
         def isValid(V : array) -> bool:
@@ -368,7 +365,7 @@ class Fmp_test(unittest.TestCase):
                     theta = 1-10**ps;
                     f = makeFmp( order, tau, theta );
                     V = f.getCore().getVRF(0)
-                    caseGroup = createTestGroup(group, 'Case_%d' % self.iCase)
+                    caseGroup = testData.createTestGroup( 'Vrfs_Case_%d' % self.iCase)
                     self.iCase += 1
                     testData.putInteger(caseGroup, 'order', order)
                     testData.putScalar(caseGroup, 'tau', tau)
@@ -401,12 +398,11 @@ class Fmp_test(unittest.TestCase):
 #             print(A2S(f.core._getVRF(tau, theta)))
 #         
         print("test0Generate")
-        path = testDataPath('testFMP.nc');
-        cdf = Dataset(path, "w", format="NETCDF4");
-        self.generateStates(cdf)
-        self.generateGammas(cdf)
-        self.generateVrfs(cdf)
-        cdf.close()
+        testData = TestData('testFMP.nc', "w");
+        self.generateStates(testData)
+        self.generateGammas(testData)
+        self.generateVrfs(testData)
+        testData.close()
 
 
    
@@ -441,10 +437,10 @@ class Fmp_test(unittest.TestCase):
         assert_not_empty(matches)
         setup = testData.getGroupVariable(matches[0], 'setup')
         states = testData.getGroup(matches[0])
-        cases = testData.getMatchingSubGroups(states, "Case_");
+        cases = testData.getMatchingGroups("Case_");
         for i in range(0, len(cases)) :
             caseName = cases[i]
-            caseGroup = testData.getSubGroup(states, caseName)
+            caseGroup = testData.getGroup(caseName)
             order = testData.getInteger(caseGroup, 'order')
             tau = testData.getScalar(caseGroup, 'tau')
             theta = testData.getScalar(caseGroup, 'theta')
@@ -498,10 +494,10 @@ class Fmp_test(unittest.TestCase):
         matches = testData.getMatchingGroups('Gammas')
         assert_not_empty(matches)
         states = testData.getGroup(matches[0])
-        cases = testData.getMatchingSubGroups(states, "Case_");
+        cases = testData.getMatchingGroups( "Gammas_Case_");
         for i in range(0, len(cases)) :
             caseName = cases[i]
-            caseGroup = testData.getSubGroup(states, caseName)
+            caseGroup = testData.getGroup(caseName)
             order = testData.getInteger(caseGroup, 'order')
             tau = testData.getScalar(caseGroup, 'tau')
             theta = testData.getScalar(caseGroup, 'theta')
@@ -541,10 +537,10 @@ class Fmp_test(unittest.TestCase):
         matches = testData.getMatchingGroups('Vrfs')
         assert_not_empty(matches)
         states = testData.getGroup(matches[0])
-        cases = testData.getMatchingSubGroups(states, "Case_");
+        cases = testData.getMatchingGroups("Vrfs_Case_");
         for i in range(0, len(cases)) :
             caseName = cases[i]
-            caseGroup = testData.getSubGroup(states, caseName)
+            caseGroup = testData.getGroup(caseName)
             order = testData.getInteger(caseGroup, 'order')
             tau = testData.getScalar(caseGroup, 'tau')
             theta = testData.getScalar(caseGroup, 'theta')

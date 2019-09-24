@@ -186,7 +186,7 @@ namespace polynomialfiltering {
             /// 
             ///  @return  N x N covariance matrix
             /// 
-            static RealMatrix transitionCovarianceMatrix(const double dt, const RealMatrix& V);
+            RealMatrix transitionCovarianceMatrix(const double dt, const RealMatrix& V);
 
             ///// @brief Transition the current filter covariance matrix to the specified time
             /// 

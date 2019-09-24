@@ -49,10 +49,10 @@ public class Pair_test {
         assert_clear();
         testData = new TestData("testPair.nc");
         states = testData.getGroup("States");
-        matches = testData.getMatchingSubGroups(states, "Case_");
+        matches = testData.getMatchingGroups("States_Case_");
         assert_not_empty(matches);
         for (int i = 0; i < numElements(matches); i++) {
-            caseGroup = testData.getSubGroup(states, matches.get(i));
+            caseGroup = testData.getGroup(matches.get(i));
             order = testData.getInteger(caseGroup, "order");
             tau = testData.getScalar(caseGroup, "tau");
             theta = testData.getScalar(caseGroup, "theta");
@@ -112,7 +112,7 @@ public class Pair_test {
         }
                 
         testData.close();
-        assertGreaterEqual(38.0, assert_report("Pair_test/test2CheckStates"));
+        assertGreaterEqual(39.4, assert_report("Pair_test/test2CheckStates"));
     }
     
     

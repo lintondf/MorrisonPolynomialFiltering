@@ -59,141 +59,25 @@ public:
     static std::string testDataPath();
 
 
-	TestData(std::string fileName) {
-		std::string filePath = testDataPath();
-		filePath += fileName;
-		int retval, numgrps;
-		retval = nc_open(filePath.c_str(), NC_NOWRITE, &ncid);
-		std::cout << "TestData: nc_open " << filePath << " -> " << retval << std::endl;
-		if (retval == 0) {
-			nc_inq_grps(ncid, &numgrps, NULL);
-			int* grp_ncids = new int[numgrps];
-			nc_inq_grps(ncid, &numgrps, grp_ncids);
-			for (int g = 0; g < numgrps; g++) {
-				char name[NC_MAX_NAME];
-				nc_inq_grpname(grp_ncids[g], name);
-				groupNames.push_back(name);
-				groupIds.push_back(grp_ncids[g]);
-			}
-		}
-	}
+    TestData(std::string fileName);
 
 	void close() {} // meet python interface; closed in destructor
 
-	~TestData() {
-		nc_close(ncid);
-	}
+    ~TestData();
+    
+    const std::vector<std::string> getGroupNames();
 
-	const std::vector<std::string> getGroupNames() {
-		return groupNames;
-	}
+    std::vector<std::string> getMatchingGroups(std::string testName);
+    
+    Group getGroup( const std::string groupName );
 
-	std::vector<std::string> getMatchingGroups(std::string testName) {
-		std::vector<std::string> matches;
-		for (int i = 0; i < groupNames.size(); i++) {
-			if (groupNames.at(i).substr(0, testName.size()) == testName) {
-				matches.push_back(groupNames.at(i));
-			}
-		}
-		return matches;
-	}
+    RealMatrix getGroupVariable(std::string groupName, std::string variableName);
     
-    std::vector<std::string> getMatchingSubGroups(Group parent, std::string testName) {
-        std::vector<std::string>  subgroupNames;
-        int numgrps;
-        nc_inq_grps(parent, &numgrps, NULL);
-        int* grp_ncids = new int[numgrps];
-        nc_inq_grps(parent, &numgrps, grp_ncids);
-        for (int g = 0; g < numgrps; g++) {
-            char name[NC_MAX_NAME];
-            nc_inq_grpname(grp_ncids[g], name);
-            subgroupNames.push_back(name);
-        }
-        std::vector<std::string> matches;
-        for (int i = 0; i < groupNames.size(); i++) {
-            if (subgroupNames.at(i).substr(0, testName.size()) == testName) {
-                matches.push_back(subgroupNames.at(i));
-            }
-        }
-        return matches;
-    }
+    RealMatrix getArray( Group gid, std::string variableName );
     
-    Group getSubGroup( Group parent, std::string groupName ) {
-        int numgrps;
-        nc_inq_grps(parent, &numgrps, NULL);
-        int* grp_ncids = new int[numgrps];
-        nc_inq_grps(parent, &numgrps, grp_ncids);
-        for (int g = 0; g < numgrps; g++) {
-            char name[NC_MAX_NAME];
-            nc_inq_grpname(grp_ncids[g], name);
-            if (groupName == name) {
-                return grp_ncids[g];
-            }
-        }
-       return -1;
-    }
+    double getScalar( Group gid, std::string variableName );
     
-    Group getGroup( const std::string groupName ) {
-        for (int i = 0; i < groupNames.size(); i++) {
-            if (groupNames.at(i) == groupName) {
-                int gid = groupIds.at(i);
-                return gid;
-            }
-        }
-        return -1;
-    }
-
-	RealMatrix getGroupVariable(std::string groupName, std::string variableName) {
-		for (int i = 0; i < groupNames.size(); i++) {
-			if (groupNames.at(i) == groupName) {
-				int gid = groupIds.at(i);
-                return getArray( gid, variableName);
-			}
-		}
-		return RealMatrix::Zero(0, 0);
-	}
-    
-    RealMatrix getArray( Group gid, std::string variableName ) {
-        int vid;
-        int status = nc_inq_varid(gid, variableName.c_str(), &vid);
-        if (status != NC_NOERR) {
-            throw ValueError("Missing test variable:" + variableName);
-        }
-        
-        //int  rh_id;
-        nc_type rh_type;
-        int rh_ndims;
-        int  rh_dimids[NC_MAX_VAR_DIMS];
-        int rh_natts;
-        nc_inq_var(gid, vid, 0, &rh_type, &rh_ndims, rh_dimids, &rh_natts);
-        size_t count[2];
-        count[0] = count[1] = 1;
-        for (int j = 0; j < rh_ndims; j++) {
-            size_t dval;
-            char dname[NC_MAX_NAME];
-            nc_inq_dim(gid, rh_dimids[j], dname, &dval);
-            //std::cout << "              " << j << " " << dname << " " << dval << std::endl;
-            count[j] = dval;
-        }
-        size_t start[2] = { 0, 0 };
-        size_t numel = count[0] * count[1];
-        printf("%s: %d dims %d * %d = %d\n", variableName.c_str(), rh_ndims, count[0], count[1], numel);
-        double* data = new double[numel];
-        nc_get_vara_double(gid, vid, start, count, data);
-        Map<RealMatrix>  m(data, count[1], count[0]);
-        RealMatrix out = m.transpose();
-        delete[] data;
-        return out;
-    }
-    
-    double getScalar( Group gid, std::string variableName ) {
-        RealMatrix m = getArray( gid, variableName );
-        return m(0, 0);
-    }
-    
-    int getInteger( Group gid, std::string variableName ) {
-        return (int) getScalar(gid, variableName);
-    }
+    int getInteger( Group gid, std::string variableName );
     
     
 protected:

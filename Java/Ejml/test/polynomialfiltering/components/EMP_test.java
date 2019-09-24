@@ -70,8 +70,8 @@ public class EMP_test {
         for (int order = 0; order < numElements(matches); order++) {
             setup = testData.getGroupVariable(matches.get(order), "setup");
                         
-            //  N = int(setup(0, 0))
-            double     td2 = setup.get(0, 0);
+            //  N = int(setup(0))
+            double     td2 = setup.get(0);
             N = (int) td2;
             taus = testData.getGroupVariable(matches.get(order), "taus");
             expected = testData.getGroupVariable(matches.get(order), "expected");
@@ -81,7 +81,7 @@ public class EMP_test {
             nTaus = taus.getNumElements();
             for (int itau = 0; itau < nTaus; itau++) {
                                 
-                tau = taus.get(itau, 0);
+                tau = taus.get(itau);
                 rf = Emp.makeEmp(order, tau);
                 f = new RecursivePolynomialFilterMock(order, tau, rf.getCore());
                 for (int iN = order + 1; iN < N; iN++) {
@@ -127,7 +127,7 @@ public class EMP_test {
         matches = testData.getMatchingGroups("States");
         assert_not_empty(matches);
         setup = testData.getGroupVariable(matches.get(0), "setup");
-        matches = testData.getMatchingGroups("Case_");
+        matches = testData.getMatchingGroups("States_Case_");
         assert_not_empty(matches);
         for (int i = 0; i < numElements(matches); i++) {
                         

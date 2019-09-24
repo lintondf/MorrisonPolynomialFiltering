@@ -110,16 +110,14 @@ class RecursivePolynomialFilter_test(unittest.TestCase):
     def tearDown(self):
         pass
 
-    def xtest0Generate(self):
-        path = testDataPath('testRecursivePolynomialFilter.nc');
-#         print("Writing to: ", path)
-        cdf = Dataset(path, "w", format="NETCDF4");
+    def test0Generate(self):
+        testData = TestData('testRecursivePolynomialFilter.nc', 'w');
         
         N = 5;
         iTest = 0;
         for order in range(5,5+1) :
             for tau in [0.1, 1, 10] :
-                group = createTestGroup(cdf, 'testPurePredict_%d' % iTest );
+                group = testData.createTestGroup('testPurePredict_%d' % iTest );
                 iTest += 1;
                 (times, truth, observations, noise) = \
                     generateTestData(order, N, 0.0, self.Y0[0:order+1], tau, sigma=sqrt(1.0))
@@ -152,7 +150,7 @@ class RecursivePolynomialFilter_test(unittest.TestCase):
         iTest = 0;
         for order in range(5,5+1) :
             for tau in [0.1, 1, 10] :
-                group = createTestGroup(cdf, 'testPureObservation_%d' % iTest );
+                group = testData.createTestGroup('testPureObservation_%d' % iTest );
                 iTest += 1;
                 (times, truth, observations, noise) = \
                     generateTestData(order, N, 0.0, self.Y0[0:order+1], tau, sigma=sqrt(1.0))
@@ -188,7 +186,7 @@ class RecursivePolynomialFilter_test(unittest.TestCase):
                 writeTestVariable(group, 'es', es);
                 writeTestVariable(group, 'innovations', innovations);
                 writeTestVariable(group, 'expected', actual);
-        cdf.close()
+        testData.close()
         
         
     @testcase
@@ -341,8 +339,8 @@ class RecursivePolynomialFilter_test(unittest.TestCase):
         assert_almost_equal(f.getState(), array([11.0, 8.0, 3.0]))
         assert_almost_equal(f.transitionState(4.0), array([33.0, 14.0, 3.0]))
         self.assertEqual(2, f.getN())
-        self.assertEqual(f.effectiveTheta(2, 0), 0)
-        assert_almost_equal(f.effectiveTheta(2, 10), 0.56673)
+        self.assertEqual(RecursivePolynomialFilter.effectiveTheta(2, 0), 0)
+        assert_almost_equal(RecursivePolynomialFilter.effectiveTheta(2, 10), 0.56673)
         
         g = RecursivePolynomialFilter(2, 1.0, core );
         g.copyState(f)

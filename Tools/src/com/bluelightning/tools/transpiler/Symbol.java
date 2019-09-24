@@ -193,7 +193,8 @@ public class Symbol {
 	public boolean isClassMethod() {
 		if (this.functionParametersInfo == null)
 			return false;
-		return this.functionParametersInfo.decorators.contains("@classmethod");
+		return this.functionParametersInfo.decorators.contains("@staticmethod") ||
+			   this.functionParametersInfo.decorators.contains("@forcestatic");
 	}
 
 	public void setDimensions(String[] dims) {

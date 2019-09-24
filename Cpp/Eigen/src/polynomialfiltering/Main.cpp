@@ -94,7 +94,7 @@ namespace polynomialfiltering {
             RealMatrix V; ///<  covariance matrix of the filter
             V = this->getCovariance();
             dt = t - this->getTime();
-            return AbstractFilterWithCovariance::transitionCovarianceMatrix(dt, V);
+            return this->transitionCovarianceMatrix(dt, V);
         }
 
         double AbstractFilterWithCovariance::getFirstVariance () {

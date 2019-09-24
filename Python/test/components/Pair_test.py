@@ -71,7 +71,7 @@ class Pair_test(unittest.TestCase):
             ])
         group = testData.createTestGroup('States')
         for i in range(0,setup.shape[0]) :
-            case = testData.createSubGroup(group, 'Case_%d' % i)
+            case = testData.createTestGroup( 'States_Case_%d' % i)
             order = int(setup[i,0])
             tau = setup[i,1]
             theta = self.thetaFromN( order, N[order]//2)  # thetas[i]
@@ -112,7 +112,7 @@ class Pair_test(unittest.TestCase):
             testData.putArray(case, 'expected', expected)
             testData.putArray(case, 'vdiags', vdiags)
        
-    def xtest0Generate(self):
+    def test0Generate(self):
         print("test0Generate")
         testData = TestData('testPair.nc', 'w');
         self.generateStates(testData)
@@ -147,10 +147,10 @@ class Pair_test(unittest.TestCase):
         assert_clear()
         testData = TestData('testPair.nc')
         states = testData.getGroup('States')
-        matches = testData.getMatchingSubGroups(states, 'Case_')
+        matches = testData.getMatchingGroups('States_Case_')
         assert_not_empty(matches)
         for i in range(0, len(matches)) :
-            caseGroup = testData.getSubGroup(states, matches[i])
+            caseGroup = testData.getGroup(matches[i])
             order = testData.getInteger(caseGroup, 'order')
             tau = testData.getScalar(caseGroup, 'tau')
             theta = testData.getScalar(caseGroup, 'theta')
@@ -176,7 +176,7 @@ class Pair_test(unittest.TestCase):
             assert_allclose( actual, expectedStates)
             assert_allclose( vdiags, expectedVdiag)
         testData.close()
-        self.assertGreaterEqual(38.0, assert_report('Pair_test/test2CheckStates'))
+        self.assertGreaterEqual(39.4, assert_report('Pair_test/test2CheckStates'))
         
     @testcase
     def test9Coverage(self):

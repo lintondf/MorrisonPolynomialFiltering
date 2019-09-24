@@ -9,7 +9,7 @@
 # from __future__ import annotations;
 
 from abc import ABC, abstractmethod
-from polynomialfiltering.PythonUtilities import virtual, inline;
+from polynomialfiltering.PythonUtilities import virtual, inline, forcestatic;
 
 from numpy import array, zeros;
 from numpy import array as vector;
@@ -58,7 +58,7 @@ class RecursivePolynomialFilter(AbstractFilter):
             td = pow(self.tau, d)
             self.D[d] = td
       
-    @staticmethod            
+    @staticmethod           
     def effectiveTheta(order : int, n : float) -> float:
         """
         Estimate of the FMP fading factor theta to match 0th variance of an EMP
@@ -264,7 +264,7 @@ class RecursivePolynomialFilter(AbstractFilter):
         """
         '''@Z : vector'''
         
-        return RecursivePolynomialFilter.conformState(self.order, state)
+        return AbstractFilter.conformState(self.order, state)
         
     @inline
     def _normalizeTime(self, t : float) -> float:

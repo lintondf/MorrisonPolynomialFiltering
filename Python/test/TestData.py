@@ -53,9 +53,6 @@ class TestData :
         return self.cdf.createGroup(name);
 
 
-    def createSubGroup(self, parent : Group, name : str) -> Group:
-        return parent.createGroup(name)
-    
     def getMatchingGroups(self, prefix : str) -> List[str]:
         results = []
         for group in self.cdf.groups :
@@ -63,28 +60,13 @@ class TestData :
                 results.append(group)
         return results;
     
-    def getMatchingSubGroups(self, parent: Group, prefix : str) -> List[str]:
-        results = []
-        for group in parent.groups :
-            if (group.startswith(prefix)) :
-                results.append(group)
-        return results;
-    
     def getGroup(self, groupName :str)-> Group:
         return self.cdf.groups[groupName];
-    
-    def getSubGroup(self, group : Group, subGroupName: str)-> Group:
-        return group.groups[subGroupName];
     
     def getGroupVariable(self, groupName : str, variableName : str) -> array:
         group = self.cdf.groups[groupName];
         return group.variables[variableName][:];
     
-    def getSubGroupVariable(self, groupName : str, subgroup : str, variableName : str) -> array:
-        group = self.cdf.groups[groupName];
-        sub = group.groups[subgroup];
-        return sub.variables[variableName][:];
-        
     def close(self) -> None:
         self.cdf.close()
         

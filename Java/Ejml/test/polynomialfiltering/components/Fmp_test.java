@@ -61,10 +61,10 @@ public class Fmp_test {
         assert_not_empty(matches);
         setup = testData.getGroupVariable(matches.get(0), "setup");
         states = testData.getGroup(matches.get(0));
-        cases = testData.getMatchingSubGroups(states, "Case_");
+        cases = testData.getMatchingGroups("Case_");
         for (int i = 0; i < numElements(cases); i++) {
             caseName = cases.get(i);
-            caseGroup = testData.getSubGroup(states, caseName);
+            caseGroup = testData.getGroup(caseName);
             order = testData.getInteger(caseGroup, "order");
             tau = testData.getScalar(caseGroup, "tau");
             theta = testData.getScalar(caseGroup, "theta");
@@ -135,10 +135,10 @@ public class Fmp_test {
         matches = testData.getMatchingGroups("Gammas");
         assert_not_empty(matches);
         states = testData.getGroup(matches.get(0));
-        cases = testData.getMatchingSubGroups(states, "Case_");
+        cases = testData.getMatchingGroups("Gammas_Case_");
         for (int i = 0; i < numElements(cases); i++) {
             caseName = cases.get(i);
-            caseGroup = testData.getSubGroup(states, caseName);
+            caseGroup = testData.getGroup(caseName);
             order = testData.getInteger(caseGroup, "order");
             tau = testData.getScalar(caseGroup, "tau");
             theta = testData.getScalar(caseGroup, "theta");
@@ -181,10 +181,10 @@ public class Fmp_test {
         matches = testData.getMatchingGroups("Vrfs");
         assert_not_empty(matches);
         states = testData.getGroup(matches.get(0));
-        cases = testData.getMatchingSubGroups(states, "Case_");
+        cases = testData.getMatchingGroups("Vrfs_Case_");
         for (int i = 0; i < numElements(cases); i++) {
             caseName = cases.get(i);
-            caseGroup = testData.getSubGroup(states, caseName);
+            caseGroup = testData.getGroup(caseName);
             order = testData.getInteger(caseGroup, "order");
             tau = testData.getScalar(caseGroup, "tau");
             theta = testData.getScalar(caseGroup, "theta");

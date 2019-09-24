@@ -138,7 +138,7 @@ namespace polynomialfiltering {
 
             RealVector RecursivePolynomialFilter::_conformState (const RealVector& state) {
                 RealVector Z;
-                return RecursivePolynomialFilter::conformState(this->order, state);
+                return AbstractFilter::conformState(this->order, state);
             }
 
             double RecursivePolynomialFilter::_normalizeTime (const double t) {

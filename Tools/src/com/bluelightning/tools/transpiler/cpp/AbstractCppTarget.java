@@ -102,12 +102,17 @@ public abstract class AbstractCppTarget extends AbstractLanguageTarget {
 		if (open.equals("(")) {
 			programmer.openParenthesis( out );
 			for (int i = 0; i < child.getChildCount(); i++) {
+				if (i == 0 && child.getChild(0) instanceof TranslationSymbolNode) {
+					TranslationSymbolNode tsn = (TranslationSymbolNode) child.getChild(0);
+					if (tsn.getSymbol().getName().equals("self"))
+						continue;
+				}
 				if (child.getChild(i) instanceof TranslationOperatorNode)
 					continue;
-				if (i > 0) {
+				i += emitChild( out, scope, child.getChild(i));
+				if (i < child.getChildCount()-1) {
 					out.append(", "); //->programmer
 				}
-				i += emitChild( out, scope, child.getChild(i));
 			}
 			programmer.closeParenthesis( out );
 		} else {
@@ -297,7 +302,7 @@ public abstract class AbstractCppTarget extends AbstractLanguageTarget {
 				}
 				where.write( "" );
 				String decl = String.format("%s%s(%s)", type, name, header.sb.toString() ); 
-				if (fpi.decorators.contains("@classmethod")) {
+				if (fpi.decorators.contains("@staticmethod") || fpi.decorators.contains("@forcestatic")) {
 					symbol.setStatic(true);
 					where.append("static " + decl);
 				} else if (fpi.decorators.contains("@abstractmethod") ||

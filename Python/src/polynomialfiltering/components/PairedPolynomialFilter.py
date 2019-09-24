@@ -35,13 +35,13 @@ class PairedPolynomialFilter( RecursivePolynomialFilter ):
         
     def update(self, t : float, Zstar : vector, e : float) -> vector:
         '''@ i : array'''
-        i = RecursivePolynomialFilter.update(t, Zstar, e);
+        i = RecursivePolynomialFilter.update(self, t, Zstar, e);
         if (self.n == self.threshold) :
             self.core = self.fmpCore;
         return i
 
     def start(self, t : float, Z : vector) -> None:
-        RecursivePolynomialFilter.start(t, Z)
+        RecursivePolynomialFilter.start(self, t, Z)
         self.core = self.empCore
         
     def isFading(self) -> bool:

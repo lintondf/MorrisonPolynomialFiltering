@@ -8,7 +8,7 @@
 
 from typing import Tuple
 from abc import abstractmethod
-from polynomialfiltering.PythonUtilities import virtual, inline
+from polynomialfiltering.PythonUtilities import virtual, inline, forcestatic
 
 from math import isnan, exp, log;
 from numpy import array, diag, zeros, sqrt, transpose, copy
@@ -472,7 +472,7 @@ class CoreFmp5(AbstractCoreFmp):
         return V;
 
 
-@classmethod
+@forcestatic
 def makeFmpCore(order : int, tau : float, theta : float) -> ICore:
     """
     Factory for fading memory polynomial filter cores
@@ -498,7 +498,7 @@ def makeFmpCore(order : int, tau : float, theta : float) -> ICore:
     else : # (order == 5.0) :
         return CoreFmp5(tau, theta);
     
-@classmethod
+@forcestatic
 def makeFmp(order : int, tau : float, theta : float) -> RecursivePolynomialFilter:
     '''@core : ICore'''
     core = makeFmpCore(order, tau, theta);

@@ -242,8 +242,8 @@
             assert_almost_equal(f->getState(), (RealVector3() << 11.0, 8.0, 3.0).finished());
             assert_almost_equal(f->transitionState(4.0), (RealVector3() << 33.0, 14.0, 3.0).finished());
             assertEqual(2, f->getN());
-            assertEqual(f->effectiveTheta(2, 0), 0);
-            assert_almost_equal(f->effectiveTheta(2, 10), 0.56673);
+            assertEqual(RecursivePolynomialFilter::effectiveTheta(2, 0), 0);
+            assert_almost_equal(RecursivePolynomialFilter::effectiveTheta(2, 10), 0.56673);
             g = std::make_shared<RecursivePolynomialFilter>(2, 1.0, core);
             g->copyState(f);
             assert_almost_equal(g->getState(), (RealVector3() << 11.0, 8.0, 3.0).finished());

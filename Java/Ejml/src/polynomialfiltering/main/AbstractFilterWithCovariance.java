@@ -53,7 +53,7 @@ public abstract class AbstractFilterWithCovariance extends AbstractFilter {
     ///  @return  N x N covariance matrix
     /// 
     
-    static public DMatrixRMaj transitionCovarianceMatrix (final double dt, final DMatrixRMaj V) {
+    public DMatrixRMaj transitionCovarianceMatrix (final double dt, final DMatrixRMaj V) {
         DMatrixRMaj F = new DMatrixRMaj();
         DMatrixRMaj C = new DMatrixRMaj();
                 
@@ -82,8 +82,8 @@ public abstract class AbstractFilterWithCovariance extends AbstractFilter {
                 
         dt = t - this.getTime();
         
-        //  asssignment.dummy = return ( AbstractFilterWithCovariance.transitionCovarianceMatrix(dt, V))
-        DMatrixRMaj tm6 = AbstractFilterWithCovariance.transitionCovarianceMatrix(dt, V);
+        //  asssignment.dummy = return ( this.transitionCovarianceMatrix(dt, V))
+        DMatrixRMaj tm6 = this.transitionCovarianceMatrix(dt, V);
         return tm6;
     }
     

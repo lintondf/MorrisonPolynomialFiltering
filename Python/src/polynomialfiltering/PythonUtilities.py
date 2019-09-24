@@ -30,6 +30,12 @@ def constructor(funcobj):
     '''
     return funcobj;
 
+def forcestatic(funcobj):
+    '''
+    @forcestatic marks a function as a static method; used when staticmethod doesn't work
+    '''
+    return funcobj;
+
 def ignore(funcobj):
     '''
     Function marked @ignore are not transpiled

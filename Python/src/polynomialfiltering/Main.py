@@ -16,7 +16,7 @@ from abc import ABC, abstractmethod
 from enum import Enum
 from numpy import array, eye, transpose, zeros
 from numpy import array as vector;
-from polynomialfiltering.PythonUtilities import virtual;
+from polynomialfiltering.PythonUtilities import virtual, forcestatic;
 
 class FilterStatus(Enum):
     """
@@ -61,8 +61,8 @@ class AbstractFilter(ABC):
         self.order = order
         self.name = name
         
-    @classmethod
-    def conformState(self, order : int, state : vector) -> vector:
+    @staticmethod
+    def conformState(order : int, state : vector) -> vector:
         """
         Matches an input state vector to the filter order
         
@@ -84,8 +84,8 @@ class AbstractFilter(ABC):
         
     
         
-    @classmethod            
-    def stateTransitionMatrix(self, N : int, dt : float) -> array: # TODO remove
+    @staticmethod            
+    def stateTransitionMatrix( N : int, dt : float) -> array: # TODO remove
         """
         Return a state transition matrix of size N for time step dt
         

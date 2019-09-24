@@ -25,6 +25,7 @@ from scipy.stats import kstest, chi2, lognorm, norm, anderson
 from runstats import Statistics
 
 from netCDF4 import Dataset
+
 from TestSuite import testDataPath;
 from TestUtilities import generateTestPolynomial, generateTestData, createTestGroup, writeTestVariable, A2S, assert_clear, assert_report
 from TestData import TestData
@@ -220,14 +221,14 @@ class EMP_test(unittest.TestCase):
 #                     assert_allclose(actual, expected[order][k1][k2], rtol=1e-3)
 #         seed()
     
-    def generateVRF(self, cdf : Dataset) -> None:
+    def generateVRF(self, testData : TestData) -> None:
         for order in range(0,5+1) :
-            group = createTestGroup(cdf, 'VRF_%d' % order );
+            group = testData.createTestGroup('VRF_%d' % order );
             setup = array([500])
-            writeTestVariable(group, "setup", setup);
+            testData.putArray(group, "setup", setup);
             N = setup[0]
             taus = array([0.01, 0.1, 1, 10])
-            writeTestVariable(group, "taus", taus);
+            testData.putArray(group, "taus", taus);
             expected = zeros([0, order+1]);
             for itau in range(0,len(taus)) :
                 tau = taus[itau]
@@ -236,11 +237,11 @@ class EMP_test(unittest.TestCase):
                 for iN in range(order+1, N) :
                     f.setN(iN)
                     expected = concatenate([expected, f.getVRF()]);
-            writeTestVariable(group, "expected", expected)
+            testData.putArray(group, "expected", expected)
             
 
     
-    def generateStates(self, cdf : Dataset) -> None:
+    def generateStates(self, testData : TestData) -> None:
         R = 10.0
         N = array([64, 128, 512, 512, 1024, 2048])
         setup = array([
@@ -251,12 +252,12 @@ class EMP_test(unittest.TestCase):
             [4, 0.01],[4, 0.1], [4, 1.0], [4, 10.0],  
             [5, 0.01],[5, 0.1], [5, 1.0], [5, 10.0]
             ])
-        group = createTestGroup(cdf, 'States')
+        group = testData.createTestGroup('States')
         writeTestVariable(group, 'setup', setup)
         for i in range(0,setup.shape[0]) :
             order = int(setup[i,0])
             tau = setup[i,1]
-            case = createTestGroup(cdf, 'Case_%d' % i)
+            case = testData.createTestGroup('States_Case_%d' % i)
             t0 = 0.0
             Y = generateTestPolynomial( order, N[order], t0, tau )
             for retry in range(0,10) :
@@ -289,17 +290,16 @@ class EMP_test(unittest.TestCase):
                     break;
             assert(retry < 10)
             print('%5d, %6.3f, %3d, %6.3f' % (order, tau, retry, iBad / (iBad+iGood) ))
-            writeTestVariable(case, 'times', times)
-            writeTestVariable(case, 'observations', observations)
-            writeTestVariable(case, 'expected', expected)
+            testData.putArray(case, 'times', times)
+            testData.putArray(case, 'observations', observations)
+            testData.putArray(case, 'expected', expected)
        
     def xtest0Generate(self):
         print("test0Generate")
-        path = testDataPath('testEMP.nc');
-        cdf = Dataset(path, "w", format="NETCDF4");
-        self.generateVRF(cdf)
-        self.generateStates(cdf)
-        cdf.close()
+        testData = TestData('testEMP.nc', 'w');
+        self.generateVRF(testData)
+        self.generateStates(testData)
+        testData.close()
        
     @testcase        
     def test1CheckVRF(self) -> None:
@@ -327,13 +327,13 @@ class EMP_test(unittest.TestCase):
         assert_not_empty(matches)
         for order in range(0, len(matches)) :
             setup = testData.getGroupVariable(matches[order], 'setup')
-            N = int(setup[0,0])            
+            N = int(setup[0])            
             taus = testData.getGroupVariable(matches[order], 'taus')
             expected = testData.getGroupVariable(matches[order], 'expected')
             offset = 0;
             nTaus = len(taus)
             for itau in range(0,nTaus) :
-                tau = taus[itau,0]
+                tau = taus[itau]
                 rf = makeEmp(order, tau)
                 f = self.RecursivePolynomialFilterMock( order, tau, rf.getCore() )
                 for iN in range(order+1, N) :
@@ -370,7 +370,7 @@ class EMP_test(unittest.TestCase):
         matches = testData.getMatchingGroups('States')
         assert_not_empty(matches)
         setup = testData.getGroupVariable(matches[0], 'setup')
-        matches = testData.getMatchingGroups('Case_')
+        matches = testData.getMatchingGroups('States_Case_')
         assert_not_empty(matches)
         for i in range(0, len(matches)) :
             order = int(setup[i,0])

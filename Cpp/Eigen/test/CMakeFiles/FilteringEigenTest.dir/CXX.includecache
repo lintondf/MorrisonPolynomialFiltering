@@ -304,16 +304,6 @@ polynomialfiltering/filters/controls/ConstantObservationErrorModel.hpp
 TestData.hpp
 -
 
-/Users/lintondf/GITHUB/MorrisonPolynomialFiltering/Cpp/Eigen/test/testMain.cpp
-doctest.h
--
-TestData.hpp
--
-cmath
--
-polynomialfiltering/PolynomialFilteringEigen.hpp
--
-
 include/Eigen/Cholesky
 Core
 include/Eigen/Core
