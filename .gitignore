@@ -15,6 +15,10 @@ Cpp/cpptest
 Cpp/Eigen/CMakeFiles
 Cpp/Eigen/src/CMakeFiles
 Cpp/Eigen/test/CMakeFiles
+Cpp/Eigen/Makefile
+Cpp/Eigen/cmake_install.cmake
+Cpp/Eigen/test/Makefile
+Cpp/Eigen/test/cmake_install.cmake
 Java/*.log
 Java/bin
 Java/out
