@@ -26,7 +26,7 @@ from polynomialfiltering.PythonUtilities import ignore, testcase, testclass, tes
 from polynomialfiltering.PythonUtilities import assert_not_empty
 
 
-from polynomialfiltering.components.RecursivePolynomialFilter import RecursivePolynomialFilter, ICore
+from polynomialfiltering.filters.RecursivePolynomialFilter import RecursivePolynomialFilter, ICore
 from polynomialfiltering.Main import FilterStatus
 
 class RecursivePolynomialFilter_test(unittest.TestCase):

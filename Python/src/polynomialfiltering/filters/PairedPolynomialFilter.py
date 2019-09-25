@@ -8,12 +8,13 @@
 
 from typing import Tuple
 from abc import abstractmethod
+from overrides import overrides
 
 from math import isnan, exp, log;
 from numpy import array, diag, zeros, sqrt, transpose
 from numpy import array as vector
 from polynomialfiltering.components.ICore import ICore
-from polynomialfiltering.components.RecursivePolynomialFilter import RecursivePolynomialFilter
+from polynomialfiltering.filters.RecursivePolynomialFilter import RecursivePolynomialFilter
 from polynomialfiltering.components.Emp import makeEmpCore, nSwitch
 from polynomialfiltering.components.Fmp import makeFmpCore
 

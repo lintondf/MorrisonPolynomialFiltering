@@ -116,6 +116,8 @@ class AbstractFilter(ABC):
                 B[i,j] = pow(dt,ji)/fji
         return B
     
+
+        
     
     def getName(self) -> str:
         """
@@ -242,6 +244,9 @@ class AbstractFilter(ABC):
     def getVRF(self) -> array:
         pass
     
+    @abstractmethod   # pragma: no cover
+    def add(self, t : float, y : float, observationId : int = -1) -> None:
+        pass
     
     
 class AbstractFilterWithCovariance(AbstractFilter) :

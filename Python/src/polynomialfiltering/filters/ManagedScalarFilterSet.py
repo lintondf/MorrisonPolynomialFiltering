@@ -13,7 +13,7 @@ from numpy import array as vector
 from polynomialfiltering.PythonUtilities import virtual;
 from polynomialfiltering.Main import AbstractFilter
 from polynomialfiltering.filters import ManagedFilterBase;
-from polynomialfiltering.filters.controls.BaseScalarJudge import BaseScalarJudge
+from polynomialfiltering.filters.controls.judge.BaseScalarJudge import BaseScalarJudge
 
 
 class ManagedScalarRecursiveFilterSet(ManagedFilterBase):

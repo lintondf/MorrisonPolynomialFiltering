@@ -4,6 +4,7 @@ Created on Apr 25, 2019
 @author: NOOK
 '''
 from docutils.nodes import target
+from overrides import overrides
 from astropy.io.ascii.tests.common import assert_almost_equal
 
 """ Taus for full range valid thetas [2e-16, 1-2e-16]
@@ -35,7 +36,7 @@ from TestUtilities import generateTestPolynomial, generateTestData, createTestGr
 from TestData import TestData
 
 from polynomialfiltering.Main import AbstractFilter, FilterStatus
-from polynomialfiltering.components.RecursivePolynomialFilter import RecursivePolynomialFilter
+from polynomialfiltering.filters.RecursivePolynomialFilter import RecursivePolynomialFilter
 from polynomialfiltering.components.ICore import ICore
 from polynomialfiltering.components.Fmp import makeFmp, makeFmpCore
 

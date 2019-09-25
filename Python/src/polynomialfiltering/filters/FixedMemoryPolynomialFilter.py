@@ -7,6 +7,7 @@
 '''
 
 from abc import abstractmethod
+from overrides import overrides
 from polynomialfiltering.PythonUtilities import virtual, inline;
 
 from numpy import array, copy, eye, ones, zeros, transpose
@@ -50,12 +51,14 @@ class FixedMemoryFilter(AbstractFilter) :
         self.yRing = zeros([memorySize]);
         self.status = FilterStatus.IDLE
         
+    @overrides
     def getN(self)->int:
         return self.n
     
     def getTau(self) -> float:
         return self.tau
     
+    @overrides
     def getTime(self) -> float:
         return self.t
     
@@ -77,10 +80,12 @@ class FixedMemoryFilter(AbstractFilter) :
         self.Z = solve(TntTn, TntYn); # lstsq(TntTn, TntYn, rcond=None)[0];
         return copy(self.Z);
     
+    @overrides
     def getState(self) -> vector:
         return self.transitionState(self.t)
     
-    def add(self, t : float, y : float, observationId : str = '') -> None:
+    @overrides
+    def add(self, t : float, y : float, observationId : int = -1) -> None:
         '''@idx : int'''
         self.t = t;
         idx = self.n % self.L
@@ -92,6 +97,7 @@ class FixedMemoryFilter(AbstractFilter) :
         else :
             self.status = FilterStatus.INITIALIZING
     
+    @overrides
     def getVRF(self) -> array:
         '''@V : array'''
         if (self.n < self.L) :
@@ -100,12 +106,14 @@ class FixedMemoryFilter(AbstractFilter) :
             V = self._transitionVrf(self.t)
         return V
     
+    @overrides
     @inline
     def getFirstVRF(self) -> float:
         '''@V : array'''
         V = self.getVRF()
         return V[0,0]
 
+    @overrides
     @inline
     def getLastVRF(self) -> float:
         '''@V : array'''

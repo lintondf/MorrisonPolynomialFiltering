@@ -15,7 +15,7 @@ from polynomialfiltering.filters.IManagedFilter import IManagedFilter;
 from polynomialfiltering.filters.controls.IObservationErrorModel import IObservationErrorModel
 from polynomialfiltering.filters.controls.IJudge import IJudge
 from polynomialfiltering.filters.controls.IMonitor import IMonitor
-from polynomialfiltering.filters.controls.ConstantObservationErrorModel import ConstantObservationErrorModel
+from polynomialfiltering.filters.controls.errormodel.ConstantObservationErrorModel import ConstantObservationErrorModel
 
 
 class ManagedFilterBase(AbstractFilterWithCovariance, IManagedFilter):

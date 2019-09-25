@@ -13,7 +13,7 @@ from polynomialfiltering.PythonUtilities import ignore, testcase, testclass, tes
 from polynomialfiltering.Main import AbstractFilter, AbstractFilterWithCovariance
 from polynomialfiltering.components.Emp import makeEmp
 from polynomialfiltering.filters.ManagedFilterBase import ManagedFilterBase;
-from Filtering import FilterStatus
+from polynomialfiltering.Main import FilterStatus
 
 class ManagedFilterBase_test(unittest.TestCase):
 
@@ -35,6 +35,21 @@ class ManagedFilterBase_test(unittest.TestCase):
         @testclassmethod
         def getGoodnessOfFit(self) -> float:
             return 0.0;
+        
+        @testclassmethod
+        def getFirstVRF(self) -> float:
+            return 0.0;
+        
+        @testclassmethod
+        def getLastVRF(self) -> float:
+            return 0.0;
+        
+        @testclassmethod
+        def getVRF(self) -> array:
+            '''V : array'''
+            V = zeros(self.order+1, self.order+1)
+            return V;
+        
         
     
     

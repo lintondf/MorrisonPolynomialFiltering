@@ -17,7 +17,7 @@ from polynomialfiltering.PythonUtilities import ignore, testcase
 from TestData import TestData
 from polynomialfiltering.PythonUtilities import assert_not_empty
 
-from polynomialfiltering.filters.controls.ConstantObservationErrorModel import ConstantObservationErrorModel
+from polynomialfiltering.filters.controls.errormodel.ConstantObservationErrorModel import ConstantObservationErrorModel
 
 class ConstantObservationErrorModel_test(unittest.TestCase):
 

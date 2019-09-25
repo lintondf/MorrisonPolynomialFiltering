@@ -29,9 +29,9 @@ from TestData import TestData
 from scipy.optimize.zeros import brentq
 
 from polynomialfiltering.Main import AbstractFilterWithCovariance, FilterStatus
-from polynomialfiltering.components.RecursivePolynomialFilter import RecursivePolynomialFilter
+from polynomialfiltering.filters.RecursivePolynomialFilter import RecursivePolynomialFilter
 from polynomialfiltering.components.ICore import ICore
-from polynomialfiltering.components.PairedPolynomialFilter import PairedPolynomialFilter
+from polynomialfiltering.filters.PairedPolynomialFilter import PairedPolynomialFilter
 from polynomialfiltering.components.Emp import nSwitch
 
 from polynomialfiltering.PythonUtilities import ignore, testcase, testclass, testclassmethod

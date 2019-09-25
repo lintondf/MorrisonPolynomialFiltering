@@ -9,6 +9,7 @@
 # from __future__ import annotations;
 
 from abc import ABC, abstractmethod
+from overrides import overrides
 from polynomialfiltering.PythonUtilities import virtual, inline, forcestatic;
 
 from numpy import array, zeros;
@@ -85,6 +86,14 @@ class RecursivePolynomialFilter(AbstractFilter):
         self.tau = that.tau;
         self.D = that.D;
         self.Z = that.Z;
+        
+    @overrides
+    def add(self, t : float, y : float, observationId : int = -1) -> None:
+        '''Zstar : vector'''
+        '''e : float'''
+        Zstar = self.predict(t)
+        e = y - Zstar[0]
+        self.update(t, Zstar, e)
             
     def start(self, t : float, Z : vector) -> None:
         """

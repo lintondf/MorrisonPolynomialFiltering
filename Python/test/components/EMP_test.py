@@ -31,7 +31,7 @@ from TestUtilities import generateTestPolynomial, generateTestData, createTestGr
 from TestData import TestData
 
 from polynomialfiltering.Main import AbstractFilterWithCovariance, FilterStatus
-from polynomialfiltering.components.RecursivePolynomialFilter import RecursivePolynomialFilter
+from polynomialfiltering.filters.RecursivePolynomialFilter import RecursivePolynomialFilter
 from polynomialfiltering.components.ICore import ICore
 from polynomialfiltering.components.Emp import makeEmp, makeEmpCore, nUnitLastVRF, nSwitch
 

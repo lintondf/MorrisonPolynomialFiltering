@@ -22,7 +22,7 @@ from scipy.optimize.zeros import brentq
 
 
 from polynomialfiltering.components.Fmp import makeFmp, makeFmpCore
-from polynomialfiltering.components.FixedMemoryPolynomialFilter import FixedMemoryFilter;
+from polynomialfiltering.filters.FixedMemoryPolynomialFilter import FixedMemoryFilter;
 
 from polynomialfiltering.Main import FilterStatus
 from TestSuite import testDataPath;
