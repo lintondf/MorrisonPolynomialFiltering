@@ -22,7 +22,7 @@ class ManagedFilterBase(AbstractFilterWithCovariance, IManagedFilter):
     """
     Base class for all managed filters
     
-    Managed filters support analytic or emperical error models, observation editing and goodness-of-fit
+    Managed filters support analytic or empirical error models, observation editing and goodness-of-fit
     evaluators, and running status monitors that can stop and restart filters. 
     """
 

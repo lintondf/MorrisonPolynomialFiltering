@@ -62,7 +62,7 @@ class ConstantObservationErrorModel(IObservationErrorModel):
         
         Arguments:
             R - constant covariance matrix of a vector observation
-            inverseR - inverse of the R matrix; used when inverseR is easily computed.
+            inverseR - inverse of the R matrix; used when inverseR is easily precomputed.
         """
         self.R = R;
         self.iR = inverseR;

@@ -42,4 +42,4 @@ set(SOURCES  ${MAIN_SRC}
 	${TEST_SRC}
 	testMain.cpp)
 add_executable(FilteringEigenTest ${SOURCES})
-target_link_libraries( FilteringEigenTest ${NETCDF_LIBRARIES_C}  ${BOOST_LIBRARIES} boost_math_tr1 boost_math_c99) 
+target_link_libraries( FilteringEigenTest ${NETCDF_LIBRARIES_C}  ${BOOST_LIBRARIES}) # boost_math_tr1 boost_math_c99) 

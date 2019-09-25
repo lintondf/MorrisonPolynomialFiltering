@@ -14,7 +14,7 @@ from numpy import array, zeros, eye, exp, transpose
 from numpy import array as vector;
 
 from polynomialfiltering.Main import AbstractFilterWithCovariance
-from polynomialfiltering.components.FadingMemoryPolynomialFilter import makeFMP
+from polynomialfiltering.components.Fmp import makeFmp
 from polynomialfiltering.filters.controls.IJudge import IJudge
 
 

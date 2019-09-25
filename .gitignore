@@ -19,6 +19,9 @@ Cpp/Eigen/Makefile
 Cpp/Eigen/cmake_install.cmake
 Cpp/Eigen/test/Makefile
 Cpp/Eigen/test/cmake_install.cmake
+Cpp/Eigen/.vscode/
+Cpp/Eigen/EigenTest
+Cpp/Eigen/test/FilteringEigenTest
 Java/*.log
 Java/bin
 Java/out

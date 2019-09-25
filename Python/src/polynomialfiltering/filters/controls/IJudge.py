@@ -23,7 +23,7 @@ class IJudge(ABC):
     Judges the goodness of fit of a filter
     
     Called to determine whether to accept or reject the current observation and
-    to estimate th
+    to estimate the goodness of fit
     """
     
     def __init__(self):
