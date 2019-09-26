@@ -22,7 +22,7 @@
 
 
 #include <TestData.hpp>
-#include <polynomialfiltering/components/RecursivePolynomialFilter.hpp>
+#include <polynomialfiltering/filters/RecursivePolynomialFilter.hpp>
 #include <polynomialfiltering/Main.hpp>
 #include <polynomialfiltering/components/ICore.hpp>
 #include <polynomialfiltering/components/Emp.hpp>
@@ -58,7 +58,7 @@
                     RealMatrix truth;
                     RealMatrix expected;
                     RealMatrix actual;
-                    std::shared_ptr<RecursivePolynomialFilter> f;
+                    std::shared_ptr<filters::RecursivePolynomialFilter> f;
                     RealMatrix Zstar;
                     double e;
                     assert_clear();
@@ -112,7 +112,7 @@
                     RealMatrix expectedG;
                     RealMatrix actualG;
                     double nS;
-                    std::shared_ptr<RecursivePolynomialFilter> f;
+                    std::shared_ptr<filters::RecursivePolynomialFilter> f;
                     assert_clear();
                     testData = std::make_shared<TestData>("testFMP.nc");
                     matches = testData->getMatchingGroups("Gammas");
@@ -153,7 +153,7 @@
                     RealMatrix truth;
                     RealMatrix expectedV;
                     RealMatrix actualV;
-                    std::shared_ptr<RecursivePolynomialFilter> f;
+                    std::shared_ptr<filters::RecursivePolynomialFilter> f;
                     assert_clear();
                     testData = std::make_shared<TestData>("testFMP.nc");
                     matches = testData->getMatchingGroups("Vrfs");
@@ -171,7 +171,7 @@
                         actualV = f->getCore()->getVRF(0);
                         assert_almost_equal(actualV, expectedV);
                     }
-                    assertGreaterEqual(0.0, assert_report("Fmp_test/test1CheckVrfs"));
+                    assertGreaterEqual(1.0, assert_report("Fmp_test/test1CheckVrfs"));
                     testData->close();
                 }
 
@@ -205,7 +205,7 @@
                     double theta;
                     RealMatrix Y0;
                     RealMatrix observations;
-                    std::shared_ptr<RecursivePolynomialFilter> f;
+                    std::shared_ptr<filters::RecursivePolynomialFilter> f;
                     double t;
                     RealMatrix Zstar;
                     double e;
@@ -236,7 +236,7 @@
                     f->update(t, Zstar, e);
                     actual = f->getState();
                     assert_almost_equal(actual, (RealVector6() <<  - 5.30339172,  - 10.89873388,  - 16.74985512,  - 15.02740172,  - 7.1477283,  - 1.405171).finished());
-                    assertGreaterEqual(0.0, assert_report("Fmp_test/test9Basic"));
+                    assertGreaterEqual(24.5, assert_report("Fmp_test/test9Basic"));
                 }
 
                 void test9NSwitch () {

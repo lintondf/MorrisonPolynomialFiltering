@@ -105,7 +105,9 @@ public class EjmlExpressionCompiler implements IExpressionCompiler {
 						if (method.isFunction()) {
 							if (method.getName().equals("__init__"))
 								continue;
-							String name = programmer.rewriteSymbol(symbol.getScope(), symbol) + "$" + method.getName();
+							String name = method.getName();
+							if (! method.isStatic())
+								name = programmer.rewriteSymbol(symbol.getScope(), symbol) + "$" + name;
 							if (printMapping) System.out.printf("      method %s: %s\n", name, method.getType());
 					    	GenericMethodFunction gmf = new GenericMethodFunction(name, method.getType());
 				    		add( gmf );
@@ -145,7 +147,7 @@ public class EjmlExpressionCompiler implements IExpressionCompiler {
 					if (symbol == null)
 						continue;
 					String name = programmer.rewriteSymbol(method.getScope().getParent(), symbol) + "$" + method.getName();
-	//				System.out.printf("      method %s: %s\n", name, method.getType());
+//					System.out.printf("      method %s: %s\n", name, method.getType());
 			    	GenericMethodFunction gmf = new GenericMethodFunction(name, method.getType());
 		    		add( gmf );
 				}

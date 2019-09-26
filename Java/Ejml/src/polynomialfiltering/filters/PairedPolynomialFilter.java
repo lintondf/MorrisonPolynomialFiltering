@@ -1,4 +1,4 @@
-/***** /polynomialfiltering/components/PairedPolynomialFilter/
+/***** /polynomialfiltering/filters/PairedPolynomialFilter/
  * (C) Copyright 2019 - Blue Lightning Development, LLC.
  * D. F. Linton. support@BlueLightningDevelopment.com
  *
@@ -8,7 +8,7 @@
  * AUTO-GENERATED Java from Python Reference Implementation
  */
 
-package polynomialfiltering.components;
+package polynomialfiltering.filters;
  
 import java.util.stream.IntStream;
 import org.ejml.data.DMatrixRMaj;
@@ -17,7 +17,8 @@ import polynomialfiltering.main.FilterStatus;
 import polynomialfiltering.main.AbstractFilter;
 import polynomialfiltering.main.AbstractFilterWithCovariance;
 import static polynomialfiltering.main.Utility.*;
-import polynomialfiltering.components.RecursivePolynomialFilter;
+import static polynomialfiltering.components.Emp.makeEmpCore;
+import polynomialfiltering.filters.RecursivePolynomialFilter;
 import polynomialfiltering.components.ICore;
 import static polynomialfiltering.components.Fmp.makeFmpCore;
 import static polynomialfiltering.components.Emp.nSwitch;
@@ -26,28 +27,28 @@ import static polynomialfiltering.components.Emp.nSwitch;
 public class PairedPolynomialFilter extends RecursivePolynomialFilter {
     protected  ICore empCore; ///<  provider of core expanding functions
     protected  ICore fmpCore; ///<  provider of core fading functions
-    protected  int threshold;
+    protected  int switchN;
     protected  double theta;
     
     public PairedPolynomialFilter() {}  // auto-generated null constructor
 
     
     public PairedPolynomialFilter (final int order, final double tau, final double theta) {
-        super(order, tau, Emp.makeEmpCore(order, tau) );
+        super(order, tau, makeEmpCore(order, tau) );
         this.empCore = this.core;
                 
-        this.fmpCore = Fmp.makeFmpCore(order, tau, theta);
+        this.fmpCore = makeFmpCore(order, tau, theta);
                 
         this.theta = theta;
                 
-        this.threshold = (int) Emp.nSwitch(this.order, this.theta);
+        this.switchN = (int) nSwitch(this.order, this.theta);
     }
     
     
     public DMatrixRMaj update (final double t, final DMatrixRMaj Zstar, final double e) {
         DMatrixRMaj i = new DMatrixRMaj();
         i = super.update(t, Zstar, e);
-        if (this.n == this.threshold) {
+        if (this.n == this.switchN) {
             this.core = this.fmpCore;
         }
         return i;
@@ -62,9 +63,9 @@ public class PairedPolynomialFilter extends RecursivePolynomialFilter {
     
     public boolean isFading () {
         boolean isF;
-        isF = this.n == this.threshold;
+        isF = this.n == this.switchN;
         return isF;
     }
     
-} // class components
+} // class filters
 

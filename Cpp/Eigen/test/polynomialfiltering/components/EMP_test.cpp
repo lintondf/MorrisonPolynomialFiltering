@@ -22,7 +22,7 @@
 
 
 #include <TestData.hpp>
-#include <polynomialfiltering/components/RecursivePolynomialFilter.hpp>
+#include <polynomialfiltering/filters/RecursivePolynomialFilter.hpp>
 #include <polynomialfiltering/Main.hpp>
 #include <polynomialfiltering/components/ICore.hpp>
 #include <polynomialfiltering/components/Emp.hpp>
@@ -62,7 +62,7 @@
                 int offset;
                 double tau;
                 std::shared_ptr<ICore> core;
-                std::shared_ptr<RecursivePolynomialFilter> rf;
+                std::shared_ptr<filters::RecursivePolynomialFilter> rf;
                 std::shared_ptr<RecursivePolynomialFilterMock> f;
                 RealMatrix V;
                 RealMatrix E;
@@ -91,7 +91,7 @@
                     }
                 }
                 testData->close();
-                assertGreaterEqual(0.0, assert_report("Emp_test/test1CheckVRF"));
+                assertGreaterEqual(2.0, assert_report("Emp_test/test1CheckVRF"));
             }
 
             void test2CheckStates () {
@@ -108,7 +108,7 @@
                 RealMatrix diff;
                 double tau;
                 std::shared_ptr<ICore> core;
-                std::shared_ptr<RecursivePolynomialFilter> f;
+                std::shared_ptr<filters::RecursivePolynomialFilter> f;
                 double e;
                 assert_clear();
                 testData = std::make_shared<TestData>("testEMP.nc");

@@ -25,7 +25,7 @@ import polynomialfiltering.components.fmp.CoreFmp2;
 import polynomialfiltering.components.fmp.CoreFmp3;
 import polynomialfiltering.components.fmp.CoreFmp4;
 import polynomialfiltering.components.fmp.CoreFmp5;
-import polynomialfiltering.components.RecursivePolynomialFilter;
+import polynomialfiltering.filters.RecursivePolynomialFilter;
 
  
 public class Fmp {
@@ -67,7 +67,7 @@ public class Fmp {
     static public RecursivePolynomialFilter makeFmp (final int order, final double tau, final double theta) {
         RecursivePolynomialFilter _makeFmp_return_value = new RecursivePolynomialFilter(); ///< auto-generated return variable
         ICore core;
-        core = Fmp.makeFmpCore(order, tau, theta);
+        core = makeFmpCore(order, tau, theta);
         _makeFmp_return_value = new RecursivePolynomialFilter(order, tau, core);
         return _makeFmp_return_value;
     }

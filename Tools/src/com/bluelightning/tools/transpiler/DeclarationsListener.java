@@ -349,7 +349,16 @@ class DeclarationsListener extends LcdPythonBaseListener {
 								fields = fields[0].split("!");
 								Scope currentScope = scopeStack.peek().getParent();
 								Transpiler.instance().addManualSuper(currentScope.toString(), fields[2], fields[3]);
-							} else {
+							} else if (fields[0].startsWith("!import!")) {
+								fields = fields[0].split("!");
+								Scope currentScope = scopeStack.peek().getParent();
+								while (currentScope.getLevel() != Level.IMPORT) {
+									if (currentScope.getLevel() == Level.CLASS || currentScope.getLevel() == Level.MODULE)
+										break;
+									currentScope = currentScope.getParent();
+								}
+								Transpiler.instance().addManualImport( currentScope.toString(), fields[2]);
+ 							} else {
 								declareSymbol( token, fields[0] );
 							}
 						} else {

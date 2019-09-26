@@ -19,7 +19,7 @@ import static polynomialfiltering.main.Utility.*;
 import utility.TestData;
 import ucar.nc2.Group;
 import static utility.TestMain.*;
-import polynomialfiltering.components.RecursivePolynomialFilter;
+import polynomialfiltering.filters.RecursivePolynomialFilter;
 import polynomialfiltering.components.ICore;
 import polynomialfiltering.components.EMP_test.RecursivePolynomialFilterMock;
 import static polynomialfiltering.components.Emp.makeEmp;
@@ -82,7 +82,7 @@ public class EMP_test {
             for (int itau = 0; itau < nTaus; itau++) {
                                 
                 tau = taus.get(itau);
-                rf = Emp.makeEmp(order, tau);
+                rf = makeEmp(order, tau);
                 f = new RecursivePolynomialFilterMock(order, tau, rf.getCore());
                 for (int iN = order + 1; iN < N; iN++) {
                                         
@@ -101,7 +101,7 @@ public class EMP_test {
         }
                 
         testData.close();
-        assertGreaterEqual(0.0, assert_report("Emp_test/test1CheckVRF"));
+        assertGreaterEqual(2.0, assert_report("Emp_test/test1CheckVRF"));
     }
     
     
@@ -143,7 +143,7 @@ public class EMP_test {
             //  actual = zeros(expected.getNumRows(), expected.getNumCols())
             actual.reshape(expected.getNumRows(), expected.getNumCols());
             CommonOps_DDRM.fill( actual, 0.0 );
-            f = Emp.makeEmp(order, tau);
+            f = makeEmp(order, tau);
                         
             //  f.start(0.0, expected(0,  : ))
             DMatrixRMaj tm10 = new DMatrixRMaj( 1, ((expected.numCols)-0) );
@@ -194,8 +194,8 @@ public class EMP_test {
                                 
                 tau = taus.get(itau);
                                 
-                n = Emp.nUnitLastVRF(order, tau);
-                core = Emp.makeEmpCore(order, tau);
+                n = nUnitLastVRF(order, tau);
+                core = makeEmpCore(order, tau);
             }
         }
     }
@@ -203,7 +203,7 @@ public class EMP_test {
     
     @Test
     public void test9Coverage () {
-        assertEqual(0.0, Emp.nSwitch(0, 2.0));
+        assertEqual(0.0, nSwitch(0, 2.0));
     }
     
 } // class EMP_test

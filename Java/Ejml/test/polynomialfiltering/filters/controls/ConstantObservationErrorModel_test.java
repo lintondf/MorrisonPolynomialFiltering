@@ -19,7 +19,7 @@ import static polynomialfiltering.main.Utility.*;
 import utility.TestData;
 import ucar.nc2.Group;
 import static utility.TestMain.*;
-import polynomialfiltering.filters.controls.ConstantObservationErrorModel;
+import polynomialfiltering.filters.controls.errormodel.ConstantObservationErrorModel;
 
  
 public class ConstantObservationErrorModel_test {

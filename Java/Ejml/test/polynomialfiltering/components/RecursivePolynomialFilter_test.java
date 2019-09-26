@@ -20,7 +20,7 @@ import utility.TestData;
 import ucar.nc2.Group;
 import static utility.TestMain.*;
 import polynomialfiltering.components.ICore;
-import polynomialfiltering.components.RecursivePolynomialFilter;
+import polynomialfiltering.filters.RecursivePolynomialFilter;
 
  
 
@@ -212,7 +212,7 @@ public class RecursivePolynomialFilter_test {
                         
             assert_almost_equal(actual, expected);
         }
-        assertGreaterEqual(0.0, assert_report("RecursivePolynomialFilter_test/test1PurePredict"));
+        assertGreaterEqual(2.6, assert_report("RecursivePolynomialFilter_test/test1PurePredict"));
                 
         testData.close();
     }

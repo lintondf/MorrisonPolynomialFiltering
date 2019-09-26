@@ -89,8 +89,8 @@ class RecursivePolynomialFilter(AbstractFilter):
         
     @overrides
     def add(self, t : float, y : float, observationId : int = -1) -> None:
-        '''Zstar : vector'''
-        '''e : float'''
+        '''@Zstar : vector'''
+        '''@e : float'''
         Zstar = self.predict(t)
         e = y - Zstar[0]
         self.update(t, Zstar, e)

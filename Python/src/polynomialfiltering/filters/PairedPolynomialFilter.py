@@ -21,23 +21,24 @@ from polynomialfiltering.components.Fmp import makeFmpCore
 class PairedPolynomialFilter( RecursivePolynomialFilter ):
     '''@ empCore : ICore | provider of core expanding functions'''
     '''@ fmpCore : ICore | provider of core fading functions'''
-    '''@ threshold : int '''
+    '''@ switchN : int '''
     '''@theta : float'''
     
     
     def __init__(self, order : int, tau : float, theta : float ) :
-        '''@!super!Java!super(order, tau, Emp.makeEmpCore(order, tau) );'''
+        '''@!import!static polynomialfiltering.components.Emp.makeEmpCore'''
+        '''@!super!Java!super(order, tau, makeEmpCore(order, tau) );'''
         '''@!super!C++!RecursivePolynomialFilter(order, tau, Emp::makeEmpCore(order, tau) )'''
         super().__init__(order, tau, makeEmpCore(order, tau) )
         self.empCore = self.core;
         self.fmpCore = makeFmpCore(order, tau, theta);
         self.theta = theta;
-        self.threshold = int(nSwitch( self.order, self.theta ))
+        self.switchN = int(nSwitch( self.order, self.theta ))
         
     def update(self, t : float, Zstar : vector, e : float) -> vector:
         '''@ i : array'''
         i = RecursivePolynomialFilter.update(self, t, Zstar, e);
-        if (self.n == self.threshold) :
+        if (self.n == self.switchN) :
             self.core = self.fmpCore;
         return i
 
@@ -47,6 +48,6 @@ class PairedPolynomialFilter( RecursivePolynomialFilter ):
         
     def isFading(self) -> bool:
         '''@isF : bool'''
-        isF = self.n == self.threshold
+        isF = self.n == self.switchN
         return isF
         

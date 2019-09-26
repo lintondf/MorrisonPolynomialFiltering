@@ -200,7 +200,7 @@ public abstract class AbstractJavaTarget extends AbstractLanguageTarget{
 //		}
 		Symbol.FunctionParametersInfo fpi = symbol.getFunctionParametersInfo();
 		if (symbol != null && fpi != null) {
-				String name = symbol.getName();
+				String name = symbol.getName() + "";
 				String remappedType = programmer.remapType(currentScope, symbol); 
 				String type = remappedType + " ";
 				Indent body = new Indent();
@@ -352,6 +352,10 @@ public abstract class AbstractJavaTarget extends AbstractLanguageTarget{
 //				addComma = true;
 			}
 		}
+		if (accessAndType.contains("abstract")) {
+			indent.append(");\n");
+			return;
+		}
 		indent.append(") {\n");
 		indent.in();
 		indent.write("");
@@ -466,8 +470,8 @@ public abstract class AbstractJavaTarget extends AbstractLanguageTarget{
 					symbol = symbol.getAncestor();
 				}
 				addStaticImport( symbol.getScope(), symbol.getName());
-				out.append(symbol.getScope().getLast());
-				programmer.writeOperator( out, "." );
+//				out.append(symbol.getScope().getLast());
+//				programmer.writeOperator( out, "." );
 			}
 			out.append( rewrite );
 		}

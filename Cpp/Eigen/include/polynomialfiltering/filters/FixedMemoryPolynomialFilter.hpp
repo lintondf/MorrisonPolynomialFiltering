@@ -1,4 +1,4 @@
-/***** /polynomialfiltering/components/FixedMemoryPolynomialFilter/
+/***** /polynomialfiltering/filters/FixedMemoryPolynomialFilter/
  * (C) Copyright 2019 - Blue Lightning Development, LLC.
  * D. F. Linton. support@BlueLightningDevelopment.com
  *
@@ -7,8 +7,8 @@
  *
  * AUTO-GENERATED C++ from Python Reference Implementation
  */
-#ifndef ___POLYNOMIALFILTERING_COMPONENTS_FIXEDMEMORYPOLYNOMIALFILTER_HPP
-#define ___POLYNOMIALFILTERING_COMPONENTS_FIXEDMEMORYPOLYNOMIALFILTER_HPP
+#ifndef ___POLYNOMIALFILTERING_FILTERS_FIXEDMEMORYPOLYNOMIALFILTER_HPP
+#define ___POLYNOMIALFILTERING_FILTERS_FIXEDMEMORYPOLYNOMIALFILTER_HPP
 
 #include <math.h>
 #include <vector>
@@ -22,9 +22,9 @@
 
 
 namespace polynomialfiltering {
-    namespace components {
+    namespace filters {
 
-        ///// @class /polynomialfiltering/components/FixedMemoryPolynomialFilter/::FixedMemoryFilter : <CLASS>; supers(AbstractFilter,)
+        ///// @class /polynomialfiltering/filters/FixedMemoryPolynomialFilter/::FixedMemoryFilter : <CLASS>; supers(AbstractFilter,)
         /// @brief Equally-weighted, fixed memory size, irregularly spaced data filter
         /// 
         /// Same units between state and observations
@@ -37,7 +37,7 @@ namespace polynomialfiltering {
                 double getTime();
                 RealVector transitionState(const double t);
                 RealVector getState();
-                void add(const double t, const double y, const std::string observationId="");
+                void add(const double t, const double y, const int observationId=-1);
                 RealMatrix getVRF();
                 double getFirstVRF();
                 double getLastVRF();
@@ -56,8 +56,8 @@ namespace polynomialfiltering {
                 RealMatrix _getTn(const RealVector& dt);
         }; // class FixedMemoryFilter 
 
-    }; // namespace components
+    }; // namespace filters
 }; // namespace polynomialfiltering
 
 
-#endif // ___POLYNOMIALFILTERING_COMPONENTS_FIXEDMEMORYPOLYNOMIALFILTER_HPP
+#endif // ___POLYNOMIALFILTERING_FILTERS_FIXEDMEMORYPOLYNOMIALFILTER_HPP

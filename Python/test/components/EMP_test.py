@@ -343,7 +343,7 @@ class EMP_test(unittest.TestCase):
                     assert_allclose(V, E)
                     offset += order+1
         testData.close()
-        self.assertGreaterEqual(0.0, assert_report("Emp_test/test1CheckVRF"))
+        self.assertGreaterEqual(2.0, assert_report("Emp_test/test1CheckVRF"))
                 
     @testcase
     def test2CheckStates(self) -> None:

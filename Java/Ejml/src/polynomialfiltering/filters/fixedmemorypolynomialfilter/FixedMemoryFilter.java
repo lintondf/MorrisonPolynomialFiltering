@@ -1,4 +1,4 @@
-/***** /polynomialfiltering/components/FixedMemoryPolynomialFilter/FixedMemoryFilter/
+/***** /polynomialfiltering/filters/FixedMemoryPolynomialFilter/FixedMemoryFilter/
  * (C) Copyright 2019 - Blue Lightning Development, LLC.
  * D. F. Linton. support@BlueLightningDevelopment.com
  *
@@ -8,7 +8,7 @@
  * AUTO-GENERATED Java from Python Reference Implementation
  */
 
-package polynomialfiltering.components.fixedmemorypolynomialfilter;
+package polynomialfiltering.filters.fixedmemorypolynomialfilter;
  
 import java.util.stream.IntStream;
 import org.ejml.data.DMatrixRMaj;
@@ -137,10 +137,10 @@ public class FixedMemoryFilter extends AbstractFilter {
     
     
     public void add(final double t, final double y) {
-        add(t, y, "");
+        add(t, y, -1);
     }
     
-    public void add (final double t, final double y, final String observationId) {
+    public void add (final double t, final double y, final int observationId) {
         int idx;
                 
         this.t = t;

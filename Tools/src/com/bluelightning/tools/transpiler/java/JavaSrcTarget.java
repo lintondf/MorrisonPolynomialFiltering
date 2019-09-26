@@ -10,6 +10,7 @@ import java.io.OutputStreamWriter;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.nio.file.Path;
+import java.util.List;
 
 import com.bluelightning.tools.transpiler.Indent;
 import com.bluelightning.tools.transpiler.Scope;
@@ -55,6 +56,12 @@ public class JavaSrcTarget extends AbstractJavaTarget {
 		}
 		packageName = catalogContents( scope );
 		initializeImports();
+		List<String> manual = Transpiler.instance().getManualImports(scope.toString());
+		if (manual != null) {
+			for (String text : manual) {
+				imports.add( text );
+			}
+		}
 		System.out.println(String.format("\nJava/%s src: ", programmer.getName()) + scope.toAnnotatedString() );
 	}
 	

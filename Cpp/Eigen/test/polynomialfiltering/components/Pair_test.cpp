@@ -22,12 +22,12 @@
 
 
 #include <TestData.hpp>
-#include <polynomialfiltering/components/RecursivePolynomialFilter.hpp>
+#include <polynomialfiltering/filters/RecursivePolynomialFilter.hpp>
 #include <polynomialfiltering/Main.hpp>
 #include <polynomialfiltering/components/ICore.hpp>
 #include <polynomialfiltering/components/Emp.hpp>
 #include <polynomialfiltering/components/Fmp.hpp>
-#include <polynomialfiltering/components/PairedPolynomialFilter.hpp>
+#include <polynomialfiltering/filters/PairedPolynomialFilter.hpp>
 #include <TestData.hpp>
 
 
@@ -58,7 +58,7 @@
                     RealMatrix expectedVdiag;
                     RealMatrix actual;
                     RealMatrix vdiags;
-                    std::shared_ptr<PairedPolynomialFilter> f;
+                    std::shared_ptr<filters::PairedPolynomialFilter> f;
                     RealMatrix Zstar;
                     RealMatrix diff;
                     double e;
@@ -78,7 +78,7 @@
                         observations = testData->getArray(caseGroup, "observations");
                         expectedStates = testData->getArray(caseGroup, "expected");
                         expectedVdiag = testData->getArray(caseGroup, "vdiags");
-                        f = std::make_shared<PairedPolynomialFilter>(order, tau, theta);
+                        f = std::make_shared<filters::PairedPolynomialFilter>(order, tau, theta);
                         actual = ArrayXXd::Zero(N, order + 1);
                         vdiags = ArrayXXd::Zero(N, order + 1);
                         for (int j = 0; j < N; j++) {
@@ -96,9 +96,9 @@
                 }
 
                 void test9Coverage () {
-                    std::shared_ptr<PairedPolynomialFilter> f;
+                    std::shared_ptr<filters::PairedPolynomialFilter> f;
                     RealMatrix Zstar;
-                    f = std::make_shared<PairedPolynomialFilter>(0, 1.0, 0.5);
+                    f = std::make_shared<filters::PairedPolynomialFilter>(0, 1.0, 0.5);
                     f->start(0.0, (RealVector1() << 10.).finished());
                     assertEqual(0.0, f->getTime());
                     assert_almost_equal(f->getState(), (RealVector1() << 10.).finished());

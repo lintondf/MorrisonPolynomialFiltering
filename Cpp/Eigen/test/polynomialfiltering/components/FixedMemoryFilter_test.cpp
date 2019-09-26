@@ -22,13 +22,13 @@
 
 
 #include <TestData.hpp>
-#include <polynomialfiltering/components/RecursivePolynomialFilter.hpp>
+#include <polynomialfiltering/filters/RecursivePolynomialFilter.hpp>
 #include <polynomialfiltering/Main.hpp>
 #include <polynomialfiltering/components/ICore.hpp>
 #include <polynomialfiltering/components/Emp.hpp>
 #include <polynomialfiltering/components/Fmp.hpp>
-#include <polynomialfiltering/components/PairedPolynomialFilter.hpp>
-#include <polynomialfiltering/components/FixedMemoryPolynomialFilter.hpp>
+#include <polynomialfiltering/filters/PairedPolynomialFilter.hpp>
+#include <polynomialfiltering/filters/FixedMemoryPolynomialFilter.hpp>
 #include <TestData.hpp>
 
 
@@ -50,14 +50,14 @@
                     int iCheck;
                     RealMatrix times;
                     RealMatrix observations;
-                    std::shared_ptr<FixedMemoryFilter> fixed;
+                    std::shared_ptr<filters::FixedMemoryFilter> fixed;
                     order = int(setup(0));
                     window = int(setup(1));
                     M = int(setup(2));
                     iCheck = int(setup(3));
                     times = data.col(0);
                     observations = data.col(1);
-                    fixed = std::make_shared<FixedMemoryFilter>(order, window);
+                    fixed = std::make_shared<filters::FixedMemoryFilter>(order, window);
                     for (int i = 0; i < M; i++) {
                         fixed->add(times(i), observations(i));
                     }
@@ -71,14 +71,14 @@
                     int iCheck;
                     RealMatrix times;
                     RealMatrix observations;
-                    std::shared_ptr<FixedMemoryFilter> fixed;
+                    std::shared_ptr<filters::FixedMemoryFilter> fixed;
                     order = int(setup(0));
                     window = int(setup(1));
                     M = int(setup(2));
                     iCheck = int(setup(3));
                     times = data.col(0);
                     observations = data.col(1);
-                    fixed = std::make_shared<FixedMemoryFilter>(order, window);
+                    fixed = std::make_shared<filters::FixedMemoryFilter>(order, window);
                     for (int i = 0; i < M; i++) {
                         fixed->add(times(i), observations(i));
                     }
@@ -244,13 +244,13 @@
 
             void test9Regresssion () {
                 std::shared_ptr<TestFixedMemoryFilter> f;
-                std::shared_ptr<FixedMemoryFilter> fixed;
+                std::shared_ptr<filters::FixedMemoryFilter> fixed;
                 RealMatrix Z;
                 assert_clear();
                 f = std::make_shared<TestFixedMemoryFilter>(4);
                 assertEqual(f->getOrder(), 4);
                 assertEqual(f->getL(), 51);
-                fixed = std::make_shared<FixedMemoryFilter>(0, 5);
+                fixed = std::make_shared<filters::FixedMemoryFilter>(0, 5);
                 assertEqual(fixed->getTau(), 0.0);
                 assertEqual(fixed->getStatus(), FilterStatus::IDLE);
                 Z = ArrayXXd::Zero(1, 1);

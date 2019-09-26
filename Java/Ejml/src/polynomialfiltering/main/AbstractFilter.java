@@ -235,5 +235,8 @@ public abstract class AbstractFilter {
     abstract public double getLastVRF ();
     
     abstract public DMatrixRMaj getVRF ();
+    
+    abstract public void add(final double t, final double y);
+    abstract public void add (final double t, final double y, final int observationId);
 } // class Main
 

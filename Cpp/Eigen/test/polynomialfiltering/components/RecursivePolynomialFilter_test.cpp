@@ -22,7 +22,7 @@
 
 
 #include <TestData.hpp>
-#include <polynomialfiltering/components/RecursivePolynomialFilter.hpp>
+#include <polynomialfiltering/filters/RecursivePolynomialFilter.hpp>
 #include <polynomialfiltering/Main.hpp>
 #include <TestData.hpp>
 
@@ -119,7 +119,7 @@
             RealMatrix actual;
             RealMatrix expected;
             std::shared_ptr<ICore> core;
-            std::shared_ptr<RecursivePolynomialFilter> f;
+            std::shared_ptr<filters::RecursivePolynomialFilter> f;
             RealVector Zstar;
             double e;
             RealMatrix V;
@@ -138,7 +138,7 @@
                 actual = ArrayXXd::Zero(N, order + 1);
                 actual.row(0) = truth.row(0);
                 core = std::make_shared<PurePredictCore>(order);
-                f = std::make_shared<RecursivePolynomialFilter>(order, tau, core);
+                f = std::make_shared<filters::RecursivePolynomialFilter>(order, tau, core);
                 f->start(times(0), truth.row(0));
                 for (int i = 1; i < N; i++) {
                     Zstar = f->predict(times(i));
@@ -151,7 +151,7 @@
                 expected = testData->getGroupVariable(matches[iMatch], "expected");
                 assert_almost_equal(actual, expected);
             }
-            assertGreaterEqual(0.0, assert_report("RecursivePolynomialFilter_test/test1PurePredict"));
+            assertGreaterEqual(2.6, assert_report("RecursivePolynomialFilter_test/test1PurePredict"));
             testData->close();
         }
 
@@ -172,7 +172,7 @@
             RealMatrix actual;
             RealMatrix expected;
             std::shared_ptr<ICore> core;
-            std::shared_ptr<RecursivePolynomialFilter> f;
+            std::shared_ptr<filters::RecursivePolynomialFilter> f;
             RealVector Zstar;
             double e;
             RealMatrix V;
@@ -195,7 +195,7 @@
                 actual = ArrayXXd::Zero(N, order + 1);
                 actual.row(0) = truth.row(0);
                 core = std::make_shared<PureObservationCore>(order);
-                f = std::make_shared<RecursivePolynomialFilter>(order, tau, core);
+                f = std::make_shared<filters::RecursivePolynomialFilter>(order, tau, core);
                 f->start(times(0), truth.row(0));
                 for (int i = 1; i < N; i++) {
                     Zstar = f->predict(times(i));
@@ -216,14 +216,14 @@
 
         void test9Coverage () {
             std::shared_ptr<ICore> core;
-            std::shared_ptr<RecursivePolynomialFilter> f;
-            std::shared_ptr<RecursivePolynomialFilter> g;
+            std::shared_ptr<filters::RecursivePolynomialFilter> f;
+            std::shared_ptr<filters::RecursivePolynomialFilter> g;
             std::string name;
             RealVector Zstar;
             RealMatrix I;
             assert_clear();
             core = std::make_shared<PureObservationCore>(2);
-            f = std::make_shared<RecursivePolynomialFilter>(2, 1.0, core);
+            f = std::make_shared<filters::RecursivePolynomialFilter>(2, 1.0, core);
             assertEqual(2, f->getOrder());
             assertEqual(1.0, f->getTau());
             f->setName("hello");
@@ -242,9 +242,9 @@
             assert_almost_equal(f->getState(), (RealVector3() << 11.0, 8.0, 3.0).finished());
             assert_almost_equal(f->transitionState(4.0), (RealVector3() << 33.0, 14.0, 3.0).finished());
             assertEqual(2, f->getN());
-            assertEqual(RecursivePolynomialFilter::effectiveTheta(2, 0), 0);
-            assert_almost_equal(RecursivePolynomialFilter::effectiveTheta(2, 10), 0.56673);
-            g = std::make_shared<RecursivePolynomialFilter>(2, 1.0, core);
+            assertEqual(filters::RecursivePolynomialFilter::effectiveTheta(2, 0), 0);
+            assert_almost_equal(filters::RecursivePolynomialFilter::effectiveTheta(2, 10), 0.56673);
+            g = std::make_shared<filters::RecursivePolynomialFilter>(2, 1.0, core);
             g->copyState(f);
             assert_almost_equal(g->getState(), (RealVector3() << 11.0, 8.0, 3.0).finished());
             assert_report("RecursivePolynomialFilter_test/test9Coverage");

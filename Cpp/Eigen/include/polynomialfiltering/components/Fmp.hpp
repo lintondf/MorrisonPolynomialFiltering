@@ -19,7 +19,7 @@
 
 
 #include <polynomialfiltering/components/ICore.hpp>
-#include <polynomialfiltering/components/RecursivePolynomialFilter.hpp>
+#include <polynomialfiltering/filters/RecursivePolynomialFilter.hpp>
 
 
 namespace polynomialfiltering {
@@ -187,7 +187,7 @@ namespace polynomialfiltering {
             ///  @return  fading memory filter core object
             /// 
             static std::shared_ptr<ICore> makeFmpCore(const int order, const double tau, const double theta);
-            static std::shared_ptr<RecursivePolynomialFilter> makeFmp(const int order, const double tau, const double theta);
+            static std::shared_ptr<filters::RecursivePolynomialFilter> makeFmp(const int order, const double tau, const double theta);
         };
     }; // namespace components
 }; // namespace polynomialfiltering

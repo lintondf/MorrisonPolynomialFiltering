@@ -1,4 +1,4 @@
-/***** /polynomialfiltering/components/RecursivePolynomialFilter/
+/***** /polynomialfiltering/filters/RecursivePolynomialFilter/
  * (C) Copyright 2019 - Blue Lightning Development, LLC.
  * D. F. Linton. support@BlueLightningDevelopment.com
  *
@@ -8,7 +8,7 @@
  * AUTO-GENERATED Java from Python Reference Implementation
  */
 
-package polynomialfiltering.components;
+package polynomialfiltering.filters;
  
 import java.util.stream.IntStream;
 import org.ejml.data.DMatrixRMaj;
@@ -107,6 +107,24 @@ public class RecursivePolynomialFilter extends AbstractFilter {
         this.tau = that.tau;
         this.D = that.D;
         this.Z = that.Z;
+    }
+    
+    
+    public void add(final double t, final double y) {
+        add(t, y, -1);
+    }
+    
+    public void add (final double t, final double y, final int observationId) {
+        DMatrixRMaj Zstar = new DMatrixRMaj();
+        double e;
+                
+        Zstar = this.predict(t);
+                
+        //  e = y - Zstar(0)
+        double     td2 = Zstar.get(0);
+        e = y - td2;
+                
+        DMatrixRMaj tm4 = this.update(t, Zstar, e);
     }
     
 
@@ -394,5 +412,5 @@ public class RecursivePolynomialFilter extends AbstractFilter {
         return R;
     }
     
-} // class components
+} // class filters
 

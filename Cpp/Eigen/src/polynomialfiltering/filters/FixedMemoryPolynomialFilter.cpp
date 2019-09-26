@@ -1,4 +1,4 @@
-/***** /polynomialfiltering/components/FixedMemoryPolynomialFilter/
+/***** /polynomialfiltering/filters/FixedMemoryPolynomialFilter/
  * (C) Copyright 2019 - Blue Lightning Development, LLC.
  * D. F. Linton. support@BlueLightningDevelopment.com
  *
@@ -8,12 +8,12 @@
  * AUTO-GENERATED C++ from Python Reference Implementation
  */
 
-#include "polynomialfiltering/components/FixedMemoryPolynomialFilter.hpp"
+#include "polynomialfiltering/filters/FixedMemoryPolynomialFilter.hpp"
 
 #pragma float_control(push)
 #pragma float_control(precise, off)
 namespace polynomialfiltering {
-    namespace components {
+    namespace filters {
         using namespace Eigen;
         
             FixedMemoryFilter::FixedMemoryFilter (const int order, const int memorySize) : AbstractFilter(order) {
@@ -64,7 +64,7 @@ namespace polynomialfiltering {
                 return this->transitionState(this->t);
             }
 
-            void FixedMemoryFilter::add (const double t, const double y, const std::string observationId) {
+            void FixedMemoryFilter::add (const double t, const double y, const int observationId) {
                 int idx;
                 this->t = t;
                 idx = this->n % this->L;
@@ -126,7 +126,7 @@ namespace polynomialfiltering {
                 return Tn;
             }
 
-    }; // namespace components
+    }; // namespace filters
 }; // namespace polynomialfiltering
 
 #pragma float_control(pop)

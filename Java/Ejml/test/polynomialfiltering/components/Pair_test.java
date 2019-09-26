@@ -19,7 +19,7 @@ import static polynomialfiltering.main.Utility.*;
 import utility.TestData;
 import ucar.nc2.Group;
 import static utility.TestMain.*;
-import polynomialfiltering.components.PairedPolynomialFilter;
+import polynomialfiltering.filters.PairedPolynomialFilter;
 import org.ejml.dense.row.MatrixFeatures_DDRM;
 
  

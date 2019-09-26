@@ -1,4 +1,4 @@
-/***** /polynomialfiltering/components/PairedPolynomialFilter/
+/***** /polynomialfiltering/filters/PairedPolynomialFilter/
  * (C) Copyright 2019 - Blue Lightning Development, LLC.
  * D. F. Linton. support@BlueLightningDevelopment.com
  *
@@ -7,8 +7,8 @@
  *
  * AUTO-GENERATED C++ from Python Reference Implementation
  */
-#ifndef ___POLYNOMIALFILTERING_COMPONENTS_PAIREDPOLYNOMIALFILTER_HPP
-#define ___POLYNOMIALFILTERING_COMPONENTS_PAIREDPOLYNOMIALFILTER_HPP
+#ifndef ___POLYNOMIALFILTERING_FILTERS_PAIREDPOLYNOMIALFILTER_HPP
+#define ___POLYNOMIALFILTERING_FILTERS_PAIREDPOLYNOMIALFILTER_HPP
 
 #include <math.h>
 #include <vector>
@@ -19,13 +19,13 @@
 
 
 #include <polynomialfiltering/components/ICore.hpp>
-#include <polynomialfiltering/components/RecursivePolynomialFilter.hpp>
+#include <polynomialfiltering/filters/RecursivePolynomialFilter.hpp>
 #include <polynomialfiltering/components/Emp.hpp>
 #include <polynomialfiltering/components/Fmp.hpp>
 
 
 namespace polynomialfiltering {
-    namespace components {
+    namespace filters {
         class PairedPolynomialFilter : public RecursivePolynomialFilter {
             public:
                 PairedPolynomialFilter(const int order, const double tau, const double theta);
@@ -33,14 +33,14 @@ namespace polynomialfiltering {
                 void start(const double t, const RealVector& Z);
                 bool isFading();
             protected:
-                std::shared_ptr<ICore> empCore; ///<  provider of core expanding functions
-                std::shared_ptr<ICore> fmpCore; ///<  provider of core fading functions
-                int threshold;
+                std::shared_ptr<components::ICore> empCore; ///<  provider of core expanding functions
+                std::shared_ptr<components::ICore> fmpCore; ///<  provider of core fading functions
+                int switchN;
                 double theta;
         }; // class PairedPolynomialFilter 
 
-    }; // namespace components
+    }; // namespace filters
 }; // namespace polynomialfiltering
 
 
-#endif // ___POLYNOMIALFILTERING_COMPONENTS_PAIREDPOLYNOMIALFILTER_HPP
+#endif // ___POLYNOMIALFILTERING_FILTERS_PAIREDPOLYNOMIALFILTER_HPP

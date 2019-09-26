@@ -19,7 +19,7 @@ import static polynomialfiltering.main.Utility.*;
 import utility.TestData;
 import ucar.nc2.Group;
 import static utility.TestMain.*;
-import polynomialfiltering.components.RecursivePolynomialFilter;
+import polynomialfiltering.filters.RecursivePolynomialFilter;
 import static polynomialfiltering.components.Fmp.makeFmp;
 import static polynomialfiltering.components.Emp.nSwitch;
 import polynomialfiltering.components.ICore;
@@ -77,7 +77,7 @@ public class Fmp_test {
             //  actual = zeros(times.getNumRows(), order + 1)
             actual.reshape(times.getNumRows(), order + 1);
             CommonOps_DDRM.fill( actual, 0.0 );
-            f = Fmp.makeFmp(order, tau, theta);
+            f = makeFmp(order, tau, theta);
                         
             f.start(0.0, Y0);
             for (int j = 0; j < times.getNumRows(); j++) {
@@ -144,10 +144,10 @@ public class Fmp_test {
             theta = testData.getScalar(caseGroup, "theta");
             nS = testData.getScalar(caseGroup, "nS");
             expectedG = testData.getArray(caseGroup, "G");
-            f = Fmp.makeFmp(order, tau, theta);
+            f = makeFmp(order, tau, theta);
             actualG = f.getCore().getGamma(0, 1.0);
                         
-            assert_almost_equal(nS, Emp.nSwitch(order, theta));
+            assert_almost_equal(nS, nSwitch(order, theta));
                         
             assert_almost_equal(actualG, expectedG);
         }
@@ -189,12 +189,12 @@ public class Fmp_test {
             tau = testData.getScalar(caseGroup, "tau");
             theta = testData.getScalar(caseGroup, "theta");
             expectedV = testData.getArray(caseGroup, "V");
-            f = Fmp.makeFmp(order, tau, theta);
+            f = makeFmp(order, tau, theta);
             actualV = f.getCore().getVRF(0);
                         
             assert_almost_equal(actualV, expectedV);
         }
-        assertGreaterEqual(0.0, assert_report("Fmp_test/test1CheckVrfs"));
+        assertGreaterEqual(1.0, assert_report("Fmp_test/test1CheckVrfs"));
                 
         testData.close();
     }
@@ -209,10 +209,10 @@ public class Fmp_test {
         DMatrixRMaj ad = new DMatrixRMaj();
         DMatrixRMaj ah = new DMatrixRMaj();
         assert_clear();
-        core90 = Fmp.makeFmpCore(3, 1.0, 0.90);
-        core95 = Fmp.makeFmpCore(3, 1.0, 0.95);
-        core95half = Fmp.makeFmpCore(3, 2.0, 0.95);
-        core95double = Fmp.makeFmpCore(3, 0.5, 0.95);
+        core90 = makeFmpCore(3, 1.0, 0.90);
+        core95 = makeFmpCore(3, 1.0, 0.95);
+        core95half = makeFmpCore(3, 2.0, 0.95);
+        core95double = makeFmpCore(3, 0.5, 0.95);
                 
         //  assert_almost_equal(core90.getVRF(1), core90.getVRF(10))
         DMatrixRMaj tm9 = core90.getVRF(1);
@@ -287,7 +287,7 @@ public class Fmp_test {
         CommonOps_DDRM.fill( actual, 0.0 );
         Y0 = (new DMatrixRMaj(new double[] { - 5.373000000000E+00,  - 1.125200000000E+01,  - 1.740600000000E+01,  - 1.565700000000E+01,  - 7.458400000000E+00,  - 1.467800000000E+00}));
         observations = (new DMatrixRMaj(new double[] { - 5.2565E+00,  - 2.8652E+00,  - 1.4812E+01, 4.6590E+00, 4.7380E+00,  - 7.3765E+00, 1.3271E+01, 7.3593E+00, 3.4308E+00,  - 1.1329E+00,  - 1.5789E+00}));
-        f = Fmp.makeFmp(order, tau, theta);
+        f = makeFmp(order, tau, theta);
                 
         f.start(0.0, Y0);
                 
@@ -324,7 +324,7 @@ public class Fmp_test {
                 
         actual = f.getState();
         assert_almost_equal(actual, (new DMatrixRMaj(new double[] { - 5.30339172,  - 10.89873388,  - 16.74985512,  - 15.02740172,  - 7.1477283,  - 1.405171})));
-        assertGreaterEqual(0.0, assert_report("Fmp_test/test9Basic"));
+        assertGreaterEqual(24.5, assert_report("Fmp_test/test9Basic"));
     }
     
     
@@ -353,10 +353,10 @@ public class Fmp_test {
                 for (int itau = 0; itau < nTaus; itau++) {
                                         
                     tau = taus.get(itau);
-                    emp = Emp.makeEmpCore(order, tau);
-                    fmp = Fmp.makeFmpCore(order, tau, theta);
+                    emp = makeEmpCore(order, tau);
+                    fmp = makeFmpCore(order, tau, theta);
                                         
-                    n = (int) Emp.nSwitch(order, theta);
+                    n = (int) nSwitch(order, theta);
                 }
             }
         }

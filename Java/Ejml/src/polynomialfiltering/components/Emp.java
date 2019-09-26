@@ -25,7 +25,7 @@ import polynomialfiltering.components.emp.CoreEmp2;
 import polynomialfiltering.components.emp.CoreEmp3;
 import polynomialfiltering.components.emp.CoreEmp4;
 import polynomialfiltering.components.emp.CoreEmp5;
-import polynomialfiltering.components.RecursivePolynomialFilter;
+import polynomialfiltering.filters.RecursivePolynomialFilter;
 
  
 public class Emp {
@@ -132,7 +132,7 @@ public class Emp {
     static public RecursivePolynomialFilter makeEmp (final int order, final double tau) {
         RecursivePolynomialFilter _makeEmp_return_value = new RecursivePolynomialFilter(); ///< auto-generated return variable
         ICore core;
-        core = Emp.makeEmpCore(order, tau);
+        core = makeEmpCore(order, tau);
         _makeEmp_return_value = new RecursivePolynomialFilter(order, tau, core);
         return _makeEmp_return_value;
     }

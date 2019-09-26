@@ -115,21 +115,22 @@ public abstract class AbstractProgrammer implements IProgrammer {
 		String t = typeRemap.get(typeName);
 		if (t != null)
 			return t;
-		Symbol c = Transpiler.instance().lookupClass(typeName);
-		if (c != null) {
-			Scope typeScope = c.getScope();
-			String prefix = typeScope.getVisiblityPrefix(currentScope);
-			t = typeRemap.get(typeName);
-			if (t != null)
-				return t;
-			if (! prefix.isEmpty()) {
-				typeName = prefix.replace("/", ".") + typeName;
-			}
-			typeName = String.format("%s", typeName);
-			return typeName;			
-		} else {
-			return typeName;
-		}
+		return typeName;  // package visability in Java resolved via imports
+//		Symbol c = Transpiler.instance().lookupClass(typeName);
+//		if (c != null) {
+//			Scope typeScope = c.getScope();
+//			String prefix = typeScope.getVisiblityPrefix(currentScope);
+//			t = typeRemap.get(typeName);
+//			if (t != null)
+//				return t;
+//			if (! prefix.isEmpty()) {
+//				typeName = prefix.replace("/", ".") + typeName;
+//			}
+//			typeName = String.format("%s", typeName);
+//			return typeName;			
+//		} else {
+//			return typeName;
+//		}
 	}
 	
 	@Override

@@ -1,4 +1,4 @@
-/***** /polynomialfiltering/components/RecursivePolynomialFilter/
+/***** /polynomialfiltering/filters/RecursivePolynomialFilter/
  * (C) Copyright 2019 - Blue Lightning Development, LLC.
  * D. F. Linton. support@BlueLightningDevelopment.com
  *
@@ -8,15 +8,15 @@
  * AUTO-GENERATED C++ from Python Reference Implementation
  */
 
-#include "polynomialfiltering/components/RecursivePolynomialFilter.hpp"
+#include "polynomialfiltering/filters/RecursivePolynomialFilter.hpp"
 
 #pragma float_control(push)
 #pragma float_control(precise, off)
 namespace polynomialfiltering {
-    namespace components {
+    namespace filters {
         using namespace Eigen;
         
-            RecursivePolynomialFilter::RecursivePolynomialFilter (const int order, const double tau, const std::shared_ptr<ICore> core) : AbstractFilter(order) {
+            RecursivePolynomialFilter::RecursivePolynomialFilter (const int order, const double tau, const std::shared_ptr<components::ICore> core) : AbstractFilter(order) {
                 double td; ///<  tau^d 
                 if (order < 0 || order > 5) {
                     throw ValueError("Polynomial orders < 0 or > 5 are not supported");
@@ -51,6 +51,14 @@ namespace polynomialfiltering {
                 this->tau = that->tau;
                 this->D = that->D;
                 this->Z = that->Z;
+            }
+
+            void RecursivePolynomialFilter::add (const double t, const double y, const int observationId) {
+                RealVector Zstar;
+                double e;
+                Zstar = this->predict(t);
+                e = y - Zstar(0);
+                this->update(t, Zstar, e);
             }
 
             void RecursivePolynomialFilter::start (const double t, const RealVector& Z) {
@@ -92,7 +100,7 @@ namespace polynomialfiltering {
                 return innovation;
             }
 
-            std::shared_ptr<ICore> RecursivePolynomialFilter::getCore () {
+            std::shared_ptr<components::ICore> RecursivePolynomialFilter::getCore () {
                 return this->core;
             }
 
@@ -161,7 +169,7 @@ namespace polynomialfiltering {
                 return R;
             }
 
-    }; // namespace components
+    }; // namespace filters
 }; // namespace polynomialfiltering
 
 #pragma float_control(pop)

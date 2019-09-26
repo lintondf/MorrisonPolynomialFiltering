@@ -409,10 +409,10 @@ namespace polynomialfiltering {
             }
         }
 
-        std::shared_ptr<RecursivePolynomialFilter> Fmp::makeFmp (const int order, const double tau, const double theta) {
+        std::shared_ptr<filters::RecursivePolynomialFilter> Fmp::makeFmp (const int order, const double tau, const double theta) {
             std::shared_ptr<ICore> core;
             core = Fmp::makeFmpCore(order, tau, theta);
-            return std::make_shared<RecursivePolynomialFilter>(order, tau, core);
+            return std::make_shared<filters::RecursivePolynomialFilter>(order, tau, core);
         }
 
     }; // namespace components

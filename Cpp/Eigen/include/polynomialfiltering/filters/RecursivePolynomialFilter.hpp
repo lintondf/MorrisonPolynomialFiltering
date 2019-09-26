@@ -1,4 +1,4 @@
-/***** /polynomialfiltering/components/RecursivePolynomialFilter/
+/***** /polynomialfiltering/filters/RecursivePolynomialFilter/
  * (C) Copyright 2019 - Blue Lightning Development, LLC.
  * D. F. Linton. support@BlueLightningDevelopment.com
  *
@@ -7,8 +7,8 @@
  *
  * AUTO-GENERATED C++ from Python Reference Implementation
  */
-#ifndef ___POLYNOMIALFILTERING_COMPONENTS_RECURSIVEPOLYNOMIALFILTER_HPP
-#define ___POLYNOMIALFILTERING_COMPONENTS_RECURSIVEPOLYNOMIALFILTER_HPP
+#ifndef ___POLYNOMIALFILTERING_FILTERS_RECURSIVEPOLYNOMIALFILTER_HPP
+#define ___POLYNOMIALFILTERING_FILTERS_RECURSIVEPOLYNOMIALFILTER_HPP
 
 #include <math.h>
 #include <vector>
@@ -23,9 +23,9 @@
 
 
 namespace polynomialfiltering {
-    namespace components {
+    namespace filters {
 
-        ///// @class /polynomialfiltering/components/::RecursivePolynomialFilter : <CLASS>; supers(AbstractFilter,)
+        ///// @class /polynomialfiltering/filters/::RecursivePolynomialFilter : <CLASS>; supers(AbstractFilter,)
         /// @brief Base class for both expanding and fading polynomial filter and their combinations.
         /// 
         class RecursivePolynomialFilter : public AbstractFilter {
@@ -37,7 +37,7 @@ namespace polynomialfiltering {
                 ///  @param		order	integer polynomial orer
                 ///  @param		tau	nominal time step
                 /// 
-                RecursivePolynomialFilter(const int order, const double tau, const std::shared_ptr<ICore> core);
+                RecursivePolynomialFilter(const int order, const double tau, const std::shared_ptr<components::ICore> core);
 
                 ///// @brief Estimate of the FMP fading factor theta to match 0th variance of an EMP
                 /// 
@@ -50,6 +50,7 @@ namespace polynomialfiltering {
                 ///// @brief Copy the state of another filter into this filter.
                 /// 
                 void copyState(const std::shared_ptr<RecursivePolynomialFilter> that);
+                void add(const double t, const double y, const int observationId=-1);
 
                 ///// @brief Start or restart the filter
                 /// 
@@ -87,7 +88,7 @@ namespace polynomialfiltering {
                 /// self.update(t, Zstar, e )
                 /// 
                 RealVector update(const double t, const RealVector& Zstar, const double e);
-                std::shared_ptr<ICore> getCore();
+                std::shared_ptr<components::ICore> getCore();
 
                 ///// @brief Return the number of processed observations since start
                 /// 
@@ -148,7 +149,7 @@ namespace polynomialfiltering {
                 double t; ///<   time of the last input
                 RealVector Z; ///<  NORMALIZED state vector at time of last input
                 RealVector D; ///<  noralization/denormalization scaling vector; D(tau) = [tau^-0, tau^-1,...tau^-order]
-                std::shared_ptr<ICore> core; ///<  provider of core expanding / fading functions
+                std::shared_ptr<components::ICore> core; ///<  provider of core expanding / fading functions
                 
                 ///// @brief Matches an input state vector to the filter order
                 /// 
@@ -207,8 +208,8 @@ namespace polynomialfiltering {
                 RealVector _denormalizeState(const RealVector& Z);
         }; // class RecursivePolynomialFilter 
 
-    }; // namespace components
+    }; // namespace filters
 }; // namespace polynomialfiltering
 
 
-#endif // ___POLYNOMIALFILTERING_COMPONENTS_RECURSIVEPOLYNOMIALFILTER_HPP
+#endif // ___POLYNOMIALFILTERING_FILTERS_RECURSIVEPOLYNOMIALFILTER_HPP

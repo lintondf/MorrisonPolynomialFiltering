@@ -19,7 +19,7 @@
 
 
 #include <polynomialfiltering/components/ICore.hpp>
-#include <polynomialfiltering/components/RecursivePolynomialFilter.hpp>
+#include <polynomialfiltering/filters/RecursivePolynomialFilter.hpp>
 
 
 namespace polynomialfiltering {
@@ -287,7 +287,7 @@ namespace polynomialfiltering {
             ///  @return  expanding memory filter object
             /// 
             static std::shared_ptr<ICore> makeEmpCore(const int order, const double tau);
-            static std::shared_ptr<RecursivePolynomialFilter> makeEmp(const int order, const double tau);
+            static std::shared_ptr<filters::RecursivePolynomialFilter> makeEmp(const int order, const double tau);
         };
     }; // namespace components
 }; // namespace polynomialfiltering

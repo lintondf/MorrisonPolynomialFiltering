@@ -499,10 +499,10 @@ namespace polynomialfiltering {
             }
         }
 
-        std::shared_ptr<RecursivePolynomialFilter> Emp::makeEmp (const int order, const double tau) {
+        std::shared_ptr<filters::RecursivePolynomialFilter> Emp::makeEmp (const int order, const double tau) {
             std::shared_ptr<ICore> core;
             core = Emp::makeEmpCore(order, tau);
-            return std::make_shared<RecursivePolynomialFilter>(order, tau, core);
+            return std::make_shared<filters::RecursivePolynomialFilter>(order, tau, core);
         }
 
     }; // namespace components

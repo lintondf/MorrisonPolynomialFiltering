@@ -157,6 +157,7 @@ namespace polynomialfiltering {
             /// 
             virtual double getLastVRF() = 0;
             virtual RealMatrix getVRF() = 0;
+            virtual void add(const double t, const double y, const int observationId=-1) = 0;
         protected:
             int order; ///<  polynomial order
             std::string name; ///<  name of this filter

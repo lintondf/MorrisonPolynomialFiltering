@@ -22,14 +22,14 @@
 
 
 #include <TestData.hpp>
-#include <polynomialfiltering/components/RecursivePolynomialFilter.hpp>
+#include <polynomialfiltering/filters/RecursivePolynomialFilter.hpp>
 #include <polynomialfiltering/Main.hpp>
 #include <polynomialfiltering/components/ICore.hpp>
 #include <polynomialfiltering/components/Emp.hpp>
 #include <polynomialfiltering/components/Fmp.hpp>
-#include <polynomialfiltering/components/PairedPolynomialFilter.hpp>
-#include <polynomialfiltering/components/FixedMemoryPolynomialFilter.hpp>
-#include <polynomialfiltering/filters/controls/ConstantObservationErrorModel.hpp>
+#include <polynomialfiltering/filters/PairedPolynomialFilter.hpp>
+#include <polynomialfiltering/filters/FixedMemoryPolynomialFilter.hpp>
+#include <polynomialfiltering/filters/controls/errormodel/ConstantObservationErrorModel.hpp>
 #include <TestData.hpp>
 
 
@@ -54,7 +54,7 @@
                         RealVector element;
                         double x;
                         RealMatrix Q;
-                        std::shared_ptr<ConstantObservationErrorModel> model;
+                        std::shared_ptr<errormodel::ConstantObservationErrorModel> model;
                         testData = std::make_shared<TestData>("testConstantObservationErrorModel.nc");
                         matches = testData->getMatchingGroups("testScalar_");
                         assert_not_empty(matches);
@@ -64,7 +64,7 @@
                             inputInverse = testData->getGroupVariable(matches[i], "inputInverse");
                             iE = int(element(0));
                             x = inputCovariance(0, 0);
-                            model = std::make_shared<ConstantObservationErrorModel>(x);
+                            model = std::make_shared<errormodel::ConstantObservationErrorModel>(x);
                             Q = model->getCovarianceMatrix(nullptr, 0.0, (RealVector1() << 0.).finished(), iE);
                             assert_almost_equal(inputCovariance(0, 0), Q);
                             Q = model->getPrecisionMatrix(nullptr, 0.0, (RealVector1() << 0.).finished(), iE);
@@ -82,7 +82,7 @@
                         RealMatrix inputInverse;
                         RealVector element;
                         RealMatrix Q;
-                        std::shared_ptr<ConstantObservationErrorModel> model;
+                        std::shared_ptr<errormodel::ConstantObservationErrorModel> model;
                         testData = std::make_shared<TestData>("testConstantObservationErrorModel.nc");
                         matches = testData->getMatchingGroups("testMatrix_");
                         assert_not_empty(matches);
@@ -92,7 +92,7 @@
                             inputInverse = testData->getGroupVariable(matches[i], "inputInverse");
                             iE = int(element(0));
                             ic = inputCovariance(0, 0);
-                            model = std::make_shared<ConstantObservationErrorModel>(ic);
+                            model = std::make_shared<errormodel::ConstantObservationErrorModel>(ic);
                             Q = model->getCovarianceMatrix(nullptr, 0.0, (RealVector1() << 0.).finished(), iE);
                             assert_almost_equal(inputCovariance(0, 0), Q);
                             Q = model->getPrecisionMatrix(nullptr, 0.0, (RealVector1() << 0.).finished(), iE);
@@ -109,7 +109,7 @@
                         RealMatrix inputInverse;
                         RealVector element;
                         RealMatrix Q;
-                        std::shared_ptr<ConstantObservationErrorModel> model;
+                        std::shared_ptr<errormodel::ConstantObservationErrorModel> model;
                         testData = std::make_shared<TestData>("testConstantObservationErrorModel.nc");
                         matches = testData->getMatchingGroups("testMatrixMatrix_");
                         assert_not_empty(matches);
@@ -118,7 +118,7 @@
                             inputCovariance = testData->getGroupVariable(matches[i], "inputCovariance");
                             inputInverse = testData->getGroupVariable(matches[i], "inputInverse");
                             iE = int(element(0));
-                            model = std::make_shared<ConstantObservationErrorModel>(inputCovariance, inputInverse);
+                            model = std::make_shared<errormodel::ConstantObservationErrorModel>(inputCovariance, inputInverse);
                             if (iE < 0) {
                                 Q = model->getCovarianceMatrix(nullptr, 0.0, (RealVector1() << 0.).finished(), iE);
                                 assert_almost_equal(inputCovariance, Q);

@@ -241,7 +241,7 @@ class RecursivePolynomialFilter_test(unittest.TestCase):
             
             expected = testData.getGroupVariable(matches[iMatch], 'expected')
             assert_almost_equal( actual, expected )
-        self.assertGreaterEqual(0.0, assert_report("RecursivePolynomialFilter_test/test1PurePredict"))          
+        self.assertGreaterEqual(2.6, assert_report("RecursivePolynomialFilter_test/test1PurePredict"))          
         testData.close()
 
     @testcase

@@ -19,7 +19,7 @@ import static polynomialfiltering.main.Utility.*;
 import utility.TestData;
 import ucar.nc2.Group;
 import static utility.TestMain.*;
-import polynomialfiltering.components.fixedmemorypolynomialfilter.FixedMemoryFilter;
+import polynomialfiltering.filters.fixedmemorypolynomialfilter.FixedMemoryFilter;
 import polynomialfiltering.components.FixedMemoryFilter_test.TestFixedMemoryFilter;
 
  

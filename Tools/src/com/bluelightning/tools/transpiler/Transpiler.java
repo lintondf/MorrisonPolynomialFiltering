@@ -121,11 +121,12 @@ public class Transpiler {
 			
 		new Target(Paths.get("polynomialfiltering"), "Main"),
 		new Target(Paths.get("polynomialfiltering/components"), "ICore", true),
-		new Target(Paths.get("polynomialfiltering/components"), "FixedMemoryPolynomialFilter"),
-		new Target(Paths.get("polynomialfiltering/components"), "RecursivePolynomialFilter"),
+		new Target(Paths.get("polynomialfiltering/filters"), "RecursivePolynomialFilter"),
 		new Target(Paths.get("polynomialfiltering/components"), "Emp"),
 		new Target(Paths.get("polynomialfiltering/components"), "Fmp"),
-		new Target(Paths.get("polynomialfiltering/components"), "PairedPolynomialFilter"),
+
+		new Target(Paths.get("polynomialfiltering/filters"), "FixedMemoryPolynomialFilter"),
+		new Target(Paths.get("polynomialfiltering/filters"), "PairedPolynomialFilter"),
 		
 		new TestTarget(Paths.get("components"), "RecursivePolynomialFilter_test"),
 		new TestTarget(Paths.get("components"), "EMP_test"),
@@ -136,7 +137,7 @@ public class Transpiler {
 		new Target(Paths.get("polynomialfiltering/filters/controls"), "IObservationErrorModel", true),
 		new Target(Paths.get("polynomialfiltering/filters/controls"), "IJudge", true),
 		new Target(Paths.get("polynomialfiltering/filters/controls"), "IMonitor", true),
-		new Target(Paths.get("polynomialfiltering/filters/controls"), "ConstantObservationErrorModel"),
+		new Target(Paths.get("polynomialfiltering/filters/controls/errormodel"), "ConstantObservationErrorModel"),
 ////		new Target(Paths.get("polynomialfiltering/filters/controls"), "BaseScalarJudge"),
 ////		//new Target(Paths.get("polynomialfiltering/filters/controls"), "BaseVectorJudge"),
 ////		//new Target(Paths.get("polynomialfiltering/filters/controls"), "NullMonitor"),
@@ -179,6 +180,22 @@ public class Transpiler {
 		if (forScope == null)
 			return null;
 		return forScope.get(language);
+	}
+	
+	HashMap<String, ArrayList<String>> manualImports = new HashMap<String, ArrayList<String>>();
+	
+	public void addManualImport(String scopeString, String importText ) {
+		ArrayList<String> forScope = manualImports.get(scopeString);
+		if (forScope == null) {
+			forScope = new ArrayList<>();
+		}
+		forScope.add( importText );
+		manualImports.put(scopeString, forScope);
+	}
+	
+	public List<String> getManualImports( String scopeString) {
+		System.out.println( scopeString + " : " + manualImports.get(scopeString));
+		return manualImports.get(scopeString);
 	}
 
 	protected boolean isTestCaseMethod = false;

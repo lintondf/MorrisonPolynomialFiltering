@@ -1,4 +1,4 @@
-/***** /polynomialfiltering/filters/controls/ConstantObservationErrorModel/
+/***** /polynomialfiltering/filters/controls/errormodel/ConstantObservationErrorModel/
  * (C) Copyright 2019 - Blue Lightning Development, LLC.
  * D. F. Linton. support@BlueLightningDevelopment.com
  *
@@ -8,7 +8,7 @@
  * AUTO-GENERATED Java from Python Reference Implementation
  */
 
-package polynomialfiltering.filters.controls;
+package polynomialfiltering.filters.controls.errormodel;
  
 import java.util.stream.IntStream;
 import org.ejml.data.DMatrixRMaj;
@@ -66,7 +66,7 @@ public class ConstantObservationErrorModel extends IObservationErrorModel {
     /// 
     /// 
     ///  @param		R	constant covariance matrix of a vector observation
-    ///  @param		inverseR	inverse of the R matrix; used when inverseR is easily computed.
+    ///  @param		inverseR	inverse of the R matrix; used when inverseR is easily precomputed.
     /// 
     
     public ConstantObservationErrorModel (final DMatrixRMaj R, final DMatrixRMaj inverseR) {
@@ -80,17 +80,6 @@ public class ConstantObservationErrorModel extends IObservationErrorModel {
         this.iR.set( inverseR );
     }
     
-
-    ///// @brief Get the precision matrix (inverse covariance) for an observation
-    /// 
-    /// 
-    ///  @param		f	the filter using this model (models can serve multiple filters)
-    ///  @param		t	the time of the observation
-    ///  @param		y	the observation vector
-    ///  @param		observationId	the element of y being used, -1 for all elements
-    /// 
-    ///  @return  Inverse of the covariance matrix (1x1 if observationId >= 0)
-    /// 
     
     public DMatrixRMaj getPrecisionMatrix(final AbstractFilterWithCovariance f, final double t, final DMatrixRMaj y) {
         return getPrecisionMatrix(f, t, y, -1);
@@ -110,17 +99,6 @@ public class ConstantObservationErrorModel extends IObservationErrorModel {
         return P;
     }
     
-
-    ///// @brief Get the covariance matrix for an observation
-    /// 
-    /// 
-    ///  @param		f	the filter using this model (models can serve multiple filters)
-    ///  @param		t	the time of the observation
-    ///  @param		y	the observation vector
-    ///  @param		observationId	the element of y being used, -1 for all elements
-    /// 
-    ///  @return  Covariance matrix (1x1 if observationId >= 0)
-    /// 
     
     public DMatrixRMaj getCovarianceMatrix(final AbstractFilterWithCovariance f, final double t, final DMatrixRMaj y) {
         return getCovarianceMatrix(f, t, y, -1);
@@ -142,5 +120,5 @@ public class ConstantObservationErrorModel extends IObservationErrorModel {
         return P;
     }
     
-} // class controls
+} // class errormodel
 
