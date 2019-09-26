@@ -227,7 +227,7 @@
                     assert_report("FixedMemoryFilter_test/test1CheckVrfs");
                 }
 
-                class TestFixedMemoryFilter : public FixedMemoryFilter {
+                class TestFixedMemoryFilter : public filters::FixedMemoryFilter {
                     public:
                         TestFixedMemoryFilter (const int order) : FixedMemoryFilter(order) {
                         }

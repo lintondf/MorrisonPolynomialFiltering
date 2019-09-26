@@ -172,6 +172,19 @@ public class CppTestTarget extends AbstractCppTarget {
 	protected String generateBodyDeclaration( String type, Symbol currentClass, String name, Scope scope, String parameters ) {
 		return String.format("%s%s (%s)", type, name, parameters );
 	}
+	
+	@Override
+	protected void emitStaticSymbol( Indent out, Scope scope, Symbol symbol ) {
+		Symbol base = symbol.getBaseSymbol();
+		String rewrite = programmer.rewriteSymbol(scope, symbol);
+		if (base != null) {
+			rewrite = programmer.rewriteSymbol(scope, base);
+			out.append( String.format("%s::%s", base.getScope().getLast(), base.getName()) );				
+		} else {
+			out.append(symbol.getName());
+		}
+	}
+	
 
 	@Override
 	public boolean isTestTarget() {

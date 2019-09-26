@@ -200,6 +200,12 @@ public abstract class AbstractProgrammer implements IProgrammer {
 			if (c != null) {
 				String prefix = c.getScope().getVisiblityPrefix(scope).replace("/", "::");
 				return prefix + name;
+			} else if (symbol.isStatic()) {
+				Symbol base = symbol.getBaseSymbol();
+				if (base != null)
+					symbol = base;
+				String prefix = symbol.getScope().getVisiblityPrefix(scope).replace("/", "::");
+				return prefix + name;
 			} else {
 				return name;
 			}

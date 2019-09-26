@@ -10,13 +10,6 @@ include_directories(.. include ${GSL_INCLUDE_DIRS} ${Boost_INCLUDE_DIRS})
 add_subdirectory( test )
 
 
-#include_directories(src) 
-#set(SOURCES src/polynomialfiltering/Main.cpp src/polynomialfiltering/components/FixedMemoryPolynomialFilter.cpp)
-#set(SOURCES src/polynomialfiltering/Main.cpp 
-#	src/polynomialfiltering/components/FixedMemoryPolynomialFilter.cpp
-set(SOURCES  src/polynomialfiltering/Main.cpp 
-    src/polynomialfiltering/components/FixedMemoryPolynomialFilter.cpp
-	src/EigenTest.cpp) 
-#add_executable(PolynomialFilteringCpp ${SOURCES})
+set(SOURCES src/EigenTest.cpp) 
 add_executable(EigenTest ${SOURCES})
 target_link_libraries( EigenTest GSL::gsl  ${Boost_LIBRARIES}) # /Users/NOOK/GITHUB/MorrisonPolynomialFiltering/Cpp/GSL/lib/gsl/gsl.lib ) 

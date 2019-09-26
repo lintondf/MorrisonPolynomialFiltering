@@ -16,11 +16,11 @@ namespace polynomialfiltering {
     namespace filters {
         using namespace Eigen;
         
-            PairedPolynomialFilter::PairedPolynomialFilter (const int order, const double tau, const double theta) : RecursivePolynomialFilter(order, tau, Emp::makeEmpCore(order, tau) ) {
+            PairedPolynomialFilter::PairedPolynomialFilter (const int order, const double tau, const double theta) : RecursivePolynomialFilter(order, tau, components::Emp::makeEmpCore(order, tau) ) {
                 this->empCore = this->core;
-                this->fmpCore = Fmp::makeFmpCore(order, tau, theta);
+                this->fmpCore = components::Fmp::makeFmpCore(order, tau, theta);
                 this->theta = theta;
-                this->switchN = int(Emp::nSwitch(this->order, this->theta));
+                this->switchN = int(components::Emp::nSwitch(this->order, this->theta));
             }
 
             RealVector PairedPolynomialFilter::update (const double t, const RealVector& Zstar, const double e) {

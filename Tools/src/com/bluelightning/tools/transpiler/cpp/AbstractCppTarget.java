@@ -148,6 +148,10 @@ public abstract class AbstractCppTarget extends AbstractLanguageTarget {
 				String separator = " : ";
 				for (String superClass : symbol.getSuperClassInfo().superClasses) {
 					if (!ignoredSuperClasses.contains(superClass)) {
+						Symbol sc = Transpiler.instance().lookup(currentScope, superClass);
+						if (sc != null) {
+							superClass = programmer.rewriteSymbol(currentScope, sc);							
+						}
 						decl += separator + "public " + superClass;
 						separator = ", ";
 					}
@@ -433,23 +437,28 @@ public abstract class AbstractCppTarget extends AbstractLanguageTarget {
 			String rewrite = programmer.rewriteSymbol( scope, symbol );
 			emitNewExpression( scope, rewrite, child );
 		} else if (symbol.isStatic()) {
-			Symbol base = symbol.getBaseSymbol();
-			if (base != null) {
-				out.append( String.format("%s::%s", symbol.getBaseSymbol().getScope().getLast(), symbol.getName()) );
-			} else {
-				out.append( String.format("%s::%s", symbol.getScope().getLast(), symbol.getName()) );				
-			}
+			emitStaticSymbol( out, scope, symbol );
 		} else {
 			out.append( programmer.rewriteSymbol( scope, symbol ) );
 		}
 		return -1;
 	}
 	
+	abstract protected void emitStaticSymbol( Indent out, Scope scope, Symbol symbol );
+	
 	protected int emitChild(Indent out, Scope scope, TranslationUnaryNode unary) {
 		Symbol symbol = unary.getRhsSymbol();
 		TranslationNode node = unary.getRhsNode();
 		if (symbol != null) {
 			if (symbol.isClassMethod()) {
+				if (unary.getLeftSibling() != null && unary.getLeftSibling() instanceof TranslationSymbolNode) {
+					TranslationSymbolNode s = (TranslationSymbolNode) unary.getLeftSibling();
+					if (s.getSymbol().isClass()) {
+						out.append("::");
+						out.append(symbol.getName());
+						return 0;
+					}
+				}
 				programmer.writeOperator( out, "::" );
 			} else {
 				if (unary.getLeftSibling() != null && unary.getLeftSibling() instanceof TranslationUnaryNode) {

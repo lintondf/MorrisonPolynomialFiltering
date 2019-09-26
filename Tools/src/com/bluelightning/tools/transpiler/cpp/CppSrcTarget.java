@@ -13,6 +13,8 @@ import com.bluelightning.tools.transpiler.AbstractLanguageTarget;
 import com.bluelightning.tools.transpiler.IProgrammer;
 import com.bluelightning.tools.transpiler.Indent;
 import com.bluelightning.tools.transpiler.Scope;
+import com.bluelightning.tools.transpiler.Symbol;
+import com.bluelightning.tools.transpiler.Transpiler;
 
 import freemarker.template.Configuration;
 import freemarker.template.TemplateException;
@@ -164,6 +166,23 @@ public class CppSrcTarget extends AbstractCppTarget {
 			e.printStackTrace();
 		}
 	}
+	
+	@Override
+	protected void emitStaticSymbol( Indent out, Scope scope, Symbol symbol ) {
+		Symbol base = symbol.getBaseSymbol();
+		if (base != null) {
+			out.append( programmer.rewriteSymbol(scope, base));
+		} else {
+			String module = symbol.getScope().getLast();
+			if (Transpiler.instance().getIgnoredModules().contains(module)) {
+				out.append(symbol.getName());
+			} else {
+				out.append( String.format("%s::%s", module, symbol.getName()) );
+			}
+		}		
+	}
+	
+
 
 	@Override
 	public boolean isTestTarget() {

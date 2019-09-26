@@ -40,7 +40,7 @@
             
             class EMP_test {
             public:
-                class RecursivePolynomialFilterMock : public RecursivePolynomialFilter {
+                class RecursivePolynomialFilterMock : public filters::RecursivePolynomialFilter {
                     public:
                         RecursivePolynomialFilterMock (const int order, const double tau, const std::shared_ptr<ICore> core) : RecursivePolynomialFilter(order,tau,core) {
                         }

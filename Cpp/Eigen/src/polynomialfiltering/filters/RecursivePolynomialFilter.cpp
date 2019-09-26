@@ -75,7 +75,7 @@ namespace polynomialfiltering {
                 RealMatrix F(order+1, order+1);
                 dt = t - this->t;
                 dtau = this->_normalizeDeltaTime(dt);
-                F = RecursivePolynomialFilter::stateTransitionMatrix(this->order + 1, dtau);
+                F = RecursivePolynomialFilter::AbstractFilter::stateTransitionMatrix(this->order + 1, dtau);
                 Zstar = F * this->Z;
                 return Zstar;
             }
