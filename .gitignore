@@ -23,6 +23,7 @@ Cpp/Eigen/test/cmake_install.cmake
 Cpp/Eigen/.vscode/
 Cpp/Eigen/EigenTest
 Cpp/Eigen/test/FilteringEigenTest
+Cpp/Eigen/build
 Java/*.log
 Java/bin
 Java/out

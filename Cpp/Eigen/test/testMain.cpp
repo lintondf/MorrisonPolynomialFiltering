@@ -5,6 +5,7 @@
 #include <TestData.hpp>
 #include <cmath>
 #include <polynomialfiltering/PolynomialFilteringEigen.hpp>
+#include <polynomialfiltering/Main.hpp>
 
 using namespace Eigen;
 using namespace polynomialfiltering;
@@ -13,10 +14,10 @@ std::string TestData::testDataPath() {
     char cwd[PATH_MAX];
     if (getcwd(cwd, sizeof(cwd)) != NULL) {
         std::string path = std::string(cwd);
-        std::string testDir("Cpp/Eigen/test");
+        std::string testDir("Cpp/Eigen" );
         std::size_t where = path.find(testDir);
         if (where > 0) {
-            path = path.replace(where, testDir.size(), "testdata");
+            path = path.replace(where, path.size()-where, "testdata");
             path = path.append( path.substr(where-1,1)); // append directory separator
             return path;
         }
@@ -128,23 +129,22 @@ static double ulp(double t) {
     double ulpOne = 2.220446049250313e-16;
     int exp;
     double mantissa = frexp(t, &exp);
+    exp--; // unbias exponent to match Java Math.getExponent
     return ulpOne * pow(2.0, (double) exp);
 }
 
 static double maxLog2Error = 0.0;
 static std::string prefix = "";
-static double threshold = 1.5 * 1.0E-7;
+static double threshold = 0.0; //1.5 * 1.0E-7;
 
 void assert_almost_equal(double A, double B) {
     double max = std::max( fabs(A), fabs(B) );
     double u = ulp(max);
     double maxError = fabs(A-B);
     double threshold = 1.0*u;
-    if (maxError > threshold) {
-        double log2Error = log2(maxError/u);
-        if (log2Error > maxLog2Error) {
-            maxLog2Error = log2Error;
-        }
+    double log2Error = log2(maxError/u);
+    if (log2Error > maxLog2Error) {
+        maxLog2Error = log2Error;
     }
     prefix = "";
 }
@@ -235,10 +235,195 @@ void assert_not_empty(std::vector< std::string >& list) {
 	CHECK(list.size() > 0);
 }
 
+TEST_CASE("testTesting") {
+		TestData *testData = new TestData("test.nc");
+		Group group = testData->getGroup("Test" );
+		if (group == -1) {
+			std::cerr << ("Test group not found") << std::endl;
+			return;
+		}
+		int i = testData->getInteger(group, "i" );
+		if (i != 1) {
+			std::cerr << ("i != 1: ") << std::endl;
+			std::cerr << i << std::endl;
+			return;
+		}
+		double x = testData->getScalar(group, "x");
+		if (x != 3.14) {
+			std::cerr << ("x != 3.14: ") << std::endl;
+			std::cerr << x << std::endl;
+			return;
+		}
+		RealMatrix v = testData->getArray(group, "v");
+		if (v.rows() != 3 || v.cols() != 1) {
+			std::cerr << ("v wrong shape; should be 3,1") << std::endl;
+			std::cerr << v << std::endl;
+			return;
+		}
+		if (v(0, 0) != 1.0 || v(1, 0) != 2.0 || v(2, 0) != 3.0) {
+			std::cerr << ("v content wrong; should be [1;2;3]") << std::endl;
+			std::cerr << v << std::endl;
+			return;
+		}
+		RealMatrix m = testData->getArray(group, "m" );
+		if (m.rows() != 2 || m.cols() != 2) {
+			std::cerr << ("m wrong shape; should be 2, 2") << std::endl;
+			std::cerr << v << std::endl;
+			return;
+		}
+		if (m(0, 0) != 4.0 || m(0, 1) != 5.0 || 
+			m(1, 0) != 6.0 || m(1, 1) != 7.0) {
+			std::cerr << ("m content wrong; should be [[4,5],[6,7]]") << std::endl;
+			std::cerr << m << std::endl;
+			return;
+		}
+#ifdef SKIP
+		assertTrue(true);
+		try {
+			assertTrue(false);
+			std::cerr << "assertTrue failed to fail" <<  std::endl;
+			return;
+		} catch (const std::exception& ae) {}
+		assertFalse(false);
+		try {
+			assertFalse(true);
+			std::cerr << "assertFalse failed to fail" <<  std::endl;
+			return;
+		} catch (const std::exception& ae) {}
+		assertGreaterEqual(3.0, 2.0);
+		assertGreaterEqual(3.0, 3.0);
+		try {
+			assertGreaterEqual(2.0, 3.0);
+			std::cerr << "assertGreaterEqual failed to fail" <<  std::endl;
+			return;
+		} catch (const std::exception& ae) {}
+		assertEqual(1, 1);
+		try {
+			assertEqual(2,1);
+			std::cerr << "assertEqual int failed to fail" <<  std::endl;
+			return;
+		} catch (const std::exception& ae) {}
+		assertEqual(1.0, 1.0);
+		try {
+			assertEqual(2.0,1.0);
+			std::cerr << "assertEqual double failed to fail" <<  std::endl;
+			return;
+		} catch (const std::exception& ae) {}
+		assertEqual(FilterStatus::COASTING, FilterStatus::COASTING);
+		try {
+			assertEqual(FilterStatus::COASTING, FilterStatus::IDLE);
+			std::cerr << "assertEqual FilterStatus failed to fail" <<  std::endl;
+			return;
+		} catch (const std::exception& ae) {}
+#endif		
+		RealMatrix A(3,3);
+		RealMatrix B(3,3);
+		A.fill(1.0);
+		B.fill(2.0);
+		assert_array_less(A, B);
+		// try {
+		// 	assert_array_less(B, A);
+		// 	std::cerr << "assert_array_less failed to fail" <<  std::endl;
+		// 	return;
+		// } catch (const std::exception& ae) {}
+		
+		A.resize(1, 1);
+		A.fill(1.0);
+		assert_clear();
+		assert_almost_equal(1.0, A);
+		assert_report("Expect 0.0");
+		assert_almost_equal(2.0, A);
+		assert_report("Expect 51");
+		// try {
+		// 	assert_almost_equal(1.0, B);			
+		// 	std::cerr << "assert_almost_equal failed to fail" <<  std::endl;
+		// 	return;
+		// } catch (const std::exception& ae) {}
+		
+		// try {
+		// 	B.resize(A.rows()+1, A.cols());
+		// 	assert_almost_equal(A, B);
+		// 	std::cerr << "assert_almost_equal failed to fail" <<  std::endl;
+		// 	return;
+		// } catch (const std::exception& ae) {}
+		// try {
+		// 	B.resize(A.rows(), A.cols()+1);
+		// 	assert_almost_equal(A, B);
+		// 	std::cerr << "assert_almost_equal failed to fail" <<  std::endl;
+		// 	return;
+		// } catch (const std::exception& ae) {}
+		
+		std::vector<std::string> ls;
+        ls.push_back("a");
+        ls.push_back("b");
+		assert_not_empty( ls );
+		ls.clear();
+		// try {
+		// 	assert_not_empty( ls );
+		// 	std::cerr << "assert_not_empty failed to fail" <<  std::endl;
+		// 	return;
+		// } catch (const std::exception& ae) {}
+		
+		double a = 1.0;
+		assert_clear();
+		double b = assert_report("Should be 0.0" );
+		double c = nextafter(a, a+1);
+		assert_almost_equal( a, c );
+		b = assert_report("Expect 0.0");
+		c = nextafter(c, a+1);
+		assert_almost_equal( a, c );
+		b = assert_report("Expect 1.0");
+		c = nextafter(c, a+1);
+		double expecting[] = {5.49, 8.81, 12.13, 15.46, 18.78, 22.10, 25.42, 28.75, 32.07, 35.39, 38.71, 42.03, 45.36, 48.68, 51.00, 52.32};
+		for (int j = -14; j <= 1; j++) {
+			double p = pow(10.0, j);
+			assert_clear();
+			assert_almost_equal( a, a+p );
+			if (fabs(maxLog2Error - expecting[14+j]) > 0.01) {
+				std::cerr << "assert_almost_equal double incorrect" <<  std::endl;
+                std::cerr << maxLog2Error << " " << expecting[14+j] << std::endl;
+				return;				
+			}
+//			System.out.println(j + " " + maxLog2Error + " " + expecting[14+j]);
+//			b = assert_report(String.format("Expect %5.1f", expecting[14+j]));
+		}
+
+		assert_clear();
+		A.resize(3, 3);
+		B.resize(3, 3);
+		A.fill(1.0);
+		for (int j = -14; j <= 1; j++) {
+			double p = pow(10.0, j);
+			assert_clear();
+			B.fill(a+p);
+			assert_almost_equal( A, B );
+			if (fabs(maxLog2Error - expecting[14+j]) > 0.01) {
+				std::cerr << "assert_almost_equal matrix incorrect" <<  std::endl;
+				return;				
+			}
+//			b = assert_report(String.format("Expect %5.1f", expecting[14+j]));
+		}
+		std::cout << "Test of testing OK" <<  std::endl;
+}
+
 int main(int argc, char** argv) {
     doctest::Context  context;
     const char* args[] = { "", "-d", "--reporters=xml", NULL };
     context.applyCommandLine(2, args);
     int i = context.run(); // output);
+    // int i = 0;
+    // std::cout << std::hexfloat << 2.220446049250313e-16 << std::endl;
+    // int exp;
+    // double one = 1.0;
+    // std::cout << std::hexfloat << one << std::endl;
+    // double mantissa = frexp(one, &exp);
+    // exp--; //unbias exponent
+    // std::cout << exp << ", " << mantissa << std::endl;
+    // double u = 2.220446049250313e-16 * pow(2.0, (double) exp);
+    // std::cout << std::hexfloat << u << std::endl;
+    // std::cout << std::hexfloat << 1.0/u << std::endl;
+    // u = log2(1.0/u);
+    // std::cout << std::hexfloat << u << std::endl;     
+    // std::cout << u << std::endl;
     return i;
 }
