@@ -51,6 +51,9 @@ class FixedMemoryFilter(AbstractFilter) :
         self.yRing = zeros([memorySize]);
         self.status = FilterStatus.IDLE
         
+    def start(self, t : float, Z : vector) -> None:
+        pass 
+    
     @overrides
     def getN(self)->int:
         return self.n

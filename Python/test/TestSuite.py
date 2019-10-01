@@ -26,7 +26,7 @@ def runAll():
         'components.FixedMemoryFilter_test',
         'components.FMP_test',
         'filters.ManagedFilterBase_test',
-        'filters.controls.ConstantObservationErrorModel_test',
+        'filters.controls.ObservationErrorModel_test',
         ]
     
     suite = unittest.TestSuite()

@@ -32,4 +32,5 @@ Java/moduleChecksums.obj
 Python/src/__pycache__
 Python/test/__pycache__
 Python/test/htmlcov
+Python/test/Filtering.py
 Tools/moduleChecksums.obj
