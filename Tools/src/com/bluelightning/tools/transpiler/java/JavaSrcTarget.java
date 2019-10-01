@@ -134,6 +134,7 @@ public class JavaSrcTarget extends AbstractJavaTarget {
 			//System.out.println(hppFile.toString());
 			StringWriter strOut = new StringWriter();
 			java.process(templateDataModel, strOut);
+			Transpiler.instance().addGeneratedFile(srcPath);
 			String old = readFileToString( srcPath );
 			if (old == null || !old.equals(strOut.toString())) {
 				srcPath.toFile().getParentFile().mkdirs();

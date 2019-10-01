@@ -139,6 +139,7 @@ public class CppTestTarget extends AbstractCppTarget {
 		docIndent.out();
 		docIndent.append("}\n");
 		templateDataModel.put("doctest", docIndent.sb.toString());
+		Transpiler.instance().addGeneratedFile(cppPath);
 		try {
 			cppPath.toFile().getParentFile().mkdirs();
 			OutputStreamWriter out = new OutputStreamWriter(new FileOutputStream(cppPath.toFile()));

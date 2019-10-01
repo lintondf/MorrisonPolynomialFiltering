@@ -138,6 +138,7 @@ public class CppSrcTarget extends AbstractCppTarget {
 			//System.out.println(hppFile.toString());
 			StringWriter strOut = new StringWriter();
 			hpp.process(templateDataModel, strOut);
+			Transpiler.instance().addGeneratedFile(hppPath);
 			String old = readFileToString( hppPath );
 			if (old == null || !old.equals(strOut.toString())) {
 				hppPath.toFile().getParentFile().mkdirs();
@@ -150,6 +151,7 @@ public class CppSrcTarget extends AbstractCppTarget {
 			if (!headerOnly) {
 				strOut = new StringWriter();
 				cpp.process(templateDataModel, strOut);
+				Transpiler.instance().addGeneratedFile(cppPath);
 				old = AbstractLanguageTarget.readFileToString( cppPath );
 				if (old == null || !old.equals(strOut.toString())) {
 					cppPath.toFile().getParentFile().mkdirs();

@@ -1,3 +1,4 @@
+cleanGeneratedFiles.sh
 **/*.log
 **/*.png
 **/CMakeCache.txt

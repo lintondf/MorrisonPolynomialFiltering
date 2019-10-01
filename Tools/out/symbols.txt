@@ -46,8 +46,6 @@
       {/polynomialfiltering/filters/controls/errormodel/ConstantObservationErrorModel/IObservationErrorModel/IObservationErrorModel/::AbstractFilterWithCovariance : <CLASS>; supers(AbstractFilter,) INHERITED; }[CLASS]
     {/polynomialfiltering/filters/controls/IJudge/}
       {/polynomialfiltering/filters/controls/IJudge/::AbstractFilterWithCovariance : <CLASS>; supers(AbstractFilter,) INHERITED; }[MODULE]
-    {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/ConstantObservationErrorModel/ConstantObservationErrorModel/}
-      {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/ConstantObservationErrorModel/ConstantObservationErrorModel/::AbstractFilterWithCovariance : <CLASS>; supers(AbstractFilter,) INHERITED; }[CLASS]
     {/polynomialfiltering/components/Pair_test/}
       {/polynomialfiltering/components/Pair_test/::AbstractFilterWithCovariance : <CLASS>; supers(AbstractFilter,) INHERITED; }[MODULE]
     {/polynomialfiltering/components/EMP_test/}
@@ -88,46 +86,17 @@
     {/polynomialfiltering/filters/RecursivePolynomialFilter/FilterStatus/}
       {/polynomialfiltering/filters/RecursivePolynomialFilter/FilterStatus/::COASTING : enum INHERITED; }[CLASS]
   {ConstantObservationErrorModel}
-    {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/}
-      {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/::ConstantObservationErrorModel : <CLASS>; supers(IObservationErrorModel,) INHERITED; }[MODULE]
     {/polynomialfiltering/filters/controls/errormodel/}
       {/polynomialfiltering/filters/controls/errormodel/::ConstantObservationErrorModel : <CLASS>; supers(IObservationErrorModel,)}[MODULE]
   {ConstantObservationErrorModel_0}
-    {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test3MatrixMatrix/ConstantObservationErrorModel/}
-      {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test3MatrixMatrix/ConstantObservationErrorModel/::ConstantObservationErrorModel_0 : None; params(/polynomialfiltering/filters/controls/errormodel/ConstantObservationErrorModel/ConstantObservationErrorModel_0/::self : ConstantObservationErrorModel,/polynomialfiltering/filters/controls/errormodel/ConstantObservationErrorModel/ConstantObservationErrorModel_0/::r : float, | @constructor;) INHERITED; }[CLASS]
-    {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test2Matrix/ConstantObservationErrorModel/}
-      {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test2Matrix/ConstantObservationErrorModel/::ConstantObservationErrorModel_0 : None; params(/polynomialfiltering/filters/controls/errormodel/ConstantObservationErrorModel/ConstantObservationErrorModel_0/::self : ConstantObservationErrorModel,/polynomialfiltering/filters/controls/errormodel/ConstantObservationErrorModel/ConstantObservationErrorModel_0/::r : float, | @constructor;) INHERITED; }[CLASS]
-    {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/ConstantObservationErrorModel/}
-      {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/ConstantObservationErrorModel/::ConstantObservationErrorModel_0 : None; params(/polynomialfiltering/filters/controls/errormodel/ConstantObservationErrorModel/ConstantObservationErrorModel_0/::self : ConstantObservationErrorModel,/polynomialfiltering/filters/controls/errormodel/ConstantObservationErrorModel/ConstantObservationErrorModel_0/::r : float, | @constructor;) INHERITED; }[CLASS]
-    {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test1Scalar/ConstantObservationErrorModel/}
-      {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test1Scalar/ConstantObservationErrorModel/::ConstantObservationErrorModel_0 : None; params(/polynomialfiltering/filters/controls/errormodel/ConstantObservationErrorModel/ConstantObservationErrorModel_0/::self : ConstantObservationErrorModel,/polynomialfiltering/filters/controls/errormodel/ConstantObservationErrorModel/ConstantObservationErrorModel_0/::r : float, | @constructor;) INHERITED; }[CLASS]
     {/polynomialfiltering/filters/controls/errormodel/ConstantObservationErrorModel/}
       {/polynomialfiltering/filters/controls/errormodel/ConstantObservationErrorModel/::ConstantObservationErrorModel_0 : None; params(/polynomialfiltering/filters/controls/errormodel/ConstantObservationErrorModel/ConstantObservationErrorModel_0/::self : ConstantObservationErrorModel,/polynomialfiltering/filters/controls/errormodel/ConstantObservationErrorModel/ConstantObservationErrorModel_0/::r : float, | @constructor;)}[CLASS]
   {ConstantObservationErrorModel_1}
-    {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test3MatrixMatrix/ConstantObservationErrorModel/}
-      {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test3MatrixMatrix/ConstantObservationErrorModel/::ConstantObservationErrorModel_1 : None; params(/polynomialfiltering/filters/controls/errormodel/ConstantObservationErrorModel/ConstantObservationErrorModel_1/::self : ConstantObservationErrorModel,/polynomialfiltering/filters/controls/errormodel/ConstantObservationErrorModel/ConstantObservationErrorModel_1/::R : array, | @constructor;) INHERITED; }[CLASS]
-    {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test2Matrix/ConstantObservationErrorModel/}
-      {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test2Matrix/ConstantObservationErrorModel/::ConstantObservationErrorModel_1 : None; params(/polynomialfiltering/filters/controls/errormodel/ConstantObservationErrorModel/ConstantObservationErrorModel_1/::self : ConstantObservationErrorModel,/polynomialfiltering/filters/controls/errormodel/ConstantObservationErrorModel/ConstantObservationErrorModel_1/::R : array, | @constructor;) INHERITED; }[CLASS]
-    {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/ConstantObservationErrorModel/}
-      {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/ConstantObservationErrorModel/::ConstantObservationErrorModel_1 : None; params(/polynomialfiltering/filters/controls/errormodel/ConstantObservationErrorModel/ConstantObservationErrorModel_1/::self : ConstantObservationErrorModel,/polynomialfiltering/filters/controls/errormodel/ConstantObservationErrorModel/ConstantObservationErrorModel_1/::R : array, | @constructor;) INHERITED; }[CLASS]
-    {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test1Scalar/ConstantObservationErrorModel/}
-      {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test1Scalar/ConstantObservationErrorModel/::ConstantObservationErrorModel_1 : None; params(/polynomialfiltering/filters/controls/errormodel/ConstantObservationErrorModel/ConstantObservationErrorModel_1/::self : ConstantObservationErrorModel,/polynomialfiltering/filters/controls/errormodel/ConstantObservationErrorModel/ConstantObservationErrorModel_1/::R : array, | @constructor;) INHERITED; }[CLASS]
     {/polynomialfiltering/filters/controls/errormodel/ConstantObservationErrorModel/}
       {/polynomialfiltering/filters/controls/errormodel/ConstantObservationErrorModel/::ConstantObservationErrorModel_1 : None; params(/polynomialfiltering/filters/controls/errormodel/ConstantObservationErrorModel/ConstantObservationErrorModel_1/::self : ConstantObservationErrorModel,/polynomialfiltering/filters/controls/errormodel/ConstantObservationErrorModel/ConstantObservationErrorModel_1/::R : array, | @constructor;)}[CLASS]
   {ConstantObservationErrorModel_2}
-    {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test3MatrixMatrix/ConstantObservationErrorModel/}
-      {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test3MatrixMatrix/ConstantObservationErrorModel/::ConstantObservationErrorModel_2 : None; params(/polynomialfiltering/filters/controls/errormodel/ConstantObservationErrorModel/ConstantObservationErrorModel_2/::self : ConstantObservationErrorModel,/polynomialfiltering/filters/controls/errormodel/ConstantObservationErrorModel/ConstantObservationErrorModel_2/::R : array,/polynomialfiltering/filters/controls/errormodel/ConstantObservationErrorModel/ConstantObservationErrorModel_2/::inverseR : array, | @constructor;) INHERITED; }[CLASS]
-    {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test2Matrix/ConstantObservationErrorModel/}
-      {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test2Matrix/ConstantObservationErrorModel/::ConstantObservationErrorModel_2 : None; params(/polynomialfiltering/filters/controls/errormodel/ConstantObservationErrorModel/ConstantObservationErrorModel_2/::self : ConstantObservationErrorModel,/polynomialfiltering/filters/controls/errormodel/ConstantObservationErrorModel/ConstantObservationErrorModel_2/::R : array,/polynomialfiltering/filters/controls/errormodel/ConstantObservationErrorModel/ConstantObservationErrorModel_2/::inverseR : array, | @constructor;) INHERITED; }[CLASS]
-    {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/ConstantObservationErrorModel/}
-      {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/ConstantObservationErrorModel/::ConstantObservationErrorModel_2 : None; params(/polynomialfiltering/filters/controls/errormodel/ConstantObservationErrorModel/ConstantObservationErrorModel_2/::self : ConstantObservationErrorModel,/polynomialfiltering/filters/controls/errormodel/ConstantObservationErrorModel/ConstantObservationErrorModel_2/::R : array,/polynomialfiltering/filters/controls/errormodel/ConstantObservationErrorModel/ConstantObservationErrorModel_2/::inverseR : array, | @constructor;) INHERITED; }[CLASS]
-    {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test1Scalar/ConstantObservationErrorModel/}
-      {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test1Scalar/ConstantObservationErrorModel/::ConstantObservationErrorModel_2 : None; params(/polynomialfiltering/filters/controls/errormodel/ConstantObservationErrorModel/ConstantObservationErrorModel_2/::self : ConstantObservationErrorModel,/polynomialfiltering/filters/controls/errormodel/ConstantObservationErrorModel/ConstantObservationErrorModel_2/::R : array,/polynomialfiltering/filters/controls/errormodel/ConstantObservationErrorModel/ConstantObservationErrorModel_2/::inverseR : array, | @constructor;) INHERITED; }[CLASS]
     {/polynomialfiltering/filters/controls/errormodel/ConstantObservationErrorModel/}
       {/polynomialfiltering/filters/controls/errormodel/ConstantObservationErrorModel/::ConstantObservationErrorModel_2 : None; params(/polynomialfiltering/filters/controls/errormodel/ConstantObservationErrorModel/ConstantObservationErrorModel_2/::self : ConstantObservationErrorModel,/polynomialfiltering/filters/controls/errormodel/ConstantObservationErrorModel/ConstantObservationErrorModel_2/::R : array,/polynomialfiltering/filters/controls/errormodel/ConstantObservationErrorModel/ConstantObservationErrorModel_2/::inverseR : array, | @constructor;)}[CLASS]
-  {ConstantObservationErrorModel_test}
-    {/polynomialfiltering/filters/controls/}
-      {/polynomialfiltering/filters/controls/::ConstantObservationErrorModel_test : <CLASS>; supers(unittest.TestCase,)}[MODULE]
   {CoreEmp0}
     {/polynomialfiltering/components/Emp/}
       {/polynomialfiltering/components/Emp/::CoreEmp0 : <CLASS>; supers(ICore,)}[MODULE]
@@ -391,8 +360,6 @@
     {/polynomialfiltering/filters/RecursivePolynomialFilter/FilterStatus/}
       {/polynomialfiltering/filters/RecursivePolynomialFilter/FilterStatus/::INITIALIZING : enum INHERITED; }[CLASS]
   {IObservationErrorModel}
-    {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/ConstantObservationErrorModel/ConstantObservationErrorModel/}
-      {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/ConstantObservationErrorModel/ConstantObservationErrorModel/::IObservationErrorModel : <CLASS>; supers(ABC,) INHERITED; }[CLASS]
     {/polynomialfiltering/filters/controls/}
       {/polynomialfiltering/filters/controls/::IObservationErrorModel : <CLASS>; supers(ABC,)}[MODULE]
     {/polynomialfiltering/filters/controls/errormodel/ConstantObservationErrorModel/}
@@ -473,24 +440,9 @@
   {PurePredictCore}
     {/polynomialfiltering/components/RecursivePolynomialFilter_test/}
       {/polynomialfiltering/components/RecursivePolynomialFilter_test/::PurePredictCore : <CLASS>; supers(ICore,); params( | @testclass;)}[CLASS]
-  {Q}
-    {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test3MatrixMatrix/}
-      {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test3MatrixMatrix/::Q : array}[MEMBER]
-    {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test1Scalar/}
-      {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test1Scalar/::Q : array}[MEMBER]
-    {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test2Matrix/}
-      {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test2Matrix/::Q : array}[MEMBER]
   {R}
-    {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test3MatrixMatrix/ConstantObservationErrorModel/}
-      {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test3MatrixMatrix/ConstantObservationErrorModel/::R : array INHERITED; }[CLASS]
-    {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test2Matrix/ConstantObservationErrorModel/}
-      {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test2Matrix/ConstantObservationErrorModel/::R : array INHERITED; }[CLASS]
     {/polynomialfiltering/filters/RecursivePolynomialFilter/_denormalizeState/}
       {/polynomialfiltering/filters/RecursivePolynomialFilter/_denormalizeState/::R : vector}[MEMBER]
-    {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/ConstantObservationErrorModel/}
-      {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/ConstantObservationErrorModel/::R : array INHERITED; }[CLASS]
-    {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test1Scalar/ConstantObservationErrorModel/}
-      {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test1Scalar/ConstantObservationErrorModel/::R : array INHERITED; }[CLASS]
     {/polynomialfiltering/components/EMP_test/oneCrossSectionChi2/}
       {/polynomialfiltering/components/EMP_test/oneCrossSectionChi2/::R : float}[MEMBER]
     {/polynomialfiltering/components/EMP_test/driver/}
@@ -772,6 +724,8 @@
       {/polynomialfiltering/components/FixedMemoryFilter_test/executeVRF/FixedMemoryFilter/::Z : vector INHERITED; }[CLASS]
     {/polynomialfiltering/filters/RecursivePolynomialFilter/_normalizeState/}
       {/polynomialfiltering/filters/RecursivePolynomialFilter/_normalizeState/::Z : vector}[MEMBER]
+    {/polynomialfiltering/filters/FixedMemoryPolynomialFilter/FixedMemoryFilter/start/}
+      {/polynomialfiltering/filters/FixedMemoryPolynomialFilter/FixedMemoryFilter/start/::Z : vector}[MEMBER]
   {Zstar}
     {/polynomialfiltering/components/RecursivePolynomialFilter_test/test9Coverage/}
       {/polynomialfiltering/components/RecursivePolynomialFilter_test/test9Coverage/::Zstar : vector}[MEMBER]
@@ -1467,12 +1421,8 @@
       {/polynomialfiltering/components/Pair_test/generateStates/TestData/::close : None; params( | ) INHERITED; }[CLASS]
     {/polynomialfiltering/components/FixedMemoryFilter_test/test1CheckNoisy/TestData/}
       {/polynomialfiltering/components/FixedMemoryFilter_test/test1CheckNoisy/TestData/::close : None; params( | ) INHERITED; }[CLASS]
-    {/polynomialfiltering/filters/controls/TestData/}
-      {/polynomialfiltering/filters/controls/TestData/::close : None; params( | ) INHERITED; }[CLASS]
     {/polynomialfiltering/components/FixedMemoryFilter_test/test1CheckPerfect/TestData/}
       {/polynomialfiltering/components/FixedMemoryFilter_test/test1CheckPerfect/TestData/::close : None; params( | ) INHERITED; }[CLASS]
-    {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test2Matrix/TestData/}
-      {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test2Matrix/TestData/::close : None; params( | ) INHERITED; }[CLASS]
     {/polynomialfiltering/components/EMP_test/generateStates/TestData/}
       {/polynomialfiltering/components/EMP_test/generateStates/TestData/::close : None; params( | ) INHERITED; }[CLASS]
     {/polynomialfiltering/components/TestData/}
@@ -1487,8 +1437,6 @@
       {/polynomialfiltering/components/EMP_test/TestData/::close : None; params( | ) INHERITED; }[CLASS]
     {/polynomialfiltering/components/FixedMemoryFilter_test/generatePerfect/TestData/}
       {/polynomialfiltering/components/FixedMemoryFilter_test/generatePerfect/TestData/::close : None; params( | ) INHERITED; }[CLASS]
-    {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test1Scalar/TestData/}
-      {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test1Scalar/TestData/::close : None; params( | ) INHERITED; }[CLASS]
     {/polynomialfiltering/components/EMP_test/test1CheckVRF/TestData/}
       {/polynomialfiltering/components/EMP_test/test1CheckVRF/TestData/::close : None; params( | ) INHERITED; }[CLASS]
     {/polynomialfiltering/components/Fmp_test/generateVrfs/TestData/}
@@ -1511,8 +1459,6 @@
       {/polynomialfiltering/components/RecursivePolynomialFilter_test/test1PureObservation/TestData/::close : None; params( | ) INHERITED; }[CLASS]
     {/polynomialfiltering/components/FixedMemoryFilter_test/test1CheckMidpoints/TestData/}
       {/polynomialfiltering/components/FixedMemoryFilter_test/test1CheckMidpoints/TestData/::close : None; params( | ) INHERITED; }[CLASS]
-    {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test3MatrixMatrix/TestData/}
-      {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test3MatrixMatrix/TestData/::close : None; params( | ) INHERITED; }[CLASS]
     {/polynomialfiltering/components/Pair_test/test2CheckStates/TestData/}
       {/polynomialfiltering/components/Pair_test/test2CheckStates/TestData/::close : None; params( | ) INHERITED; }[CLASS]
     {/TestData/}
@@ -1978,13 +1924,6 @@
       {/polynomialfiltering/components/Pair_test/PairedPolynomialFilter/::effectiveTheta : float; params(/polynomialfiltering/filters/RecursivePolynomialFilter/effectiveTheta/::order : int,/polynomialfiltering/filters/RecursivePolynomialFilter/effectiveTheta/::n : float, | @staticmethod;) INHERITED; }[CLASS]
     {/polynomialfiltering/filters/RecursivePolynomialFilter/}
       {/polynomialfiltering/filters/RecursivePolynomialFilter/::effectiveTheta : float; params(/polynomialfiltering/filters/RecursivePolynomialFilter/effectiveTheta/::order : int,/polynomialfiltering/filters/RecursivePolynomialFilter/effectiveTheta/::n : float, | @staticmethod;)}[CLASS]
-  {element}
-    {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test3MatrixMatrix/}
-      {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test3MatrixMatrix/::element : vector}[MEMBER]
-    {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test1Scalar/}
-      {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test1Scalar/::element : vector}[MEMBER]
-    {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test2Matrix/}
-      {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test2Matrix/::element : vector}[MEMBER]
   {emp}
     {/polynomialfiltering/components/Fmp_test/test9NSwitch/}
       {/polynomialfiltering/components/Fmp_test/test9NSwitch/::emp : ICore}[MEMBER]
@@ -2175,12 +2114,8 @@
       {/polynomialfiltering/components/Pair_test/generateStates/TestData/::getArray : array; params( | ) INHERITED; }[CLASS]
     {/polynomialfiltering/components/FixedMemoryFilter_test/test1CheckNoisy/TestData/}
       {/polynomialfiltering/components/FixedMemoryFilter_test/test1CheckNoisy/TestData/::getArray : array; params( | ) INHERITED; }[CLASS]
-    {/polynomialfiltering/filters/controls/TestData/}
-      {/polynomialfiltering/filters/controls/TestData/::getArray : array; params( | ) INHERITED; }[CLASS]
     {/polynomialfiltering/components/FixedMemoryFilter_test/test1CheckPerfect/TestData/}
       {/polynomialfiltering/components/FixedMemoryFilter_test/test1CheckPerfect/TestData/::getArray : array; params( | ) INHERITED; }[CLASS]
-    {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test2Matrix/TestData/}
-      {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test2Matrix/TestData/::getArray : array; params( | ) INHERITED; }[CLASS]
     {/polynomialfiltering/components/EMP_test/generateStates/TestData/}
       {/polynomialfiltering/components/EMP_test/generateStates/TestData/::getArray : array; params( | ) INHERITED; }[CLASS]
     {/polynomialfiltering/components/TestData/}
@@ -2195,8 +2130,6 @@
       {/polynomialfiltering/components/EMP_test/TestData/::getArray : array; params( | ) INHERITED; }[CLASS]
     {/polynomialfiltering/components/FixedMemoryFilter_test/generatePerfect/TestData/}
       {/polynomialfiltering/components/FixedMemoryFilter_test/generatePerfect/TestData/::getArray : array; params( | ) INHERITED; }[CLASS]
-    {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test1Scalar/TestData/}
-      {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test1Scalar/TestData/::getArray : array; params( | ) INHERITED; }[CLASS]
     {/polynomialfiltering/components/EMP_test/test1CheckVRF/TestData/}
       {/polynomialfiltering/components/EMP_test/test1CheckVRF/TestData/::getArray : array; params( | ) INHERITED; }[CLASS]
     {/polynomialfiltering/components/Fmp_test/generateVrfs/TestData/}
@@ -2219,8 +2152,6 @@
       {/polynomialfiltering/components/RecursivePolynomialFilter_test/test1PureObservation/TestData/::getArray : array; params( | ) INHERITED; }[CLASS]
     {/polynomialfiltering/components/FixedMemoryFilter_test/test1CheckMidpoints/TestData/}
       {/polynomialfiltering/components/FixedMemoryFilter_test/test1CheckMidpoints/TestData/::getArray : array; params( | ) INHERITED; }[CLASS]
-    {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test3MatrixMatrix/TestData/}
-      {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test3MatrixMatrix/TestData/::getArray : array; params( | ) INHERITED; }[CLASS]
     {/polynomialfiltering/components/Pair_test/test2CheckStates/TestData/}
       {/polynomialfiltering/components/Pair_test/test2CheckStates/TestData/::getArray : array; params( | ) INHERITED; }[CLASS]
     {/TestData/}
@@ -2311,14 +2242,6 @@
       {/polynomialfiltering/filters/controls/IObservationErrorModel/::getCovarianceMatrix : array; params(/polynomialfiltering/filters/controls/IObservationErrorModel/getCovarianceMatrix/::self : IObservationErrorModel,/polynomialfiltering/filters/controls/IObservationErrorModel/getCovarianceMatrix/::f : AbstractFilterWithCovariance ClassRef; ,/polynomialfiltering/filters/controls/IObservationErrorModel/getCovarianceMatrix/::t : float,/polynomialfiltering/filters/controls/IObservationErrorModel/getCovarianceMatrix/::y : vector,/polynomialfiltering/filters/controls/IObservationErrorModel/getCovarianceMatrix/::observationId : int, | @abstractmethod;)}[CLASS]
     {/polynomialfiltering/filters/controls/errormodel/ConstantObservationErrorModel/IObservationErrorModel/}
       {/polynomialfiltering/filters/controls/errormodel/ConstantObservationErrorModel/IObservationErrorModel/::getCovarianceMatrix : array; params(/polynomialfiltering/filters/controls/IObservationErrorModel/getCovarianceMatrix/::self : IObservationErrorModel,/polynomialfiltering/filters/controls/IObservationErrorModel/getCovarianceMatrix/::f : AbstractFilterWithCovariance ClassRef; ,/polynomialfiltering/filters/controls/IObservationErrorModel/getCovarianceMatrix/::t : float,/polynomialfiltering/filters/controls/IObservationErrorModel/getCovarianceMatrix/::y : vector,/polynomialfiltering/filters/controls/IObservationErrorModel/getCovarianceMatrix/::observationId : int, | @abstractmethod;) INHERITED; }[CLASS]
-    {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test3MatrixMatrix/ConstantObservationErrorModel/}
-      {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test3MatrixMatrix/ConstantObservationErrorModel/::getCovarianceMatrix : array; params(/polynomialfiltering/filters/controls/errormodel/ConstantObservationErrorModel/getCovarianceMatrix/::self : ConstantObservationErrorModel,/polynomialfiltering/filters/controls/errormodel/ConstantObservationErrorModel/getCovarianceMatrix/::f : AbstractFilterWithCovariance ClassRef; ,/polynomialfiltering/filters/controls/errormodel/ConstantObservationErrorModel/getCovarianceMatrix/::t : float,/polynomialfiltering/filters/controls/errormodel/ConstantObservationErrorModel/getCovarianceMatrix/::y : vector,/polynomialfiltering/filters/controls/errormodel/ConstantObservationErrorModel/getCovarianceMatrix/::observationId : int, | ) INHERITED; }[CLASS]
-    {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test2Matrix/ConstantObservationErrorModel/}
-      {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test2Matrix/ConstantObservationErrorModel/::getCovarianceMatrix : array; params(/polynomialfiltering/filters/controls/errormodel/ConstantObservationErrorModel/getCovarianceMatrix/::self : ConstantObservationErrorModel,/polynomialfiltering/filters/controls/errormodel/ConstantObservationErrorModel/getCovarianceMatrix/::f : AbstractFilterWithCovariance ClassRef; ,/polynomialfiltering/filters/controls/errormodel/ConstantObservationErrorModel/getCovarianceMatrix/::t : float,/polynomialfiltering/filters/controls/errormodel/ConstantObservationErrorModel/getCovarianceMatrix/::y : vector,/polynomialfiltering/filters/controls/errormodel/ConstantObservationErrorModel/getCovarianceMatrix/::observationId : int, | ) INHERITED; }[CLASS]
-    {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/ConstantObservationErrorModel/}
-      {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/ConstantObservationErrorModel/::getCovarianceMatrix : array; params(/polynomialfiltering/filters/controls/errormodel/ConstantObservationErrorModel/getCovarianceMatrix/::self : ConstantObservationErrorModel,/polynomialfiltering/filters/controls/errormodel/ConstantObservationErrorModel/getCovarianceMatrix/::f : AbstractFilterWithCovariance ClassRef; ,/polynomialfiltering/filters/controls/errormodel/ConstantObservationErrorModel/getCovarianceMatrix/::t : float,/polynomialfiltering/filters/controls/errormodel/ConstantObservationErrorModel/getCovarianceMatrix/::y : vector,/polynomialfiltering/filters/controls/errormodel/ConstantObservationErrorModel/getCovarianceMatrix/::observationId : int, | ) INHERITED; }[CLASS]
-    {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test1Scalar/ConstantObservationErrorModel/}
-      {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test1Scalar/ConstantObservationErrorModel/::getCovarianceMatrix : array; params(/polynomialfiltering/filters/controls/errormodel/ConstantObservationErrorModel/getCovarianceMatrix/::self : ConstantObservationErrorModel,/polynomialfiltering/filters/controls/errormodel/ConstantObservationErrorModel/getCovarianceMatrix/::f : AbstractFilterWithCovariance ClassRef; ,/polynomialfiltering/filters/controls/errormodel/ConstantObservationErrorModel/getCovarianceMatrix/::t : float,/polynomialfiltering/filters/controls/errormodel/ConstantObservationErrorModel/getCovarianceMatrix/::y : vector,/polynomialfiltering/filters/controls/errormodel/ConstantObservationErrorModel/getCovarianceMatrix/::observationId : int, | ) INHERITED; }[CLASS]
     {/polynomialfiltering/filters/controls/errormodel/ConstantObservationErrorModel/}
       {/polynomialfiltering/filters/controls/errormodel/ConstantObservationErrorModel/::getCovarianceMatrix : array; params(/polynomialfiltering/filters/controls/errormodel/ConstantObservationErrorModel/getCovarianceMatrix/::self : ConstantObservationErrorModel,/polynomialfiltering/filters/controls/errormodel/ConstantObservationErrorModel/getCovarianceMatrix/::f : AbstractFilterWithCovariance ClassRef; ,/polynomialfiltering/filters/controls/errormodel/ConstantObservationErrorModel/getCovarianceMatrix/::t : float,/polynomialfiltering/filters/controls/errormodel/ConstantObservationErrorModel/getCovarianceMatrix/::y : vector,/polynomialfiltering/filters/controls/errormodel/ConstantObservationErrorModel/getCovarianceMatrix/::observationId : int, | )}[CLASS]
   {getDiagonalVRF}
@@ -2618,12 +2541,8 @@
       {/polynomialfiltering/components/Pair_test/generateStates/TestData/::getGroup : Group; params( | ) INHERITED; }[CLASS]
     {/polynomialfiltering/components/FixedMemoryFilter_test/test1CheckNoisy/TestData/}
       {/polynomialfiltering/components/FixedMemoryFilter_test/test1CheckNoisy/TestData/::getGroup : Group; params( | ) INHERITED; }[CLASS]
-    {/polynomialfiltering/filters/controls/TestData/}
-      {/polynomialfiltering/filters/controls/TestData/::getGroup : Group; params( | ) INHERITED; }[CLASS]
     {/polynomialfiltering/components/FixedMemoryFilter_test/test1CheckPerfect/TestData/}
       {/polynomialfiltering/components/FixedMemoryFilter_test/test1CheckPerfect/TestData/::getGroup : Group; params( | ) INHERITED; }[CLASS]
-    {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test2Matrix/TestData/}
-      {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test2Matrix/TestData/::getGroup : Group; params( | ) INHERITED; }[CLASS]
     {/polynomialfiltering/components/EMP_test/generateStates/TestData/}
       {/polynomialfiltering/components/EMP_test/generateStates/TestData/::getGroup : Group; params( | ) INHERITED; }[CLASS]
     {/polynomialfiltering/components/TestData/}
@@ -2638,8 +2557,6 @@
       {/polynomialfiltering/components/EMP_test/TestData/::getGroup : Group; params( | ) INHERITED; }[CLASS]
     {/polynomialfiltering/components/FixedMemoryFilter_test/generatePerfect/TestData/}
       {/polynomialfiltering/components/FixedMemoryFilter_test/generatePerfect/TestData/::getGroup : Group; params( | ) INHERITED; }[CLASS]
-    {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test1Scalar/TestData/}
-      {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test1Scalar/TestData/::getGroup : Group; params( | ) INHERITED; }[CLASS]
     {/polynomialfiltering/components/EMP_test/test1CheckVRF/TestData/}
       {/polynomialfiltering/components/EMP_test/test1CheckVRF/TestData/::getGroup : Group; params( | ) INHERITED; }[CLASS]
     {/polynomialfiltering/components/Fmp_test/generateVrfs/TestData/}
@@ -2662,8 +2579,6 @@
       {/polynomialfiltering/components/RecursivePolynomialFilter_test/test1PureObservation/TestData/::getGroup : Group; params( | ) INHERITED; }[CLASS]
     {/polynomialfiltering/components/FixedMemoryFilter_test/test1CheckMidpoints/TestData/}
       {/polynomialfiltering/components/FixedMemoryFilter_test/test1CheckMidpoints/TestData/::getGroup : Group; params( | ) INHERITED; }[CLASS]
-    {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test3MatrixMatrix/TestData/}
-      {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test3MatrixMatrix/TestData/::getGroup : Group; params( | ) INHERITED; }[CLASS]
     {/polynomialfiltering/components/Pair_test/test2CheckStates/TestData/}
       {/polynomialfiltering/components/Pair_test/test2CheckStates/TestData/::getGroup : Group; params( | ) INHERITED; }[CLASS]
     {/TestData/}
@@ -2681,12 +2596,8 @@
       {/polynomialfiltering/components/Pair_test/generateStates/TestData/::getGroupVariable : array; params( | ) INHERITED; }[CLASS]
     {/polynomialfiltering/components/FixedMemoryFilter_test/test1CheckNoisy/TestData/}
       {/polynomialfiltering/components/FixedMemoryFilter_test/test1CheckNoisy/TestData/::getGroupVariable : array; params( | ) INHERITED; }[CLASS]
-    {/polynomialfiltering/filters/controls/TestData/}
-      {/polynomialfiltering/filters/controls/TestData/::getGroupVariable : array; params( | ) INHERITED; }[CLASS]
     {/polynomialfiltering/components/FixedMemoryFilter_test/test1CheckPerfect/TestData/}
       {/polynomialfiltering/components/FixedMemoryFilter_test/test1CheckPerfect/TestData/::getGroupVariable : array; params( | ) INHERITED; }[CLASS]
-    {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test2Matrix/TestData/}
-      {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test2Matrix/TestData/::getGroupVariable : array; params( | ) INHERITED; }[CLASS]
     {/polynomialfiltering/components/EMP_test/generateStates/TestData/}
       {/polynomialfiltering/components/EMP_test/generateStates/TestData/::getGroupVariable : array; params( | ) INHERITED; }[CLASS]
     {/polynomialfiltering/components/TestData/}
@@ -2701,8 +2612,6 @@
       {/polynomialfiltering/components/EMP_test/TestData/::getGroupVariable : array; params( | ) INHERITED; }[CLASS]
     {/polynomialfiltering/components/FixedMemoryFilter_test/generatePerfect/TestData/}
       {/polynomialfiltering/components/FixedMemoryFilter_test/generatePerfect/TestData/::getGroupVariable : array; params( | ) INHERITED; }[CLASS]
-    {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test1Scalar/TestData/}
-      {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test1Scalar/TestData/::getGroupVariable : array; params( | ) INHERITED; }[CLASS]
     {/polynomialfiltering/components/EMP_test/test1CheckVRF/TestData/}
       {/polynomialfiltering/components/EMP_test/test1CheckVRF/TestData/::getGroupVariable : array; params( | ) INHERITED; }[CLASS]
     {/polynomialfiltering/components/Fmp_test/generateVrfs/TestData/}
@@ -2725,8 +2634,6 @@
       {/polynomialfiltering/components/RecursivePolynomialFilter_test/test1PureObservation/TestData/::getGroupVariable : array; params( | ) INHERITED; }[CLASS]
     {/polynomialfiltering/components/FixedMemoryFilter_test/test1CheckMidpoints/TestData/}
       {/polynomialfiltering/components/FixedMemoryFilter_test/test1CheckMidpoints/TestData/::getGroupVariable : array; params( | ) INHERITED; }[CLASS]
-    {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test3MatrixMatrix/TestData/}
-      {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test3MatrixMatrix/TestData/::getGroupVariable : array; params( | ) INHERITED; }[CLASS]
     {/polynomialfiltering/components/Pair_test/test2CheckStates/TestData/}
       {/polynomialfiltering/components/Pair_test/test2CheckStates/TestData/::getGroupVariable : array; params( | ) INHERITED; }[CLASS]
     {/TestData/}
@@ -2744,12 +2651,8 @@
       {/polynomialfiltering/components/Pair_test/generateStates/TestData/::getInteger : int; params( | ) INHERITED; }[CLASS]
     {/polynomialfiltering/components/FixedMemoryFilter_test/test1CheckNoisy/TestData/}
       {/polynomialfiltering/components/FixedMemoryFilter_test/test1CheckNoisy/TestData/::getInteger : int; params( | ) INHERITED; }[CLASS]
-    {/polynomialfiltering/filters/controls/TestData/}
-      {/polynomialfiltering/filters/controls/TestData/::getInteger : int; params( | ) INHERITED; }[CLASS]
     {/polynomialfiltering/components/FixedMemoryFilter_test/test1CheckPerfect/TestData/}
       {/polynomialfiltering/components/FixedMemoryFilter_test/test1CheckPerfect/TestData/::getInteger : int; params( | ) INHERITED; }[CLASS]
-    {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test2Matrix/TestData/}
-      {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test2Matrix/TestData/::getInteger : int; params( | ) INHERITED; }[CLASS]
     {/polynomialfiltering/components/EMP_test/generateStates/TestData/}
       {/polynomialfiltering/components/EMP_test/generateStates/TestData/::getInteger : int; params( | ) INHERITED; }[CLASS]
     {/polynomialfiltering/components/TestData/}
@@ -2764,8 +2667,6 @@
       {/polynomialfiltering/components/EMP_test/TestData/::getInteger : int; params( | ) INHERITED; }[CLASS]
     {/polynomialfiltering/components/FixedMemoryFilter_test/generatePerfect/TestData/}
       {/polynomialfiltering/components/FixedMemoryFilter_test/generatePerfect/TestData/::getInteger : int; params( | ) INHERITED; }[CLASS]
-    {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test1Scalar/TestData/}
-      {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test1Scalar/TestData/::getInteger : int; params( | ) INHERITED; }[CLASS]
     {/polynomialfiltering/components/EMP_test/test1CheckVRF/TestData/}
       {/polynomialfiltering/components/EMP_test/test1CheckVRF/TestData/::getInteger : int; params( | ) INHERITED; }[CLASS]
     {/polynomialfiltering/components/Fmp_test/generateVrfs/TestData/}
@@ -2788,8 +2689,6 @@
       {/polynomialfiltering/components/RecursivePolynomialFilter_test/test1PureObservation/TestData/::getInteger : int; params( | ) INHERITED; }[CLASS]
     {/polynomialfiltering/components/FixedMemoryFilter_test/test1CheckMidpoints/TestData/}
       {/polynomialfiltering/components/FixedMemoryFilter_test/test1CheckMidpoints/TestData/::getInteger : int; params( | ) INHERITED; }[CLASS]
-    {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test3MatrixMatrix/TestData/}
-      {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test3MatrixMatrix/TestData/::getInteger : int; params( | ) INHERITED; }[CLASS]
     {/polynomialfiltering/components/Pair_test/test2CheckStates/TestData/}
       {/polynomialfiltering/components/Pair_test/test2CheckStates/TestData/::getInteger : int; params( | ) INHERITED; }[CLASS]
     {/TestData/}
@@ -3008,12 +2907,8 @@
       {/polynomialfiltering/components/Pair_test/generateStates/TestData/::getMatchingGroups : List[str]; params( | ) INHERITED; }[CLASS]
     {/polynomialfiltering/components/FixedMemoryFilter_test/test1CheckNoisy/TestData/}
       {/polynomialfiltering/components/FixedMemoryFilter_test/test1CheckNoisy/TestData/::getMatchingGroups : List[str]; params( | ) INHERITED; }[CLASS]
-    {/polynomialfiltering/filters/controls/TestData/}
-      {/polynomialfiltering/filters/controls/TestData/::getMatchingGroups : List[str]; params( | ) INHERITED; }[CLASS]
     {/polynomialfiltering/components/FixedMemoryFilter_test/test1CheckPerfect/TestData/}
       {/polynomialfiltering/components/FixedMemoryFilter_test/test1CheckPerfect/TestData/::getMatchingGroups : List[str]; params( | ) INHERITED; }[CLASS]
-    {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test2Matrix/TestData/}
-      {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test2Matrix/TestData/::getMatchingGroups : List[str]; params( | ) INHERITED; }[CLASS]
     {/polynomialfiltering/components/EMP_test/generateStates/TestData/}
       {/polynomialfiltering/components/EMP_test/generateStates/TestData/::getMatchingGroups : List[str]; params( | ) INHERITED; }[CLASS]
     {/polynomialfiltering/components/TestData/}
@@ -3028,8 +2923,6 @@
       {/polynomialfiltering/components/EMP_test/TestData/::getMatchingGroups : List[str]; params( | ) INHERITED; }[CLASS]
     {/polynomialfiltering/components/FixedMemoryFilter_test/generatePerfect/TestData/}
       {/polynomialfiltering/components/FixedMemoryFilter_test/generatePerfect/TestData/::getMatchingGroups : List[str]; params( | ) INHERITED; }[CLASS]
-    {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test1Scalar/TestData/}
-      {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test1Scalar/TestData/::getMatchingGroups : List[str]; params( | ) INHERITED; }[CLASS]
     {/polynomialfiltering/components/EMP_test/test1CheckVRF/TestData/}
       {/polynomialfiltering/components/EMP_test/test1CheckVRF/TestData/::getMatchingGroups : List[str]; params( | ) INHERITED; }[CLASS]
     {/polynomialfiltering/components/Fmp_test/generateVrfs/TestData/}
@@ -3052,8 +2945,6 @@
       {/polynomialfiltering/components/RecursivePolynomialFilter_test/test1PureObservation/TestData/::getMatchingGroups : List[str]; params( | ) INHERITED; }[CLASS]
     {/polynomialfiltering/components/FixedMemoryFilter_test/test1CheckMidpoints/TestData/}
       {/polynomialfiltering/components/FixedMemoryFilter_test/test1CheckMidpoints/TestData/::getMatchingGroups : List[str]; params( | ) INHERITED; }[CLASS]
-    {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test3MatrixMatrix/TestData/}
-      {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test3MatrixMatrix/TestData/::getMatchingGroups : List[str]; params( | ) INHERITED; }[CLASS]
     {/polynomialfiltering/components/Pair_test/test2CheckStates/TestData/}
       {/polynomialfiltering/components/Pair_test/test2CheckStates/TestData/::getMatchingGroups : List[str]; params( | ) INHERITED; }[CLASS]
     {/TestData/}
@@ -3071,12 +2962,8 @@
       {/polynomialfiltering/components/Pair_test/generateStates/TestData/::getMatchingSubGroups : List[str]; params( | ) INHERITED; }[CLASS]
     {/polynomialfiltering/components/FixedMemoryFilter_test/test1CheckNoisy/TestData/}
       {/polynomialfiltering/components/FixedMemoryFilter_test/test1CheckNoisy/TestData/::getMatchingSubGroups : List[str]; params( | ) INHERITED; }[CLASS]
-    {/polynomialfiltering/filters/controls/TestData/}
-      {/polynomialfiltering/filters/controls/TestData/::getMatchingSubGroups : List[str]; params( | ) INHERITED; }[CLASS]
     {/polynomialfiltering/components/FixedMemoryFilter_test/test1CheckPerfect/TestData/}
       {/polynomialfiltering/components/FixedMemoryFilter_test/test1CheckPerfect/TestData/::getMatchingSubGroups : List[str]; params( | ) INHERITED; }[CLASS]
-    {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test2Matrix/TestData/}
-      {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test2Matrix/TestData/::getMatchingSubGroups : List[str]; params( | ) INHERITED; }[CLASS]
     {/polynomialfiltering/components/EMP_test/generateStates/TestData/}
       {/polynomialfiltering/components/EMP_test/generateStates/TestData/::getMatchingSubGroups : List[str]; params( | ) INHERITED; }[CLASS]
     {/polynomialfiltering/components/TestData/}
@@ -3091,8 +2978,6 @@
       {/polynomialfiltering/components/EMP_test/TestData/::getMatchingSubGroups : List[str]; params( | ) INHERITED; }[CLASS]
     {/polynomialfiltering/components/FixedMemoryFilter_test/generatePerfect/TestData/}
       {/polynomialfiltering/components/FixedMemoryFilter_test/generatePerfect/TestData/::getMatchingSubGroups : List[str]; params( | ) INHERITED; }[CLASS]
-    {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test1Scalar/TestData/}
-      {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test1Scalar/TestData/::getMatchingSubGroups : List[str]; params( | ) INHERITED; }[CLASS]
     {/polynomialfiltering/components/EMP_test/test1CheckVRF/TestData/}
       {/polynomialfiltering/components/EMP_test/test1CheckVRF/TestData/::getMatchingSubGroups : List[str]; params( | ) INHERITED; }[CLASS]
     {/polynomialfiltering/components/Fmp_test/generateVrfs/TestData/}
@@ -3115,8 +3000,6 @@
       {/polynomialfiltering/components/RecursivePolynomialFilter_test/test1PureObservation/TestData/::getMatchingSubGroups : List[str]; params( | ) INHERITED; }[CLASS]
     {/polynomialfiltering/components/FixedMemoryFilter_test/test1CheckMidpoints/TestData/}
       {/polynomialfiltering/components/FixedMemoryFilter_test/test1CheckMidpoints/TestData/::getMatchingSubGroups : List[str]; params( | ) INHERITED; }[CLASS]
-    {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test3MatrixMatrix/TestData/}
-      {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test3MatrixMatrix/TestData/::getMatchingSubGroups : List[str]; params( | ) INHERITED; }[CLASS]
     {/polynomialfiltering/components/Pair_test/test2CheckStates/TestData/}
       {/polynomialfiltering/components/Pair_test/test2CheckStates/TestData/::getMatchingSubGroups : List[str]; params( | ) INHERITED; }[CLASS]
     {/TestData/}
@@ -3424,14 +3307,6 @@
       {/polynomialfiltering/filters/controls/IObservationErrorModel/::getPrecisionMatrix : array; params(/polynomialfiltering/filters/controls/IObservationErrorModel/getPrecisionMatrix/::self : IObservationErrorModel,/polynomialfiltering/filters/controls/IObservationErrorModel/getPrecisionMatrix/::f : AbstractFilterWithCovariance ClassRef; ,/polynomialfiltering/filters/controls/IObservationErrorModel/getPrecisionMatrix/::t : float,/polynomialfiltering/filters/controls/IObservationErrorModel/getPrecisionMatrix/::y : vector,/polynomialfiltering/filters/controls/IObservationErrorModel/getPrecisionMatrix/::observationId : int, | @abstractmethod;)}[CLASS]
     {/polynomialfiltering/filters/controls/errormodel/ConstantObservationErrorModel/IObservationErrorModel/}
       {/polynomialfiltering/filters/controls/errormodel/ConstantObservationErrorModel/IObservationErrorModel/::getPrecisionMatrix : array; params(/polynomialfiltering/filters/controls/IObservationErrorModel/getPrecisionMatrix/::self : IObservationErrorModel,/polynomialfiltering/filters/controls/IObservationErrorModel/getPrecisionMatrix/::f : AbstractFilterWithCovariance ClassRef; ,/polynomialfiltering/filters/controls/IObservationErrorModel/getPrecisionMatrix/::t : float,/polynomialfiltering/filters/controls/IObservationErrorModel/getPrecisionMatrix/::y : vector,/polynomialfiltering/filters/controls/IObservationErrorModel/getPrecisionMatrix/::observationId : int, | @abstractmethod;) INHERITED; }[CLASS]
-    {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test3MatrixMatrix/ConstantObservationErrorModel/}
-      {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test3MatrixMatrix/ConstantObservationErrorModel/::getPrecisionMatrix : array; params(/polynomialfiltering/filters/controls/errormodel/ConstantObservationErrorModel/getPrecisionMatrix/::self : ConstantObservationErrorModel,/polynomialfiltering/filters/controls/errormodel/ConstantObservationErrorModel/getPrecisionMatrix/::f : AbstractFilterWithCovariance ClassRef; ,/polynomialfiltering/filters/controls/errormodel/ConstantObservationErrorModel/getPrecisionMatrix/::t : float,/polynomialfiltering/filters/controls/errormodel/ConstantObservationErrorModel/getPrecisionMatrix/::y : vector,/polynomialfiltering/filters/controls/errormodel/ConstantObservationErrorModel/getPrecisionMatrix/::observationId : int, | ) INHERITED; }[CLASS]
-    {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test2Matrix/ConstantObservationErrorModel/}
-      {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test2Matrix/ConstantObservationErrorModel/::getPrecisionMatrix : array; params(/polynomialfiltering/filters/controls/errormodel/ConstantObservationErrorModel/getPrecisionMatrix/::self : ConstantObservationErrorModel,/polynomialfiltering/filters/controls/errormodel/ConstantObservationErrorModel/getPrecisionMatrix/::f : AbstractFilterWithCovariance ClassRef; ,/polynomialfiltering/filters/controls/errormodel/ConstantObservationErrorModel/getPrecisionMatrix/::t : float,/polynomialfiltering/filters/controls/errormodel/ConstantObservationErrorModel/getPrecisionMatrix/::y : vector,/polynomialfiltering/filters/controls/errormodel/ConstantObservationErrorModel/getPrecisionMatrix/::observationId : int, | ) INHERITED; }[CLASS]
-    {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/ConstantObservationErrorModel/}
-      {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/ConstantObservationErrorModel/::getPrecisionMatrix : array; params(/polynomialfiltering/filters/controls/errormodel/ConstantObservationErrorModel/getPrecisionMatrix/::self : ConstantObservationErrorModel,/polynomialfiltering/filters/controls/errormodel/ConstantObservationErrorModel/getPrecisionMatrix/::f : AbstractFilterWithCovariance ClassRef; ,/polynomialfiltering/filters/controls/errormodel/ConstantObservationErrorModel/getPrecisionMatrix/::t : float,/polynomialfiltering/filters/controls/errormodel/ConstantObservationErrorModel/getPrecisionMatrix/::y : vector,/polynomialfiltering/filters/controls/errormodel/ConstantObservationErrorModel/getPrecisionMatrix/::observationId : int, | ) INHERITED; }[CLASS]
-    {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test1Scalar/ConstantObservationErrorModel/}
-      {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test1Scalar/ConstantObservationErrorModel/::getPrecisionMatrix : array; params(/polynomialfiltering/filters/controls/errormodel/ConstantObservationErrorModel/getPrecisionMatrix/::self : ConstantObservationErrorModel,/polynomialfiltering/filters/controls/errormodel/ConstantObservationErrorModel/getPrecisionMatrix/::f : AbstractFilterWithCovariance ClassRef; ,/polynomialfiltering/filters/controls/errormodel/ConstantObservationErrorModel/getPrecisionMatrix/::t : float,/polynomialfiltering/filters/controls/errormodel/ConstantObservationErrorModel/getPrecisionMatrix/::y : vector,/polynomialfiltering/filters/controls/errormodel/ConstantObservationErrorModel/getPrecisionMatrix/::observationId : int, | ) INHERITED; }[CLASS]
     {/polynomialfiltering/filters/controls/errormodel/ConstantObservationErrorModel/}
       {/polynomialfiltering/filters/controls/errormodel/ConstantObservationErrorModel/::getPrecisionMatrix : array; params(/polynomialfiltering/filters/controls/errormodel/ConstantObservationErrorModel/getPrecisionMatrix/::self : ConstantObservationErrorModel,/polynomialfiltering/filters/controls/errormodel/ConstantObservationErrorModel/getPrecisionMatrix/::f : AbstractFilterWithCovariance ClassRef; ,/polynomialfiltering/filters/controls/errormodel/ConstantObservationErrorModel/getPrecisionMatrix/::t : float,/polynomialfiltering/filters/controls/errormodel/ConstantObservationErrorModel/getPrecisionMatrix/::y : vector,/polynomialfiltering/filters/controls/errormodel/ConstantObservationErrorModel/getPrecisionMatrix/::observationId : int, | )}[CLASS]
   {getSamplesToStart}
@@ -3516,12 +3391,8 @@
       {/polynomialfiltering/components/Pair_test/generateStates/TestData/::getScalar : float; params( | ) INHERITED; }[CLASS]
     {/polynomialfiltering/components/FixedMemoryFilter_test/test1CheckNoisy/TestData/}
       {/polynomialfiltering/components/FixedMemoryFilter_test/test1CheckNoisy/TestData/::getScalar : float; params( | ) INHERITED; }[CLASS]
-    {/polynomialfiltering/filters/controls/TestData/}
-      {/polynomialfiltering/filters/controls/TestData/::getScalar : float; params( | ) INHERITED; }[CLASS]
     {/polynomialfiltering/components/FixedMemoryFilter_test/test1CheckPerfect/TestData/}
       {/polynomialfiltering/components/FixedMemoryFilter_test/test1CheckPerfect/TestData/::getScalar : float; params( | ) INHERITED; }[CLASS]
-    {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test2Matrix/TestData/}
-      {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test2Matrix/TestData/::getScalar : float; params( | ) INHERITED; }[CLASS]
     {/polynomialfiltering/components/EMP_test/generateStates/TestData/}
       {/polynomialfiltering/components/EMP_test/generateStates/TestData/::getScalar : float; params( | ) INHERITED; }[CLASS]
     {/polynomialfiltering/components/TestData/}
@@ -3536,8 +3407,6 @@
       {/polynomialfiltering/components/EMP_test/TestData/::getScalar : float; params( | ) INHERITED; }[CLASS]
     {/polynomialfiltering/components/FixedMemoryFilter_test/generatePerfect/TestData/}
       {/polynomialfiltering/components/FixedMemoryFilter_test/generatePerfect/TestData/::getScalar : float; params( | ) INHERITED; }[CLASS]
-    {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test1Scalar/TestData/}
-      {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test1Scalar/TestData/::getScalar : float; params( | ) INHERITED; }[CLASS]
     {/polynomialfiltering/components/EMP_test/test1CheckVRF/TestData/}
       {/polynomialfiltering/components/EMP_test/test1CheckVRF/TestData/::getScalar : float; params( | ) INHERITED; }[CLASS]
     {/polynomialfiltering/components/Fmp_test/generateVrfs/TestData/}
@@ -3560,8 +3429,6 @@
       {/polynomialfiltering/components/RecursivePolynomialFilter_test/test1PureObservation/TestData/::getScalar : float; params( | ) INHERITED; }[CLASS]
     {/polynomialfiltering/components/FixedMemoryFilter_test/test1CheckMidpoints/TestData/}
       {/polynomialfiltering/components/FixedMemoryFilter_test/test1CheckMidpoints/TestData/::getScalar : float; params( | ) INHERITED; }[CLASS]
-    {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test3MatrixMatrix/TestData/}
-      {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test3MatrixMatrix/TestData/::getScalar : float; params( | ) INHERITED; }[CLASS]
     {/polynomialfiltering/components/Pair_test/test2CheckStates/TestData/}
       {/polynomialfiltering/components/Pair_test/test2CheckStates/TestData/::getScalar : float; params( | ) INHERITED; }[CLASS]
     {/TestData/}
@@ -3773,12 +3640,8 @@
       {/polynomialfiltering/components/Pair_test/generateStates/TestData/::getSubGroup : Group; params( | ) INHERITED; }[CLASS]
     {/polynomialfiltering/components/FixedMemoryFilter_test/test1CheckNoisy/TestData/}
       {/polynomialfiltering/components/FixedMemoryFilter_test/test1CheckNoisy/TestData/::getSubGroup : Group; params( | ) INHERITED; }[CLASS]
-    {/polynomialfiltering/filters/controls/TestData/}
-      {/polynomialfiltering/filters/controls/TestData/::getSubGroup : Group; params( | ) INHERITED; }[CLASS]
     {/polynomialfiltering/components/FixedMemoryFilter_test/test1CheckPerfect/TestData/}
       {/polynomialfiltering/components/FixedMemoryFilter_test/test1CheckPerfect/TestData/::getSubGroup : Group; params( | ) INHERITED; }[CLASS]
-    {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test2Matrix/TestData/}
-      {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test2Matrix/TestData/::getSubGroup : Group; params( | ) INHERITED; }[CLASS]
     {/polynomialfiltering/components/EMP_test/generateStates/TestData/}
       {/polynomialfiltering/components/EMP_test/generateStates/TestData/::getSubGroup : Group; params( | ) INHERITED; }[CLASS]
     {/polynomialfiltering/components/TestData/}
@@ -3793,8 +3656,6 @@
       {/polynomialfiltering/components/EMP_test/TestData/::getSubGroup : Group; params( | ) INHERITED; }[CLASS]
     {/polynomialfiltering/components/FixedMemoryFilter_test/generatePerfect/TestData/}
       {/polynomialfiltering/components/FixedMemoryFilter_test/generatePerfect/TestData/::getSubGroup : Group; params( | ) INHERITED; }[CLASS]
-    {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test1Scalar/TestData/}
-      {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test1Scalar/TestData/::getSubGroup : Group; params( | ) INHERITED; }[CLASS]
     {/polynomialfiltering/components/EMP_test/test1CheckVRF/TestData/}
       {/polynomialfiltering/components/EMP_test/test1CheckVRF/TestData/::getSubGroup : Group; params( | ) INHERITED; }[CLASS]
     {/polynomialfiltering/components/Fmp_test/generateVrfs/TestData/}
@@ -3817,8 +3678,6 @@
       {/polynomialfiltering/components/RecursivePolynomialFilter_test/test1PureObservation/TestData/::getSubGroup : Group; params( | ) INHERITED; }[CLASS]
     {/polynomialfiltering/components/FixedMemoryFilter_test/test1CheckMidpoints/TestData/}
       {/polynomialfiltering/components/FixedMemoryFilter_test/test1CheckMidpoints/TestData/::getSubGroup : Group; params( | ) INHERITED; }[CLASS]
-    {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test3MatrixMatrix/TestData/}
-      {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test3MatrixMatrix/TestData/::getSubGroup : Group; params( | ) INHERITED; }[CLASS]
     {/polynomialfiltering/components/Pair_test/test2CheckStates/TestData/}
       {/polynomialfiltering/components/Pair_test/test2CheckStates/TestData/::getSubGroup : Group; params( | ) INHERITED; }[CLASS]
     {/TestData/}
@@ -3836,12 +3695,8 @@
       {/polynomialfiltering/components/Pair_test/generateStates/TestData/::getSubGroupVariable : array; params( | ) INHERITED; }[CLASS]
     {/polynomialfiltering/components/FixedMemoryFilter_test/test1CheckNoisy/TestData/}
       {/polynomialfiltering/components/FixedMemoryFilter_test/test1CheckNoisy/TestData/::getSubGroupVariable : array; params( | ) INHERITED; }[CLASS]
-    {/polynomialfiltering/filters/controls/TestData/}
-      {/polynomialfiltering/filters/controls/TestData/::getSubGroupVariable : array; params( | ) INHERITED; }[CLASS]
     {/polynomialfiltering/components/FixedMemoryFilter_test/test1CheckPerfect/TestData/}
       {/polynomialfiltering/components/FixedMemoryFilter_test/test1CheckPerfect/TestData/::getSubGroupVariable : array; params( | ) INHERITED; }[CLASS]
-    {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test2Matrix/TestData/}
-      {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test2Matrix/TestData/::getSubGroupVariable : array; params( | ) INHERITED; }[CLASS]
     {/polynomialfiltering/components/EMP_test/generateStates/TestData/}
       {/polynomialfiltering/components/EMP_test/generateStates/TestData/::getSubGroupVariable : array; params( | ) INHERITED; }[CLASS]
     {/polynomialfiltering/components/TestData/}
@@ -3856,8 +3711,6 @@
       {/polynomialfiltering/components/EMP_test/TestData/::getSubGroupVariable : array; params( | ) INHERITED; }[CLASS]
     {/polynomialfiltering/components/FixedMemoryFilter_test/generatePerfect/TestData/}
       {/polynomialfiltering/components/FixedMemoryFilter_test/generatePerfect/TestData/::getSubGroupVariable : array; params( | ) INHERITED; }[CLASS]
-    {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test1Scalar/TestData/}
-      {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test1Scalar/TestData/::getSubGroupVariable : array; params( | ) INHERITED; }[CLASS]
     {/polynomialfiltering/components/EMP_test/test1CheckVRF/TestData/}
       {/polynomialfiltering/components/EMP_test/test1CheckVRF/TestData/::getSubGroupVariable : array; params( | ) INHERITED; }[CLASS]
     {/polynomialfiltering/components/Fmp_test/generateVrfs/TestData/}
@@ -3880,8 +3733,6 @@
       {/polynomialfiltering/components/RecursivePolynomialFilter_test/test1PureObservation/TestData/::getSubGroupVariable : array; params( | ) INHERITED; }[CLASS]
     {/polynomialfiltering/components/FixedMemoryFilter_test/test1CheckMidpoints/TestData/}
       {/polynomialfiltering/components/FixedMemoryFilter_test/test1CheckMidpoints/TestData/::getSubGroupVariable : array; params( | ) INHERITED; }[CLASS]
-    {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test3MatrixMatrix/TestData/}
-      {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test3MatrixMatrix/TestData/::getSubGroupVariable : array; params( | ) INHERITED; }[CLASS]
     {/polynomialfiltering/components/Pair_test/test2CheckStates/TestData/}
       {/polynomialfiltering/components/Pair_test/test2CheckStates/TestData/::getSubGroupVariable : array; params( | ) INHERITED; }[CLASS]
     {/TestData/}
@@ -4243,8 +4094,6 @@
       {/polynomialfiltering/components/FixedMemoryFilter_test/executeEstimatedState/::i : int}[MEMBER]
     {/polynomialfiltering/components/FixedMemoryFilter_test/test9Regresssion/}
       {/polynomialfiltering/components/FixedMemoryFilter_test/test9Regresssion/::i : int}[MEMBER]
-    {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test2Matrix/}
-      {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test2Matrix/::i : int}[MEMBER]
     {/polynomialfiltering/components/FixedMemoryFilter_test/test1CheckPerfect/}
       {/polynomialfiltering/components/FixedMemoryFilter_test/test1CheckPerfect/::i : int}[MEMBER]
     {/polynomialfiltering/components/FixedMemoryFilter_test/test1CheckNoisy/}
@@ -4257,10 +4106,6 @@
       {/polynomialfiltering/components/RecursivePolynomialFilter_test/test1PureObservation/::i : int}[MEMBER]
     {/polynomialfiltering/filters/PairedPolynomialFilter/update/}
       {/polynomialfiltering/filters/PairedPolynomialFilter/update/::i : array}[MEMBER]
-    {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test3MatrixMatrix/}
-      {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test3MatrixMatrix/::i : int}[MEMBER]
-    {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test1Scalar/}
-      {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test1Scalar/::i : int}[MEMBER]
     {/polynomialfiltering/components/Pair_test/test2CheckStates/}
       {/polynomialfiltering/components/Pair_test/test2CheckStates/::i : int}[MEMBER]
     {/polynomialfiltering/components/FixedMemoryFilter_test/test1CheckMidpoints/}
@@ -4278,13 +4123,6 @@
       {/polynomialfiltering/components/FixedMemoryFilter_test/test1CheckMidpoints/::iCheck : int}[MEMBER]
     {/polynomialfiltering/components/FixedMemoryFilter_test/executeVRF/}
       {/polynomialfiltering/components/FixedMemoryFilter_test/executeVRF/::iCheck : int}[MEMBER]
-  {iE}
-    {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test3MatrixMatrix/}
-      {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test3MatrixMatrix/::iE : int}[MEMBER]
-    {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test1Scalar/}
-      {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test1Scalar/::iE : int}[MEMBER]
-    {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test2Matrix/}
-      {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test2Matrix/::iE : int}[MEMBER]
   {iMatch}
     {/polynomialfiltering/components/RecursivePolynomialFilter_test/test1PurePredict/}
       {/polynomialfiltering/components/RecursivePolynomialFilter_test/test1PurePredict/::iMatch : int}[MEMBER]
@@ -4294,23 +4132,12 @@
     {/polynomialfiltering/components/EMP_test/test1CheckVRF/}
       {/polynomialfiltering/components/EMP_test/test1CheckVRF/::iN : int}[MEMBER]
   {iR}
-    {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test3MatrixMatrix/ConstantObservationErrorModel/}
-      {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test3MatrixMatrix/ConstantObservationErrorModel/::iR : array INHERITED; }[CLASS]
-    {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test2Matrix/ConstantObservationErrorModel/}
-      {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test2Matrix/ConstantObservationErrorModel/::iR : array INHERITED; }[CLASS]
     {/polynomialfiltering/filters/controls/IJudge/vectorUpdate/}
       {/polynomialfiltering/filters/controls/IJudge/vectorUpdate/::iR : array}[MEMBER]
-    {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/ConstantObservationErrorModel/}
-      {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/ConstantObservationErrorModel/::iR : array INHERITED; }[CLASS]
-    {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test1Scalar/ConstantObservationErrorModel/}
-      {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test1Scalar/ConstantObservationErrorModel/::iR : array INHERITED; }[CLASS]
     {/polynomialfiltering/filters/controls/IJudge/scalarUpdate/}
       {/polynomialfiltering/filters/controls/IJudge/scalarUpdate/::iR : array}[MEMBER]
     {/polynomialfiltering/filters/controls/errormodel/ConstantObservationErrorModel/}
       {/polynomialfiltering/filters/controls/errormodel/ConstantObservationErrorModel/::iR : array}[CLASS]
-  {ic}
-    {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test2Matrix/}
-      {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test2Matrix/::ic : float}[MEMBER]
   {idx}
     {/polynomialfiltering/filters/FixedMemoryPolynomialFilter/FixedMemoryFilter/add/}
       {/polynomialfiltering/filters/FixedMemoryPolynomialFilter/FixedMemoryFilter/add/::idx : int}[MEMBER]
@@ -4326,20 +4153,6 @@
   {innovations}
     {/polynomialfiltering/components/RecursivePolynomialFilter_test/test1PureObservation/}
       {/polynomialfiltering/components/RecursivePolynomialFilter_test/test1PureObservation/::innovations : array}[MEMBER]
-  {inputCovariance}
-    {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test3MatrixMatrix/}
-      {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test3MatrixMatrix/::inputCovariance : array}[MEMBER]
-    {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test1Scalar/}
-      {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test1Scalar/::inputCovariance : array}[MEMBER]
-    {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test2Matrix/}
-      {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test2Matrix/::inputCovariance : array}[MEMBER]
-  {inputInverse}
-    {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test3MatrixMatrix/}
-      {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test3MatrixMatrix/::inputInverse : array}[MEMBER]
-    {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test1Scalar/}
-      {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test1Scalar/::inputInverse : array}[MEMBER]
-    {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test2Matrix/}
-      {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test2Matrix/::inputInverse : array}[MEMBER]
   {int}
     {/}
       {/::int : integerCast}[IMPORT]
@@ -4415,12 +4228,8 @@
       {/polynomialfiltering/components/Pair_test/generateStates/TestData/::make : TestData; params( | ) INHERITED; }[CLASS]
     {/polynomialfiltering/components/FixedMemoryFilter_test/test1CheckNoisy/TestData/}
       {/polynomialfiltering/components/FixedMemoryFilter_test/test1CheckNoisy/TestData/::make : TestData; params( | ) INHERITED; }[CLASS]
-    {/polynomialfiltering/filters/controls/TestData/}
-      {/polynomialfiltering/filters/controls/TestData/::make : TestData; params( | ) INHERITED; }[CLASS]
     {/polynomialfiltering/components/FixedMemoryFilter_test/test1CheckPerfect/TestData/}
       {/polynomialfiltering/components/FixedMemoryFilter_test/test1CheckPerfect/TestData/::make : TestData; params( | ) INHERITED; }[CLASS]
-    {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test2Matrix/TestData/}
-      {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test2Matrix/TestData/::make : TestData; params( | ) INHERITED; }[CLASS]
     {/polynomialfiltering/components/EMP_test/generateStates/TestData/}
       {/polynomialfiltering/components/EMP_test/generateStates/TestData/::make : TestData; params( | ) INHERITED; }[CLASS]
     {/polynomialfiltering/components/TestData/}
@@ -4435,8 +4244,6 @@
       {/polynomialfiltering/components/EMP_test/TestData/::make : TestData; params( | ) INHERITED; }[CLASS]
     {/polynomialfiltering/components/FixedMemoryFilter_test/generatePerfect/TestData/}
       {/polynomialfiltering/components/FixedMemoryFilter_test/generatePerfect/TestData/::make : TestData; params( | ) INHERITED; }[CLASS]
-    {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test1Scalar/TestData/}
-      {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test1Scalar/TestData/::make : TestData; params( | ) INHERITED; }[CLASS]
     {/polynomialfiltering/components/EMP_test/test1CheckVRF/TestData/}
       {/polynomialfiltering/components/EMP_test/test1CheckVRF/TestData/::make : TestData; params( | ) INHERITED; }[CLASS]
     {/polynomialfiltering/components/Fmp_test/generateVrfs/TestData/}
@@ -4459,8 +4266,6 @@
       {/polynomialfiltering/components/RecursivePolynomialFilter_test/test1PureObservation/TestData/::make : TestData; params( | ) INHERITED; }[CLASS]
     {/polynomialfiltering/components/FixedMemoryFilter_test/test1CheckMidpoints/TestData/}
       {/polynomialfiltering/components/FixedMemoryFilter_test/test1CheckMidpoints/TestData/::make : TestData; params( | ) INHERITED; }[CLASS]
-    {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test3MatrixMatrix/TestData/}
-      {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test3MatrixMatrix/TestData/::make : TestData; params( | ) INHERITED; }[CLASS]
     {/polynomialfiltering/components/Pair_test/test2CheckStates/TestData/}
       {/polynomialfiltering/components/Pair_test/test2CheckStates/TestData/::make : TestData; params( | ) INHERITED; }[CLASS]
     {/TestData/}
@@ -4516,30 +4321,24 @@
     {/polynomialfiltering/components/Fmp/}
       {/polynomialfiltering/components/Fmp/::makeFmpCore : ICore; params(/polynomialfiltering/components/Fmp/makeFmpCore/::order : int,/polynomialfiltering/components/Fmp/makeFmpCore/::tau : float,/polynomialfiltering/components/Fmp/makeFmpCore/::theta : float, | @forcestatic;)}[MODULE]
   {matches}
-    {/polynomialfiltering/components/RecursivePolynomialFilter_test/test1PurePredict/}
-      {/polynomialfiltering/components/RecursivePolynomialFilter_test/test1PurePredict/::matches : List[str]}[MEMBER]
-    {/polynomialfiltering/components/Fmp_test/test1CheckVRF/}
-      {/polynomialfiltering/components/Fmp_test/test1CheckVRF/::matches : List[str]}[MEMBER]
-    {/polynomialfiltering/components/EMP_test/test2CheckStates/}
-      {/polynomialfiltering/components/EMP_test/test2CheckStates/::matches : List[str]}[MEMBER]
-    {/polynomialfiltering/components/Fmp_test/test1CheckStates/}
-      {/polynomialfiltering/components/Fmp_test/test1CheckStates/::matches : List[str]}[MEMBER]
-    {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test2Matrix/}
-      {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test2Matrix/::matches : List[str]}[MEMBER]
     {/polynomialfiltering/components/FixedMemoryFilter_test/test1CheckPerfect/}
       {/polynomialfiltering/components/FixedMemoryFilter_test/test1CheckPerfect/::matches : List[str]}[MEMBER]
     {/polynomialfiltering/components/FixedMemoryFilter_test/test1CheckNoisy/}
       {/polynomialfiltering/components/FixedMemoryFilter_test/test1CheckNoisy/::matches : List[str]}[MEMBER]
+    {/polynomialfiltering/components/RecursivePolynomialFilter_test/test1PurePredict/}
+      {/polynomialfiltering/components/RecursivePolynomialFilter_test/test1PurePredict/::matches : List[str]}[MEMBER]
     {/polynomialfiltering/components/Fmp_test/test1CheckGammas/}
       {/polynomialfiltering/components/Fmp_test/test1CheckGammas/::matches : List[str]}[MEMBER]
+    {/polynomialfiltering/components/Fmp_test/test1CheckVRF/}
+      {/polynomialfiltering/components/Fmp_test/test1CheckVRF/::matches : List[str]}[MEMBER]
     {/polynomialfiltering/components/FixedMemoryFilter_test/test1CheckVrfs/}
       {/polynomialfiltering/components/FixedMemoryFilter_test/test1CheckVrfs/::matches : List[str]}[MEMBER]
+    {/polynomialfiltering/components/EMP_test/test2CheckStates/}
+      {/polynomialfiltering/components/EMP_test/test2CheckStates/::matches : List[str]}[MEMBER]
+    {/polynomialfiltering/components/Fmp_test/test1CheckStates/}
+      {/polynomialfiltering/components/Fmp_test/test1CheckStates/::matches : List[str]}[MEMBER]
     {/polynomialfiltering/components/RecursivePolynomialFilter_test/test1PureObservation/}
       {/polynomialfiltering/components/RecursivePolynomialFilter_test/test1PureObservation/::matches : List[str]}[MEMBER]
-    {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test3MatrixMatrix/}
-      {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test3MatrixMatrix/::matches : List[str]}[MEMBER]
-    {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test1Scalar/}
-      {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test1Scalar/::matches : List[str]}[MEMBER]
     {/polynomialfiltering/components/Pair_test/test2CheckStates/}
       {/polynomialfiltering/components/Pair_test/test2CheckStates/::matches : List[str]}[MEMBER]
     {/polynomialfiltering/components/EMP_test/test1CheckVRF/}
@@ -4555,13 +4354,6 @@
   {min}
     {/}
       {/::min : int}[IMPORT]
-  {model}
-    {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test3MatrixMatrix/}
-      {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test3MatrixMatrix/::model : ConstantObservationErrorModel}[MEMBER]
-    {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test1Scalar/}
-      {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test1Scalar/::model : ConstantObservationErrorModel}[MEMBER]
-    {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test2Matrix/}
-      {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test2Matrix/::model : ConstantObservationErrorModel}[MEMBER]
   {mt2}
     {/polynomialfiltering/components/Fmp/CoreFmp3/getGamma/}
       {/polynomialfiltering/components/Fmp/CoreFmp3/getGamma/::mt2 : float}[MEMBER]
@@ -5288,12 +5080,8 @@
       {/polynomialfiltering/components/Pair_test/generateStates/TestData/::putArray : None; params( | ) INHERITED; }[CLASS]
     {/polynomialfiltering/components/FixedMemoryFilter_test/test1CheckNoisy/TestData/}
       {/polynomialfiltering/components/FixedMemoryFilter_test/test1CheckNoisy/TestData/::putArray : None; params( | ) INHERITED; }[CLASS]
-    {/polynomialfiltering/filters/controls/TestData/}
-      {/polynomialfiltering/filters/controls/TestData/::putArray : None; params( | ) INHERITED; }[CLASS]
     {/polynomialfiltering/components/FixedMemoryFilter_test/test1CheckPerfect/TestData/}
       {/polynomialfiltering/components/FixedMemoryFilter_test/test1CheckPerfect/TestData/::putArray : None; params( | ) INHERITED; }[CLASS]
-    {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test2Matrix/TestData/}
-      {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test2Matrix/TestData/::putArray : None; params( | ) INHERITED; }[CLASS]
     {/polynomialfiltering/components/EMP_test/generateStates/TestData/}
       {/polynomialfiltering/components/EMP_test/generateStates/TestData/::putArray : None; params( | ) INHERITED; }[CLASS]
     {/polynomialfiltering/components/TestData/}
@@ -5308,8 +5096,6 @@
       {/polynomialfiltering/components/EMP_test/TestData/::putArray : None; params( | ) INHERITED; }[CLASS]
     {/polynomialfiltering/components/FixedMemoryFilter_test/generatePerfect/TestData/}
       {/polynomialfiltering/components/FixedMemoryFilter_test/generatePerfect/TestData/::putArray : None; params( | ) INHERITED; }[CLASS]
-    {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test1Scalar/TestData/}
-      {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test1Scalar/TestData/::putArray : None; params( | ) INHERITED; }[CLASS]
     {/polynomialfiltering/components/EMP_test/test1CheckVRF/TestData/}
       {/polynomialfiltering/components/EMP_test/test1CheckVRF/TestData/::putArray : None; params( | ) INHERITED; }[CLASS]
     {/polynomialfiltering/components/Fmp_test/generateVrfs/TestData/}
@@ -5332,8 +5118,6 @@
       {/polynomialfiltering/components/RecursivePolynomialFilter_test/test1PureObservation/TestData/::putArray : None; params( | ) INHERITED; }[CLASS]
     {/polynomialfiltering/components/FixedMemoryFilter_test/test1CheckMidpoints/TestData/}
       {/polynomialfiltering/components/FixedMemoryFilter_test/test1CheckMidpoints/TestData/::putArray : None; params( | ) INHERITED; }[CLASS]
-    {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test3MatrixMatrix/TestData/}
-      {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test3MatrixMatrix/TestData/::putArray : None; params( | ) INHERITED; }[CLASS]
     {/polynomialfiltering/components/Pair_test/test2CheckStates/TestData/}
       {/polynomialfiltering/components/Pair_test/test2CheckStates/TestData/::putArray : None; params( | ) INHERITED; }[CLASS]
     {/TestData/}
@@ -5351,12 +5135,8 @@
       {/polynomialfiltering/components/Pair_test/generateStates/TestData/::putScalar : None; params( | ) INHERITED; }[CLASS]
     {/polynomialfiltering/components/FixedMemoryFilter_test/test1CheckNoisy/TestData/}
       {/polynomialfiltering/components/FixedMemoryFilter_test/test1CheckNoisy/TestData/::putScalar : None; params( | ) INHERITED; }[CLASS]
-    {/polynomialfiltering/filters/controls/TestData/}
-      {/polynomialfiltering/filters/controls/TestData/::putScalar : None; params( | ) INHERITED; }[CLASS]
     {/polynomialfiltering/components/FixedMemoryFilter_test/test1CheckPerfect/TestData/}
       {/polynomialfiltering/components/FixedMemoryFilter_test/test1CheckPerfect/TestData/::putScalar : None; params( | ) INHERITED; }[CLASS]
-    {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test2Matrix/TestData/}
-      {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test2Matrix/TestData/::putScalar : None; params( | ) INHERITED; }[CLASS]
     {/polynomialfiltering/components/EMP_test/generateStates/TestData/}
       {/polynomialfiltering/components/EMP_test/generateStates/TestData/::putScalar : None; params( | ) INHERITED; }[CLASS]
     {/polynomialfiltering/components/TestData/}
@@ -5371,8 +5151,6 @@
       {/polynomialfiltering/components/EMP_test/TestData/::putScalar : None; params( | ) INHERITED; }[CLASS]
     {/polynomialfiltering/components/FixedMemoryFilter_test/generatePerfect/TestData/}
       {/polynomialfiltering/components/FixedMemoryFilter_test/generatePerfect/TestData/::putScalar : None; params( | ) INHERITED; }[CLASS]
-    {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test1Scalar/TestData/}
-      {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test1Scalar/TestData/::putScalar : None; params( | ) INHERITED; }[CLASS]
     {/polynomialfiltering/components/EMP_test/test1CheckVRF/TestData/}
       {/polynomialfiltering/components/EMP_test/test1CheckVRF/TestData/::putScalar : None; params( | ) INHERITED; }[CLASS]
     {/polynomialfiltering/components/Fmp_test/generateVrfs/TestData/}
@@ -5395,8 +5173,6 @@
       {/polynomialfiltering/components/RecursivePolynomialFilter_test/test1PureObservation/TestData/::putScalar : None; params( | ) INHERITED; }[CLASS]
     {/polynomialfiltering/components/FixedMemoryFilter_test/test1CheckMidpoints/TestData/}
       {/polynomialfiltering/components/FixedMemoryFilter_test/test1CheckMidpoints/TestData/::putScalar : None; params( | ) INHERITED; }[CLASS]
-    {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test3MatrixMatrix/TestData/}
-      {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test3MatrixMatrix/TestData/::putScalar : None; params( | ) INHERITED; }[CLASS]
     {/polynomialfiltering/components/Pair_test/test2CheckStates/TestData/}
       {/polynomialfiltering/components/Pair_test/test2CheckStates/TestData/::putScalar : None; params( | ) INHERITED; }[CLASS]
     {/TestData/}
@@ -5450,8 +5226,6 @@
       {/polynomialfiltering/filters/PairedPolynomialFilter/__init__/::self : PairedPolynomialFilter}[MEMBER]
     {/polynomialfiltering/components/RecursivePolynomialFilter_test/test1PureObservation/}
       {/polynomialfiltering/components/RecursivePolynomialFilter_test/test1PureObservation/::self : RecursivePolynomialFilter_test}[MEMBER]
-    {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test3MatrixMatrix/}
-      {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test3MatrixMatrix/::self : ConstantObservationErrorModel_test}[MEMBER]
     {/polynomialfiltering/components/Emp/CoreEmp1/getGamma/}
       {/polynomialfiltering/components/Emp/CoreEmp1/getGamma/::self : CoreEmp1}[MEMBER]
     {/polynomialfiltering/components/Fmp/CoreFmp0/getGamma/}
@@ -5480,8 +5254,6 @@
       {/polynomialfiltering/Main/AbstractFilter/getState/::self : AbstractFilter}[MEMBER]
     {/polynomialfiltering/components/Emp/CoreEmp5/_getVRF/}
       {/polynomialfiltering/components/Emp/CoreEmp5/_getVRF/::self : CoreEmp5}[MEMBER]
-    {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test0Generate/}
-      {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test0Generate/::self : ConstantObservationErrorModel_test}[MEMBER]
     {/polynomialfiltering/components/RecursivePolynomialFilter_test/PureObservationCore/getVRF/}
       {/polynomialfiltering/components/RecursivePolynomialFilter_test/PureObservationCore/getVRF/::self : PureObservationCore}[MEMBER]
     {/polynomialfiltering/filters/controls/IMonitor/rejected/}
@@ -5546,8 +5318,8 @@
       {/polynomialfiltering/filters/RecursivePolynomialFilter/update/::self : RecursivePolynomialFilter}[MEMBER]
     {/polynomialfiltering/components/Emp/CoreEmp2/_getLastVRF/}
       {/polynomialfiltering/components/Emp/CoreEmp2/_getLastVRF/::self : CoreEmp2}[MEMBER]
-    {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/tearDown/}
-      {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/tearDown/::self : ConstantObservationErrorModel_test}[MEMBER]
+    {/polynomialfiltering/filters/FixedMemoryPolynomialFilter/FixedMemoryFilter/start/}
+      {/polynomialfiltering/filters/FixedMemoryPolynomialFilter/FixedMemoryFilter/start/::self : FixedMemoryFilter}[MEMBER]
     {/polynomialfiltering/components/EMP_test/test9CoreBasic/}
       {/polynomialfiltering/components/EMP_test/test9CoreBasic/::self : EMP_test}[MEMBER]
     {/polynomialfiltering/components/Pair_test/tearDown/}
@@ -5562,8 +5334,6 @@
       {/polynomialfiltering/components/Emp/CoreEmp1/_getVRF/::self : CoreEmp1}[MEMBER]
     {/polynomialfiltering/Main/AbstractFilter/getStatus/}
       {/polynomialfiltering/Main/AbstractFilter/getStatus/::self : AbstractFilter}[MEMBER]
-    {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test2Matrix/}
-      {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test2Matrix/::self : ConstantObservationErrorModel_test}[MEMBER]
     {/polynomialfiltering/components/Emp/CoreEmp5/getVRF/}
       {/polynomialfiltering/components/Emp/CoreEmp5/getVRF/::self : CoreEmp5}[MEMBER]
     {/polynomialfiltering/components/Fmp/AbstractCoreFmp/getGamma/}
@@ -5582,8 +5352,6 @@
       {/polynomialfiltering/filters/controls/errormodel/ConstantObservationErrorModel/ConstantObservationErrorModel_0/::self : ConstantObservationErrorModel}[MEMBER]
     {/polynomialfiltering/components/FixedMemoryFilter_test/test1CheckMidpoints/}
       {/polynomialfiltering/components/FixedMemoryFilter_test/test1CheckMidpoints/::self : FixedMemoryFilter_test}[MEMBER]
-    {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/setUp/}
-      {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/setUp/::self : ConstantObservationErrorModel_test}[MEMBER]
     {/polynomialfiltering/filters/RecursivePolynomialFilter/getTime/}
       {/polynomialfiltering/filters/RecursivePolynomialFilter/getTime/::self : RecursivePolynomialFilter}[MEMBER]
     {/polynomialfiltering/components/Emp/CoreEmp1/getLastVRF/}
@@ -5602,8 +5370,6 @@
       {/polynomialfiltering/components/Fmp_test/test9Basic/::self : Fmp_test}[MEMBER]
     {/polynomialfiltering/filters/FixedMemoryPolynomialFilter/FixedMemoryFilter/getVRF/}
       {/polynomialfiltering/filters/FixedMemoryPolynomialFilter/FixedMemoryFilter/getVRF/::self : FixedMemoryFilter}[MEMBER]
-    {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/tearDownClass/}
-      {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/tearDownClass/::self : ConstantObservationErrorModel_test}[MEMBER]
     {/polynomialfiltering/filters/PairedPolynomialFilter/start/}
       {/polynomialfiltering/filters/PairedPolynomialFilter/start/::self : PairedPolynomialFilter}[MEMBER]
     {/polynomialfiltering/filters/FixedMemoryPolynomialFilter/FixedMemoryFilter/add/}
@@ -5722,8 +5488,6 @@
       {/polynomialfiltering/components/Emp/CoreEmp4/getFirstVRF/::self : CoreEmp4}[MEMBER]
     {/polynomialfiltering/components/Fmp_test/xtest0Generate/}
       {/polynomialfiltering/components/Fmp_test/xtest0Generate/::self : Fmp_test}[MEMBER]
-    {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test1Scalar/}
-      {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test1Scalar/::self : ConstantObservationErrorModel_test}[MEMBER]
     {/polynomialfiltering/filters/RecursivePolynomialFilter/getState/}
       {/polynomialfiltering/filters/RecursivePolynomialFilter/getState/::self : RecursivePolynomialFilter}[MEMBER]
     {/polynomialfiltering/components/Emp/CoreEmp3/getVRF/}
@@ -5738,8 +5502,6 @@
       {/polynomialfiltering/components/FixedMemoryFilter_test/tearDownClass/::self : FixedMemoryFilter_test}[MEMBER]
     {/polynomialfiltering/Main/AbstractFilterWithCovariance/getFirstVariance/}
       {/polynomialfiltering/Main/AbstractFilterWithCovariance/getFirstVariance/::self : AbstractFilterWithCovariance}[MEMBER]
-    {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/setUpClass/}
-      {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/setUpClass/::self : ConstantObservationErrorModel_test}[MEMBER]
     {/polynomialfiltering/Main/AbstractFilter/getVRF/}
       {/polynomialfiltering/Main/AbstractFilter/getVRF/::self : AbstractFilter}[MEMBER]
     {/polynomialfiltering/components/ICore/__init__/}
@@ -6148,13 +5910,9 @@
       {/polynomialfiltering/components/Pair_test/::setUp : None; params(/polynomialfiltering/components/Pair_test/setUp/::self : Pair_test, | )}[CLASS]
     {/polynomialfiltering/components/EMP_test/}
       {/polynomialfiltering/components/EMP_test/::setUp : None; params(/polynomialfiltering/components/EMP_test/setUp/::self : EMP_test, | )}[CLASS]
-    {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/}
-      {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/::setUp : None; params(/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/setUp/::self : ConstantObservationErrorModel_test, | )}[CLASS]
   {setUpClass}
     {/polynomialfiltering/components/FixedMemoryFilter_test/}
       {/polynomialfiltering/components/FixedMemoryFilter_test/::setUpClass : None; params(/polynomialfiltering/components/FixedMemoryFilter_test/setUpClass/::self : FixedMemoryFilter_test, | @classmethod;)}[CLASS]
-    {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/}
-      {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/::setUpClass : None; params(/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/setUpClass/::self : ConstantObservationErrorModel_test, | @classmethod;)}[CLASS]
   {setup}
     {/polynomialfiltering/components/RecursivePolynomialFilter_test/test1PurePredict/}
       {/polynomialfiltering/components/RecursivePolynomialFilter_test/test1PurePredict/::setup : array}[MEMBER]
@@ -6192,42 +5950,28 @@
     {/}
       {/::sqrt : array}[IMPORT]
   {start}
-    {/polynomialfiltering/components/EMP_test/RecursivePolynomialFilterMock/}
-      {/polynomialfiltering/components/EMP_test/RecursivePolynomialFilterMock/::start : None; params(/polynomialfiltering/filters/RecursivePolynomialFilter/start/::self : RecursivePolynomialFilter,/polynomialfiltering/filters/RecursivePolynomialFilter/start/::t : float,/polynomialfiltering/filters/RecursivePolynomialFilter/start/::Z : vector, | ) INHERITED; }[CLASS]
-    {/polynomialfiltering/filters/PairedPolynomialFilter/}
-      {/polynomialfiltering/filters/PairedPolynomialFilter/::start : None; params(/polynomialfiltering/filters/PairedPolynomialFilter/start/::self : PairedPolynomialFilter,/polynomialfiltering/filters/PairedPolynomialFilter/start/::t : float,/polynomialfiltering/filters/PairedPolynomialFilter/start/::Z : vector, | )}[CLASS]
-    {/polynomialfiltering/components/Fmp_test/test1CheckVRF/RecursivePolynomialFilter/}
-      {/polynomialfiltering/components/Fmp_test/test1CheckVRF/RecursivePolynomialFilter/::start : None; params(/polynomialfiltering/filters/RecursivePolynomialFilter/start/::self : RecursivePolynomialFilter,/polynomialfiltering/filters/RecursivePolynomialFilter/start/::t : float,/polynomialfiltering/filters/RecursivePolynomialFilter/start/::Z : vector, | ) INHERITED; }[CLASS]
+    {/polynomialfiltering/components/FixedMemoryFilter_test/TestFixedMemoryFilter/}
+      {/polynomialfiltering/components/FixedMemoryFilter_test/TestFixedMemoryFilter/::start : None; params(/polynomialfiltering/filters/FixedMemoryPolynomialFilter/FixedMemoryFilter/start/::self : FixedMemoryFilter,/polynomialfiltering/filters/FixedMemoryPolynomialFilter/FixedMemoryFilter/start/::t : float,/polynomialfiltering/filters/FixedMemoryPolynomialFilter/FixedMemoryFilter/start/::Z : vector, | ) INHERITED; }[CLASS]
     {/polynomialfiltering/components/RecursivePolynomialFilter_test/RecursivePolynomialFilter/}
       {/polynomialfiltering/components/RecursivePolynomialFilter_test/RecursivePolynomialFilter/::start : None; params(/polynomialfiltering/filters/RecursivePolynomialFilter/start/::self : RecursivePolynomialFilter,/polynomialfiltering/filters/RecursivePolynomialFilter/start/::t : float,/polynomialfiltering/filters/RecursivePolynomialFilter/start/::Z : vector, | ) INHERITED; }[CLASS]
     {/polynomialfiltering/components/EMP_test/test1CheckVRF/RecursivePolynomialFilter/}
       {/polynomialfiltering/components/EMP_test/test1CheckVRF/RecursivePolynomialFilter/::start : None; params(/polynomialfiltering/filters/RecursivePolynomialFilter/start/::self : RecursivePolynomialFilter,/polynomialfiltering/filters/RecursivePolynomialFilter/start/::t : float,/polynomialfiltering/filters/RecursivePolynomialFilter/start/::Z : vector, | ) INHERITED; }[CLASS]
-    {/polynomialfiltering/components/Pair_test/test2CheckStates/PairedPolynomialFilter/}
-      {/polynomialfiltering/components/Pair_test/test2CheckStates/PairedPolynomialFilter/::start : None; params(/polynomialfiltering/filters/PairedPolynomialFilter/start/::self : PairedPolynomialFilter,/polynomialfiltering/filters/PairedPolynomialFilter/start/::t : float,/polynomialfiltering/filters/PairedPolynomialFilter/start/::Z : vector, | ) INHERITED; }[CLASS]
     {/polynomialfiltering/components/Pair_test/test9Coverage/PairedPolynomialFilter/}
       {/polynomialfiltering/components/Pair_test/test9Coverage/PairedPolynomialFilter/::start : None; params(/polynomialfiltering/filters/PairedPolynomialFilter/start/::self : PairedPolynomialFilter,/polynomialfiltering/filters/PairedPolynomialFilter/start/::t : float,/polynomialfiltering/filters/PairedPolynomialFilter/start/::Z : vector, | ) INHERITED; }[CLASS]
-    {/polynomialfiltering/components/EMP_test/RecursivePolynomialFilter/}
-      {/polynomialfiltering/components/EMP_test/RecursivePolynomialFilter/::start : None; params(/polynomialfiltering/filters/RecursivePolynomialFilter/start/::self : RecursivePolynomialFilter,/polynomialfiltering/filters/RecursivePolynomialFilter/start/::t : float,/polynomialfiltering/filters/RecursivePolynomialFilter/start/::Z : vector, | ) INHERITED; }[CLASS]
-    {/polynomialfiltering/components/RecursivePolynomialFilter_test/test9Coverage/RecursivePolynomialFilter/}
-      {/polynomialfiltering/components/RecursivePolynomialFilter_test/test9Coverage/RecursivePolynomialFilter/::start : None; params(/polynomialfiltering/filters/RecursivePolynomialFilter/start/::self : RecursivePolynomialFilter,/polynomialfiltering/filters/RecursivePolynomialFilter/start/::t : float,/polynomialfiltering/filters/RecursivePolynomialFilter/start/::Z : vector, | ) INHERITED; }[CLASS]
     {/polynomialfiltering/components/EMP_test/test1CheckVRF/RecursivePolynomialFilterMock/}
       {/polynomialfiltering/components/EMP_test/test1CheckVRF/RecursivePolynomialFilterMock/::start : None; params(/polynomialfiltering/filters/RecursivePolynomialFilter/start/::self : RecursivePolynomialFilter,/polynomialfiltering/filters/RecursivePolynomialFilter/start/::t : float,/polynomialfiltering/filters/RecursivePolynomialFilter/start/::Z : vector, | ) INHERITED; }[CLASS]
     {/polynomialfiltering/components/Pair_test/RecursivePolynomialFilter/}
       {/polynomialfiltering/components/Pair_test/RecursivePolynomialFilter/::start : None; params(/polynomialfiltering/filters/RecursivePolynomialFilter/start/::self : RecursivePolynomialFilter,/polynomialfiltering/filters/RecursivePolynomialFilter/start/::t : float,/polynomialfiltering/filters/RecursivePolynomialFilter/start/::Z : vector, | ) INHERITED; }[CLASS]
     {/polynomialfiltering/components/Fmp/RecursivePolynomialFilter/}
       {/polynomialfiltering/components/Fmp/RecursivePolynomialFilter/::start : None; params(/polynomialfiltering/filters/RecursivePolynomialFilter/start/::self : RecursivePolynomialFilter,/polynomialfiltering/filters/RecursivePolynomialFilter/start/::t : float,/polynomialfiltering/filters/RecursivePolynomialFilter/start/::Z : vector, | ) INHERITED; }[CLASS]
-    {/polynomialfiltering/components/Fmp_test/RecursivePolynomialFilter/}
-      {/polynomialfiltering/components/Fmp_test/RecursivePolynomialFilter/::start : None; params(/polynomialfiltering/filters/RecursivePolynomialFilter/start/::self : RecursivePolynomialFilter,/polynomialfiltering/filters/RecursivePolynomialFilter/start/::t : float,/polynomialfiltering/filters/RecursivePolynomialFilter/start/::Z : vector, | ) INHERITED; }[CLASS]
-    {/polynomialfiltering/components/Fmp_test/test1CheckGammas/RecursivePolynomialFilter/}
-      {/polynomialfiltering/components/Fmp_test/test1CheckGammas/RecursivePolynomialFilter/::start : None; params(/polynomialfiltering/filters/RecursivePolynomialFilter/start/::self : RecursivePolynomialFilter,/polynomialfiltering/filters/RecursivePolynomialFilter/start/::t : float,/polynomialfiltering/filters/RecursivePolynomialFilter/start/::Z : vector, | ) INHERITED; }[CLASS]
-    {/polynomialfiltering/components/Emp/RecursivePolynomialFilter/}
-      {/polynomialfiltering/components/Emp/RecursivePolynomialFilter/::start : None; params(/polynomialfiltering/filters/RecursivePolynomialFilter/start/::self : RecursivePolynomialFilter,/polynomialfiltering/filters/RecursivePolynomialFilter/start/::t : float,/polynomialfiltering/filters/RecursivePolynomialFilter/start/::Z : vector, | ) INHERITED; }[CLASS]
+    {/polynomialfiltering/components/FixedMemoryFilter_test/test9Regresssion/FixedMemoryFilter/}
+      {/polynomialfiltering/components/FixedMemoryFilter_test/test9Regresssion/FixedMemoryFilter/::start : None; params(/polynomialfiltering/filters/FixedMemoryPolynomialFilter/FixedMemoryFilter/start/::self : FixedMemoryFilter,/polynomialfiltering/filters/FixedMemoryPolynomialFilter/FixedMemoryFilter/start/::t : float,/polynomialfiltering/filters/FixedMemoryPolynomialFilter/FixedMemoryFilter/start/::Z : vector, | ) INHERITED; }[CLASS]
+    {/polynomialfiltering/components/FixedMemoryFilter_test/test9Regresssion/TestFixedMemoryFilter/}
+      {/polynomialfiltering/components/FixedMemoryFilter_test/test9Regresssion/TestFixedMemoryFilter/::start : None; params(/polynomialfiltering/filters/FixedMemoryPolynomialFilter/FixedMemoryFilter/start/::self : FixedMemoryFilter,/polynomialfiltering/filters/FixedMemoryPolynomialFilter/FixedMemoryFilter/start/::t : float,/polynomialfiltering/filters/FixedMemoryPolynomialFilter/FixedMemoryFilter/start/::Z : vector, | ) INHERITED; }[CLASS]
     {/polynomialfiltering/filters/PairedPolynomialFilter/RecursivePolynomialFilter/}
       {/polynomialfiltering/filters/PairedPolynomialFilter/RecursivePolynomialFilter/::start : None; params(/polynomialfiltering/filters/RecursivePolynomialFilter/start/::self : RecursivePolynomialFilter,/polynomialfiltering/filters/RecursivePolynomialFilter/start/::t : float,/polynomialfiltering/filters/RecursivePolynomialFilter/start/::Z : vector, | ) INHERITED; }[CLASS]
     {/polynomialfiltering/components/EMP_test/test2CheckStates/RecursivePolynomialFilter/}
       {/polynomialfiltering/components/EMP_test/test2CheckStates/RecursivePolynomialFilter/::start : None; params(/polynomialfiltering/filters/RecursivePolynomialFilter/start/::self : RecursivePolynomialFilter,/polynomialfiltering/filters/RecursivePolynomialFilter/start/::t : float,/polynomialfiltering/filters/RecursivePolynomialFilter/start/::Z : vector, | ) INHERITED; }[CLASS]
-    {/polynomialfiltering/components/Fmp_test/test9Basic/RecursivePolynomialFilter/}
-      {/polynomialfiltering/components/Fmp_test/test9Basic/RecursivePolynomialFilter/::start : None; params(/polynomialfiltering/filters/RecursivePolynomialFilter/start/::self : RecursivePolynomialFilter,/polynomialfiltering/filters/RecursivePolynomialFilter/start/::t : float,/polynomialfiltering/filters/RecursivePolynomialFilter/start/::Z : vector, | ) INHERITED; }[CLASS]
     {/polynomialfiltering/components/RecursivePolynomialFilter_test/test1PureObservation/RecursivePolynomialFilter/}
       {/polynomialfiltering/components/RecursivePolynomialFilter_test/test1PureObservation/RecursivePolynomialFilter/::start : None; params(/polynomialfiltering/filters/RecursivePolynomialFilter/start/::self : RecursivePolynomialFilter,/polynomialfiltering/filters/RecursivePolynomialFilter/start/::t : float,/polynomialfiltering/filters/RecursivePolynomialFilter/start/::Z : vector, | ) INHERITED; }[CLASS]
     {/polynomialfiltering/components/RecursivePolynomialFilter_test/test1PurePredict/RecursivePolynomialFilter/}
@@ -6236,8 +5980,36 @@
       {/polynomialfiltering/components/Fmp_test/test1CheckStates/RecursivePolynomialFilter/::start : None; params(/polynomialfiltering/filters/RecursivePolynomialFilter/start/::self : RecursivePolynomialFilter,/polynomialfiltering/filters/RecursivePolynomialFilter/start/::t : float,/polynomialfiltering/filters/RecursivePolynomialFilter/start/::Z : vector, | ) INHERITED; }[CLASS]
     {/polynomialfiltering/components/Pair_test/PairedPolynomialFilter/}
       {/polynomialfiltering/components/Pair_test/PairedPolynomialFilter/::start : None; params(/polynomialfiltering/filters/PairedPolynomialFilter/start/::self : PairedPolynomialFilter,/polynomialfiltering/filters/PairedPolynomialFilter/start/::t : float,/polynomialfiltering/filters/PairedPolynomialFilter/start/::Z : vector, | ) INHERITED; }[CLASS]
+    {/polynomialfiltering/components/EMP_test/RecursivePolynomialFilterMock/}
+      {/polynomialfiltering/components/EMP_test/RecursivePolynomialFilterMock/::start : None; params(/polynomialfiltering/filters/RecursivePolynomialFilter/start/::self : RecursivePolynomialFilter,/polynomialfiltering/filters/RecursivePolynomialFilter/start/::t : float,/polynomialfiltering/filters/RecursivePolynomialFilter/start/::Z : vector, | ) INHERITED; }[CLASS]
+    {/polynomialfiltering/filters/PairedPolynomialFilter/}
+      {/polynomialfiltering/filters/PairedPolynomialFilter/::start : None; params(/polynomialfiltering/filters/PairedPolynomialFilter/start/::self : PairedPolynomialFilter,/polynomialfiltering/filters/PairedPolynomialFilter/start/::t : float,/polynomialfiltering/filters/PairedPolynomialFilter/start/::Z : vector, | )}[CLASS]
+    {/polynomialfiltering/components/Fmp_test/test1CheckVRF/RecursivePolynomialFilter/}
+      {/polynomialfiltering/components/Fmp_test/test1CheckVRF/RecursivePolynomialFilter/::start : None; params(/polynomialfiltering/filters/RecursivePolynomialFilter/start/::self : RecursivePolynomialFilter,/polynomialfiltering/filters/RecursivePolynomialFilter/start/::t : float,/polynomialfiltering/filters/RecursivePolynomialFilter/start/::Z : vector, | ) INHERITED; }[CLASS]
+    {/polynomialfiltering/components/Pair_test/test2CheckStates/PairedPolynomialFilter/}
+      {/polynomialfiltering/components/Pair_test/test2CheckStates/PairedPolynomialFilter/::start : None; params(/polynomialfiltering/filters/PairedPolynomialFilter/start/::self : PairedPolynomialFilter,/polynomialfiltering/filters/PairedPolynomialFilter/start/::t : float,/polynomialfiltering/filters/PairedPolynomialFilter/start/::Z : vector, | ) INHERITED; }[CLASS]
+    {/polynomialfiltering/components/EMP_test/RecursivePolynomialFilter/}
+      {/polynomialfiltering/components/EMP_test/RecursivePolynomialFilter/::start : None; params(/polynomialfiltering/filters/RecursivePolynomialFilter/start/::self : RecursivePolynomialFilter,/polynomialfiltering/filters/RecursivePolynomialFilter/start/::t : float,/polynomialfiltering/filters/RecursivePolynomialFilter/start/::Z : vector, | ) INHERITED; }[CLASS]
+    {/polynomialfiltering/components/FixedMemoryFilter_test/executeEstimatedState/FixedMemoryFilter/}
+      {/polynomialfiltering/components/FixedMemoryFilter_test/executeEstimatedState/FixedMemoryFilter/::start : None; params(/polynomialfiltering/filters/FixedMemoryPolynomialFilter/FixedMemoryFilter/start/::self : FixedMemoryFilter,/polynomialfiltering/filters/FixedMemoryPolynomialFilter/FixedMemoryFilter/start/::t : float,/polynomialfiltering/filters/FixedMemoryPolynomialFilter/FixedMemoryFilter/start/::Z : vector, | ) INHERITED; }[CLASS]
+    {/polynomialfiltering/components/RecursivePolynomialFilter_test/test9Coverage/RecursivePolynomialFilter/}
+      {/polynomialfiltering/components/RecursivePolynomialFilter_test/test9Coverage/RecursivePolynomialFilter/::start : None; params(/polynomialfiltering/filters/RecursivePolynomialFilter/start/::self : RecursivePolynomialFilter,/polynomialfiltering/filters/RecursivePolynomialFilter/start/::t : float,/polynomialfiltering/filters/RecursivePolynomialFilter/start/::Z : vector, | ) INHERITED; }[CLASS]
+    {/polynomialfiltering/filters/FixedMemoryPolynomialFilter/FixedMemoryFilter/}
+      {/polynomialfiltering/filters/FixedMemoryPolynomialFilter/FixedMemoryFilter/::start : None; params(/polynomialfiltering/filters/FixedMemoryPolynomialFilter/FixedMemoryFilter/start/::self : FixedMemoryFilter,/polynomialfiltering/filters/FixedMemoryPolynomialFilter/FixedMemoryFilter/start/::t : float,/polynomialfiltering/filters/FixedMemoryPolynomialFilter/FixedMemoryFilter/start/::Z : vector, | )}[CLASS]
+    {/polynomialfiltering/components/Fmp_test/RecursivePolynomialFilter/}
+      {/polynomialfiltering/components/Fmp_test/RecursivePolynomialFilter/::start : None; params(/polynomialfiltering/filters/RecursivePolynomialFilter/start/::self : RecursivePolynomialFilter,/polynomialfiltering/filters/RecursivePolynomialFilter/start/::t : float,/polynomialfiltering/filters/RecursivePolynomialFilter/start/::Z : vector, | ) INHERITED; }[CLASS]
+    {/polynomialfiltering/components/Fmp_test/test1CheckGammas/RecursivePolynomialFilter/}
+      {/polynomialfiltering/components/Fmp_test/test1CheckGammas/RecursivePolynomialFilter/::start : None; params(/polynomialfiltering/filters/RecursivePolynomialFilter/start/::self : RecursivePolynomialFilter,/polynomialfiltering/filters/RecursivePolynomialFilter/start/::t : float,/polynomialfiltering/filters/RecursivePolynomialFilter/start/::Z : vector, | ) INHERITED; }[CLASS]
+    {/polynomialfiltering/components/Emp/RecursivePolynomialFilter/}
+      {/polynomialfiltering/components/Emp/RecursivePolynomialFilter/::start : None; params(/polynomialfiltering/filters/RecursivePolynomialFilter/start/::self : RecursivePolynomialFilter,/polynomialfiltering/filters/RecursivePolynomialFilter/start/::t : float,/polynomialfiltering/filters/RecursivePolynomialFilter/start/::Z : vector, | ) INHERITED; }[CLASS]
+    {/polynomialfiltering/components/Fmp_test/test9Basic/RecursivePolynomialFilter/}
+      {/polynomialfiltering/components/Fmp_test/test9Basic/RecursivePolynomialFilter/::start : None; params(/polynomialfiltering/filters/RecursivePolynomialFilter/start/::self : RecursivePolynomialFilter,/polynomialfiltering/filters/RecursivePolynomialFilter/start/::t : float,/polynomialfiltering/filters/RecursivePolynomialFilter/start/::Z : vector, | ) INHERITED; }[CLASS]
     {/polynomialfiltering/filters/RecursivePolynomialFilter/}
       {/polynomialfiltering/filters/RecursivePolynomialFilter/::start : None; params(/polynomialfiltering/filters/RecursivePolynomialFilter/start/::self : RecursivePolynomialFilter,/polynomialfiltering/filters/RecursivePolynomialFilter/start/::t : float,/polynomialfiltering/filters/RecursivePolynomialFilter/start/::Z : vector, | )}[CLASS]
+    {/polynomialfiltering/components/FixedMemoryFilter_test/FixedMemoryFilter/}
+      {/polynomialfiltering/components/FixedMemoryFilter_test/FixedMemoryFilter/::start : None; params(/polynomialfiltering/filters/FixedMemoryPolynomialFilter/FixedMemoryFilter/start/::self : FixedMemoryFilter,/polynomialfiltering/filters/FixedMemoryPolynomialFilter/FixedMemoryFilter/start/::t : float,/polynomialfiltering/filters/FixedMemoryPolynomialFilter/FixedMemoryFilter/start/::Z : vector, | ) INHERITED; }[CLASS]
+    {/polynomialfiltering/components/FixedMemoryFilter_test/executeVRF/FixedMemoryFilter/}
+      {/polynomialfiltering/components/FixedMemoryFilter_test/executeVRF/FixedMemoryFilter/::start : None; params(/polynomialfiltering/filters/FixedMemoryPolynomialFilter/FixedMemoryFilter/start/::self : FixedMemoryFilter,/polynomialfiltering/filters/FixedMemoryPolynomialFilter/FixedMemoryFilter/start/::t : float,/polynomialfiltering/filters/FixedMemoryPolynomialFilter/FixedMemoryFilter/start/::Z : vector, | ) INHERITED; }[CLASS]
   {state}
     {/polynomialfiltering/filters/RecursivePolynomialFilter/_conformState/}
       {/polynomialfiltering/filters/RecursivePolynomialFilter/_conformState/::state : vector}[MEMBER]
@@ -6598,6 +6370,8 @@
       {/polynomialfiltering/components/FixedMemoryFilter_test/executeVRF/FixedMemoryFilter/::t : float INHERITED; }[CLASS]
     {/polynomialfiltering/filters/controls/IObservationErrorModel/getPrecisionMatrix/}
       {/polynomialfiltering/filters/controls/IObservationErrorModel/getPrecisionMatrix/::t : float}[MEMBER]
+    {/polynomialfiltering/filters/FixedMemoryPolynomialFilter/FixedMemoryFilter/start/}
+      {/polynomialfiltering/filters/FixedMemoryPolynomialFilter/FixedMemoryFilter/start/::t : float}[MEMBER]
     {/polynomialfiltering/filters/controls/IObservationErrorModel/getCovarianceMatrix/}
       {/polynomialfiltering/filters/controls/IObservationErrorModel/getCovarianceMatrix/::t : float}[MEMBER]
   {t0}
@@ -6950,13 +6724,9 @@
       {/polynomialfiltering/components/Pair_test/::tearDown : None; params(/polynomialfiltering/components/Pair_test/tearDown/::self : Pair_test, | )}[CLASS]
     {/polynomialfiltering/components/EMP_test/}
       {/polynomialfiltering/components/EMP_test/::tearDown : None; params(/polynomialfiltering/components/EMP_test/tearDown/::self : EMP_test, | )}[CLASS]
-    {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/}
-      {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/::tearDown : None; params(/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/tearDown/::self : ConstantObservationErrorModel_test, | )}[CLASS]
   {tearDownClass}
     {/polynomialfiltering/components/FixedMemoryFilter_test/}
       {/polynomialfiltering/components/FixedMemoryFilter_test/::tearDownClass : None; params(/polynomialfiltering/components/FixedMemoryFilter_test/tearDownClass/::self : FixedMemoryFilter_test, | @classmethod;)}[CLASS]
-    {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/}
-      {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/::tearDownClass : None; params(/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/tearDownClass/::self : ConstantObservationErrorModel_test, | @classmethod;)}[CLASS]
   {test0Generate}
     {/polynomialfiltering/components/RecursivePolynomialFilter_test/}
       {/polynomialfiltering/components/RecursivePolynomialFilter_test/::test0Generate : None; params(/polynomialfiltering/components/RecursivePolynomialFilter_test/test0Generate/::self : RecursivePolynomialFilter_test, | )}[CLASS]
@@ -6964,8 +6734,6 @@
       {/polynomialfiltering/components/FixedMemoryFilter_test/::test0Generate : None; params(/polynomialfiltering/components/FixedMemoryFilter_test/test0Generate/::self : FixedMemoryFilter_test, | )}[CLASS]
     {/polynomialfiltering/components/Pair_test/}
       {/polynomialfiltering/components/Pair_test/::test0Generate : None; params(/polynomialfiltering/components/Pair_test/test0Generate/::self : Pair_test, | )}[CLASS]
-    {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/}
-      {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/::test0Generate : None; params(/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test0Generate/::self : ConstantObservationErrorModel_test, | )}[CLASS]
   {test1CheckGammas}
     {/polynomialfiltering/components/Fmp_test/}
       {/polynomialfiltering/components/Fmp_test/::test1CheckGammas : None; params(/polynomialfiltering/components/Fmp_test/test1CheckGammas/::self : Fmp_test, | @testcase;)}[CLASS]
@@ -6995,20 +6763,11 @@
   {test1PurePredict}
     {/polynomialfiltering/components/RecursivePolynomialFilter_test/}
       {/polynomialfiltering/components/RecursivePolynomialFilter_test/::test1PurePredict : None; params(/polynomialfiltering/components/RecursivePolynomialFilter_test/test1PurePredict/::self : RecursivePolynomialFilter_test, | @testcase;)}[CLASS]
-  {test1Scalar}
-    {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/}
-      {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/::test1Scalar : None; params(/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test1Scalar/::self : ConstantObservationErrorModel_test, | @testcase;)}[CLASS]
   {test2CheckStates}
     {/polynomialfiltering/components/Pair_test/}
       {/polynomialfiltering/components/Pair_test/::test2CheckStates : None; params(/polynomialfiltering/components/Pair_test/test2CheckStates/::self : Pair_test, | @testcase;)}[CLASS]
     {/polynomialfiltering/components/EMP_test/}
       {/polynomialfiltering/components/EMP_test/::test2CheckStates : None; params(/polynomialfiltering/components/EMP_test/test2CheckStates/::self : EMP_test, | @testcase;)}[CLASS]
-  {test2Matrix}
-    {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/}
-      {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/::test2Matrix : None; params(/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test2Matrix/::self : ConstantObservationErrorModel_test, | @testcase;)}[CLASS]
-  {test3MatrixMatrix}
-    {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/}
-      {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/::test3MatrixMatrix : None; params(/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test3MatrixMatrix/::self : ConstantObservationErrorModel_test, | @testcase;)}[CLASS]
   {test9Basic}
     {/polynomialfiltering/components/Fmp_test/}
       {/polynomialfiltering/components/Fmp_test/::test9Basic : None; params(/polynomialfiltering/components/Fmp_test/test9Basic/::self : Fmp_test, | @testcase;)}[CLASS]
@@ -7040,16 +6799,22 @@
       {/polynomialfiltering/components/Fmp_test/test1CheckVRF/::testData : TestData}[MEMBER]
     {/polynomialfiltering/components/EMP_test/generateStates/}
       {/polynomialfiltering/components/EMP_test/generateStates/::testData : TestData ClassRef; }[MEMBER]
+    {/polynomialfiltering/components/Fmp_test/generateVrfs/}
+      {/polynomialfiltering/components/Fmp_test/generateVrfs/::testData : TestData ClassRef; }[MEMBER]
     {/polynomialfiltering/components/EMP_test/test2CheckStates/}
       {/polynomialfiltering/components/EMP_test/test2CheckStates/::testData : TestData}[MEMBER]
     {/polynomialfiltering/components/Fmp_test/test1CheckStates/}
       {/polynomialfiltering/components/Fmp_test/test1CheckStates/::testData : TestData}[MEMBER]
+    {/polynomialfiltering/components/FixedMemoryFilter_test/}
+      {/polynomialfiltering/components/FixedMemoryFilter_test/::testData : TestData}[CLASS]
     {/polynomialfiltering/components/FixedMemoryFilter_test/generatePerfect/}
       {/polynomialfiltering/components/FixedMemoryFilter_test/generatePerfect/::testData : TestData ClassRef; }[MEMBER]
-    {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test2Matrix/}
-      {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test2Matrix/::testData : TestData}[MEMBER]
+    {/polynomialfiltering/components/FixedMemoryFilter_test/generateNoisy/}
+      {/polynomialfiltering/components/FixedMemoryFilter_test/generateNoisy/::testData : TestData ClassRef; }[MEMBER]
     {/polynomialfiltering/components/Fmp_test/generateStates/}
       {/polynomialfiltering/components/Fmp_test/generateStates/::testData : TestData ClassRef; }[MEMBER]
+    {/polynomialfiltering/components/FixedMemoryFilter_test/test1CheckPerfect/}
+      {/polynomialfiltering/components/FixedMemoryFilter_test/test1CheckPerfect/::testData : TestData}[MEMBER]
     {/polynomialfiltering/components/FixedMemoryFilter_test/test1CheckNoisy/}
       {/polynomialfiltering/components/FixedMemoryFilter_test/test1CheckNoisy/::testData : TestData}[MEMBER]
     {/polynomialfiltering/components/Fmp_test/test1CheckGammas/}
@@ -7062,28 +6827,16 @@
       {/polynomialfiltering/components/FixedMemoryFilter_test/generateVRF/::testData : TestData ClassRef; }[MEMBER]
     {/polynomialfiltering/components/Fmp_test/generateGammas/}
       {/polynomialfiltering/components/Fmp_test/generateGammas/::testData : TestData ClassRef; }[MEMBER]
-    {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test3MatrixMatrix/}
-      {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test3MatrixMatrix/::testData : TestData}[MEMBER]
     {/polynomialfiltering/components/Pair_test/generateStates/}
       {/polynomialfiltering/components/Pair_test/generateStates/::testData : TestData ClassRef; }[MEMBER]
-    {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test1Scalar/}
-      {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test1Scalar/::testData : TestData}[MEMBER]
-    {/polynomialfiltering/components/FixedMemoryFilter_test/test1CheckMidpoints/}
-      {/polynomialfiltering/components/FixedMemoryFilter_test/test1CheckMidpoints/::testData : TestData}[MEMBER]
-    {/polynomialfiltering/components/Fmp_test/generateVrfs/}
-      {/polynomialfiltering/components/Fmp_test/generateVrfs/::testData : TestData ClassRef; }[MEMBER]
-    {/polynomialfiltering/components/FixedMemoryFilter_test/}
-      {/polynomialfiltering/components/FixedMemoryFilter_test/::testData : TestData}[CLASS]
-    {/polynomialfiltering/components/FixedMemoryFilter_test/generateNoisy/}
-      {/polynomialfiltering/components/FixedMemoryFilter_test/generateNoisy/::testData : TestData ClassRef; }[MEMBER]
-    {/polynomialfiltering/components/FixedMemoryFilter_test/test1CheckPerfect/}
-      {/polynomialfiltering/components/FixedMemoryFilter_test/test1CheckPerfect/::testData : TestData}[MEMBER]
     {/polynomialfiltering/components/FixedMemoryFilter_test/generateMidpoints/}
       {/polynomialfiltering/components/FixedMemoryFilter_test/generateMidpoints/::testData : TestData ClassRef; }[MEMBER]
     {/polynomialfiltering/components/Pair_test/test2CheckStates/}
       {/polynomialfiltering/components/Pair_test/test2CheckStates/::testData : TestData}[MEMBER]
     {/polynomialfiltering/components/EMP_test/test1CheckVRF/}
       {/polynomialfiltering/components/EMP_test/test1CheckVRF/::testData : TestData}[MEMBER]
+    {/polynomialfiltering/components/FixedMemoryFilter_test/test1CheckMidpoints/}
+      {/polynomialfiltering/components/FixedMemoryFilter_test/test1CheckMidpoints/::testData : TestData}[MEMBER]
     {/polynomialfiltering/components/EMP_test/generateVRF/}
       {/polynomialfiltering/components/EMP_test/generateVRF/::testData : TestData ClassRef; }[MEMBER]
   {testDataPath}
@@ -7095,12 +6848,8 @@
       {/polynomialfiltering/components/Pair_test/generateStates/TestData/::testDataPath : str; params( | ) INHERITED; }[CLASS]
     {/polynomialfiltering/components/FixedMemoryFilter_test/test1CheckNoisy/TestData/}
       {/polynomialfiltering/components/FixedMemoryFilter_test/test1CheckNoisy/TestData/::testDataPath : str; params( | ) INHERITED; }[CLASS]
-    {/polynomialfiltering/filters/controls/TestData/}
-      {/polynomialfiltering/filters/controls/TestData/::testDataPath : str; params( | ) INHERITED; }[CLASS]
     {/polynomialfiltering/components/FixedMemoryFilter_test/test1CheckPerfect/TestData/}
       {/polynomialfiltering/components/FixedMemoryFilter_test/test1CheckPerfect/TestData/::testDataPath : str; params( | ) INHERITED; }[CLASS]
-    {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test2Matrix/TestData/}
-      {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test2Matrix/TestData/::testDataPath : str; params( | ) INHERITED; }[CLASS]
     {/polynomialfiltering/components/EMP_test/generateStates/TestData/}
       {/polynomialfiltering/components/EMP_test/generateStates/TestData/::testDataPath : str; params( | ) INHERITED; }[CLASS]
     {/polynomialfiltering/components/TestData/}
@@ -7115,8 +6864,6 @@
       {/polynomialfiltering/components/EMP_test/TestData/::testDataPath : str; params( | ) INHERITED; }[CLASS]
     {/polynomialfiltering/components/FixedMemoryFilter_test/generatePerfect/TestData/}
       {/polynomialfiltering/components/FixedMemoryFilter_test/generatePerfect/TestData/::testDataPath : str; params( | ) INHERITED; }[CLASS]
-    {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test1Scalar/TestData/}
-      {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test1Scalar/TestData/::testDataPath : str; params( | ) INHERITED; }[CLASS]
     {/polynomialfiltering/components/EMP_test/test1CheckVRF/TestData/}
       {/polynomialfiltering/components/EMP_test/test1CheckVRF/TestData/::testDataPath : str; params( | ) INHERITED; }[CLASS]
     {/polynomialfiltering/components/Fmp_test/generateVrfs/TestData/}
@@ -7139,8 +6886,6 @@
       {/polynomialfiltering/components/RecursivePolynomialFilter_test/test1PureObservation/TestData/::testDataPath : str; params( | ) INHERITED; }[CLASS]
     {/polynomialfiltering/components/FixedMemoryFilter_test/test1CheckMidpoints/TestData/}
       {/polynomialfiltering/components/FixedMemoryFilter_test/test1CheckMidpoints/TestData/::testDataPath : str; params( | ) INHERITED; }[CLASS]
-    {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test3MatrixMatrix/TestData/}
-      {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test3MatrixMatrix/TestData/::testDataPath : str; params( | ) INHERITED; }[CLASS]
     {/polynomialfiltering/components/Pair_test/test2CheckStates/TestData/}
       {/polynomialfiltering/components/Pair_test/test2CheckStates/TestData/::testDataPath : str; params( | ) INHERITED; }[CLASS]
     {/TestData/}
@@ -7505,8 +7250,6 @@
   {x}
     {/polynomialfiltering/Main/AbstractFilter/stateTransitionMatrix/}
       {/polynomialfiltering/Main/AbstractFilter/stateTransitionMatrix/::x : float}[MEMBER]
-    {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test1Scalar/}
-      {/polynomialfiltering/filters/controls/ConstantObservationErrorModel_test/test1Scalar/::x : float}[MEMBER]
   {xtest0Generate}
     {/polynomialfiltering/components/Fmp_test/}
       {/polynomialfiltering/components/Fmp_test/::xtest0Generate : None; params(/polynomialfiltering/components/Fmp_test/xtest0Generate/::self : Fmp_test, | )}[CLASS]

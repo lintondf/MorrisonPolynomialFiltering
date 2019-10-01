@@ -147,7 +147,7 @@ public class Transpiler {
 //////		new Target(Paths.get("polynomialfiltering/filters"), "ManagedScalarRecursiveFilter"),
 //////		new Target(Paths.get("polynomialfiltering/filters"), "ManagedScalarRecursiveFilterSet"),
 		
-		new TestTarget(Paths.get("filters/controls"), "ConstantObservationErrorModel_test"),
+		new TestTarget(Paths.get("filters/controls"), "ObservationErrorModel_test"),
 	};
 	
 	final Set<String> ignoredModules = new TreeSet<String>( Arrays.asList( new String[]{
@@ -198,6 +198,14 @@ public class Transpiler {
 		return manualImports.get(scopeString);
 	}
 
+	
+	TreeSet<String> generatedFiles = new TreeSet<String>();
+	
+	public void addGeneratedFile( Path path ) {
+		generatedFiles.add(path.toAbsolutePath().toString());
+	}
+	
+	
 	protected boolean isTestCaseMethod = false;
 	
 	/**
@@ -954,5 +962,13 @@ public class Transpiler {
 		for (String missed : srcs) {
 			System.out.println("Missed: " + missed);
 		}
+		File cleaner = new File("../cleanGeneratedFiles.sh");
+		try {
+			Writer out = new OutputStreamWriter(new FileOutputStream(cleaner));
+			for (String path : transpiler.generatedFiles) {
+				out.write(String.format("rm %s\n", path));
+			}
+			out.close();
+		} catch (Exception x) {}
 	}
 }

@@ -133,6 +133,7 @@ public class JavaTestTarget extends AbstractJavaTarget {
 //			}
 			String outStr = strOut.toString();
 			outStr = outStr.replace("this.assert", "assert"); // convert calls to self.assert* methods to TestMain imports
+			Transpiler.instance().addGeneratedFile(srcPath);
 			String old = readFileToString( srcPath );
 			if (true || old == null || !old.equals(outStr)) {
 				srcPath.toFile().getParentFile().mkdirs();
