@@ -75,6 +75,7 @@ public class TranslateWolframNotebook {
 					break;
 				int jFinish = line.indexOf(cformFinishMarker, iStart);
 				String cform = line.substring(iStart+cformStartMarker.length(), jFinish);
+				cform = cform.replace("\\\\n     -", "");
 				cform = cform.replace("\"",  "");
 				cform = cform.replaceAll("\\s", "");
 				//System.out.println(cform);
@@ -295,18 +296,35 @@ public class TranslateWolframNotebook {
 	}
 
 	public static void emitPython( Chunk template, List<String> cforms, String signatureFormat, Map<String, String> parameters) {
+		StringBuilder p = new StringBuilder();
+		for (String key : parameters.keySet()) {
+			p.append(parameters.get(key));
+			p.append(" : vector, ");
+		}
+		p.delete(p.length()-2, p.length());
+		parameters.put("Cos", "cos");
+		parameters.put("Sin", "sin");
+		parameters.put("Sqrt", "sqrt");
 		int derivative = 1;
 		for (String cform : cforms) {
 			try {
-				System.out.println(cform);
-				LinkedList<Object> list = new ExpressionParser().parsePostfix(cform);
+				for (String key : parameters.keySet()) {
+					cform = cform.replace(key, parameters.get(key));
+				}
+//				LinkedList<Object> list = new ExpressionParser().parsePostfix(cform);
 				String signature = String.format(signatureFormat, derivative, derivative);
-				emitPython(template, signature, parameters, list );
+				String def = String.format("    def %s(self, %s) -> array:", signature, p.toString());
+				System.out.println(def);
+				System.out.printf("        return %s;\n\n", cform);
+//				emitPython(template, signature, parameters, list );
 			} catch (Exception x) {
 				x.printStackTrace();
 			}	
 			derivative++;
 		}
+		parameters.remove("Cos");
+		parameters.remove("Sin");
+		parameters.remove("Sqrt");
 	}
 	
 	public static void emitPython( Chunk template, String functionSignature, Map<String, String> parameters, LinkedList<Object> list) {
@@ -391,12 +409,12 @@ public class TranslateWolframNotebook {
 		Chunk javaTemplate = theme.makeChunk();
 		Chunk pythonTemplate = theme.makeChunk();
 		try {
-			byte[] bytes = Files.readAllBytes( Paths.get("../Java/src/com/bluelightning/tools/RadarCoordinatesTemplate.java") );
-			javaTemplate.append( new String( bytes, "UTF-8" ) );
-			bytes = Files.readAllBytes( Paths.get("../Python/src/RadarCoordinatesTemplate.py") );
+			byte[] bytes = Files.readAllBytes( Paths.get("../Python/test/RadarCoordinatesTemplate.py") );
 			pythonTemplate.append( new String( bytes, "UTF-8" ) );
-			bytes = Files.readAllBytes( Paths.get("../Cpp/src/RadarCoordinatesTemplate.hpp") );
-			cppTemplate.append( new String( bytes, "UTF-8" ) );
+//			bytes = Files.readAllBytes( Paths.get("../Java/src/com/bluelightning/tools/RadarCoordinatesTemplate.java") );
+//			javaTemplate.append( new String( bytes, "UTF-8" ) );
+//			bytes = Files.readAllBytes( Paths.get("../Cpp/src/RadarCoordinatesTemplate.hpp") );
+//			cppTemplate.append( new String( bytes, "UTF-8" ) );
 		} catch (Exception x) {
 			x.printStackTrace();
 		}
@@ -410,16 +428,16 @@ public class TranslateWolframNotebook {
 		
 		List<String> cforms = translateNotebook( "data/dAzimuth.nb" );
 		emitPython( pythonTemplate, cforms, "d%dAzimuthdENU%d", map );
-		emitJava( javaTemplate, cforms, "d%dAzimuthdENU%d", map );
-		emitCpp( cppTemplate, cforms, "d%dAzimuthdENU%d", map );
+//		emitJava( javaTemplate, cforms, "d%dAzimuthdENU%d", map );
+//		emitCpp( cppTemplate, cforms, "d%dAzimuthdENU%d", map );
 		cforms = translateNotebook( "data/dElevation.nb" );
 		emitPython( pythonTemplate, cforms, "d%dElevationdENU%d", map );
-		emitJava( javaTemplate, cforms, "d%dElevationdENU%d", map );
-		emitCpp( cppTemplate, cforms, "d%dElevationdENU%d", map );
+//		emitJava( javaTemplate, cforms, "d%dElevationdENU%d", map );
+//		emitCpp( cppTemplate, cforms, "d%dElevationdENU%d", map );
 		cforms = translateNotebook( "data/dRange.nb" );
 		emitPython( pythonTemplate, cforms, "d%dRangedENU%d", map );
-		emitJava( javaTemplate, cforms, "d%dRangedENU%d", map );
-		emitCpp( cppTemplate, cforms, "d%dRangedENU%d", map );
+//		emitJava( javaTemplate, cforms, "d%dRangedENU%d", map );
+//		emitCpp( cppTemplate, cforms, "d%dRangedENU%d", map );
 		
 		map.clear();
 		map.put( "X", "A");
@@ -428,43 +446,45 @@ public class TranslateWolframNotebook {
 
 		cforms = translateNotebook( "data/dEast.nb" );
 		emitPython( pythonTemplate, cforms, "d%dEastdAER%d", map );
-		emitJava( javaTemplate, cforms, "d%dEastdAER%d", map );
-		emitCpp( cppTemplate, cforms, "d%dEastdAER%d", map );
+//		emitJava( javaTemplate, cforms, "d%dEastdAER%d", map );
+//		emitCpp( cppTemplate, cforms, "d%dEastdAER%d", map );
 		cforms = translateNotebook( "data/dNorth.nb" );
 		emitPython( pythonTemplate, cforms, "d%dNorthdAER%d", map );
-		emitJava( javaTemplate, cforms, "d%dNorthdAER%d", map );
-		emitCpp( cppTemplate, cforms, "d%dNorthdAER%d", map );
+//		emitJava( javaTemplate, cforms, "d%dNorthdAER%d", map );
+//		emitCpp( cppTemplate, cforms, "d%dNorthdAER%d", map );
 		cforms = translateNotebook( "data/dUp.nb" );
 		emitPython( pythonTemplate, cforms, "d%dUpdAER%d", map );
-		emitJava( javaTemplate, cforms, "d%dUpdAER%d", map );
-		emitCpp( cppTemplate, cforms, "d%dUpdAER%d", map );
+//		emitJava( javaTemplate, cforms, "d%dUpdAER%d", map );
+//		emitCpp( cppTemplate, cforms, "d%dUpdAER%d", map );
 		
-		cppTemplate.set("WARNING", "DO NOT EDIT THIS FILE!  EDIT RadarCoordinatesTemplate.java");
-		String cppOutput = cppTemplate.toString();
-		cppOutput = cppOutput.replace("class RadarCoordinatesTemplate", "class RadarCoordinates");
-		try {
-			Files.write(Paths.get("../Cpp/src/RadarCoordinates.hpp"), cppOutput.getBytes());
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-		javaTemplate.set("WARNING", "DO NOT EDIT THIS FILE!  EDIT RadarCoordinatesTemplate.java");
-		String javaOutput = javaTemplate.toString();
-		javaOutput = javaOutput.replace("public class RadarCoordinatesTemplate", "public class RadarCoordinates");
-		try {
-			Files.write(Paths.get("../Java/src/com/bluelightning/tools/RadarCoordinates.java"), javaOutput.getBytes());
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-		String pythonOutput = pythonTemplate.toString();
-		pythonOutput = pythonOutput.replace("class RadarCoordinatesTemplate", "class RadarCoordinates");
-		try {
-			Files.write(Paths.get("../Python/src/RadarCoordinates.py"), pythonOutput.getBytes());
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+//		cppTemplate.set("WARNING", "DO NOT EDIT THIS FILE!  EDIT RadarCoordinatesTemplate.java");
+//		String cppOutput = cppTemplate.toString();
+//		cppOutput = cppOutput.replace("class RadarCoordinatesTemplate", "class RadarCoordinates");
+//		try {
+//			Files.write(Paths.get("../Cpp/src/RadarCoordinates.hpp"), cppOutput.getBytes());
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
+//
+//		javaTemplate.set("WARNING", "DO NOT EDIT THIS FILE!  EDIT RadarCoordinatesTemplate.java");
+//		String javaOutput = javaTemplate.toString();
+//		javaOutput = javaOutput.replace("public class RadarCoordinatesTemplate", "public class RadarCoordinates");
+//		try {
+//			Files.write(Paths.get("../Java/src/com/bluelightning/tools/RadarCoordinates.java"), javaOutput.getBytes());
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
+//
+//		String pythonOutput = pythonTemplate.toString();
+//		pythonOutput = pythonOutput.replace("class RadarCoordinatesTemplate", "class RadarCoordinates");
+//		try {
+//			Files.write(Paths.get("../Python/src/RadarCoordinates.py"), pythonOutput.getBytes());
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
 	}
+	
+	
 	public static void mainTest_identifyTwoItemGroup(String[] args) {
 		System.out.println( identifyTwoItemGroup("hello"));
 		System.out.println( identifyTwoItemGroup("(1)"));
@@ -743,147 +763,6 @@ public class TranslateWolframNotebook {
 
 	}	
 	
-	public static void mainx(String[] args) {
-		//translateNotebooks(args);
-		Chunk cppTemplate = theme.makeChunk();
-		Chunk javaTemplate = theme.makeChunk();
-		Chunk pythonTemplate = theme.makeChunk();
-		for (int order = 0; order <= 5; order++) {
-			pythonTemplate.append(String.format("# EMP%d VRF\n", order) );
-			pythonTemplate.append("tau = self.tau;\n");
-			pythonTemplate.append("return array([\n");
-			for (int i = 0; i <= order; i++) {
-				pythonTemplate.append( String.format("{$EMP%dVRF_%dth}", order, i));
-				if (i < order) {
-					pythonTemplate.append(",");
-				}
-				pythonTemplate.append("\n");
-			}
-			pythonTemplate.append("])\n");
-		}
-//		System.out.println(pythonTemplate.toString());
-
-//		int order = 5;
-//		List<String> cforms = translateVRF2CForm(new String[] {
-//				"6 (2n+3)(3n4+18n3+113n2+258n+280)\r\n" + 
-//				"|(n+1)(6)",
-//				"588 (25n8+500n7+4 450n6+23 300n5+79 585n4+181 760n3\r\n" + 
-//				"+267 180n2+226 920n+84 528)\r\n" + 
-//				"|\r\n" + 
-//				"tau2(n+6)(11)",
-//				"70 560 (2n+3)(16n5+192n4+952n3+2 472n2+3 501n+2 230)\r\n" + 
-//				"|\r\n" + 
-//				"tau4(n+6)(11)",
-//				"2 721 600 (48n4+402n3+1 274n2+1 828n+1 047)\r\n" + 
-//				"|\r\n" + 
-//				"tau6(n+6)(11)",
-//				"50 803 200 (2n+3)(25n+62)\r\n" + 
-//				"|\r\n" + 
-//				"tau8(n+6)(11)",
-//				"10 059 033 600\r\n" + 
-//				"|\r\n" + 
-//				"tau10(n+6)(11)"
-//		} );
-//		int order = 4;
-//		List<String> cforms = translateVRF2CForm(new String[] {
-//			"5 (5n4+30n3+115n2+210n+144)\r\n" + 
-//			"|(n+1)(5)",
-//			"100 (2n+3)(24n5+297n4+1476n3+3 777n2+5 198n+3 172)\r\n" + 
-//			"|tau\r\n" + 
-//			"2(n+5)(9)",
-//			"35 280 (9n4+76n3+239n2+336n+185)\r\n" + 
-//			"|tau\r\n" + 
-//			"4(n+5)(9)",
-//			"100 800 (2n+3)(32n+79)\r\n" + 
-//			"|tau\r\n" + 
-//			"6(n+5)(9)",
-//			"25 401 600\r\n" + 
-//			"|tau\r\n" + 
-//			"8(n+5)(9)",
-//		} );
-//		int order = 3;
-//		List<String> cforms = translateVRF2CForm(new String[] {
-//			"4(4n3+18n2+38n+30)\r\n" + 
-//			"|(n+1)(4)",
-//			"200 (6n4+51n3+159n2+219n+116)\r\n" + 
-//			"|tau\r\n" + 
-//			"2(n+4)(7)",
-//			"1440 (2n+3)(9n+22)\r\n" + 
-//			"|tau\r\n" + 
-//			"4(n+4)(7)",
-//			"100 800\r\n" + 
-//			"|tau\r\n" + 
-//			"6(n+4)(7)",
-//		} );
-//		int order = 2;
-//		List<String> cforms = translateVRF2CForm(new String[] {
-//			"3(3n2+9n+8)\r\n" + 
-//			"|(n+1)(3)",
-//			"12(16n2+62n+57)\r\n" + 
-//			"|tau\r\n" + 
-//			"2(n+3)(5)",
-//			"720\r\n" + 
-//			"|tau\r\n" + 
-//			"4(n+3)(5)",
-//		} );
-//		int order = 1;
-//		List<String> cforms = translateVRF2CForm(new String[] {
-//				"2(2n+3)\r\n" + 
-//				"|(n+1)(2)",
-//				"12\r\n" + 
-//				"|tau\r\n" + 
-//				"2(n+2)(3)"
-//		} );
-//		int order = 1;  // FMF
-//		List<String> cforms = translateVRF2CForm(new String[] {
-//				"(t 2+4t +5)(1 - t)        |   (1+t)3",
-//				"2(1 - t)3 | u 2(1+t)3"
-//		} );
-//		int order = 2;
-//		List<String> cforms = translateVRF2CForm(new String[] {
-//				"(t 4+6t3 +16t 2+24t +19)(1 - t)                       |   (1+t)5",
-//				"(13t 2+50t +49)(1 - t)3         |   2 u 2(1+t)5 ",
-//				"6(1 - t)5|  u 4(1+t)5"
-//		} );
-//		int order = 3;
-//		List<String> cforms = translateVRF2CForm(new String[] {
-//				"  (t6+8t5+29t 4+64t3+97t 2+104t+69)(1 - t)                                     |  (1+t)7",
-//				"5(53t4+298t3+762t 2+970t+581)(1 - t)3                               | 18 u 2(1+t)7",
-//				"2(23t 2+76t+63)(1 - t)5              | u 4(1+t)7",
-//				"20(1 - t)7   | u 6(1+t)7"
-//		} );
-//		int order = 4;
-//		List<String> cforms = translateVRF2CForm(new String[] {
-//				"(t8+10t7+46t6+130t5+2 56t 4+380t3+446t 2+4 10t+251)(1 - t)                                                  |  (1+t)9",
-//				"5(449t6+2 988t5+10 013t 4+21 216t3+28 923t 2+25 588t+12 199)(1 - t)3                                                | 72 u 2(1+t)9",
-//				"7(2 021t 4+10 144t3+22 746t 2+25 144t+12 521)(1 - t)5                                       | 72 u 4(1+t)9",
-//				"5(113t 2+338t+253)(1 - t)7                 | 2 u 6(1+t)9",
-//				"70(1 - t)9 |  u 8(1+t)9"
-//		} );
-		int order = 5;
-		List<String> cforms = translateVRF2CForm(new String[] {
-				"(t10+12t9+67t8+232t7+562t6+1 024t5 +14 84t 4+1 792t3+1 847t 2+1 572t+923)(1 - t)                                 | (1+t)11",
-				"7(17 467t8+124 874t7+478 036t6+1 239 958t5+2 345 510 t4          +3 250 918t3+3 352 636t 2+2 454 074t+1 028 527)(1 - t)3                                              | 1800 u 2(1+t)11",
-				"7(7 121t6+43 016t5+129 715t4+244 880t3                 +295 855t 2+225 176t+87 581)(1 - t)5                                | 72 u 4(1+t)11",
-				"3(2 549t 4+12 072t3+24 926t 2+25 176t+11 117)(1 - t)7                                      |  4 u 6(1+t)11",
-				"14(113t 2+316t+221)(1 - t)9                 | u8(1+t)11",
-				"252(1 - t)11 |  u 10(1+t)11",
-		} );
-		int element = 0;
-		for (String cform : cforms) {
-			try {
-				System.out.println(cform);
-				LinkedList<Object> list = new ExpressionParser().parsePostfix(cform);
-				String signature = String.format("EMP%dVRF_%dth", order, element);
-				emitPython(pythonTemplate, signature, null, list );
-			} catch (Exception x) {
-				x.printStackTrace();
-			}	
-			element++;
-		}
-		System.out.println(pythonTemplate.toString().replace("POW", "pow"));		
-		
-	}
 	
 	protected static final Pattern powerPattern = Pattern.compile("(Power\\(([^,]*),(\\d+)\\))");
 	
@@ -1056,7 +935,149 @@ public class TranslateWolframNotebook {
 //		}
 	}
 	
-	public static void main(String[] args) {
+	public static void mainx(String[] args) {
+		//translateNotebooks(args);
+		Chunk cppTemplate = theme.makeChunk();
+		Chunk javaTemplate = theme.makeChunk();
+		Chunk pythonTemplate = theme.makeChunk();
+		for (int order = 0; order <= 5; order++) {
+			pythonTemplate.append(String.format("# EMP%d VRF\n", order) );
+			pythonTemplate.append("tau = self.tau;\n");
+			pythonTemplate.append("return array([\n");
+			for (int i = 0; i <= order; i++) {
+				pythonTemplate.append( String.format("{$EMP%dVRF_%dth}", order, i));
+				if (i < order) {
+					pythonTemplate.append(",");
+				}
+				pythonTemplate.append("\n");
+			}
+			pythonTemplate.append("])\n");
+		}
+//		System.out.println(pythonTemplate.toString());
+
+//		int order = 5;
+//		List<String> cforms = translateVRF2CForm(new String[] {
+//				"6 (2n+3)(3n4+18n3+113n2+258n+280)\r\n" + 
+//				"|(n+1)(6)",
+//				"588 (25n8+500n7+4 450n6+23 300n5+79 585n4+181 760n3\r\n" + 
+//				"+267 180n2+226 920n+84 528)\r\n" + 
+//				"|\r\n" + 
+//				"tau2(n+6)(11)",
+//				"70 560 (2n+3)(16n5+192n4+952n3+2 472n2+3 501n+2 230)\r\n" + 
+//				"|\r\n" + 
+//				"tau4(n+6)(11)",
+//				"2 721 600 (48n4+402n3+1 274n2+1 828n+1 047)\r\n" + 
+//				"|\r\n" + 
+//				"tau6(n+6)(11)",
+//				"50 803 200 (2n+3)(25n+62)\r\n" + 
+//				"|\r\n" + 
+//				"tau8(n+6)(11)",
+//				"10 059 033 600\r\n" + 
+//				"|\r\n" + 
+//				"tau10(n+6)(11)"
+//		} );
+//		int order = 4;
+//		List<String> cforms = translateVRF2CForm(new String[] {
+//			"5 (5n4+30n3+115n2+210n+144)\r\n" + 
+//			"|(n+1)(5)",
+//			"100 (2n+3)(24n5+297n4+1476n3+3 777n2+5 198n+3 172)\r\n" + 
+//			"|tau\r\n" + 
+//			"2(n+5)(9)",
+//			"35 280 (9n4+76n3+239n2+336n+185)\r\n" + 
+//			"|tau\r\n" + 
+//			"4(n+5)(9)",
+//			"100 800 (2n+3)(32n+79)\r\n" + 
+//			"|tau\r\n" + 
+//			"6(n+5)(9)",
+//			"25 401 600\r\n" + 
+//			"|tau\r\n" + 
+//			"8(n+5)(9)",
+//		} );
+//		int order = 3;
+//		List<String> cforms = translateVRF2CForm(new String[] {
+//			"4(4n3+18n2+38n+30)\r\n" + 
+//			"|(n+1)(4)",
+//			"200 (6n4+51n3+159n2+219n+116)\r\n" + 
+//			"|tau\r\n" + 
+//			"2(n+4)(7)",
+//			"1440 (2n+3)(9n+22)\r\n" + 
+//			"|tau\r\n" + 
+//			"4(n+4)(7)",
+//			"100 800\r\n" + 
+//			"|tau\r\n" + 
+//			"6(n+4)(7)",
+//		} );
+//		int order = 2;
+//		List<String> cforms = translateVRF2CForm(new String[] {
+//			"3(3n2+9n+8)\r\n" + 
+//			"|(n+1)(3)",
+//			"12(16n2+62n+57)\r\n" + 
+//			"|tau\r\n" + 
+//			"2(n+3)(5)",
+//			"720\r\n" + 
+//			"|tau\r\n" + 
+//			"4(n+3)(5)",
+//		} );
+//		int order = 1;
+//		List<String> cforms = translateVRF2CForm(new String[] {
+//				"2(2n+3)\r\n" + 
+//				"|(n+1)(2)",
+//				"12\r\n" + 
+//				"|tau\r\n" + 
+//				"2(n+2)(3)"
+//		} );
+//		int order = 1;  // FMF
+//		List<String> cforms = translateVRF2CForm(new String[] {
+//				"(t 2+4t +5)(1 - t)        |   (1+t)3",
+//				"2(1 - t)3 | u 2(1+t)3"
+//		} );
+//		int order = 2;
+//		List<String> cforms = translateVRF2CForm(new String[] {
+//				"(t 4+6t3 +16t 2+24t +19)(1 - t)                       |   (1+t)5",
+//				"(13t 2+50t +49)(1 - t)3         |   2 u 2(1+t)5 ",
+//				"6(1 - t)5|  u 4(1+t)5"
+//		} );
+//		int order = 3;
+//		List<String> cforms = translateVRF2CForm(new String[] {
+//				"  (t6+8t5+29t 4+64t3+97t 2+104t+69)(1 - t)                                     |  (1+t)7",
+//				"5(53t4+298t3+762t 2+970t+581)(1 - t)3                               | 18 u 2(1+t)7",
+//				"2(23t 2+76t+63)(1 - t)5              | u 4(1+t)7",
+//				"20(1 - t)7   | u 6(1+t)7"
+//		} );
+//		int order = 4;
+//		List<String> cforms = translateVRF2CForm(new String[] {
+//				"(t8+10t7+46t6+130t5+2 56t 4+380t3+446t 2+4 10t+251)(1 - t)                                                  |  (1+t)9",
+//				"5(449t6+2 988t5+10 013t 4+21 216t3+28 923t 2+25 588t+12 199)(1 - t)3                                                | 72 u 2(1+t)9",
+//				"7(2 021t 4+10 144t3+22 746t 2+25 144t+12 521)(1 - t)5                                       | 72 u 4(1+t)9",
+//				"5(113t 2+338t+253)(1 - t)7                 | 2 u 6(1+t)9",
+//				"70(1 - t)9 |  u 8(1+t)9"
+//		} );
+		int order = 5;
+		List<String> cforms = translateVRF2CForm(new String[] {
+				"(t10+12t9+67t8+232t7+562t6+1 024t5 +14 84t 4+1 792t3+1 847t 2+1 572t+923)(1 - t)                                 | (1+t)11",
+				"7(17 467t8+124 874t7+478 036t6+1 239 958t5+2 345 510 t4          +3 250 918t3+3 352 636t 2+2 454 074t+1 028 527)(1 - t)3                                              | 1800 u 2(1+t)11",
+				"7(7 121t6+43 016t5+129 715t4+244 880t3                 +295 855t 2+225 176t+87 581)(1 - t)5                                | 72 u 4(1+t)11",
+				"3(2 549t 4+12 072t3+24 926t 2+25 176t+11 117)(1 - t)7                                      |  4 u 6(1+t)11",
+				"14(113t 2+316t+221)(1 - t)9                 | u8(1+t)11",
+				"252(1 - t)11 |  u 10(1+t)11",
+		} );
+		int element = 0;
+		for (String cform : cforms) {
+			try {
+				System.out.println(cform);
+				LinkedList<Object> list = new ExpressionParser().parsePostfix(cform);
+				String signature = String.format("EMP%dVRF_%dth", order, element);
+				emitPython(pythonTemplate, signature, null, list );
+			} catch (Exception x) {
+				x.printStackTrace();
+			}	
+			element++;
+		}
+		System.out.println(pythonTemplate.toString().replace("POW", "pow"));		
+		
+	}
+	
+	public static void mainy(String[] args) {
 		//List<CVRFCode> codes = translateCVRFNotebook("../Java/data/ComputedEMPVRF.nb" ); // MorrisonCVRF.nb");
 		List<CVRFCode> codes = translateCVRFNotebook("../Java/data/ComputedFMPVRF.nb" ); // MorrisonCVRF.nb");
 		for (CVRFCode code : codes) {
@@ -1088,5 +1109,8 @@ public class TranslateWolframNotebook {
 		writeTemplates( templates, paths );
 	}
 	
+	public static void main(String[] args) {
+		translateNotebooks(args);
+	}
 
 }

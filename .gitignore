@@ -1,5 +1,7 @@
 cleanGeneratedFiles.sh
 **/*.log
+**/*.svg
+**/*.dot
 **/*.png
 **/CMakeCache.txt
 testdata

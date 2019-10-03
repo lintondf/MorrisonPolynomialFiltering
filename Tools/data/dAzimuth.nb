@@ -1,23 +1,23 @@
 Notebook[{Cell[
 CellGroupData[{Cell[
 BoxData[RowBox[{"ArcTan","[",RowBox[{"y",",","x"}],"]"}]],
-"Input",ExpressionUUID -> "b3c8fc36-01f6-457b-8ec0-0c608175fdf7",CellLabel -> "In[2]:= "],Cell[
+"Input",ExpressionUUID -> "b3c8fc36-01f6-457b-8ec0-0c608175fdf7",CellLabel -> "In[1]:= "],Cell[
 BoxData[
-RowBox[{"ArcTan","[",RowBox[{"y",",","x"}],"]"}],StandardForm],"Output",ExpressionUUID -> "4db7fc73-8cb3-4f94-84d9-683dd7e0b4d8",
-CellLabel -> "Out[2]= "]},Open],ExpressionUUID -> "f285f70f-182c-4da7-85c6-3109a549713f"],Cell[
+RowBox[{"ArcTan","[",RowBox[{"y",",","x"}],"]"}],StandardForm],"Output",ExpressionUUID -> "81c0ea84-be79-4585-bb5c-383e173c289b",
+CellLabel -> "Out[1]= "]},Open],ExpressionUUID -> "98065628-351e-434e-8535-c6e103f2f177"],Cell[
 CellGroupData[
 {Cell[
 BoxData[RowBox[{"FullSimplify","[",RowBox[{"Dt","[","%","]"}],"]"}]],"Input",
-ExpressionUUID -> "407d455b-88df-45b2-9034-c973faa5cf63",CellLabel -> "In[3]:= "],Cell[
+ExpressionUUID -> "407d455b-88df-45b2-9034-c973faa5cf63",CellLabel -> "In[2]:= "],Cell[
 BoxData[
 FractionBox[RowBox[{RowBox[{"y"," ",RowBox[{"Dt","[","x","]"}]}],"-",RowBox[{"x"," ",RowBox[
 {"Dt","[","y","]"}]}]}],RowBox[{SuperscriptBox["x","2"],"+",SuperscriptBox["y","2"]}]],
-StandardForm],"Output",ExpressionUUID -> "7cbfb9de-372d-4451-b1c1-39fa4fd1e53b",CellLabel -> "Out[3]= "]},
-Open],ExpressionUUID -> "9b3b32fc-cf10-4dcb-b2ed-835b88578605"],Cell[
+StandardForm],"Output",ExpressionUUID -> "765b62fc-aac6-40a4-8829-c7c8a594f18d",CellLabel -> "Out[2]= "]},
+Open],ExpressionUUID -> "9fcd6ee7-2fd9-4779-8055-6fff4f5526c2"],Cell[
 CellGroupData[
 {Cell[
 BoxData[RowBox[{"FullSimplify","[",RowBox[{"Dt","[","%","]"}],"]"}]],"Input",
-ExpressionUUID -> "8ae95cf5-a494-4f16-a7de-e1b99ff300c3",CellLabel -> "In[4]:= "],Cell[
+ExpressionUUID -> "8ae95cf5-a494-4f16-a7de-e1b99ff300c3",CellLabel -> "In[3]:= "],Cell[
 BoxData[
 FractionBox[RowBox[{RowBox[{RowBox[{"-","2"}]," ",RowBox[{"(",RowBox[{RowBox[{"y"," ",RowBox[
 {"Dt","[","x","]"}]}],"-",RowBox[{"x"," ",RowBox[{"Dt","[","y","]"}]}]}],")"}]," ",RowBox[
@@ -26,12 +26,12 @@ FractionBox[RowBox[{RowBox[{RowBox[{"-","2"}]," ",RowBox[{"(",RowBox[{RowBox[{"y
 "2"],"+",SuperscriptBox["y","2"]}],")"}]," ",RowBox[{"(",RowBox[{RowBox[{"y"," ",RowBox[
 {"Dt","[",RowBox[{"Dt","[","x","]"}],"]"}]}],"-",RowBox[{"x"," ",RowBox[{"Dt","[",RowBox[
 {"Dt","[","y","]"}],"]"}]}]}],")"}]}]}],SuperscriptBox[RowBox[{"(",RowBox[{SuperscriptBox[
-"x","2"],"+",SuperscriptBox["y","2"]}],")"}],"2"]],StandardForm],"Output",ExpressionUUID -> "f74d4c58-e37e-4029-b802-914a1825e135",
-CellLabel -> "Out[4]= "]},Open],ExpressionUUID -> "c47495e7-bcc0-435f-b989-a89bf4a503af"],Cell[
+"x","2"],"+",SuperscriptBox["y","2"]}],")"}],"2"]],StandardForm],"Output",ExpressionUUID -> "da35d17b-aaff-4ac6-ac3d-32fbb95f4609",
+CellLabel -> "Out[3]= "]},Open],ExpressionUUID -> "ec0c3846-f267-47c0-b4ba-3ba702c72ffb"],Cell[
 CellGroupData[
 {Cell[
 BoxData[RowBox[{"FullSimplify","[",RowBox[{"Dt","[","%","]"}],"]"}]],"Input",
-ExpressionUUID -> "7590b83c-e606-4a8d-8f82-a304fabd1a1e",CellLabel -> "In[5]:= "],Cell[
+ExpressionUUID -> "7590b83c-e606-4a8d-8f82-a304fabd1a1e",CellLabel -> "In[4]:= "],Cell[
 BoxData[
 FractionBox[RowBox[{RowBox[{RowBox[{"(",RowBox[{RowBox[{"6"," ",SuperscriptBox["x",
 "2"]," ","y"}],"-",RowBox[{"2"," ",SuperscriptBox["y","3"]}]}],")"}]," ",SuperscriptBox[
@@ -55,12 +55,12 @@ RowBox[{"(",RowBox[{SuperscriptBox["x","2"],"+",SuperscriptBox["y","2"]}],")"}],
 {"(",RowBox[{RowBox[{RowBox[{"-","y"}]," ",RowBox[{"Dt","[",RowBox[{"Dt","[",RowBox[
 {"Dt","[","x","]"}],"]"}],"]"}]}],"+",RowBox[{"x"," ",RowBox[{"Dt","[",RowBox[{"Dt","[",RowBox[
 {"Dt","[","y","]"}],"]"}],"]"}]}]}],")"}]}]}],SuperscriptBox[RowBox[{"(",RowBox[{SuperscriptBox[
-"x","2"],"+",SuperscriptBox["y","2"]}],")"}],"3"]],StandardForm],"Output",ExpressionUUID -> "c01a75fd-ef64-4970-a94b-5707509622b2",
-CellLabel -> "Out[5]= "]},Open],ExpressionUUID -> "3050937a-6a87-4ec2-af34-97c790c52937"],Cell[
+"x","2"],"+",SuperscriptBox["y","2"]}],")"}],"3"]],StandardForm],"Output",ExpressionUUID -> "9d140dd4-4fad-4cab-bc30-66a8b213e485",
+CellLabel -> "Out[4]= "]},Open],ExpressionUUID -> "d5d90809-964b-4a0e-ab14-aefe37cfe2c2"],Cell[
 CellGroupData[
 {Cell[
 BoxData[RowBox[{"FullSimplify","[",RowBox[{"Dt","[","%","]"}],"]"}]],"Input",
-ExpressionUUID -> "bc073e19-38cf-4218-90fd-ce79c8f857f2",CellLabel -> "In[6]:= "],Cell[
+ExpressionUUID -> "bc073e19-38cf-4218-90fd-ce79c8f857f2",CellLabel -> "In[5]:= "],Cell[
 BoxData[
 FractionBox[RowBox[{RowBox[{"24"," ","x"," ","y"," ",RowBox[{"(",RowBox[{RowBox[{"-",SuperscriptBox[
 "x","2"]}],"+",SuperscriptBox["y","2"]}],")"}]," ",SuperscriptBox[RowBox[{"Dt","[","x","]"}],
@@ -113,12 +113,12 @@ RowBox[{"Dt","[",RowBox[{"Dt","[","x","]"}],"]"}],"2"]}],"+",RowBox[{"6"," ",Row
 {"Dt","[",RowBox[{"Dt","[",RowBox[{"Dt","[","x","]"}],"]"}],"]"}],"]"}]}],"+",RowBox[
 {"x"," ",RowBox[{"Dt","[",RowBox[{"Dt","[",RowBox[{"Dt","[",RowBox[{"Dt","[","y","]"}],"]"}],"]"}],"]"}]}]}],")"}]}]}],")"}]}]}],
 SuperscriptBox[RowBox[{"(",RowBox[{SuperscriptBox["x","2"],"+",SuperscriptBox["y",
-"2"]}],")"}],"4"]],StandardForm],"Output",ExpressionUUID -> "161d57cc-ce97-455a-b415-f0f105071734",
-CellLabel -> "Out[6]= "]},Open],ExpressionUUID -> "25f4fe56-085a-42b1-923a-26d75264bd28"],Cell[
+"2"]}],")"}],"4"]],StandardForm],"Output",ExpressionUUID -> "89e423b5-ef4c-4e38-9111-3f15085514f2",
+CellLabel -> "Out[5]= "]},Open],ExpressionUUID -> "dfb1c390-9e9a-497c-a04a-6cc9cec81ac3"],Cell[
 CellGroupData[
 {Cell[
 BoxData[RowBox[{"FullSimplify","[",RowBox[{"Dt","[","%","]"}],"]"}]],"Input",
-ExpressionUUID -> "006d749b-2781-4ca5-8498-b412f6934443",CellLabel -> "In[7]:= "],Cell[
+ExpressionUUID -> "006d749b-2781-4ca5-8498-b412f6934443",CellLabel -> "In[6]:= "],Cell[
 BoxData[
 FractionBox[RowBox[{RowBox[{"24"," ",RowBox[{"(",RowBox[{RowBox[{"5"," ",SuperscriptBox[
 "x","4"]," ","y"}],"-",RowBox[{"10"," ",SuperscriptBox["x","2"]," ",SuperscriptBox[
@@ -225,41 +225,45 @@ RowBox[{"Dt","[",RowBox[{"Dt","[","y","]"}],"]"}],"2"]}],"-",RowBox[{"2"," ","x"
 {"x"," ",RowBox[{"Dt","[",RowBox[{"Dt","[",RowBox[{"Dt","[",RowBox[{"Dt","[",RowBox[
 {"Dt","[","y","]"}],"]"}],"]"}],"]"}],"]"}]}]}],")"}]}]}],")"}]}]}],SuperscriptBox[
 RowBox[{"(",RowBox[{SuperscriptBox["x","2"],"+",SuperscriptBox["y","2"]}],")"}],"5"]],
-StandardForm],"Output",ExpressionUUID -> "3cb8a85a-ef4b-454a-a9e9-1814f6ebe8ec",CellLabel -> "Out[7]= "]},
-Open],ExpressionUUID -> "57b30345-0167-44e2-90bd-e00b1313615f"],Cell[
+StandardForm],"Output",ExpressionUUID -> "7e47c363-7f85-429a-81b6-3235c8f21f19",CellLabel -> "Out[6]= "]},
+Open],ExpressionUUID -> "4782eb66-0cec-409d-92e1-1b476322dd17"],Cell[
 CellGroupData[
 {Cell[
-BoxData[RowBox[{"CForm","[",RowBox[{"Out","[","3","]"}],"]"}]],"Input",ExpressionUUID -> "fa1fd95e-dd96-43bf-8a01-43839ec050b4",
-CellLabel -> "In[8]:= "],Cell[
-"\<\"(y*Dt(x) - x*Dt(y))/(Power(x,2) + Power(y,2))\"\>",
-"Output",ExpressionUUID -> "493bacc8-7ac2-4d69-9afa-c76ee87fa2d9",CellLabel -> "Out[8]//CForm= "]},
-Open],ExpressionUUID -> "f9f46e96-e1a4-487a-b6e9-6eb94abb80e3"],Cell[
+BoxData[RowBox[{"FortranForm","[",RowBox[{"Out","[","2","]"}],"]"}]],"Input",
+ExpressionUUID -> "fa1fd95e-dd96-43bf-8a01-43839ec050b4",CellLabel -> "In[12]:= "],Cell[
+
+"\<\"(y*Dt(x) - x*Dt(y))/(x**2 + y**2)\"\>","Output",ExpressionUUID -> "01055e4a-a304-4f66-b604-2ac36976abc8",
+CellLabel -> "Out[12]//FortranForm= "]},Open],ExpressionUUID -> "84add1e8-3fbf-4f00-910a-bbc9ab7779a0"],Cell[
 CellGroupData[
 {Cell[
-BoxData[RowBox[{"CForm","[",RowBox[{"Out","[","4","]"}],"]"}]],"Input",ExpressionUUID -> "c0bbb21c-4729-4fa8-b2d2-9f8f6effe677",
-CellLabel -> "In[9]:= "],Cell[
-"\<\"(-2*(y*Dt(x) - x*Dt(y))*(x*Dt(x) + y*Dt(y)) + \\n     (Power(x,2) + Power(y,2))*(y*Dt(Dt(x)) - x*Dt(Dt(y))))/\\n   Power(Power(x,2) + Power(y,2),2)\"\>",
-"Output",ExpressionUUID -> "31761790-be9b-4abd-b973-99b47ac3a9e9",CellLabel -> "Out[9]//CForm= "]},
-Open],ExpressionUUID -> "dfdc4a05-cc2e-414f-ba86-e1acc78f2fc0"],Cell[
+BoxData[RowBox[{"FortranForm","[",RowBox[{"Out","[","3","]"}],"]"}]],"Input",
+ExpressionUUID -> "c0bbb21c-4729-4fa8-b2d2-9f8f6effe677",CellLabel -> "In[13]:= "],Cell[
+
+"\<\"        (-2*(y*Dt(x) - x*Dt(y))*(x*Dt(x) + y*Dt(y)) + \\n     -    (x**2 + y**2)*(y*Dt(Dt(x)) - x*Dt(Dt(y))))/(x**2 + y**2)**2\"\>",
+"Output",ExpressionUUID -> "ee162655-00cb-46ee-90ca-f537581900b4",CellLabel -> "Out[13]//FortranForm= "]},
+Open],ExpressionUUID -> "b6610f49-67bc-4d5a-8c17-df5a0f724476"],Cell[
 CellGroupData[
 {Cell[
-BoxData[RowBox[{"CForm","[",RowBox[{"Out","[","5","]"}],"]"}]],"Input",ExpressionUUID -> "e0e3975f-62b6-4daf-8e8e-d78e5e4eac6d",
-CellLabel -> "In[10]:= "],Cell[
-"\<\"((6*Power(x,2)*y - 2*Power(y,3))*Power(Dt(x),3) - \\n     6*x*(Power(x,2) - 3*Power(y,2))*Power(Dt(x),2)*Dt(y) + \\n     2*(Power(x,3) - 3*x*Power(y,2))*Power(Dt(y),3) + \\n     3*Dt(y)*((Power(x,4) - Power(y,4))*Dt(Dt(x)) + \\n        2*x*y*(Power(x,2) + Power(y,2))*Dt(Dt(y))) + \\n     3*Dt(x)*(2*y*(-3*Power(x,2) + Power(y,2))*Power(Dt(y),2) - \\n        2*x*y*(Power(x,2) + Power(y,2))*Dt(Dt(x)) + \\n        (Power(x,4) - Power(y,4))*Dt(Dt(y))) - \\n     Power(Power(x,2) + Power(y,2),2)*(-(y*Dt(Dt(Dt(x)))) + x*Dt(Dt(Dt(y)))))/\\n   Power(Power(x,2) + Power(y,2),3)\"\>",
-"Output",ExpressionUUID -> "9b462885-9f07-4198-87f6-21ed901249ab",CellLabel -> "Out[10]//CForm= "]},
-Open],ExpressionUUID -> "63fff6dc-3b43-44cf-bb4d-e8cde7728e02"],Cell[
+BoxData[RowBox[{"FortranForm","[",RowBox[{"Out","[","4","]"}],"]"}]],"Input",
+ExpressionUUID -> "e0e3975f-62b6-4daf-8e8e-d78e5e4eac6d",CellLabel -> "In[14]:= "],Cell[
+
+"\<\"        ((6*x**2*y - 2*y**3)*Dt(x)**3 - 6*x*(x**2 - 3*y**2)*Dt(x)**2*Dt(y) + \\n     -    2*(x**3 - 3*x*y**2)*Dt(y)**3 + \\n     -    3*Dt(y)*((x**4 - y**4)*Dt(Dt(x)) + 2*x*y*(x**2 + y**2)*Dt(Dt(y))) + \\n     -    3*Dt(x)*(2*y*(-3*x**2 + y**2)*Dt(y)**2 - 2*x*y*(x**2 + y**2)*Dt(Dt(x)) + \\n     -       (x**4 - y**4)*Dt(Dt(y))) - \\n     -    (x**2 + y**2)**2*(-(y*Dt(Dt(Dt(x)))) + x*Dt(Dt(Dt(y)))))/(x**2 + y**2)**3\"\>",
+"Output",ExpressionUUID -> "ee038034-46bc-4378-bb06-12465c9bdd56",CellLabel -> "Out[14]//FortranForm= "]},
+Open],ExpressionUUID -> "9591fe35-48b3-4af8-aa1f-9309f623f7a7"],Cell[
 CellGroupData[
 {Cell[
-BoxData[RowBox[{"CForm","[",RowBox[{"Out","[","6","]"}],"]"}]],"Input",ExpressionUUID -> "822fb9a5-713b-4ed7-ae60-35487a8364df",
-CellLabel -> "In[11]:= "],Cell[
-"\<\"(24*x*y*(-Power(x,2) + Power(y,2))*Power(Dt(x),4) + \\n     24*(Power(x,4) - 6*Power(x,2)*Power(y,2) + Power(y,4))*Power(Dt(x),3)*Dt(y) + \\n     24*x*y*(-Power(x,2) + Power(y,2))*Power(Dt(y),4) + \\n     12*(Power(x,2) + Power(y,2))*Power(Dt(y),2)*\\n      ((-3*Power(x,2)*y + Power(y,3))*Dt(Dt(x)) + \\n        x*(Power(x,2) - 3*Power(y,2))*Dt(Dt(y))) - \\n     12*Power(Dt(x),2)*(12*x*y*(-Power(x,2) + Power(y,2))*Power(Dt(y),2) + \\n        (Power(x,2) + Power(y,2))*((-3*Power(x,2)*y + Power(y,3))*Dt(Dt(x)) + \\n           x*(Power(x,2) - 3*Power(y,2))*Dt(Dt(y)))) + \\n     4*Power(Power(x,2) + Power(y,2),2)*Dt(y)*\\n      ((x - y)*(x + y)*Dt(Dt(Dt(x))) + 2*x*y*Dt(Dt(Dt(y)))) + \\n     4*Dt(x)*(-6*(Power(x,4) - 6*Power(x,2)*Power(y,2) + Power(y,4))*\\n         Power(Dt(y),3) - 6*(Power(x,2) + Power(y,2))*Dt(y)*\\n         ((Power(x,3) - 3*x*Power(y,2))*Dt(Dt(x)) - \\n           y*(-3*Power(x,2) + Power(y,2))*Dt(Dt(y))) + \\n        Power(Power(x,2) + Power(y,2),2)*\\n         (-2*x*y*Dt(Dt(Dt(x))) + (x - y)*(x + y)*Dt(Dt(Dt(y))))) - \\n     Power(Power(x,2) + Power(y,2),2)*\\n      (6*x*y*Power(Dt(Dt(x)),2) + 6*(-Power(x,2) + Power(y,2))*Dt(Dt(x))*Dt(Dt(y)) - \\n        6*x*y*Power(Dt(Dt(y)),2) + \\n        (Power(x,2) + Power(y,2))*(-(y*Dt(Dt(Dt(Dt(x))))) + x*Dt(Dt(Dt(Dt(y)))))))/\\n   Power(Power(x,2) + Power(y,2),4)\"\>",
-"Output",ExpressionUUID -> "9c089f07-930d-4ca8-bef4-3f3b45135498",CellLabel -> "Out[11]//CForm= "]},
-Open],ExpressionUUID -> "dee9b1f1-f450-4d9d-997a-fd3071356079"],Cell[
+BoxData[RowBox[{"FortranForm","[",RowBox[{"Out","[","5","]"}],"]"}]],"Input",
+ExpressionUUID -> "822fb9a5-713b-4ed7-ae60-35487a8364df",CellLabel -> "In[15]:= "],Cell[
+
+"\<\"        (24*x*y*(-x**2 + y**2)*Dt(x)**4 + \\n     -    24*(x**4 - 6*x**2*y**2 + y**4)*Dt(x)**3*Dt(y) + \\n     -    24*x*y*(-x**2 + y**2)*Dt(y)**4 + \\n     -    12*(x**2 + y**2)*Dt(y)**2*\\n     -     ((-3*x**2*y + y**3)*Dt(Dt(x)) + x*(x**2 - 3*y**2)*Dt(Dt(y))) - \\n     -    12*Dt(x)**2*(12*x*y*(-x**2 + y**2)*Dt(y)**2 + \\n     -       (x**2 + y**2)*((-3*x**2*y + y**3)*Dt(Dt(x)) + \\n     -          x*(x**2 - 3*y**2)*Dt(Dt(y)))) + \\n     -    4*(x**2 + y**2)**2*Dt(y)*\\n     -     ((x - y)*(x + y)*Dt(Dt(Dt(x))) + 2*x*y*Dt(Dt(Dt(y)))) + \\n     -    4*Dt(x)*(-6*(x**4 - 6*x**2*y**2 + y**4)*Dt(y)**3 - \\n     -       6*(x**2 + y**2)*Dt(y)*\\n     -        ((x**3 - 3*x*y**2)*Dt(Dt(x)) - y*(-3*x**2 + y**2)*Dt(Dt(y))) + \\n     -       (x**2 + y**2)**2*(-2*x*y*Dt(Dt(Dt(x))) + (x - y)*(x + y)*Dt(Dt(Dt(y)))))\\n     -      - (x**2 + y**2)**2*(6*x*y*Dt(Dt(x))**2 + \\n     -       6*(-x**2 + y**2)*Dt(Dt(x))*Dt(Dt(y)) - 6*x*y*Dt(Dt(y))**2 + \\n     -       (x**2 + y**2)*(-(y*Dt(Dt(Dt(Dt(x))))) + x*Dt(Dt(Dt(Dt(y)))))))/\\n     -  (x**2 + y**2)**4\"\>",
+"Output",ExpressionUUID -> "bf65fa2c-f72d-4e9b-8de5-2facb64b5a3f",CellLabel -> "Out[15]//FortranForm= "]},
+Open],ExpressionUUID -> "91a48bda-8cb1-44a5-8eab-c056542b73f7"],Cell[
 CellGroupData[
 {Cell[
-BoxData[RowBox[{"CForm","[",RowBox[{"Out","[","7","]"}],"]"}]],"Input",ExpressionUUID -> "5dfecfb3-e966-4b8a-951a-84ebc2fbf72a",
-CellLabel -> "In[12]:= "],Cell[
-"\<\"(24*(5*Power(x,4)*y - 10*Power(x,2)*Power(y,3) + Power(y,5))*Power(Dt(x),5) - \\n     120*x*(Power(x,4) - 10*Power(x,2)*Power(y,2) + 5*Power(y,4))*Power(Dt(x),4)*\\n      Dt(y) - 24*(Power(x,5) - 10*Power(x,3)*Power(y,2) + 5*x*Power(y,4))*\\n      Power(Dt(y),5) - 60*(Power(x,2) + Power(y,2))*Power(Dt(y),3)*\\n      ((Power(x,4) - 6*Power(x,2)*Power(y,2) + Power(y,4))*Dt(Dt(x)) + \\n        4*x*(x - y)*y*(x + y)*Dt(Dt(y))) + \\n     60*Power(Dt(x),3)*(-4*(5*Power(x,4)*y - 10*Power(x,2)*Power(y,3) + Power(y,5))*\\n         Power(Dt(y),2) + 4*x*y*(-Power(x,4) + Power(y,4))*Dt(Dt(x)) + \\n        (Power(x,6) - 5*Power(x,4)*Power(y,2) - 5*Power(x,2)*Power(y,4) + \\n           Power(y,6))*Dt(Dt(y))) + \\n     20*Power(Power(x,2) + Power(y,2),2)*Power(Dt(y),2)*\\n      ((-3*Power(x,2)*y + Power(y,3))*Dt(Dt(Dt(x))) + \\n        x*(Power(x,2) - 3*Power(y,2))*Dt(Dt(Dt(y)))) - \\n     20*Power(Dt(x),2)*(-12*(Power(x,5) - 10*Power(x,3)*Power(y,2) + 5*x*Power(y,4))*\\n         Power(Dt(y),3) - 9*(Power(x,2) + Power(y,2))*Dt(y)*\\n         ((Power(x,4) - 6*Power(x,2)*Power(y,2) + Power(y,4))*Dt(Dt(x)) + \\n           4*x*(x - y)*y*(x + y)*Dt(Dt(y))) + \\n        Power(Power(x,2) + Power(y,2),2)*\\n         ((-3*Power(x,2)*y + Power(y,3))*Dt(Dt(Dt(x))) + \\n           x*(Power(x,2) - 3*Power(y,2))*Dt(Dt(Dt(y))))) + \\n     5*Power(Power(x,2) + Power(y,2),2)*Dt(y)*\\n      (-6*(Power(x,3) - 3*x*Power(y,2))*Power(Dt(Dt(x)),2) + \\n        12*y*(-3*Power(x,2) + Power(y,2))*Dt(Dt(x))*Dt(Dt(y)) + \\n        6*(Power(x,3) - 3*x*Power(y,2))*Power(Dt(Dt(y)),2) + \\n        (Power(x,4) - Power(y,4))*Dt(Dt(Dt(Dt(x)))) + \\n        2*x*y*(Power(x,2) + Power(y,2))*Dt(Dt(Dt(Dt(y))))) + \\n     5*Dt(x)*(24*(5*Power(x,4)*y - 10*Power(x,2)*Power(y,3) + Power(y,5))*\\n         Power(Dt(y),4) - 36*(Power(x,2) + Power(y,2))*Power(Dt(y),2)*\\n         (4*x*y*(-Power(x,2) + Power(y,2))*Dt(Dt(x)) + \\n           (Power(x,4) - 6*Power(x,2)*Power(y,2) + Power(y,4))*Dt(Dt(y))) - \\n        8*Power(Power(x,2) + Power(y,2),2)*Dt(y)*\\n         ((Power(x,3) - 3*x*Power(y,2))*Dt(Dt(Dt(x))) - \\n           y*(-3*Power(x,2) + Power(y,2))*Dt(Dt(Dt(y)))) + \\n        Power(Power(x,2) + Power(y,2),2)*\\n         (-6*y*(-3*Power(x,2) + Power(y,2))*Power(Dt(Dt(x)),2) - \\n           12*x*(Power(x,2) - 3*Power(y,2))*Dt(Dt(x))*Dt(Dt(y)) + \\n           6*y*(-3*Power(x,2) + Power(y,2))*Power(Dt(Dt(y)),2) - \\n           2*x*y*(Power(x,2) + Power(y,2))*Dt(Dt(Dt(Dt(x)))) + \\n           (Power(x,4) - Power(y,4))*Dt(Dt(Dt(Dt(y)))))) - \\n     Power(Power(x,2) + Power(y,2),3)*\\n      (-10*Dt(Dt(y))*((x - y)*(x + y)*Dt(Dt(Dt(x))) + 2*x*y*Dt(Dt(Dt(y)))) + \\n        10*Dt(Dt(x))*(2*x*y*Dt(Dt(Dt(x))) + \\n           (-Power(x,2) + Power(y,2))*Dt(Dt(Dt(y)))) + \\n        (Power(x,2) + Power(y,2))*(-(y*Dt(Dt(Dt(Dt(Dt(x)))))) + \\n           x*Dt(Dt(Dt(Dt(Dt(y))))))))/Power(Power(x,2) + Power(y,2),5)\"\>",
-"Output",ExpressionUUID -> "9f4038cf-8972-4f3c-b7ef-78dc73eaf477",CellLabel -> "Out[12]//CForm= "]},
-Open],ExpressionUUID -> "a51fc75f-4abe-488c-9d0f-79af14fdb8ce"]},StyleDefinitions -> "Default.nb",
-FrontEndVersion -> "11.3 for Wolfram Cloud 1.49 (December 12, 2018)"]
+BoxData[RowBox[{"FortranForm","[",RowBox[{"Out","[","6","]"}],"]"}]],"Input",
+ExpressionUUID -> "5dfecfb3-e966-4b8a-951a-84ebc2fbf72a",CellLabel -> "In[16]:= "],Cell[
+
+"\<\"        (24*(5*x**4*y - 10*x**2*y**3 + y**5)*Dt(x)**5 - \\n     -    120*x*(x**4 - 10*x**2*y**2 + 5*y**4)*Dt(x)**4*Dt(y) - \\n     -    24*(x**5 - 10*x**3*y**2 + 5*x*y**4)*Dt(y)**5 - \\n     -    60*(x**2 + y**2)*Dt(y)**3*\\n     -     ((x**4 - 6*x**2*y**2 + y**4)*Dt(Dt(x)) + 4*x*(x - y)*y*(x + y)*Dt(Dt(y)))\\\\\\n     -     + 60*Dt(x)**3*(-4*(5*x**4*y - 10*x**2*y**3 + y**5)*Dt(y)**2 + \\n     -       4*x*y*(-x**4 + y**4)*Dt(Dt(x)) + \\n     -       (x**6 - 5*x**4*y**2 - 5*x**2*y**4 + y**6)*Dt(Dt(y))) + \\n     -    20*(x**2 + y**2)**2*Dt(y)**2*\\n     -     ((-3*x**2*y + y**3)*Dt(Dt(Dt(x))) + x*(x**2 - 3*y**2)*Dt(Dt(Dt(y)))) - \\n     -    20*Dt(x)**2*(-12*(x**5 - 10*x**3*y**2 + 5*x*y**4)*Dt(y)**3 - \\n     -       9*(x**2 + y**2)*Dt(y)*\\n     -        ((x**4 - 6*x**2*y**2 + y**4)*Dt(Dt(x)) + \\n     -          4*x*(x - y)*y*(x + y)*Dt(Dt(y))) + \\n     -       (x**2 + y**2)**2*((-3*x**2*y + y**3)*Dt(Dt(Dt(x))) + \\n     -          x*(x**2 - 3*y**2)*Dt(Dt(Dt(y))))) + \\n     -    5*(x**2 + y**2)**2*Dt(y)*\\n     -     (-6*(x**3 - 3*x*y**2)*Dt(Dt(x))**2 + \\n     -       12*y*(-3*x**2 + y**2)*Dt(Dt(x))*Dt(Dt(y)) + \\n     -       6*(x**3 - 3*x*y**2)*Dt(Dt(y))**2 + (x**4 - y**4)*Dt(Dt(Dt(Dt(x)))) + \\n     -       2*x*y*(x**2 + y**2)*Dt(Dt(Dt(Dt(y))))) + \\n     -    5*Dt(x)*(24*(5*x**4*y - 10*x**2*y**3 + y**5)*Dt(y)**4 - \\n     -       36*(x**2 + y**2)*Dt(y)**2*\\n     -        (4*x*y*(-x**2 + y**2)*Dt(Dt(x)) + \\n     -          (x**4 - 6*x**2*y**2 + y**4)*Dt(Dt(y))) - \\n     -       8*(x**2 + y**2)**2*Dt(y)*\\n     -        ((x**3 - 3*x*y**2)*Dt(Dt(Dt(x))) - y*(-3*x**2 + y**2)*Dt(Dt(Dt(y)))) + \\n     -       (x**2 + y**2)**2*(-6*y*(-3*x**2 + y**2)*Dt(Dt(x))**2 - \\n     -          12*x*(x**2 - 3*y**2)*Dt(Dt(x))*Dt(Dt(y)) + \\n     -          6*y*(-3*x**2 + y**2)*Dt(Dt(y))**2 - \\n     -          2*x*y*(x**2 + y**2)*Dt(Dt(Dt(Dt(x)))) + \\n     -          (x**4 - y**4)*Dt(Dt(Dt(Dt(y)))))) - \\n     -    (x**2 + y**2)**3*(-10*Dt(Dt(y))*\\n     -        ((x - y)*(x + y)*Dt(Dt(Dt(x))) + 2*x*y*Dt(Dt(Dt(y)))) + \\n     -       10*Dt(Dt(x))*(2*x*y*Dt(Dt(Dt(x))) + (-x**2 + y**2)*Dt(Dt(Dt(y)))) + \\n     -       (x**2 + y**2)*(-(y*Dt(Dt(Dt(Dt(Dt(x)))))) + x*Dt(Dt(Dt(Dt(Dt(y))))))))/\\n     -  (x**2 + y**2)**5\"\>",
+"Output",ExpressionUUID -> "62447c81-4fc1-4322-9f39-76cd34a9bca0",CellLabel -> "Out[16]//FortranForm= "]},
+Open],ExpressionUUID -> "3740cdc1-4b02-48a1-abbb-8d90ab77010a"]},StyleDefinitions -> "Default.nb",
+FrontEndVersion -> "12. for Wolfram Cloud 1.52.0.1 (September 12, 2019)"]

@@ -4,8 +4,8 @@ BoxData[RowBox[{"z"," ",RowBox[{"Cos","[","y","]"}]," ",RowBox[
 {"Cos","[","x","]"}]}]],"Input",ExpressionUUID -> "678b38eb-e79e-47a0-b3e1-8a3079b9a2b4",
 CellLabel -> "In[1]:= "],Cell[
 BoxData[RowBox[{"z"," ",RowBox[{"Cos","[","x","]"}]," ",RowBox[
-{"Cos","[","y","]"}]}],StandardForm],"Output",ExpressionUUID -> "22e0c8ad-37c7-40f4-a991-ca07564d06b3",
-CellLabel -> "Out[1]= "]},Open],ExpressionUUID -> "59c5230a-3d82-4478-b1a8-825e6db009be"],Cell[
+{"Cos","[","y","]"}]}],StandardForm],"Output",ExpressionUUID -> "3918eb78-3cd3-4485-be75-373e11d770be",
+CellLabel -> "Out[1]= "]},Open],ExpressionUUID -> "d8af4ec0-ff8c-4e62-9edf-0334d0e15ae9"],Cell[
 CellGroupData[
 {Cell[
 BoxData[RowBox[{"FullSimplify","[",RowBox[{"Dt","[","%","]"}],"]"}]],"Input",
@@ -15,8 +15,8 @@ RowBox[{RowBox[{RowBox[{"Cos","[","x","]"}]," ",RowBox[{"Cos","[","y","]"}]," ",
 {"Dt","[","z","]"}]}],"-",RowBox[{"z"," ",RowBox[{"(",RowBox[{RowBox[{RowBox[{"Cos","[","y","]"}]," ",RowBox[
 {"Dt","[","x","]"}]," ",RowBox[{"Sin","[","x","]"}]}],"+",RowBox[{RowBox[{"Cos","[","x","]"}]," ",RowBox[
 {"Dt","[","y","]"}]," ",RowBox[{"Sin","[","y","]"}]}]}],")"}]}]}],StandardForm],"Output",
-ExpressionUUID -> "9e915e5d-735c-4e5e-8ba1-eaac27a21f99",CellLabel -> "Out[2]= "]},
-Open],ExpressionUUID -> "0c637fad-ad83-4a45-b917-b0a3e265cb6c"],Cell[
+ExpressionUUID -> "4a1b059a-f5da-4e92-95bf-c1d4a68dc807",CellLabel -> "Out[2]= "]},
+Open],ExpressionUUID -> "4dae5115-cbc8-4f23-bc86-34e82512b4db"],Cell[
 CellGroupData[
 {Cell[
 BoxData[RowBox[{"FullSimplify","[",RowBox[{"Dt","[","%","]"}],"]"}]],"Input",
@@ -32,8 +32,8 @@ RowBox[{RowBox[{RowBox[{"-",RowBox[{"Cos","[","y","]"}]}]," ",RowBox[{"(",RowBox
 {"Dt","[","y","]"}],"]"}]}],"+",RowBox[{"2"," ",RowBox[{"Dt","[","y","]"}]," ",RowBox[
 {"(",RowBox[{RowBox[{RowBox[{"Cos","[","x","]"}]," ",RowBox[{"Dt","[","z","]"}]}],"-",RowBox[
 {"z"," ",RowBox[{"Dt","[","x","]"}]," ",RowBox[{"Sin","[","x","]"}]}]}],")"}]}]}],")"}]," ",RowBox[
-{"Sin","[","y","]"}]}]}],StandardForm],"Output",ExpressionUUID -> "49af545d-b111-4186-8bec-20abff94d734",
-CellLabel -> "Out[3]= "]},Open],ExpressionUUID -> "df5b9594-767c-4b5f-9561-9c3135f8ce69"],Cell[
+{"Sin","[","y","]"}]}]}],StandardForm],"Output",ExpressionUUID -> "b376ccb4-1ab4-4738-baf0-53a1818df9b7",
+CellLabel -> "Out[3]= "]},Open],ExpressionUUID -> "c1603e13-ae58-422f-b0a0-073d1058fdd7"],Cell[
 CellGroupData[
 {Cell[
 BoxData[RowBox[{"FullSimplify","[",RowBox[{"Dt","[","%","]"}],"]"}]],"Input",
@@ -63,8 +63,8 @@ RowBox[{"Dt","[","y","]"}],"2"]}],"-",RowBox[{"Dt","[",RowBox[{"Dt","[","z","]"}
 {RowBox[{"2"," ",RowBox[{"Dt","[","y","]"}]," ",RowBox[{"Dt","[","z","]"}]}],"+",RowBox[
 {"z"," ",RowBox[{"Dt","[",RowBox[{"Dt","[","y","]"}],"]"}]}]}],")"}]}]}],")"}]," ",RowBox[
 {"Sin","[","x","]"}]}]}],")"}]," ",RowBox[{"Sin","[","y","]"}]}]}],StandardForm],
-"Output",ExpressionUUID -> "4e8ec2ec-c456-496a-ab72-e05584e6c613",CellLabel -> "Out[4]= "]},
-Open],ExpressionUUID -> "0e6e58a9-293b-40f7-8bf7-04b911c2f1b6"],Cell[
+"Output",ExpressionUUID -> "8f6d9991-f11f-47d1-88cb-6b1a5d0c2975",CellLabel -> "Out[4]= "]},
+Open],ExpressionUUID -> "5fb22a67-4dd0-4d16-b4df-3639fd22d7ab"],Cell[
 CellGroupData[
 {Cell[
 BoxData[RowBox[{"FullSimplify","[",RowBox[{"Dt","[","%","]"}],"]"}]],"Input",
@@ -122,8 +122,8 @@ RowBox[{"Dt","[","y","]"}],"3"]}],"+",RowBox[{"6"," ",RowBox[{"Dt","[","z","]"}]
 {"Dt","[",RowBox[{"Dt","[","y","]"}],"]"}]}],"+",RowBox[{"6"," ",RowBox[{"Dt","[","y","]"}]," ",RowBox[
 {"Dt","[",RowBox[{"Dt","[","z","]"}],"]"}]}],"+",RowBox[{"2"," ","z"," ",RowBox[{"Dt","[",RowBox[
 {"Dt","[",RowBox[{"Dt","[","y","]"}],"]"}],"]"}]}]}],")"}]}]}],")"}]," ",RowBox[{"Sin","[","x","]"}]}]}],")"}]," ",RowBox[
-{"Sin","[","y","]"}]}]}],StandardForm],"Output",ExpressionUUID -> "255f2409-eeed-40af-b7ec-9c27a547f995",
-CellLabel -> "Out[5]= "]},Open],ExpressionUUID -> "7b5b3dd1-b3e5-4a1f-868b-076bb3a14f47"],Cell[
+{"Sin","[","y","]"}]}]}],StandardForm],"Output",ExpressionUUID -> "ef503330-3ea4-4fe5-b48e-484bbbb07c8a",
+CellLabel -> "Out[5]= "]},Open],ExpressionUUID -> "ada2cdc2-69f0-49f6-8bbd-1158839d88b7"],Cell[
 CellGroupData[
 {Cell[
 BoxData[RowBox[{"FullSimplify","[",RowBox[{"Dt","[","%","]"}],"]"}]],"Input",
@@ -246,41 +246,46 @@ RowBox[{"Dt","[","y","]"}],"2"]," ",RowBox[{"Dt","[",RowBox[{"Dt","[","y","]"}],
 {"Dt","[","y","]"}]," ",RowBox[{"(",RowBox[{RowBox[{RowBox[{"Cos","[","x","]"}]," ",RowBox[
 {"Dt","[",RowBox[{"Dt","[","z","]"}],"]"}]}],"-",RowBox[{"z"," ",RowBox[{"Dt","[",RowBox[
 {"Dt","[","x","]"}],"]"}]," ",RowBox[{"Sin","[","x","]"}]}]}],")"}]}]}],")"}]," ",RowBox[
-{"Sin","[","y","]"}]}]}],")"}]}]}],StandardForm],"Output",ExpressionUUID -> "aa9d1cd9-c638-4a4d-b1ff-eed424afdea3",
-CellLabel -> "Out[6]= "]},Open],ExpressionUUID -> "6a93d0b6-f3bb-4af0-ae85-718585aad70f"],Cell[
+{"Sin","[","y","]"}]}]}],")"}]}]}],StandardForm],"Output",ExpressionUUID -> "f59f70b3-93e9-4a99-b1ea-7d81f49eee99",
+CellLabel -> "Out[6]= "]},Open],ExpressionUUID -> "bf9224d1-9cb3-45fb-92b7-e789933e447d"],Cell[
 CellGroupData[
 {Cell[
-BoxData[RowBox[{"CForm","[",RowBox[{"Out","[","2","]"}],"]"}]],"Input",ExpressionUUID -> "098e06c2-2851-4ca5-9e7f-7e65ed084667",
-CellLabel -> "In[7]:= "],Cell[
-"\<\"Cos(x)*Cos(y)*Dt(z) - z*(Cos(y)*Dt(x)*Sin(x) + Cos(x)*Dt(y)*Sin(y))\"\>",
-"Output",ExpressionUUID -> "a6798b2a-4f95-4d0d-b36b-790cd6cc9315",CellLabel -> "Out[7]//CForm= "]},
-Open],ExpressionUUID -> "13e16dc3-edcb-4a8c-b38f-a3474f63f952"],Cell[
+BoxData[RowBox[{"FortranForm","[",RowBox[{"Out","[","2","]"}],"]"}]],"Input",
+ExpressionUUID -> "098e06c2-2851-4ca5-9e7f-7e65ed084667",CellLabel -> "In[7]:= "],Cell[
+
+"\<\"Cos(x)*Cos(y)*Dt(z) - z*(Cos(y)*Dt(x)*Sin(x) + Cos(x)*Dt(y)*Sin(y))\"\>","Output",
+ExpressionUUID -> "ce7be9f0-10fd-4e6b-a1e9-91772ba73c05",CellLabel -> "Out[7]//FortranForm= "]},
+Open],ExpressionUUID -> "4a685985-56c5-47ae-8b43-5f94d94cd291"],Cell[
 CellGroupData[
 {Cell[
-BoxData[RowBox[{"CForm","[",RowBox[{"Out","[","3","]"}],"]"}]],"Input",ExpressionUUID -> "785dbccf-d140-402b-912a-2a69ef3b6aeb",
-CellLabel -> "In[8]:= "],Cell[
-"\<\"-(Cos(y)*(Cos(x)*(z*(Power(Dt(x),2) + Power(Dt(y),2)) - Dt(Dt(z))) + \\n        (2*Dt(x)*Dt(z) + z*Dt(Dt(x)))*Sin(x))) - \\n   (z*Cos(x)*Dt(Dt(y)) + 2*Dt(y)*(Cos(x)*Dt(z) - z*Dt(x)*Sin(x)))*Sin(y)\"\>",
-"Output",ExpressionUUID -> "eed2164d-4ccd-45b7-b670-b324e19abf4e",CellLabel -> "Out[8]//CForm= "]},
-Open],ExpressionUUID -> "54d0c952-7335-4eca-a759-7cb777189396"],Cell[
+BoxData[RowBox[{"FortranForm","[",RowBox[{"Out","[","3","]"}],"]"}]],"Input",
+ExpressionUUID -> "785dbccf-d140-402b-912a-2a69ef3b6aeb",CellLabel -> "In[8]:= "],Cell[
+
+"\<\"        -(Cos(y)*(Cos(x)*(z*(Dt(x)**2 + Dt(y)**2) - Dt(Dt(z))) + \\n     -       (2*Dt(x)*Dt(z) + z*Dt(Dt(x)))*Sin(x))) - \\n     -  (z*Cos(x)*Dt(Dt(y)) + 2*Dt(y)*(Cos(x)*Dt(z) - z*Dt(x)*Sin(x)))*Sin(y)\"\>",
+"Output",ExpressionUUID -> "4fe8f3ab-5580-4c86-94b4-6f96655b61d9",CellLabel -> "Out[8]//FortranForm= "]},
+Open],ExpressionUUID -> "b645352c-11a3-4659-8625-ae03cdf89330"],Cell[
 CellGroupData[
 {Cell[
-BoxData[RowBox[{"CForm","[",RowBox[{"Out","[","4","]"}],"]"}]],"Input",ExpressionUUID -> "7e2e6e14-d102-4a84-a680-9bc009b98899",
-CellLabel -> "In[9]:= "],Cell[
-"\<\"Cos(y)*(Cos(x)*(-3*(Power(Dt(x),2)*Dt(z) + z*Dt(x)*Dt(Dt(x)) + \\n            Dt(y)*(Dt(y)*Dt(z) + z*Dt(Dt(y)))) + Dt(Dt(Dt(z)))) + \\n      (z*Power(Dt(x),3) - 3*Dt(z)*Dt(Dt(x)) + \\n         3*Dt(x)*(z*Power(Dt(y),2) - Dt(Dt(z))) - z*Dt(Dt(Dt(x))))*Sin(x)) + \\n   (Cos(x)*(3*z*Power(Dt(x),2)*Dt(y) + z*Power(Dt(y),3) - 3*Dt(z)*Dt(Dt(y)) - \\n         3*Dt(y)*Dt(Dt(z)) - z*Dt(Dt(Dt(y)))) + \\n      3*(z*Dt(y)*Dt(Dt(x)) + Dt(x)*(2*Dt(y)*Dt(z) + z*Dt(Dt(y))))*Sin(x))*Sin(y)\"\>",
-"Output",ExpressionUUID -> "084e21b9-5cf7-41f5-9a27-67f72cbd340c",CellLabel -> "Out[9]//CForm= "]},
-Open],ExpressionUUID -> "51591795-906c-4c20-b16d-c99a0be5b4db"],Cell[
+BoxData[RowBox[{"FortranForm","[",RowBox[{"Out","[","4","]"}],"]"}]],"Input",
+ExpressionUUID -> "7e2e6e14-d102-4a84-a680-9bc009b98899",CellLabel -> "In[9]:= "],Cell[
+
+"\<\"        Cos(y)*(Cos(x)*(-3*(Dt(x)**2*Dt(z) + z*Dt(x)*Dt(Dt(x)) + \\n     -           Dt(y)*(Dt(y)*Dt(z) + z*Dt(Dt(y)))) + Dt(Dt(Dt(z)))) + \\n     -     (z*Dt(x)**3 - 3*Dt(z)*Dt(Dt(x)) + 3*Dt(x)*(z*Dt(y)**2 - Dt(Dt(z))) - \\n     -        z*Dt(Dt(Dt(x))))*Sin(x)) + \\n     -  (Cos(x)*(3*z*Dt(x)**2*Dt(y) + z*Dt(y)**3 - 3*Dt(z)*Dt(Dt(y)) - \\n     -        3*Dt(y)*Dt(Dt(z)) - z*Dt(Dt(Dt(y)))) + \\n     -     3*(z*Dt(y)*Dt(Dt(x)) + Dt(x)*(2*Dt(y)*Dt(z) + z*Dt(Dt(y))))*Sin(x))*Sin(y)\"\>",
+"Output",ExpressionUUID -> "e1709c7d-1b71-4861-979b-6e498a330a4e",CellLabel -> "Out[9]//FortranForm= "]},
+Open],ExpressionUUID -> "df229b24-a53b-4ab7-913d-ec8b01b0c592"],Cell[
 CellGroupData[
 {Cell[
-BoxData[RowBox[{"CForm","[",RowBox[{"Out","[","5","]"}],"]"}]],"Input",ExpressionUUID -> "a5fbb7f6-533b-48f1-859e-43d92c7729f3",
-CellLabel -> "In[10]:= "],Cell[
-"\<\"Cos(y)*(Cos(x)*(z*Power(Dt(x),4) + z*Power(Dt(y),4) - \\n         3*z*(Power(Dt(Dt(x)),2) + Power(Dt(Dt(y)),2)) + \\n         6*Power(Dt(x),2)*(z*Power(Dt(y),2) - Dt(Dt(z))) - \\n         6*Power(Dt(y),2)*Dt(Dt(z)) - \\n         4*Dt(x)*(3*Dt(z)*Dt(Dt(x)) + z*Dt(Dt(Dt(x)))) - \\n         4*Dt(y)*(3*Dt(z)*Dt(Dt(y)) + z*Dt(Dt(Dt(y)))) + Dt(Dt(Dt(Dt(z))))) + \\n      (4*Power(Dt(x),3)*Dt(z) + 6*z*Power(Dt(x),2)*Dt(Dt(x)) + \\n         6*Dt(Dt(x))*(z*Power(Dt(y),2) - Dt(Dt(z))) - 4*Dt(z)*Dt(Dt(Dt(x))) + \\n         4*Dt(x)*(3*Dt(y)*(Dt(y)*Dt(z) + z*Dt(Dt(y))) - Dt(Dt(Dt(z)))) - \\n         z*Dt(Dt(Dt(Dt(x)))))*Sin(x)) + \\n   (Cos(x)*(4*Power(Dt(y),3)*Dt(z) + 12*z*Dt(x)*Dt(y)*Dt(Dt(x)) + \\n         6*z*Power(Dt(y),2)*Dt(Dt(y)) + \\n         6*Power(Dt(x),2)*(2*Dt(y)*Dt(z) + z*Dt(Dt(y))) - 6*Dt(Dt(y))*Dt(Dt(z)) - \\n         4*Dt(z)*Dt(Dt(Dt(y))) - 4*Dt(y)*Dt(Dt(Dt(z))) - z*Dt(Dt(Dt(Dt(y))))) + \\n      2*(-2*z*Power(Dt(x),3)*Dt(y) + 3*Dt(Dt(x))*(2*Dt(y)*Dt(z) + z*Dt(Dt(y))) + \\n         2*z*Dt(y)*Dt(Dt(Dt(x))) + \\n         Dt(x)*(-2*z*Power(Dt(y),3) + 6*Dt(z)*Dt(Dt(y)) + 6*Dt(y)*Dt(Dt(z)) + \\n            2*z*Dt(Dt(Dt(y)))))*Sin(x))*Sin(y)\"\>",
-"Output",ExpressionUUID -> "cbf74fbe-19fb-4a6a-b299-55b97d8d0b16",CellLabel -> "Out[10]//CForm= "]},
-Open],ExpressionUUID -> "e3066bce-aaef-4b1d-9474-e9ac42564c47"],Cell[
+BoxData[RowBox[{"FortranForm","[",RowBox[{"Out","[","5","]"}],"]"}]],"Input",
+ExpressionUUID -> "a5fbb7f6-533b-48f1-859e-43d92c7729f3",CellLabel -> "In[10]:= "],Cell[
+
+"\<\"        Cos(y)*(Cos(x)*(z*Dt(x)**4 + z*Dt(y)**4 - \\n     -        3*z*(Dt(Dt(x))**2 + Dt(Dt(y))**2) + \\n     -        6*Dt(x)**2*(z*Dt(y)**2 - Dt(Dt(z))) - 6*Dt(y)**2*Dt(Dt(z)) - \\n     -        4*Dt(x)*(3*Dt(z)*Dt(Dt(x)) + z*Dt(Dt(Dt(x)))) - \\n     -        4*Dt(y)*(3*Dt(z)*Dt(Dt(y)) + z*Dt(Dt(Dt(y)))) + Dt(Dt(Dt(Dt(z))))) + \\n     -     (4*Dt(x)**3*Dt(z) + 6*z*Dt(x)**2*Dt(Dt(x)) + \\n     -        6*Dt(Dt(x))*(z*Dt(y)**2 - Dt(Dt(z))) - 4*Dt(z)*Dt(Dt(Dt(x))) + \\n     -        4*Dt(x)*(3*Dt(y)*(Dt(y)*Dt(z) + z*Dt(Dt(y))) - Dt(Dt(Dt(z)))) - \\n     -        z*Dt(Dt(Dt(Dt(x)))))*Sin(x)) + \\n     -  (Cos(x)*(4*Dt(y)**3*Dt(z) + 12*z*Dt(x)*Dt(y)*Dt(Dt(x)) + \\n     -        6*z*Dt(y)**2*Dt(Dt(y)) + 6*Dt(x)**2*(2*Dt(y)*Dt(z) + z*Dt(Dt(y))) - \\n     -        6*Dt(Dt(y))*Dt(Dt(z)) - 4*Dt(z)*Dt(Dt(Dt(y))) - \\n     -        4*Dt(y)*Dt(Dt(Dt(z))) - z*Dt(Dt(Dt(Dt(y))))) + \\n     -     2*(-2*z*Dt(x)**3*Dt(y) + 3*Dt(Dt(x))*(2*Dt(y)*Dt(z) + z*Dt(Dt(y))) + \\n     -        2*z*Dt(y)*Dt(Dt(Dt(x))) + \\n     -        Dt(x)*(-2*z*Dt(y)**3 + 6*Dt(z)*Dt(Dt(y)) + 6*Dt(y)*Dt(Dt(z)) + \\n     -           2*z*Dt(Dt(Dt(y)))))*Sin(x))*Sin(y)\"\>",
+"Output",ExpressionUUID -> "98fb1eb4-870e-4978-a8a4-27fd8e502e0e",CellLabel -> "Out[10]//FortranForm= "]},
+Open],ExpressionUUID -> "2f161738-4fd3-4719-93d3-5fbaee11285a"],Cell[
 CellGroupData[
 {Cell[
-BoxData[RowBox[{"CForm","[",RowBox[{"Out","[","6","]"}],"]"}]],"Input",ExpressionUUID -> "fea91710-8e47-4016-a0c6-899e06e7a146",
-CellLabel -> "In[11]:= "],Cell[
-"\<\"-(z*Cos(y)*Power(Dt(x),5)*Sin(x)) + \\n   5*Cos(x)*Power(Dt(x),4)*(Cos(y)*Dt(z) - z*Dt(y)*Sin(y)) + \\n   Sin(x)*(Cos(y)*(30*z*Dt(y)*Dt(Dt(x))*Dt(Dt(y)) + \\n         10*Power(Dt(y),2)*(3*Dt(z)*Dt(Dt(x)) + z*Dt(Dt(Dt(x)))) - \\n         5*(2*Dt(Dt(z))*Dt(Dt(Dt(x))) + 2*Dt(Dt(x))*Dt(Dt(Dt(z))) + \\n            Dt(z)*Dt(Dt(Dt(Dt(x))))) - z*Dt(Dt(Dt(Dt(Dt(x)))))) + \\n      5*(-2*z*Power(Dt(y),3)*Dt(Dt(x)) + \\n         2*Dt(Dt(y))*(3*Dt(z)*Dt(Dt(x)) + z*Dt(Dt(Dt(x)))) + \\n         2*z*Dt(Dt(x))*Dt(Dt(Dt(y))) + \\n         Dt(y)*(6*Dt(Dt(x))*Dt(Dt(z)) + 4*Dt(z)*Dt(Dt(Dt(x))) + z*Dt(Dt(Dt(Dt(x))))))\\n        *Sin(y)) + Cos(x)*(Cos(y)*(5*\\n          (Power(Dt(y),4)*Dt(z) + 2*z*Power(Dt(y),3)*Dt(Dt(y)) - \\n            3*Dt(z)*(Power(Dt(Dt(x)),2) + Power(Dt(Dt(y)),2)) - \\n            2*z*(Dt(Dt(x))*Dt(Dt(Dt(x))) + Dt(Dt(y))*Dt(Dt(Dt(y)))) - \\n            2*Power(Dt(y),2)*Dt(Dt(Dt(z))) - \\n            Dt(y)*(6*Dt(Dt(y))*Dt(Dt(z)) + 4*Dt(z)*Dt(Dt(Dt(y))) + \\n               z*Dt(Dt(Dt(Dt(y)))))) + Dt(Dt(Dt(Dt(Dt(z)))))) - \\n      (z*Power(Dt(y),5) - 10*Power(Dt(y),3)*Dt(Dt(z)) + 10*Dt(Dt(z))*Dt(Dt(Dt(y))) - \\n         10*Power(Dt(y),2)*(3*Dt(z)*Dt(Dt(y)) + z*Dt(Dt(Dt(y)))) + \\n         10*Dt(Dt(y))*Dt(Dt(Dt(z))) + 5*Dt(z)*Dt(Dt(Dt(Dt(y)))) + \\n         5*Dt(y)*(-3*z*(Power(Dt(Dt(x)),2) + Power(Dt(Dt(y)),2)) + \\n            Dt(Dt(Dt(Dt(z))))) + z*Dt(Dt(Dt(Dt(Dt(y))))))*Sin(y)) + \\n   10*Power(Dt(x),3)*(Cos(y)*(z*Cos(x)*Dt(Dt(x)) + \\n         (-(z*Power(Dt(y),2)) + Dt(Dt(z)))*Sin(x)) - \\n      (2*Dt(y)*Dt(z) + z*Dt(Dt(y)))*Sin(x)*Sin(y)) + \\n   5*Dt(x)*(Cos(y)*(Cos(x)*(6*Dt(Dt(x))*(z*Power(Dt(y),2) - Dt(Dt(z))) - \\n            4*Dt(z)*Dt(Dt(Dt(x))) - z*Dt(Dt(Dt(Dt(x))))) + \\n         (-(z*Power(Dt(y),4)) + 3*z*(Power(Dt(Dt(x)),2) + Power(Dt(Dt(y)),2)) + \\n            6*Power(Dt(y),2)*Dt(Dt(z)) + \\n            4*Dt(y)*(3*Dt(z)*Dt(Dt(y)) + z*Dt(Dt(Dt(y)))) - Dt(Dt(Dt(Dt(z)))))*Sin(x)\\n         ) + (6*Cos(x)*Dt(Dt(x))*(2*Dt(y)*Dt(z) + z*Dt(Dt(y))) + \\n         4*z*Cos(x)*Dt(y)*Dt(Dt(Dt(x))) + \\n         (-4*Power(Dt(y),3)*Dt(z) - 6*z*Power(Dt(y),2)*Dt(Dt(y)) + \\n            6*Dt(Dt(y))*Dt(Dt(z)) + 4*Dt(z)*Dt(Dt(Dt(y))) + 4*Dt(y)*Dt(Dt(Dt(z))) + \\n            z*Dt(Dt(Dt(Dt(y)))))*Sin(x))*Sin(y)) + \\n   10*Power(Dt(x),2)*(Cos(y)*(Cos(x)*\\n          (3*Dt(y)*(Dt(y)*Dt(z) + z*Dt(Dt(y))) - Dt(Dt(Dt(z)))) + \\n         (3*Dt(z)*Dt(Dt(x)) + z*Dt(Dt(Dt(x))))*Sin(x)) + \\n      (-(z*Cos(x)*Power(Dt(y),3)) + Cos(x)*(3*Dt(z)*Dt(Dt(y)) + z*Dt(Dt(Dt(y)))) + \\n         3*Dt(y)*(Cos(x)*Dt(Dt(z)) - z*Dt(Dt(x))*Sin(x)))*Sin(y))\"\>",
-"Output",ExpressionUUID -> "d2b55810-d234-4c58-8091-adcd5ab47893",CellLabel -> "Out[11]//CForm= "]},
-Open],ExpressionUUID -> "8ccdd079-6c3b-4f2c-a873-aa00339ba2c5"]},StyleDefinitions -> "Default.nb",
-FrontEndVersion -> "11.3 for Wolfram Cloud 1.49 (December 12, 2018)"]
+BoxData[RowBox[{"FortranForm","[",RowBox[{"Out","[","6","]"}],"]"}]],"Input",
+ExpressionUUID -> "fea91710-8e47-4016-a0c6-899e06e7a146",CellLabel -> "In[11]:= "],Cell[
+
+"\<\"        -(z*Cos(y)*Dt(x)**5*Sin(x)) + \\n     -  5*Cos(x)*Dt(x)**4*(Cos(y)*Dt(z) - z*Dt(y)*Sin(y)) + \\n     -  Sin(x)*(Cos(y)*(30*z*Dt(y)*Dt(Dt(x))*Dt(Dt(y)) + \\n     -        10*Dt(y)**2*(3*Dt(z)*Dt(Dt(x)) + z*Dt(Dt(Dt(x)))) - \\n     -        5*(2*Dt(Dt(z))*Dt(Dt(Dt(x))) + 2*Dt(Dt(x))*Dt(Dt(Dt(z))) + \\n     -           Dt(z)*Dt(Dt(Dt(Dt(x))))) - z*Dt(Dt(Dt(Dt(Dt(x)))))) + \\n     -     5*(-2*z*Dt(y)**3*Dt(Dt(x)) + \\n     -        2*Dt(Dt(y))*(3*Dt(z)*Dt(Dt(x)) + z*Dt(Dt(Dt(x)))) + \\n     -        2*z*Dt(Dt(x))*Dt(Dt(Dt(y))) + \\n     -        Dt(y)*(6*Dt(Dt(x))*Dt(Dt(z)) + 4*Dt(z)*Dt(Dt(Dt(x))) + \\n     -           z*Dt(Dt(Dt(Dt(x))))))*Sin(y)) + \\n     -  Cos(x)*(Cos(y)*(5*(Dt(y)**4*Dt(z) + 2*z*Dt(y)**3*Dt(Dt(y)) - \\n     -           3*Dt(z)*(Dt(Dt(x))**2 + Dt(Dt(y))**2) - \\n     -           2*z*(Dt(Dt(x))*Dt(Dt(Dt(x))) + Dt(Dt(y))*Dt(Dt(Dt(y)))) - \\n     -           2*Dt(y)**2*Dt(Dt(Dt(z))) - \\n     -           Dt(y)*(6*Dt(Dt(y))*Dt(Dt(z)) + 4*Dt(z)*Dt(Dt(Dt(y))) + \\n     -              z*Dt(Dt(Dt(Dt(y)))))) + Dt(Dt(Dt(Dt(Dt(z)))))) - \\n     -     (z*Dt(y)**5 - 10*Dt(y)**3*Dt(Dt(z)) + 10*Dt(Dt(z))*Dt(Dt(Dt(y))) - \\n     -        10*Dt(y)**2*(3*Dt(z)*Dt(Dt(y)) + z*Dt(Dt(Dt(y)))) + \\n     -        10*Dt(Dt(y))*Dt(Dt(Dt(z))) + 5*Dt(z)*Dt(Dt(Dt(Dt(y)))) + \\n     -        5*Dt(y)*(-3*z*(Dt(Dt(x))**2 + Dt(Dt(y))**2) + Dt(Dt(Dt(Dt(z))))) + \\n     -        z*Dt(Dt(Dt(Dt(Dt(y))))))*Sin(y)) + \\n     -  10*Dt(x)**3*(Cos(y)*(z*Cos(x)*Dt(Dt(x)) + \\n     -        (-(z*Dt(y)**2) + Dt(Dt(z)))*Sin(x)) - \\n     -     (2*Dt(y)*Dt(z) + z*Dt(Dt(y)))*Sin(x)*Sin(y)) + \\n     -  5*Dt(x)*(Cos(y)*(Cos(x)*(6*Dt(Dt(x))*(z*Dt(y)**2 - Dt(Dt(z))) - \\n     -           4*Dt(z)*Dt(Dt(Dt(x))) - z*Dt(Dt(Dt(Dt(x))))) + \\n     -        (-(z*Dt(y)**4) + 3*z*(Dt(Dt(x))**2 + Dt(Dt(y))**2) + \\n     -           6*Dt(y)**2*Dt(Dt(z)) + \\n     -           4*Dt(y)*(3*Dt(z)*Dt(Dt(y)) + z*Dt(Dt(Dt(y)))) - Dt(Dt(Dt(Dt(z)))))*\\n     -         Sin(x)) + (6*Cos(x)*Dt(Dt(x))*(2*Dt(y)*Dt(z) + z*Dt(Dt(y))) + \\n     -        4*z*Cos(x)*Dt(y)*Dt(Dt(Dt(x))) + \\n     -        (-4*Dt(y)**3*Dt(z) - 6*z*Dt(y)**2*Dt(Dt(y)) + 6*Dt(Dt(y))*Dt(Dt(z)) + \\n     -           4*Dt(z)*Dt(Dt(Dt(y))) + 4*Dt(y)*Dt(Dt(Dt(z))) + z*Dt(Dt(Dt(Dt(y)))))\\n     -          *Sin(x))*Sin(y)) + \\n     -  10*Dt(x)**2*(Cos(y)*(Cos(x)*\\n     -         (3*Dt(y)*(Dt(y)*Dt(z) + z*Dt(Dt(y))) - Dt(Dt(Dt(z)))) + \\n     -        (3*Dt(z)*Dt(Dt(x)) + z*Dt(Dt(Dt(x))))*Sin(x)) + \\n     -     (-(z*Cos(x)*Dt(y)**3) + Cos(x)*(3*Dt(z)*Dt(Dt(y)) + z*Dt(Dt(Dt(y)))) + \\n     -        3*Dt(y)*(Cos(x)*Dt(Dt(z)) - z*Dt(Dt(x))*Sin(x)))*Sin(y))\"\>",
+"Output",ExpressionUUID -> "a847e7d7-1a0c-4530-8bd7-a6801cc17c09",CellLabel -> "Out[11]//FortranForm= "]},
+Open],ExpressionUUID -> "8c731ce2-16e4-4af8-829e-4681cf137310"]},StyleDefinitions -> "Default.nb",
+FrontEndVersion -> "12. for Wolfram Cloud 1.52.0.1 (September 12, 2019)"]

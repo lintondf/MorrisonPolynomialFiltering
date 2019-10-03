@@ -492,16 +492,115 @@ def testEMPSet(Leff : int, pSwitch : float) :
 #     print(A2S(iX))
     
 def testMvnrand():
+    for i in range(0,10) :
+        testMultiChannelCorrelationEstimation()
+
+def testMultiChannelCorrelationEstimation():
     ''' demonstrate that input correlations are preserved for multichannel filters
+    
+bias=True
+    
+    P = array([[1,0.5, 0.8],[0.5,1,0.2],[0.8,0.2,1]])
+100000 H 0.046535756536658195
+100000 H 0.037475234801137104
+100000 H 0.05354468742435166
+100000 H 0.039218807272332325
+100000 H 0.056681325039558174
+100000 H 0.02770197053996782
+100000 H 0.04875261094536215
+100000 H 0.06454081429072857
+100000 H 0.03291901670093613
+100000 H 0.04438806655347208
+100000 H 0.02404576846579826
+100000 H 0.04066952196463407
+
+    P = array([[1,0.25, 0.4],[0.25,1,0.1],[0.4,0.1,1]])
+100000 H 0.05879276504480862
+100000 H 0.053133472013619294
+100000 H 0.051186357988982835
+100000 H 0.03853091436419501
+100000 H 0.04174655173174548
+100000 H 0.056282088851761815
+100000 H 0.02560790005045638
+100000 H 0.041720884669689734
+100000 H 0.05380513552385578
+100000 H 0.02609345122165974    
+    
+    P = array([[1,0,0],[0,1,0],[0,0,1]])
+100000 H 0.07248712818974966
+100000 H 0.049051145693101546
+100000 H 0.04848568981550306
+100000 H 0.04716182880928848
+100000 H 0.050039580362314776
+100000 H 0.06431040916208332
+100000 H 0.03597575942686154
+100000 H 0.03811923960788285
+100000 H 0.040914547756784936
+100000 H 0.032779739035557545
+
+bias=False
+    
+    P = array([[1,0,0],[0,1,0],[0,0,1]])
+    
+0.05    0.044693124
+0.05    0.031009551
+0.05    0.058063483
+0.05    0.03633404
+0.05    0.042594193
+0.05    0.041135512
+0.05    0.048235499
+0.05    0.029390673
+0.05    0.051137411
+0.05    0.035876017
+
+    P = array([[1,0.25, 0.4],[0.25,1,0.1],[0.4,0.1,1]])
+
+100000 H 0.04329055418389014
+100000 H 0.046794396355747406
+100000 H 0.037708210047244214
+100000 H 0.04481023337144401
+100000 H 0.04376772302999579
+100000 H 0.06272238660329967
+100000 H 0.020110098741273022
+100000 H 0.0353464280452247
+100000 H 0.045132019208125235
+100000 H 0.04016688284723107
+
+     P = array([[1,0.5, 0.8],[0.5,1,0.2],[0.8,0.2,1]])
+
+100000 H 0.057059105479577696
+100000 H 0.03346243720479202
+100000 H 0.034286552055717644
+100000 H 0.055536037825449976
+100000 H 0.044326449976806584
+100000 H 0.03937560757243134
+100000 H 0.051381236059897376
+100000 H 0.03525404662023636
+100000 H 0.04281062186979721
+100000 H 0.0401613379585008
+
+800000 H 0.009035863656289791
+800000 H 0.018058980750411412
+800000 H 0.01548435691227172
+800000 H 0.01591124373807189
+800000 H 0.013176578646938861
+800000 H 0.02205189071722439
+800000 H 0.024443137559081833
+800000 H 0.016490649482349247
+800000 H 0.01563918631214303
+800000 H 0.015566326162363354
+
     '''
-    theta = 0.995;
-    tau = 1e-3;
-    N = 500000;
+    theta = 0.99;
+    tau = 1e-1;
+    N = 8000;
     u = array([0, 0, 0])
     P = array([[1,0.5, 0.8],[0.5,1,0.2],[0.8,0.2,1]])
     X = multivariate_normal(u, P, N)
-    print(A2S(P))
-    order = 2;
+    cP, dP = covarianceToCorrelation(cov(X, rowvar=False)) 
+#     print(A2S(P))
+#     print(A2S(mean(X, axis=0)))
+    order = 1;
     op1 = order+1
     innovations = zeros([N,3*op1])
     residuals = zeros([N,3*op1])
@@ -509,7 +608,7 @@ def testMvnrand():
         (times, truth, __, __) = \
             generateTestData(order, N, 0.0, array([1000, -100, 50, -15])[i:i+op1], tau, sigma=0)
         observations = truth[:,0] + X[:,i]
-        f = makeFmp(order, theta, tau);
+        f = makeFmp(order, tau, theta);
         f.start(0.0, truth[0,:])
 #         print(A2S(f.getState()))
 #         print(A2S(f.predict(times[1])))
@@ -523,11 +622,10 @@ def testMvnrand():
             residuals[j,i*op1:(i+1)*op1] = f.getState() - truth[j,:]
     
     V = f.getVRF()
-    print(A2S(V))
+#     print(A2S(V))
     (cV, dV) = covarianceToCorrelation(V)
-    print(A2S(dV))
-    print(A2S(cV))
-    K = cov(residuals, rowvar=False)
+#     print(A2S(cV))
+    K = cov(residuals, rowvar=False, bias=False )
 #     print(A2S(K))
     
 #     print(A2S(K[0:3,0:3]))
@@ -539,15 +637,25 @@ def testMvnrand():
 #     K = cov(residuals, rowvar=False)
     (cK, dK) = covarianceToCorrelation(K)
 #     print(A2S(dK))
+    print('residual correlations cK')
     print(A2S(cK))
-    
+    '''
+    If filters not identical, then V1, V2, V3 are VRF,
+    cV1, cV2, cV3 are their correlation matrices
+    scV1, scV2, scV3 are the Cholesky decompositions of cVi
+    The matrix is then:
+        cV1, P[0,1]*scV1@scV2', P[0,2]*scV1@scV3', etc
+    '''
     Q0 = concatenate([cV, P[0,1]*cV, P[0,2]*cV],axis=1)
     Q1 = concatenate([P[1,0]*cV, cV, P[1,2]*cV],axis=1)
     Q2 = concatenate([P[2,0]*cV, P[2,1]*cV, cV],axis=1)
     Q = concatenate([Q0, Q1, Q2], axis=0)
+    print('constructed correlation Q')
+    print(A2S(Q))
+    print('Q/cK')
     print(A2S(Q/cK))
-    
-    print(det(cK), det(Q), det(cK+Q))
+#     
+#     print(det(cK), det(Q), det(cK+Q))
     print(N, 'H', hellingerDistance(0*diag(Q), Q, 0*diag(cK), cK) )
     """
 500000 H 0.036667127445717866    
@@ -595,6 +703,8 @@ def fadingChi2():
             
 if __name__ == '__main__':
     pass
+    testMvnrand();
+    exit(0)
     testData = TestData('test.nc', 'w')
     group = testData.createTestGroup('Test')
     i = 1

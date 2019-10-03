@@ -4,8 +4,8 @@ BoxData[RowBox[{"Sqrt","[",RowBox[{RowBox[{"x","^","2"}],"+",RowBox[
 {"y","^","2"}],"+",RowBox[{"z","^","2"}]}],"]"}]],"Input",ExpressionUUID -> "25547913-a3d6-40ea-8fd0-629f9d5e05cc",
 CellLabel -> "In[1]:= "],Cell[
 BoxData[SqrtBox[RowBox[{SuperscriptBox["x","2"],"+",SuperscriptBox[
-"y","2"],"+",SuperscriptBox["z","2"]}]],StandardForm],"Output",ExpressionUUID -> "f5e2e501-2d73-4a5f-bb74-caec6f26e0b3",
-CellLabel -> "Out[1]= "]},Open],ExpressionUUID -> "76709872-c857-4e3c-8872-e5cb930a7ea9"],Cell[
+"y","2"],"+",SuperscriptBox["z","2"]}]],StandardForm],"Output",ExpressionUUID -> "3943bedb-049b-4aa3-b6d0-fe9b7bc065f7",
+CellLabel -> "Out[1]= "]},Open],ExpressionUUID -> "edd14811-b16c-46f7-bf29-4c552e59b36e"],Cell[
 CellGroupData[
 {Cell[
 BoxData[RowBox[{"FullSimplify","[",RowBox[{"Dt","[","%","]"}],"]"}]],"Input",
@@ -14,8 +14,8 @@ BoxData[
 FractionBox[RowBox[{RowBox[{"x"," ",RowBox[{"Dt","[","x","]"}]}],"+",RowBox[{"y"," ",RowBox[
 {"Dt","[","y","]"}]}],"+",RowBox[{"z"," ",RowBox[{"Dt","[","z","]"}]}]}],SqrtBox[
 RowBox[{SuperscriptBox["x","2"],"+",SuperscriptBox["y","2"],"+",SuperscriptBox["z",
-"2"]}]]],StandardForm],"Output",ExpressionUUID -> "9ba4a9f7-fb13-4f83-ba48-900f1458f292",
-CellLabel -> "Out[2]= "]},Open],ExpressionUUID -> "7da7ef6b-4f00-4aee-b872-750986fb104b"],Cell[
+"2"]}]]],StandardForm],"Output",ExpressionUUID -> "1464f82d-12b4-4ce7-a478-3f8360f9d7e1",
+CellLabel -> "Out[2]= "]},Open],ExpressionUUID -> "daf471c4-0eae-4c61-a1ac-62d6e66c9da3"],Cell[
 CellGroupData[
 {Cell[
 BoxData[RowBox[{"FullSimplify","[",RowBox[{"Dt","[","%","]"}],"]"}]],"Input",
@@ -31,8 +31,8 @@ FractionBox[RowBox[{RowBox[{RowBox[{"-","2"}]," ",SuperscriptBox[RowBox[{"(",Row
 {"Dt","[",RowBox[{"Dt","[","y","]"}],"]"}]}],"+",RowBox[{"z"," ",RowBox[{"Dt","[",RowBox[
 {"Dt","[","z","]"}],"]"}]}]}],")"}]}]}],RowBox[{"2"," ",SuperscriptBox[RowBox[{"(",RowBox[
 {SuperscriptBox["x","2"],"+",SuperscriptBox["y","2"],"+",SuperscriptBox["z","2"]}],")"}],
-RowBox[{"3","/","2"}]]}]],StandardForm],"Output",ExpressionUUID -> "3a531b15-b2df-4394-a640-75695533a52e",
-CellLabel -> "Out[3]= "]},Open],ExpressionUUID -> "7a14cc31-375b-4481-a825-9897fc0f63be"],Cell[
+RowBox[{"3","/","2"}]]}]],StandardForm],"Output",ExpressionUUID -> "5867c9ef-7c97-4567-b3c0-c0b488d9362a",
+CellLabel -> "Out[3]= "]},Open],ExpressionUUID -> "81f18c2d-5711-43bb-91b0-13ce0dc454e2"],Cell[
 CellGroupData[
 {Cell[
 BoxData[RowBox[{"FullSimplify","[",RowBox[{"Dt","[","%","]"}],"]"}]],"Input",
@@ -58,8 +58,8 @@ RowBox[{"(",RowBox[{SuperscriptBox["x","2"],"+",SuperscriptBox["y","2"],"+",Supe
 {"Dt","[",RowBox[{"Dt","[","y","]"}],"]"}],"]"}]}],"+",RowBox[{"z"," ",RowBox[{"Dt","[",RowBox[
 {"Dt","[",RowBox[{"Dt","[","z","]"}],"]"}],"]"}]}]}],")"}]}]}],RowBox[{"4"," ",SuperscriptBox[
 RowBox[{"(",RowBox[{SuperscriptBox["x","2"],"+",SuperscriptBox["y","2"],"+",SuperscriptBox[
-"z","2"]}],")"}],RowBox[{"5","/","2"}]]}]],StandardForm],"Output",ExpressionUUID -> "09d8f5d0-2a3d-4d50-bf1d-1c9dc0e320c2",
-CellLabel -> "Out[4]= "]},Open],ExpressionUUID -> "7f8bc5c6-e133-4a4d-baff-ab5b4c636399"],Cell[
+"z","2"]}],")"}],RowBox[{"5","/","2"}]]}]],StandardForm],"Output",ExpressionUUID -> "d5df478e-68f9-445b-8bd6-de0d92256cbd",
+CellLabel -> "Out[4]= "]},Open],ExpressionUUID -> "637044ae-d07f-4dad-b72c-d019724411b7"],Cell[
 CellGroupData[
 {Cell[
 BoxData[RowBox[{"FullSimplify","[",RowBox[{"Dt","[","%","]"}],"]"}]],"Input",
@@ -126,8 +126,8 @@ RowBox[{"Dt","[",RowBox[{"Dt","[","z","]"}],"]"}],"2"]}],"+",RowBox[{"4"," ",Row
 {"z"," ",RowBox[{"Dt","[",RowBox[{"Dt","[",RowBox[{"Dt","[",RowBox[{"Dt","[","z","]"}],"]"}],"]"}],"]"}]}]}],")"}]}]}],")"}]}]}],
 RowBox[{"8"," ",SuperscriptBox[RowBox[{"(",RowBox[{SuperscriptBox["x","2"],"+",SuperscriptBox[
 "y","2"],"+",SuperscriptBox["z","2"]}],")"}],RowBox[{"7","/","2"}]]}]],StandardForm],
-"Output",ExpressionUUID -> "fe39fdb0-520a-44d9-8eb0-1bb074aa4985",CellLabel -> "Out[5]= "]},
-Open],ExpressionUUID -> "a75dd9ae-968c-4f70-99c3-5d2ea6dd6500"],Cell[
+"Output",ExpressionUUID -> "bd945737-c094-4c2a-b7fc-0816af171678",CellLabel -> "Out[5]= "]},
+Open],ExpressionUUID -> "28240eb7-4d4c-4ea8-9fe1-052ce8d3df8b"],Cell[
 CellGroupData[
 {Cell[
 BoxData[RowBox[{"FullSimplify","[",RowBox[{"Dt","[","%","]"}],"]"}]],"Input",
@@ -325,41 +325,45 @@ RowBox[{"Dt","[",RowBox[{"Dt","[","z","]"}],"]"}],"2"]}],"+",RowBox[{"4"," ",Row
 {"Dt","[",RowBox[{"Dt","[",RowBox[{"Dt","[",RowBox[{"Dt","[","z","]"}],"]"}],"]"}],"]"}],"]"}]}]}],")"}]}]}],")"}]}]}],")"}]}]}],
 RowBox[{"16"," ",SuperscriptBox[RowBox[{"(",RowBox[{SuperscriptBox["x","2"],"+",SuperscriptBox[
 "y","2"],"+",SuperscriptBox["z","2"]}],")"}],RowBox[{"9","/","2"}]]}]],StandardForm],
-"Output",ExpressionUUID -> "8d6cac1f-c066-441d-b2f0-652d2bf0124e",CellLabel -> "Out[6]= "]},
-Open],ExpressionUUID -> "a7bfa3e6-94a0-4ac1-8291-e6e5699d6cac"],Cell[
+"Output",ExpressionUUID -> "ae2c2519-2af5-49cd-b6a3-1ff7b0256d6b",CellLabel -> "Out[6]= "]},
+Open],ExpressionUUID -> "d5fd5525-5b3f-42aa-8455-f9db139e32ca"],Cell[
 CellGroupData[
 {Cell[
-BoxData[RowBox[{"CForm","[",RowBox[{"Out","[","2","]"}],"]"}]],"Input",ExpressionUUID -> "87ad66e8-3a43-4b39-a281-b453387593f5",
-CellLabel -> "In[7]:= "],Cell[
-"\<\"(x*Dt(x) + y*Dt(y) + z*Dt(z))/Sqrt(Power(x,2) + Power(y,2) + Power(z,2))\"\>",
-"Output",ExpressionUUID -> "99909d56-09f1-4407-81a0-39b11d6da1c9",CellLabel -> "Out[7]//CForm= "]},
-Open],ExpressionUUID -> "ffd31ea4-0aff-4a5b-a46c-74c631d76560"],Cell[
+BoxData[RowBox[{"FortranForm","[",RowBox[{"Out","[","2","]"}],"]"}]],"Input",
+ExpressionUUID -> "87ad66e8-3a43-4b39-a281-b453387593f5",CellLabel -> "In[7]:= "],Cell[
+
+"\<\"(x*Dt(x) + y*Dt(y) + z*Dt(z))/Sqrt(x**2 + y**2 + z**2)\"\>","Output",ExpressionUUID -> "78880251-b49f-41c9-b299-4c33e99a41c4",
+CellLabel -> "Out[7]//FortranForm= "]},Open],ExpressionUUID -> "faec9f60-fbaa-49e7-b131-c57d5df9312b"],Cell[
 CellGroupData[
 {Cell[
-BoxData[RowBox[{"CForm","[",RowBox[{"Out","[","3","]"}],"]"}]],"Input",ExpressionUUID -> "cd9dc650-316d-4782-92e5-0e0d894d88e9",
-CellLabel -> "In[8]:= "],Cell[
-"\<\"(-2*Power(x*Dt(x) + y*Dt(y) + z*Dt(z),2) + \\n     2*(Power(x,2) + Power(y,2) + Power(z,2))*\\n      (Power(Dt(x),2) + Power(Dt(y),2) + Power(Dt(z),2) + x*Dt(Dt(x)) + \\n        y*Dt(Dt(y)) + z*Dt(Dt(z))))/\\n   (2.*Power(Power(x,2) + Power(y,2) + Power(z,2),1.5))\"\>",
-"Output",ExpressionUUID -> "cab90541-c6f0-4560-b5b3-9e01f91c8c06",CellLabel -> "Out[8]//CForm= "]},
-Open],ExpressionUUID -> "d9b2e9fc-94bc-4168-8c1e-fee162181e8b"],Cell[
+BoxData[RowBox[{"FortranForm","[",RowBox[{"Out","[","3","]"}],"]"}]],"Input",
+ExpressionUUID -> "cd9dc650-316d-4782-92e5-0e0d894d88e9",CellLabel -> "In[8]:= "],Cell[
+
+"\<\"        (-2*(x*Dt(x) + y*Dt(y) + z*Dt(z))**2 + \\n     -    2*(x**2 + y**2 + z**2)*(Dt(x)**2 + Dt(y)**2 + Dt(z)**2 + x*Dt(Dt(x)) + \\n     -       y*Dt(Dt(y)) + z*Dt(Dt(z))))/(2.*(x**2 + y**2 + z**2)**1.5)\"\>",
+"Output",ExpressionUUID -> "8c9c20b7-e25d-4014-8c74-c980a8d4dd9a",CellLabel -> "Out[8]//FortranForm= "]},
+Open],ExpressionUUID -> "f8c058ff-4323-4dd4-a7c2-d2682a0fd58f"],Cell[
 CellGroupData[
 {Cell[
-BoxData[RowBox[{"CForm","[",RowBox[{"Out","[","4","]"}],"]"}]],"Input",ExpressionUUID -> "fa792d7e-2034-4baf-987e-7f7508e48e68",
-CellLabel -> "In[9]:= "],Cell[
-"\<\"(-6*(x*Dt(x) + y*Dt(y) + z*Dt(z))*(-2*Power(x*Dt(x) + y*Dt(y) + z*Dt(z),2) + \\n        2*(Power(x,2) + Power(y,2) + Power(z,2))*\\n         (Power(Dt(x),2) + Power(Dt(y),2) + Power(Dt(z),2) + x*Dt(Dt(x)) + \\n           y*Dt(Dt(y)) + z*Dt(Dt(z)))) + \\n     4*Power(Power(x,2) + Power(y,2) + Power(z,2),2)*\\n      (3*Dt(x)*Dt(Dt(x)) + 3*Dt(y)*Dt(Dt(y)) + 3*Dt(z)*Dt(Dt(z)) + x*Dt(Dt(Dt(x))) + \\n        y*Dt(Dt(Dt(y))) + z*Dt(Dt(Dt(z)))))/\\n   (4.*Power(Power(x,2) + Power(y,2) + Power(z,2),2.5))\"\>",
-"Output",ExpressionUUID -> "50c5b2eb-aa92-4883-8f94-517e875cf217",CellLabel -> "Out[9]//CForm= "]},
-Open],ExpressionUUID -> "83d5881f-e093-4f42-922d-57d4a24186fd"],Cell[
+BoxData[RowBox[{"FortranForm","[",RowBox[{"Out","[","4","]"}],"]"}]],"Input",
+ExpressionUUID -> "fa792d7e-2034-4baf-987e-7f7508e48e68",CellLabel -> "In[9]:= "],Cell[
+
+"\<\"        (-6*(x*Dt(x) + y*Dt(y) + z*Dt(z))*\\n     -     (-2*(x*Dt(x) + y*Dt(y) + z*Dt(z))**2 + \\n     -       2*(x**2 + y**2 + z**2)*\\n     -        (Dt(x)**2 + Dt(y)**2 + Dt(z)**2 + x*Dt(Dt(x)) + y*Dt(Dt(y)) + \\n     -          z*Dt(Dt(z)))) + 4*(x**2 + y**2 + z**2)**2*\\n     -     (3*Dt(x)*Dt(Dt(x)) + 3*Dt(y)*Dt(Dt(y)) + 3*Dt(z)*Dt(Dt(z)) + \\n     -       x*Dt(Dt(Dt(x))) + y*Dt(Dt(Dt(y))) + z*Dt(Dt(Dt(z)))))/\\n     -  (4.*(x**2 + y**2 + z**2)**2.5)\"\>",
+"Output",ExpressionUUID -> "30b9b1fd-c589-4293-8290-f0499deafd05",CellLabel -> "Out[9]//FortranForm= "]},
+Open],ExpressionUUID -> "8c40d9f2-d299-4538-98c6-c96f0ba4a8ce"],Cell[
 CellGroupData[
 {Cell[
-BoxData[RowBox[{"CForm","[",RowBox[{"Out","[","5","]"}],"]"}]],"Input",ExpressionUUID -> "df8d567c-f712-4626-80d1-b77d98bcc0ad",
-CellLabel -> "In[10]:= "],Cell[
-"\<\"(-10*(x*Dt(x) + y*Dt(y) + z*Dt(z))*\\n      (-6*(x*Dt(x) + y*Dt(y) + z*Dt(z))*\\n         (-2*Power(x*Dt(x) + y*Dt(y) + z*Dt(z),2) + \\n           2*(Power(x,2) + Power(y,2) + Power(z,2))*\\n            (Power(Dt(x),2) + Power(Dt(y),2) + Power(Dt(z),2) + x*Dt(Dt(x)) + \\n              y*Dt(Dt(y)) + z*Dt(Dt(z)))) + \\n        4*Power(Power(x,2) + Power(y,2) + Power(z,2),2)*\\n         (3*Dt(x)*Dt(Dt(x)) + 3*Dt(y)*Dt(Dt(y)) + 3*Dt(z)*Dt(Dt(z)) + \\n           x*Dt(Dt(Dt(x))) + y*Dt(Dt(Dt(y))) + z*Dt(Dt(Dt(z))))) + \\n     2*(Power(x,2) + Power(y,2) + Power(z,2))*\\n      (-6*(Power(Dt(x),2) + Power(Dt(y),2) + Power(Dt(z),2) + x*Dt(Dt(x)) + \\n           y*Dt(Dt(y)) + z*Dt(Dt(z)))*\\n         (-2*Power(x*Dt(x) + y*Dt(y) + z*Dt(z),2) + \\n           2*(Power(x,2) + Power(y,2) + Power(z,2))*\\n            (Power(Dt(x),2) + Power(Dt(y),2) + Power(Dt(z),2) + x*Dt(Dt(x)) + \\n              y*Dt(Dt(y)) + z*Dt(Dt(z)))) + \\n        4*(Power(x,2) + Power(y,2) + Power(z,2))*(x*Dt(x) + y*Dt(y) + z*Dt(z))*\\n         (3*Dt(x)*Dt(Dt(x)) + 3*Dt(y)*Dt(Dt(y)) + 3*Dt(z)*Dt(Dt(z)) + \\n           x*Dt(Dt(Dt(x))) + y*Dt(Dt(Dt(y))) + z*Dt(Dt(Dt(z)))) + \\n        4*Power(Power(x,2) + Power(y,2) + Power(z,2),2)*\\n         (3*Power(Dt(Dt(x)),2) + 3*Power(Dt(Dt(y)),2) + 3*Power(Dt(Dt(z)),2) + \\n           4*Dt(x)*Dt(Dt(Dt(x))) + 4*Dt(y)*Dt(Dt(Dt(y))) + 4*Dt(z)*Dt(Dt(Dt(z))) + \\n           x*Dt(Dt(Dt(Dt(x)))) + y*Dt(Dt(Dt(Dt(y)))) + z*Dt(Dt(Dt(Dt(z)))))))/\\n   (8.*Power(Power(x,2) + Power(y,2) + Power(z,2),3.5))\"\>",
-"Output",ExpressionUUID -> "570bcf78-fa7f-4e90-9862-a789b47fdf16",CellLabel -> "Out[10]//CForm= "]},
-Open],ExpressionUUID -> "e5305e35-cdc1-4f77-9754-e3d11ee959de"],Cell[
+BoxData[RowBox[{"FortranForm","[",RowBox[{"Out","[","5","]"}],"]"}]],"Input",
+ExpressionUUID -> "df8d567c-f712-4626-80d1-b77d98bcc0ad",CellLabel -> "In[10]:= "],Cell[
+
+"\<\"        (-10*(x*Dt(x) + y*Dt(y) + z*Dt(z))*\\n     -     (-6*(x*Dt(x) + y*Dt(y) + z*Dt(z))*\\n     -        (-2*(x*Dt(x) + y*Dt(y) + z*Dt(z))**2 + \\n     -          2*(x**2 + y**2 + z**2)*\\n     -           (Dt(x)**2 + Dt(y)**2 + Dt(z)**2 + x*Dt(Dt(x)) + y*Dt(Dt(y)) + \\n     -             z*Dt(Dt(z)))) + \\n     -       4*(x**2 + y**2 + z**2)**2*\\n     -        (3*Dt(x)*Dt(Dt(x)) + 3*Dt(y)*Dt(Dt(y)) + 3*Dt(z)*Dt(Dt(z)) + \\n     -          x*Dt(Dt(Dt(x))) + y*Dt(Dt(Dt(y))) + z*Dt(Dt(Dt(z))))) + \\n     -    2*(x**2 + y**2 + z**2)*(-6*\\n     -        (Dt(x)**2 + Dt(y)**2 + Dt(z)**2 + x*Dt(Dt(x)) + y*Dt(Dt(y)) + \\n     -          z*Dt(Dt(z)))*(-2*(x*Dt(x) + y*Dt(y) + z*Dt(z))**2 + \\n     -          2*(x**2 + y**2 + z**2)*\\n     -           (Dt(x)**2 + Dt(y)**2 + Dt(z)**2 + x*Dt(Dt(x)) + y*Dt(Dt(y)) + \\n     -             z*Dt(Dt(z)))) + \\n     -       4*(x**2 + y**2 + z**2)*(x*Dt(x) + y*Dt(y) + z*Dt(z))*\\n     -        (3*Dt(x)*Dt(Dt(x)) + 3*Dt(y)*Dt(Dt(y)) + 3*Dt(z)*Dt(Dt(z)) + \\n     -          x*Dt(Dt(Dt(x))) + y*Dt(Dt(Dt(y))) + z*Dt(Dt(Dt(z)))) + \\n     -       4*(x**2 + y**2 + z**2)**2*\\n     -        (3*Dt(Dt(x))**2 + 3*Dt(Dt(y))**2 + 3*Dt(Dt(z))**2 + \\n     -          4*Dt(x)*Dt(Dt(Dt(x))) + 4*Dt(y)*Dt(Dt(Dt(y))) + \\n     -          4*Dt(z)*Dt(Dt(Dt(z))) + x*Dt(Dt(Dt(Dt(x)))) + y*Dt(Dt(Dt(Dt(y)))) + \\n     -          z*Dt(Dt(Dt(Dt(z)))))))/(8.*(x**2 + y**2 + z**2)**3.5)\"\>",
+"Output",ExpressionUUID -> "d70b40b0-c077-4ee6-8f85-1d05a718e8dd",CellLabel -> "Out[10]//FortranForm= "]},
+Open],ExpressionUUID -> "fd372639-5cca-4283-9dec-c0ed7bccaf87"],Cell[
 CellGroupData[
 {Cell[
-BoxData[RowBox[{"CForm","[",RowBox[{"Out","[","6","]"}],"]"}]],"Input",ExpressionUUID -> "3a47c716-69bf-456c-bf02-966c52eb4ef6",
-CellLabel -> "In[11]:= "],Cell[
-"\<\"(-14*(x*Dt(x) + y*Dt(y) + z*Dt(z))*\\n      (-10*(x*Dt(x) + y*Dt(y) + z*Dt(z))*\\n         (-6*(x*Dt(x) + y*Dt(y) + z*Dt(z))*\\n            (-2*Power(x*Dt(x) + y*Dt(y) + z*Dt(z),2) + \\n              2*(Power(x,2) + Power(y,2) + Power(z,2))*\\n               (Power(Dt(x),2) + Power(Dt(y),2) + Power(Dt(z),2) + x*Dt(Dt(x)) + \\n                 y*Dt(Dt(y)) + z*Dt(Dt(z)))) + \\n           4*Power(Power(x,2) + Power(y,2) + Power(z,2),2)*\\n            (3*Dt(x)*Dt(Dt(x)) + 3*Dt(y)*Dt(Dt(y)) + 3*Dt(z)*Dt(Dt(z)) + \\n              x*Dt(Dt(Dt(x))) + y*Dt(Dt(Dt(y))) + z*Dt(Dt(Dt(z))))) + \\n        2*(Power(x,2) + Power(y,2) + Power(z,2))*\\n         (-6*(Power(Dt(x),2) + Power(Dt(y),2) + Power(Dt(z),2) + x*Dt(Dt(x)) + \\n              y*Dt(Dt(y)) + z*Dt(Dt(z)))*\\n            (-2*Power(x*Dt(x) + y*Dt(y) + z*Dt(z),2) + \\n              2*(Power(x,2) + Power(y,2) + Power(z,2))*\\n               (Power(Dt(x),2) + Power(Dt(y),2) + Power(Dt(z),2) + x*Dt(Dt(x)) + \\n                 y*Dt(Dt(y)) + z*Dt(Dt(z)))) + \\n           4*(Power(x,2) + Power(y,2) + Power(z,2))*(x*Dt(x) + y*Dt(y) + z*Dt(z))*\\n            (3*Dt(x)*Dt(Dt(x)) + 3*Dt(y)*Dt(Dt(y)) + 3*Dt(z)*Dt(Dt(z)) + \\n              x*Dt(Dt(Dt(x))) + y*Dt(Dt(Dt(y))) + z*Dt(Dt(Dt(z)))) + \\n           4*Power(Power(x,2) + Power(y,2) + Power(z,2),2)*\\n            (3*Power(Dt(Dt(x)),2) + 3*Power(Dt(Dt(y)),2) + 3*Power(Dt(Dt(z)),2) + \\n              4*Dt(x)*Dt(Dt(Dt(x))) + 4*Dt(y)*Dt(Dt(Dt(y))) + \\n              4*Dt(z)*Dt(Dt(Dt(z))) + x*Dt(Dt(Dt(Dt(x)))) + y*Dt(Dt(Dt(Dt(y)))) + \\n              z*Dt(Dt(Dt(Dt(z))))))) + \\n     4*(Power(x,2) + Power(y,2) + Power(z,2))*\\n      (-5*(Power(Dt(x),2) + Power(Dt(y),2) + Power(Dt(z),2) + x*Dt(Dt(x)) + \\n           y*Dt(Dt(y)) + z*Dt(Dt(z)))*\\n         (-6*(x*Dt(x) + y*Dt(y) + z*Dt(z))*\\n            (-2*Power(x*Dt(x) + y*Dt(y) + z*Dt(z),2) + \\n              2*(Power(x,2) + Power(y,2) + Power(z,2))*\\n               (Power(Dt(x),2) + Power(Dt(y),2) + Power(Dt(z),2) + x*Dt(Dt(x)) + \\n                 y*Dt(Dt(y)) + z*Dt(Dt(z)))) + \\n           4*Power(Power(x,2) + Power(y,2) + Power(z,2),2)*\\n            (3*Dt(x)*Dt(Dt(x)) + 3*Dt(y)*Dt(Dt(y)) + 3*Dt(z)*Dt(Dt(z)) + \\n              x*Dt(Dt(Dt(x))) + y*Dt(Dt(Dt(y))) + z*Dt(Dt(Dt(z))))) - \\n        3*(x*Dt(x) + y*Dt(y) + z*Dt(z))*\\n         (-6*(Power(Dt(x),2) + Power(Dt(y),2) + Power(Dt(z),2) + x*Dt(Dt(x)) + \\n              y*Dt(Dt(y)) + z*Dt(Dt(z)))*\\n            (-2*Power(x*Dt(x) + y*Dt(y) + z*Dt(z),2) + \\n              2*(Power(x,2) + Power(y,2) + Power(z,2))*\\n               (Power(Dt(x),2) + Power(Dt(y),2) + Power(Dt(z),2) + x*Dt(Dt(x)) + \\n                 y*Dt(Dt(y)) + z*Dt(Dt(z)))) + \\n           4*(Power(x,2) + Power(y,2) + Power(z,2))*(x*Dt(x) + y*Dt(y) + z*Dt(z))*\\n            (3*Dt(x)*Dt(Dt(x)) + 3*Dt(y)*Dt(Dt(y)) + 3*Dt(z)*Dt(Dt(z)) + \\n              x*Dt(Dt(Dt(x))) + y*Dt(Dt(Dt(y))) + z*Dt(Dt(Dt(z)))) + \\n           4*Power(Power(x,2) + Power(y,2) + Power(z,2),2)*\\n            (3*Power(Dt(Dt(x)),2) + 3*Power(Dt(Dt(y)),2) + 3*Power(Dt(Dt(z)),2) + \\n              4*Dt(x)*Dt(Dt(Dt(x))) + 4*Dt(y)*Dt(Dt(Dt(y))) + \\n              4*Dt(z)*Dt(Dt(Dt(z))) + x*Dt(Dt(Dt(Dt(x)))) + y*Dt(Dt(Dt(Dt(y)))) + \\n              z*Dt(Dt(Dt(Dt(z)))))) + \\n        (Power(x,2) + Power(y,2) + Power(z,2))*\\n         (8*Power(x*Dt(x) + y*Dt(y) + z*Dt(z),2)*\\n            (3*Dt(x)*Dt(Dt(x)) + 3*Dt(y)*Dt(Dt(y)) + 3*Dt(z)*Dt(Dt(z)) + \\n              x*Dt(Dt(Dt(x))) + y*Dt(Dt(Dt(y))) + z*Dt(Dt(Dt(z)))) - \\n           8*(Power(x,2) + Power(y,2) + Power(z,2))*\\n            (Power(Dt(x),2) + Power(Dt(y),2) + Power(Dt(z),2) + x*Dt(Dt(x)) + \\n              y*Dt(Dt(y)) + z*Dt(Dt(z)))*\\n            (3*Dt(x)*Dt(Dt(x)) + 3*Dt(y)*Dt(Dt(y)) + 3*Dt(z)*Dt(Dt(z)) + \\n              x*Dt(Dt(Dt(x))) + y*Dt(Dt(Dt(y))) + z*Dt(Dt(Dt(z)))) - \\n           6*(-2*Power(x*Dt(x) + y*Dt(y) + z*Dt(z),2) + \\n              2*(Power(x,2) + Power(y,2) + Power(z,2))*\\n               (Power(Dt(x),2) + Power(Dt(y),2) + Power(Dt(z),2) + x*Dt(Dt(x)) + \\n                 y*Dt(Dt(y)) + z*Dt(Dt(z))))*\\n            (3*Dt(x)*Dt(Dt(x)) + 3*Dt(y)*Dt(Dt(y)) + 3*Dt(z)*Dt(Dt(z)) + \\n              x*Dt(Dt(Dt(x))) + y*Dt(Dt(Dt(y))) + z*Dt(Dt(Dt(z)))) + \\n           20*(Power(x,2) + Power(y,2) + Power(z,2))*(x*Dt(x) + y*Dt(y) + z*Dt(z))*\\n            (3*Power(Dt(Dt(x)),2) + 3*Power(Dt(Dt(y)),2) + 3*Power(Dt(Dt(z)),2) + \\n              4*Dt(x)*Dt(Dt(Dt(x))) + 4*Dt(y)*Dt(Dt(Dt(y))) + \\n              4*Dt(z)*Dt(Dt(Dt(z))) + x*Dt(Dt(Dt(Dt(x)))) + y*Dt(Dt(Dt(Dt(y)))) + \\n              z*Dt(Dt(Dt(Dt(z))))) + \\n           4*Power(Power(x,2) + Power(y,2) + Power(z,2),2)*\\n            (10*Dt(Dt(x))*Dt(Dt(Dt(x))) + 10*Dt(Dt(y))*Dt(Dt(Dt(y))) + \\n              10*Dt(Dt(z))*Dt(Dt(Dt(z))) + 5*Dt(x)*Dt(Dt(Dt(Dt(x)))) + \\n              5*Dt(y)*Dt(Dt(Dt(Dt(y)))) + 5*Dt(z)*Dt(Dt(Dt(Dt(z)))) + \\n              x*Dt(Dt(Dt(Dt(Dt(x))))) + y*Dt(Dt(Dt(Dt(Dt(y))))) + \\n              z*Dt(Dt(Dt(Dt(Dt(z)))))))))/\\n   (16.*Power(Power(x,2) + Power(y,2) + Power(z,2),4.5))\"\>",
-"Output",ExpressionUUID -> "3acab8b3-7c8a-4285-8ef6-111ce9b6f526",CellLabel -> "Out[11]//CForm= "]},
-Open],ExpressionUUID -> "b1ad4f34-5c53-4a6d-a064-84e5c6107ea4"]},StyleDefinitions -> "Default.nb",
-FrontEndVersion -> "11.3 for Wolfram Cloud 1.49 (December 12, 2018)"]
+BoxData[RowBox[{"FortranForm","[",RowBox[{"Out","[","6","]"}],"]"}]],"Input",
+ExpressionUUID -> "3a47c716-69bf-456c-bf02-966c52eb4ef6",CellLabel -> "In[11]:= "],Cell[
+
+"\<\"        (-14*(x*Dt(x) + y*Dt(y) + z*Dt(z))*\\n     -     (-10*(x*Dt(x) + y*Dt(y) + z*Dt(z))*\\n     -        (-6*(x*Dt(x) + y*Dt(y) + z*Dt(z))*\\n     -           (-2*(x*Dt(x) + y*Dt(y) + z*Dt(z))**2 + \\n     -             2*(x**2 + y**2 + z**2)*\\n     -              (Dt(x)**2 + Dt(y)**2 + Dt(z)**2 + x*Dt(Dt(x)) + y*Dt(Dt(y)) + \\n     -                z*Dt(Dt(z)))) + \\n     -          4*(x**2 + y**2 + z**2)**2*\\n     -           (3*Dt(x)*Dt(Dt(x)) + 3*Dt(y)*Dt(Dt(y)) + 3*Dt(z)*Dt(Dt(z)) + \\n     -             x*Dt(Dt(Dt(x))) + y*Dt(Dt(Dt(y))) + z*Dt(Dt(Dt(z))))) + \\n     -       2*(x**2 + y**2 + z**2)*\\n     -        (-6*(Dt(x)**2 + Dt(y)**2 + Dt(z)**2 + x*Dt(Dt(x)) + y*Dt(Dt(y)) + \\n     -             z*Dt(Dt(z)))*(-2*(x*Dt(x) + y*Dt(y) + z*Dt(z))**2 + \\n     -             2*(x**2 + y**2 + z**2)*\\n     -              (Dt(x)**2 + Dt(y)**2 + Dt(z)**2 + x*Dt(Dt(x)) + y*Dt(Dt(y)) + \\n     -                z*Dt(Dt(z)))) + \\n     -          4*(x**2 + y**2 + z**2)*(x*Dt(x) + y*Dt(y) + z*Dt(z))*\\n     -           (3*Dt(x)*Dt(Dt(x)) + 3*Dt(y)*Dt(Dt(y)) + 3*Dt(z)*Dt(Dt(z)) + \\n     -             x*Dt(Dt(Dt(x))) + y*Dt(Dt(Dt(y))) + z*Dt(Dt(Dt(z)))) + \\n     -          4*(x**2 + y**2 + z**2)**2*\\n     -           (3*Dt(Dt(x))**2 + 3*Dt(Dt(y))**2 + 3*Dt(Dt(z))**2 + \\n     -             4*Dt(x)*Dt(Dt(Dt(x))) + 4*Dt(y)*Dt(Dt(Dt(y))) + \\n     -             4*Dt(z)*Dt(Dt(Dt(z))) + x*Dt(Dt(Dt(Dt(x)))) + \\n     -             y*Dt(Dt(Dt(Dt(y)))) + z*Dt(Dt(Dt(Dt(z))))))) + \\n     -    4*(x**2 + y**2 + z**2)*(-5*\\n     -        (Dt(x)**2 + Dt(y)**2 + Dt(z)**2 + x*Dt(Dt(x)) + y*Dt(Dt(y)) + \\n     -          z*Dt(Dt(z)))*(-6*(x*Dt(x) + y*Dt(y) + z*Dt(z))*\\n     -           (-2*(x*Dt(x) + y*Dt(y) + z*Dt(z))**2 + \\n     -             2*(x**2 + y**2 + z**2)*\\n     -              (Dt(x)**2 + Dt(y)**2 + Dt(z)**2 + x*Dt(Dt(x)) + y*Dt(Dt(y)) + \\n     -                z*Dt(Dt(z)))) + \\n     -          4*(x**2 + y**2 + z**2)**2*\\n     -           (3*Dt(x)*Dt(Dt(x)) + 3*Dt(y)*Dt(Dt(y)) + 3*Dt(z)*Dt(Dt(z)) + \\n     -             x*Dt(Dt(Dt(x))) + y*Dt(Dt(Dt(y))) + z*Dt(Dt(Dt(z))))) - \\n     -       3*(x*Dt(x) + y*Dt(y) + z*Dt(z))*\\n     -        (-6*(Dt(x)**2 + Dt(y)**2 + Dt(z)**2 + x*Dt(Dt(x)) + y*Dt(Dt(y)) + \\n     -             z*Dt(Dt(z)))*(-2*(x*Dt(x) + y*Dt(y) + z*Dt(z))**2 + \\n     -             2*(x**2 + y**2 + z**2)*\\n     -              (Dt(x)**2 + Dt(y)**2 + Dt(z)**2 + x*Dt(Dt(x)) + y*Dt(Dt(y)) + \\n     -                z*Dt(Dt(z)))) + \\n     -          4*(x**2 + y**2 + z**2)*(x*Dt(x) + y*Dt(y) + z*Dt(z))*\\n     -           (3*Dt(x)*Dt(Dt(x)) + 3*Dt(y)*Dt(Dt(y)) + 3*Dt(z)*Dt(Dt(z)) + \\n     -             x*Dt(Dt(Dt(x))) + y*Dt(Dt(Dt(y))) + z*Dt(Dt(Dt(z)))) + \\n     -          4*(x**2 + y**2 + z**2)**2*\\n     -           (3*Dt(Dt(x))**2 + 3*Dt(Dt(y))**2 + 3*Dt(Dt(z))**2 + \\n     -             4*Dt(x)*Dt(Dt(Dt(x))) + 4*Dt(y)*Dt(Dt(Dt(y))) + \\n     -             4*Dt(z)*Dt(Dt(Dt(z))) + x*Dt(Dt(Dt(Dt(x)))) + \\n     -             y*Dt(Dt(Dt(Dt(y)))) + z*Dt(Dt(Dt(Dt(z)))))) + \\n     -       (x**2 + y**2 + z**2)*(8*(x*Dt(x) + y*Dt(y) + z*Dt(z))**2*\\n     -           (3*Dt(x)*Dt(Dt(x)) + 3*Dt(y)*Dt(Dt(y)) + 3*Dt(z)*Dt(Dt(z)) + \\n     -             x*Dt(Dt(Dt(x))) + y*Dt(Dt(Dt(y))) + z*Dt(Dt(Dt(z)))) - \\n     -          8*(x**2 + y**2 + z**2)*\\n     -           (Dt(x)**2 + Dt(y)**2 + Dt(z)**2 + x*Dt(Dt(x)) + y*Dt(Dt(y)) + \\n     -             z*Dt(Dt(z)))*(3*Dt(x)*Dt(Dt(x)) + 3*Dt(y)*Dt(Dt(y)) + \\n     -             3*Dt(z)*Dt(Dt(z)) + x*Dt(Dt(Dt(x))) + y*Dt(Dt(Dt(y))) + \\n     -             z*Dt(Dt(Dt(z)))) - \\n     -          6*(-2*(x*Dt(x) + y*Dt(y) + z*Dt(z))**2 + \\n     -             2*(x**2 + y**2 + z**2)*\\n     -              (Dt(x)**2 + Dt(y)**2 + Dt(z)**2 + x*Dt(Dt(x)) + y*Dt(Dt(y)) + \\n     -                z*Dt(Dt(z))))*\\n     -           (3*Dt(x)*Dt(Dt(x)) + 3*Dt(y)*Dt(Dt(y)) + 3*Dt(z)*Dt(Dt(z)) + \\n     -             x*Dt(Dt(Dt(x))) + y*Dt(Dt(Dt(y))) + z*Dt(Dt(Dt(z)))) + \\n     -          20*(x**2 + y**2 + z**2)*(x*Dt(x) + y*Dt(y) + z*Dt(z))*\\n     -           (3*Dt(Dt(x))**2 + 3*Dt(Dt(y))**2 + 3*Dt(Dt(z))**2 + \\n     -             4*Dt(x)*Dt(Dt(Dt(x))) + 4*Dt(y)*Dt(Dt(Dt(y))) + \\n     -             4*Dt(z)*Dt(Dt(Dt(z))) + x*Dt(Dt(Dt(Dt(x)))) + \\n     -             y*Dt(Dt(Dt(Dt(y)))) + z*Dt(Dt(Dt(Dt(z))))) + \\n     -          4*(x**2 + y**2 + z**2)**2*\\n     -           (10*Dt(Dt(x))*Dt(Dt(Dt(x))) + 10*Dt(Dt(y))*Dt(Dt(Dt(y))) + \\n     -             10*Dt(Dt(z))*Dt(Dt(Dt(z))) + 5*Dt(x)*Dt(Dt(Dt(Dt(x)))) + \\n     -             5*Dt(y)*Dt(Dt(Dt(Dt(y)))) + 5*Dt(z)*Dt(Dt(Dt(Dt(z)))) + \\n     -             x*Dt(Dt(Dt(Dt(Dt(x))))) + y*Dt(Dt(Dt(Dt(Dt(y))))) + \\n     -             z*Dt(Dt(Dt(Dt(Dt(z)))))))))/(16.*(x**2 + y**2 + z**2)**4.5)\"\>",
+"Output",ExpressionUUID -> "1d9e7dbc-be1c-4bd7-b835-f398a9d12e0a",CellLabel -> "Out[11]//FortranForm= "]},
+Open],ExpressionUUID -> "3ef1b938-9be3-43ee-8c5b-d5acc08e6f7c"]},StyleDefinitions -> "Default.nb",
+FrontEndVersion -> "12. for Wolfram Cloud 1.52.0.1 (September 12, 2019)"]
