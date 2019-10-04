@@ -1,4 +1,4 @@
-''' PolynomialFiltering.polynomialfiltering.IComponentFilter
+''' PolynomialFiltering.polynomialfiltering.AbstractComponentFilter
  (C) Copyright 2019 - Blue Lightning Development, LLC.
  D. F. Linton. support@BlueLightningDevelopment.com
 
@@ -11,14 +11,16 @@ from enum import Enum
 from numpy import array, eye, transpose, zeros
 from numpy import array as vector;
 from polynomialfiltering.PythonUtilities import virtual, forcestatic;
+from polynomialfiltering.Main import AbstractFilter
 
-class IComponentFilter(ABC):
+class AbstractComponentFilter(AbstractFilter):
     '''
     classdocs
     '''
 
 
-    def __init__(self, params):
+    def __init__(self, order : int, name : str = ''):
+        super().__init__(order, name)
         '''
         Constructor
         '''

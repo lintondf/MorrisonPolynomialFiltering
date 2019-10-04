@@ -16,7 +16,7 @@ from scipy.optimize.zeros import brentq
 from typing import List;
 
 from TestData import TestData
-from TestSuite import slow
+from TestSuite import slow, TestCaseBase
 from TestUtilities import generateTestPolynomial, generateTestData, createTestGroup, writeTestVariable, A2S, assert_report, assert_clear
 from polynomialfiltering.Main import AbstractFilterWithCovariance, FilterStatus
 from polynomialfiltering.PythonUtilities import assert_not_empty
@@ -33,7 +33,7 @@ from polynomialfiltering.filters.RecursivePolynomialFilter import RecursivePolyn
 # from runstats import Statistics
 # from netCDF4 import Dataset
 # from TestSuite import testDataPath;
-class Pair_test(unittest.TestCase):
+class Pair_test(TestCaseBase):
 
 
     def setUp(self):
@@ -189,23 +189,6 @@ class Pair_test(unittest.TestCase):
         f.update(4, Zstar, 0.0)
         self.assertTrue( f.isFading() )
 
-
-    def _steps(self):
-        for name in dir(self): # dir() result is implicitly sorted
-            if name.startswith("step"):
-                    yield name, getattr(self, name) 
-        
-    def test_steps(self):
-        print(type(self).__name__)
-        for name, step in self._steps():
-            try:
-                with self.subTest(name):
-                    print('  ', name, ' : ', end='')
-                    step()
-                    print(' OK')
-            except Exception as e:
-                self.fail("{} failed ({}: {})".format(step, type(e), e))
-            
 if __name__ == "__main__":
     #import sys;sys.argv = ['', 'Test.testName']
     unittest.main()

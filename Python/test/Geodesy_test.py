@@ -10,14 +10,15 @@ from pymap3d import geodetic2ecef, ecef2geodetic
 from pylint.test.functional import bad_staticmethod_argument
 from math import radians
 
+from TestSuite import TestCaseBase
 from TestUtilities import A2S
 
 from polynomialfiltering.Geodesy import Geodesy, Site
 
-class Test(unittest.TestCase):
+class Test(TestCaseBase):
 
 
-    def testEcef(self):
+    def stepEcef(self):
         data = array([
             [100.00000000000,  34.836898000000,  -121.77140100000,  319343.60000000,  -9191284.0000000,  -14840559.000000,  12069004.000000],
             [110.00000000000,  34.824071000000,  -122.05958100000,  383929.80000000,  -9295391.0000000,  -14841370.000000,  12101996.000000],
@@ -49,7 +50,7 @@ class Test(unittest.TestCase):
             print('PLH2EFG', i, A2S(ecef), A2S(err), (err < 1.0).all())
 
 
-    def testGeneral(self):
+    def stepGeneral(self):
         geodesy = Geodesy()
         lat = radians(21 + 34/60.0 + 19.6344/3600.0)
         lon = radians(-158 - 15/60.0-59.9095/3600.0)

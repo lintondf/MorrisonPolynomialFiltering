@@ -10,10 +10,12 @@ from numpy import array as vector
 from math import sin, cos, atan2, pi
 
 from polynomialfiltering.RadarCoordinates import RadarCoordinates
+
+from TestSuite import TestCaseBase
 from TestUtilities import covarianceToCorrelation
 
 
-class Test(unittest.TestCase):
+class Test(TestCaseBase):
 
 
     def setUp(self):
@@ -24,7 +26,7 @@ class Test(unittest.TestCase):
         pass
 
 
-    def testName(self):
+    def stepName(self):
         '''
 /Users/lintondf/config/estimation.cfg:Set_Radar_Variance ("0.14",   0.117, 0.194,  45.0);
 /Users/lintondf/config/estimation.cfg:Set_Radar_Variance ("1.16",   0.410, 0.490,  10.0);

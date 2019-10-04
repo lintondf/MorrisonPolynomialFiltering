@@ -8,6 +8,7 @@ import unittest
 from numpy import array, zeros
 from numpy import array as vector;
 
+from TestSuite import TestCaseBase
 from polynomialfiltering.PythonUtilities import ignore, testcase, testclass, testclassmethod
 
 from polynomialfiltering.Main import AbstractFilter, AbstractFilterWithCovariance
@@ -15,7 +16,7 @@ from polynomialfiltering.components.Emp import makeEmp
 from polynomialfiltering.filters.ManagedFilterBase import ManagedFilterBase;
 from polynomialfiltering.Main import FilterStatus
 
-class ManagedFilterBase_test(unittest.TestCase):
+class ManagedFilterBase_test(TestCaseBase):
 
     @testclass
     class ManagedFilterBaseMock(ManagedFilterBase):
@@ -62,14 +63,14 @@ class ManagedFilterBase_test(unittest.TestCase):
         pass
 
 
-    def testName(self):
+    def stepName(self):
         f = makeEmp(0, 0.1)
         m = self.ManagedFilterBaseMock( f.getOrder(), f );
         assert( m.getN() == 0 )
         assert( m.getWorker().getOrder() == 0)
         assert( m.getWorker().getTau() == 0.1)
         
-    def testWorkerPassthru(self):
+    def stepWorkerPassthru(self):
         f = makeEmp(1, 0.2)
         m = self.ManagedFilterBaseMock( f.getOrder(), f )
         assert( m.getWorker() == f)

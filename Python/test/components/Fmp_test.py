@@ -30,7 +30,7 @@ from scipy.stats import kstest, chi2, lognorm, norm, anderson
 from typing import List;
 
 from TestData import TestData
-from TestSuite import slow
+from TestSuite import slow, TestCaseBase
 from TestSuite import testDataPath;
 from TestUtilities import generateTestPolynomial, generateTestData, createTestGroup, writeTestVariable, A2S, \
     covarianceToCorrelation, assert_report, assert_clear
@@ -43,7 +43,7 @@ from polynomialfiltering.components.ICore import ICore
 from polynomialfiltering.filters.RecursivePolynomialFilter import RecursivePolynomialFilter
 
 
-class Fmp_test(unittest.TestCase):
+class Fmp_test(TestCaseBase):
 
 
     def setUp(self):
@@ -651,23 +651,6 @@ class Fmp_test(unittest.TestCase):
 #                         (order, tau, theta, n, fmp.getFirstVRF(0)/emp.getFirstVRF(n-1), fmp.getFirstVRF(0)/emp.getFirstVRF(n), fmp.getFirstVRF(0)/emp.getFirstVRF(n+1)))
         
     
-
-    def _steps(self):
-        for name in dir(self): # dir() result is implicitly sorted
-            if name.startswith("step"):
-                    yield name, getattr(self, name) 
-        
-    def test_steps(self):
-        print(type(self).__name__)
-        for name, step in self._steps():
-            try:
-                with self.subTest(name):
-                    print('  ', name, ' : ', end='')
-                    step()
-                    print(' OK')
-            except Exception as e:
-                self.fail("{} failed ({}: {})".format(step, type(e), e))
-                
 if __name__ == "__main__":
     #import sys;sys.argv = ['', 'Test.testName']
     unittest.main()

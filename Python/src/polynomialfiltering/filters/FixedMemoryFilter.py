@@ -1,4 +1,4 @@
-''' PolynomialFiltering.components.FixedMemoryPolynomialFilter
+''' PolynomialFiltering.components.FixedMemoryFilter
  (C) Copyright 2019 - Blue Lightning Development, LLC.
  D. F. Linton. support@BlueLightningDevelopment.com
 
@@ -15,10 +15,10 @@ from numpy import array as vector
 from numpy.linalg.linalg import solve, lstsq, inv
 
 from polynomialfiltering.Main import AbstractFilter, FilterStatus
-from polynomialfiltering.IComponentFilter import IComponentFilter
+from polynomialfiltering.AbstractComponentFilter import AbstractComponentFilter
 
 
-class FixedMemoryFilter(AbstractFilter, IComponentFilter) :
+class FixedMemoryFilter(AbstractComponentFilter) :
     """
     Equally-weighted, fixed memory size, irregularly spaced data filter
     

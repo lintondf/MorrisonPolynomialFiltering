@@ -30,13 +30,13 @@ from polynomialfiltering.PythonUtilities import (assert_not_empty, ignore,
                                                  testcase, testclass,
                                                  testclassmethod, testmethod)
 from TestData import TestData
-from TestSuite import slow, testDataPath
+from TestSuite import TestCaseBase, slow, testDataPath
 from TestUtilities import (A2S, assert_clear, assert_report, createTestGroup,
                            generateTestData, generateTestPolynomial,
                            writeTestVariable)
 
 
-class EMP_test(unittest.TestCase):
+class EMP_test(TestCaseBase):
     @testclass
     class RecursivePolynomialFilterMock(RecursivePolynomialFilter):
          
@@ -427,22 +427,6 @@ class EMP_test(unittest.TestCase):
         self.assertEqual(0.0, nSwitch(0, 2.0))
             
             
-    def _steps(self):
-        for name in dir(self): # dir() result is implicitly sorted
-            if name.startswith("step"):
-                    yield name, getattr(self, name) 
-        
-    def test_steps(self):
-        print(type(self).__name__)
-        for name, step in self._steps():
-            try:
-                with self.subTest(name):
-                    print('  ', name, ' : ', end='')
-                    step()
-                    print(' OK')
-            except Exception as e:
-                self.fail("{} failed ({}: {})".format(step, type(e), e))
-           
 if __name__ == "__main__":
     #import sys;sys.argv = ['', 'Test.testName']
     unittest.main()

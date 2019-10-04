@@ -15,13 +15,13 @@ from numpy import array, diag, zeros, sqrt, transpose
 from numpy import array as vector
 
 from polynomialfiltering.Main import AbstractFilter, FilterStatus
-from polynomialfiltering.IComponentFilter import IComponentFilter
+from polynomialfiltering.AbstractComponentFilter import AbstractComponentFilter
 from polynomialfiltering.components.ICore import ICore
 from polynomialfiltering.filters.RecursivePolynomialFilter import RecursivePolynomialFilter
 from polynomialfiltering.components.Emp import makeEmp, nSwitch
 from polynomialfiltering.components.Fmp import makeFmpCore
 
-class PairedPolynomialFilter( AbstractFilter, IComponentFilter ):
+class PairedPolynomialFilter( AbstractComponentFilter ):
     '''@ rpf :RecursivePolynomialFilter | delegate for actual filter processing'''
     '''@ empCore : ICore | provider of core expanding functions'''
     '''@ fmpCore : ICore | provider of core fading functions'''

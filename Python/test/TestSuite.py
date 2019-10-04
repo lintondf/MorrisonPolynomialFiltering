@@ -7,6 +7,28 @@ import os
 import unittest
 import coverage
 
+from unittest import TestCase
+
+class TestCaseBase(TestCase):
+    
+    def _steps(self):
+        for name in dir(self): # dir() result is implicitly sorted
+            if name.startswith("step"):
+                    yield name, getattr(self, name) 
+        
+    def test_steps(self):
+        if (type(self).__name__ != 'TestCaseBase') :
+            print(type(self).__name__)
+        for name, step in self._steps():
+            try:
+                with self.subTest(name):
+                    print('  ', name, ' : ', end='')
+                    step()
+                    print(' OK')
+            except Exception as e:
+                self.fail("{} failed ({}: {})".format(step, type(e), e))
+           
+    
 def slow() -> bool:
     return True;
 

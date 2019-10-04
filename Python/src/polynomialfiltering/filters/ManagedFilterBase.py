@@ -11,14 +11,14 @@ from abc import abstractmethod
 from numpy import array, eye
 from numpy import array as vector
 from polynomialfiltering.Main import AbstractFilter, AbstractFilterWithCovariance, FilterStatus
-from polynomialfiltering.filters.IManagedFilter import IManagedFilter;
+from polynomialfiltering.filters.AbstractManagedFilter import AbstractManagedFilter;
 from polynomialfiltering.filters.controls.IObservationErrorModel import IObservationErrorModel
 from polynomialfiltering.filters.controls.IJudge import IJudge
 from polynomialfiltering.filters.controls.IMonitor import IMonitor
 from polynomialfiltering.filters.controls.errormodel.ConstantObservationErrorModel import ConstantObservationErrorModel
 
 
-class ManagedFilterBase(AbstractFilterWithCovariance, IManagedFilter):
+class ManagedFilterBase(AbstractManagedFilter):
     """
     Base class for all managed filters
     

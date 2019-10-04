@@ -15,7 +15,7 @@ from numpy.testing import assert_almost_equal
 from netCDF4 import Dataset
 from TestUtilities import createTestGroup, writeTestVariable,\
     covarianceToCorrelation
-from TestSuite import testDataPath;
+from TestSuite import testDataPath, TestCaseBase;
 from polynomialfiltering.PythonUtilities import ignore, testcase
 from TestData import TestData, A2S
 from polynomialfiltering.PythonUtilities import assert_not_empty
@@ -33,14 +33,14 @@ from polynomialfiltering.filters.controls.errormodel.FixedSampleErrorModel impor
 from polynomialfiltering.filters.controls.errormodel.ObservationDifferencesErrorModel import ObservationDifferencesErrorModel
 from polynomialfiltering.filters.controls.errormodel.PairResidualsErrorModel import PairResidualsErrorModel
 from polynomialfiltering.filters.PairedPolynomialFilter import PairedPolynomialFilter
-from polynomialfiltering.filters.FixedMemoryPolynomialFilter import FixedMemoryFilter
+from polynomialfiltering.filters.FixedMemoryFilter import FixedMemoryFilter
 from statistics import stdev
 from scipy.optimize.optimize import fminbound
 from cmath import pi
 from polynomialfiltering.Geodesy import Site
 
 
-class ObservationErrorModel_test(unittest.TestCase):
+class ObservationErrorModel_test(TestCaseBase):
 
     @classmethod
     def setUpClass(self):
@@ -400,7 +400,7 @@ class ObservationErrorModel_test(unittest.TestCase):
             return metric
         
         tOffset = -1.339088; # fminbound(testOffset, -3, +3)
-        print( tOffset, testOffset(tOffset, True))
+        testOffset(tOffset, True)
         plt.show()
         
     def xstep0PlotRanges(self):
@@ -497,24 +497,7 @@ class ObservationErrorModel_test(unittest.TestCase):
             d = results[iFirst:iLast,2]-iaer[:,2]
             print(radar, d[1000], d[3000], d[1000]-d[3000])
             
-            
-    def _steps(self):
-        for name in dir(self): # dir() result is implicitly sorted
-            if name.startswith("step"):
-                    yield name, getattr(self, name) 
-        
-    def test_steps(self):
-        print(type(self).__name__)
-        for name, step in self._steps():
-            try:
-                with self.subTest(name):
-                    print('  ', name, ' : ', end='')
-                    step()
-                    print(' OK')
-            except Exception as e:
-                self.fail("{} failed ({}: {})".format(step, type(e), e))
-           
-            
+                        
 if __name__ == "__main__":
     #import sys;sys.argv = ['', 'Test.testName']
     unittest.main()

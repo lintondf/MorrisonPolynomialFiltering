@@ -47,7 +47,10 @@ class TestData :
         path = os.getcwd();
         path = path.replace("\\", "/")
         i = path.find("Python/test")
-        path = path[0:i] + "testdata/"
+        if (i < 0) :
+            path = '/Users/lintondf/GITHUB/MorrisonPolynomialFiltering/testdata/'
+        else :
+            path = path[0:i] + "testdata/"
         return path + filename;
     
     def createTestGroup(self, name : str ) -> Dataset:

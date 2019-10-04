@@ -30,7 +30,7 @@ from polynomialfiltering.Main import AbstractFilter
 from scipy.integrate.odepack import odeint
 from scipy.integrate._bvp import solve_bvp
 
-from polynomialfiltering.filters.FixedMemoryPolynomialFilter import FixedMemoryFilter;
+from polynomialfiltering.filters.FixedMemoryFilter import FixedMemoryFilter;
 
 
 def assert_clear() -> None:

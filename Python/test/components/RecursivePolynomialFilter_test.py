@@ -12,6 +12,7 @@ from numpy import cov
 from numpy.testing import assert_allclose
 from numpy.testing import assert_almost_equal
 
+from TestSuite import TestCaseBase
 from TestData import TestData
 from TestUtilities import generateTestPolynomial, generateTestData, createTestGroup, writeTestVariable, A2S, assert_report, assert_clear
 from polynomialfiltering.Main import FilterStatus
@@ -26,7 +27,7 @@ from polynomialfiltering.filters.RecursivePolynomialFilter import RecursivePolyn
 # from netCDF4 import Dataset
 # from TestUtilities import *
 # from TestSuite import testDataPath;
-class RecursivePolynomialFilter_test(unittest.TestCase):
+class RecursivePolynomialFilter_test(TestCaseBase):
 
     """ PurePredictCore ignores observations producing a results solely from the state transition update"""
     @testclass
@@ -343,23 +344,7 @@ class RecursivePolynomialFilter_test(unittest.TestCase):
         assert_almost_equal(g.getState(), array([11.0, 8.0, 3.0]))
         assert_report("RecursivePolynomialFilter_test/test9Coverage")
         
-    
-    def _steps(self):
-        for name in dir(self): # dir() result is implicitly sorted
-            if name.startswith("step"):
-                    yield name, getattr(self, name) 
-        
-    def test_steps(self):
-        print(type(self).__name__)
-        for name, step in self._steps():
-            try:
-                with self.subTest(name):
-                    print('  ', name, ' : ', end='')
-                    step()
-                    print(' OK')
-            except Exception as e:
-                self.fail("{} failed ({}: {})".format(step, type(e), e))
-
+ 
 if __name__ == "__main__":
     unittest.main()
     

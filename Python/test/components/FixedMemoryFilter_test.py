@@ -23,16 +23,16 @@ from scipy.optimize.zeros import brentq
 from scipy.stats._continuous_distns import chi2
 
 from TestData import TestData
-from TestSuite import testDataPath;
+from TestSuite import testDataPath, TestCaseBase;
 from TestUtilities import *
 from polynomialfiltering.Main import FilterStatus
 from polynomialfiltering.PythonUtilities import assert_not_empty
 from polynomialfiltering.PythonUtilities import ignore, testcase, testmethod, testclass, testclassmethod
 from polynomialfiltering.components.Fmp import makeFmp, makeFmpCore
-from polynomialfiltering.filters.FixedMemoryPolynomialFilter import FixedMemoryFilter;
+from polynomialfiltering.filters.FixedMemoryFilter import FixedMemoryFilter;
 
 
-class FixedMemoryFilter_test(unittest.TestCase):
+class FixedMemoryFilter_test(TestCaseBase):
     '''@testData : TestData'''
     
     @classmethod
@@ -562,21 +562,6 @@ class FixedMemoryFilter_test(unittest.TestCase):
 #                     print(order, N, theta, A2S(diag(V).flatten()), A2S((diag(V)/diag(c.getVRF(0))).flatten()))
 #                     N *= 2
            
-    def _steps(self):
-        for name in dir(self): # dir() result is implicitly sorted
-            if name.startswith("step"):
-                    yield name, getattr(self, name) 
-        
-    def test_steps(self):
-        print(type(self).__name__)
-        for name, step in self._steps():
-            try:
-                with self.subTest(name):
-                    print('  ', name, ' : ', end='')
-                    step()
-                    print(' OK')
-            except Exception as e:
-                self.fail("{} failed ({}: {})".format(step, type(e), e))
 
 if __name__ == "__main__":
     #import sys;sys.argv = ['', 'Test.testName']
