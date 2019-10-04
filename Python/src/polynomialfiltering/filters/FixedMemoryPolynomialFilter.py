@@ -52,13 +52,33 @@ class FixedMemoryFilter(AbstractFilter, IComponentFilter) :
         self.yRing = zeros([memorySize]);
         self.status = FilterStatus.IDLE
         
+    @overrides
     def start(self, t : float, Z : vector) -> None:
         pass 
     
     @overrides
+    def predict(self, t : float) -> vector :
+        """
+        Predict the filter state (Z*) at time t
+        
+        Arguments:
+            t - target time
+            
+        Returns:
+            predicted NORMALIZED state (INTERNAL UNITS)
+            
+        """
+        return self.transitionState(t)
+    
+    @overrides
+    def update(self, t : float, Zstar : vector, e : float) -> vector:
+        self.add(t, Zstar[0] + e)
+
+    @overrides
     def getN(self)->int:
         return self.n
     
+    @overrides
     def getTau(self) -> float:
         return self.tau
     
@@ -89,7 +109,7 @@ class FixedMemoryFilter(AbstractFilter, IComponentFilter) :
         return self.transitionState(self.t)
     
     @overrides
-    def add(self, t : float, y : float, observationId : int = -1) -> None:
+    def add(self, t : float, y : float) -> None:
         '''@idx : int'''
         self.t = t;
         idx = self.n % self.L

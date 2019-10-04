@@ -40,6 +40,7 @@ class PairedPolynomialFilter( AbstractFilter, IComponentFilter ):
         self.theta = theta;
         self.switchN = int(nSwitch( self.order, self.theta ))
         
+    @overrides
     def update(self, t : float, Zstar : vector, e : float) -> vector:
         '''@ i : array'''
         i = self.rpf.update(t, Zstar, e);
@@ -47,6 +48,7 @@ class PairedPolynomialFilter( AbstractFilter, IComponentFilter ):
             self.rpf.setCore( self.fmpCore );
         return i
 
+    @overrides
     def start(self, t : float, Z : vector) -> None:
         self.rpf.setCore(self.empCore)
         self.rpf.start(t, Z)
@@ -56,26 +58,31 @@ class PairedPolynomialFilter( AbstractFilter, IComponentFilter ):
         isF = self.rpf.getN() >= self.switchN
         return isF
         
+    @overrides
     def getN(self)->int:
         return self.rpf.getN()
     
+    @overrides
     def getState(self) -> vector:
         return self.rpf.getState()
     
+    @overrides
     def getTime(self) -> float:
         return self.rpf.getTime()
     
-    def getTai(self) -> float:
+    @overrides
+    def getTau(self) -> float:
         return self.rpf.getTau()
 
     @overrides
-    def add(self, t : float, y : float, observationId : int = -1) -> None:
+    def add(self, t : float, y : float) -> None:
         '''@Zstar : vector'''
         '''@e : float'''
         Zstar = self.predict(t)
         e = y - Zstar[0]
         self.update(t, Zstar, e)
             
+    @overrides
     def predict(self, t : float) -> vector :
         """
         Predict the filter state (Z*) at time t
@@ -93,11 +100,14 @@ class PairedPolynomialFilter( AbstractFilter, IComponentFilter ):
         '''@ F : array : order+1 : order+1 '''
         return self.rpf.predict(t)
 
+    @overrides
     def getFirstVRF(self) -> float:
         return self.rpf.getFirstVRF()
 
+    @overrides
     def getLastVRF(self) -> float:
         return self.rpf.getLastVRF()
     
+    @overrides
     def getVRF(self) -> array:
         return self.rpf.getVRF()

@@ -353,10 +353,11 @@ class RecursivePolynomialFilter_test(unittest.TestCase):
                     yield name, getattr(self, name) 
         
     def test_steps(self):
+        print(type(self).__name__)
         for name, step in self._steps():
             try:
                 with self.subTest(name):
-                    print(name, ' : ', end='')
+                    print('  ', name, ' : ', end='')
                     step()
                     print(' OK')
             except Exception as e:

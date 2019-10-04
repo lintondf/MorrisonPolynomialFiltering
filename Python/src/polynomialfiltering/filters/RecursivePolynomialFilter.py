@@ -91,13 +91,14 @@ class RecursivePolynomialFilter(AbstractFilter, IComponentFilter):
         self.Z = that.Z;
         
     @overrides
-    def add(self, t : float, y : float, observationId : int = -1) -> None:
+    def add(self, t : float, y : float) -> None:
         '''@Zstar : vector'''
         '''@e : float'''
         Zstar = self.predict(t)
         e = y - Zstar[0]
         self.update(t, Zstar, e)
             
+    @overrides
     def start(self, t : float, Z : vector) -> None:
         """
         Start or restart the filter
@@ -116,6 +117,7 @@ class RecursivePolynomialFilter(AbstractFilter, IComponentFilter):
         self.Z = StateTransition.conformState(self.order, Z);
         self.Z = self._normalizeState(self.Z)
     
+    @overrides
     def predict(self, t : float) -> vector :
         """
         Predict the filter state (Z*) at time t
@@ -137,6 +139,7 @@ class RecursivePolynomialFilter(AbstractFilter, IComponentFilter):
         Zstar = F @ self.Z;
         return Zstar;
     
+    @overrides
     def update(self, t : float, Zstar : vector, e : float) -> vector:
         """
         Update the filter state from using the prediction error e
@@ -180,6 +183,7 @@ class RecursivePolynomialFilter(AbstractFilter, IComponentFilter):
     def setCore(self, core : ICore) -> None:
         self.core = core
         
+    @overrides
     @inline    
     def getN(self)->int:
         """
@@ -208,6 +212,7 @@ class RecursivePolynomialFilter(AbstractFilter, IComponentFilter):
         """
         return self.tau
     
+    @overrides
     @inline
     def getTime(self) -> float:
         """
@@ -222,6 +227,7 @@ class RecursivePolynomialFilter(AbstractFilter, IComponentFilter):
         """
         return self.t
     
+    @overrides
     @inline
     def getState(self) -> vector:
         """
@@ -236,18 +242,21 @@ class RecursivePolynomialFilter(AbstractFilter, IComponentFilter):
         """
         return self._denormalizeState(self.Z)
     
+    @overrides
     @inline
     def getFirstVRF(self) -> float:
         if (self.n < self.core.getSamplesToStart()) :
             return 0.0;
         return self.core.getFirstVRF(self.n)
 
+    @overrides
     @inline
     def getLastVRF(self) -> float:
         if (self.n < self.core.getSamplesToStart()) :
             return 0.0;
         return self.core.getLastVRF(self.n)
     
+    @overrides
     @inline
     def getVRF(self) -> array:
         """
