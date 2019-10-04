@@ -13,7 +13,8 @@ from numpy.linalg import cholesky, inv, LinAlgError, det
 from scipy.interpolate import PchipInterpolator
 import pymap3d
 import xml.etree.ElementTree as ET 
-from polynomialfiltering.Main import FilterStatus, AbstractFilter
+from polynomialfiltering.Main import FilterStatus, AbstractFilter, StateTransition
+from polynomialfiltering.Main import StateTransition
 from polynomialfiltering.components.Emp import makeEmp
 from polynomialfiltering.components.Fmp import makeFmp
 from TestUtilities import A2S, scaleVRFEMP, covarianceToCorrelation, correlationToCovariance, generateTestData, hellingerDistance
@@ -230,7 +231,7 @@ def VRF2(order : int):
         print(A2S( P0 ))
         print(A2S( P1-P0 ))
         for i in range(-5,+6) :
-            F = emp.stateTransitionMatrix(emp.order+1, i);
+            F = StateTransition.getStateTransitionMatrix(emp.order+1, i);
             V = transpose(F) @ P0 @ F;
             print(i, isPositiveDefinite(V), end='; ')
         print('')
@@ -340,7 +341,7 @@ def testEMPSet(Leff : int, pSwitch : float) :
                     bestGOF = GOFs[i,ie]; 
         if (Best[i] >= 0 and i > 0) :
             BET[i,:] = BET[i-1,:]
-            BET[i,:] = AbstractFilter.conformState(order, emps[Best[i]].getState() );
+            BET[i,:] = StateTransition.conformState(order, emps[Best[i]].getState() );
             if (Best[i] != Best[i-1]) :
                 nSwitches += 1  
                  

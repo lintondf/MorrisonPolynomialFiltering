@@ -61,64 +61,6 @@ class AbstractFilter(ABC):
         self.order = order
         self.name = name
         
-    @staticmethod
-    def conformState(order : int, state : vector) -> vector:
-        """
-        Matches an input state vector to the filter order
-        
-        Longer state vectors are truncated and short ones are zero filled
-        
-        Arguments:
-            order - target state vector order
-            state(vector) - arbitrary length input state vector
-        
-        Returns:
-            conformed state vector with order+1 elements        
-        """
-        '''@Z : vector : order+1'''
-        '''@m : int'''
-        Z = zeros([order+1])
-        m = min( order+1, state.shape[0] )
-        Z[0:m] = state[0:m]
-        return Z
-        
-    
-        
-    @staticmethod            
-    def stateTransitionMatrix( N : int, dt : float) -> array: # TODO remove
-        """
-        Return a state transition matrix of size N for time step dt
-        
-        Returns a Pade' expanded status transition matrix of order N [RMKdR(7)]
-            P(d)_i,j = (d^(j-i))/(j-i)! where 0 <= i <= j <= N elsewhere zero
-        
-        Arguments:
-            N - return matrix is (N,N)
-            dt - time step
-        
-        Returns:
-            N by N state transition matrix
-        """
-        '''@B: array : N : N'''
-        '''@i : int'''
-        '''@j : int'''
-        '''@x : float'''
-        '''@ji : int'''
-        '''@fji : float'''
-        
-        B = eye(N)
-        for i in range(0,N) :
-            for j in range(i+1,N):
-                ji = j-i
-                fji = ji
-                for x in range(2,ji) :
-                    fji *= x 
-                B[i,j] = pow(dt,ji)/fji
-        return B
-    
-
-        
-    
     def getName(self) -> str:
         """
         Return the filter name
@@ -180,7 +122,7 @@ class AbstractFilter(ABC):
         '''@ F : array'''
         '''@ Z : vector : order+1'''
         dt = t - self.getTime()
-        F = self.stateTransitionMatrix(self.order+1, dt );
+        F = StateTransition.getStateTransitionMatrix(self.order+1, dt );
         Z = F @ self.getState();
         return Z
         
@@ -214,40 +156,6 @@ class AbstractFilter(ABC):
         """
         pass
     
-    @abstractmethod   # pragma: no cover
-    def getFirstVRF(self) -> float:
-        """
-        Get the variance reduction factor for the 0th derivative
-        
-        Arguments:
-            None
-        
-        Returns:
-            0th derivative input to output variance ratio
-        """
-        pass
-
-    @abstractmethod   # pragma: no cover
-    def getLastVRF(self) -> float:
-        """
-        Get the variance reduction factor for the 'order'th derivative
-        
-        Arguments:
-            None
-        
-        Returns:
-            'order'th derivative input to output variance ratio
-        """
-        pass
-    
-    @abstractmethod   # pragma: no cover
-    def getVRF(self) -> array:
-        pass
-    
-    @abstractmethod   # pragma: no cover
-    def add(self, t : float, y : float, observationId : int = -1) -> None:
-        pass
-    
     
 class AbstractFilterWithCovariance(AbstractFilter) :
     """
@@ -264,24 +172,6 @@ class AbstractFilterWithCovariance(AbstractFilter) :
             name - optional identifying string
         """
 
-    @classmethod
-    def transitionCovarianceMatrix(self, dt : float, V : array ) -> array:  #TODO test!!
-        """
-        Transition the specified covariance by the specified time step
-        
-        Arguments:
-            dt - time step
-            V - N x N covariance matrix
-            
-        Returns:
-            N x N covariance matrix
-        """
-        '''@ F : array'''
-        '''@ C : array'''
-        F = AbstractFilter.stateTransitionMatrix(int(V.shape[0]), dt );
-        C = (F) @ V @ transpose(F);
-        return C
-
     @virtual
     def transitionCovariance(self, t : float ) -> array:
         """
@@ -297,7 +187,7 @@ class AbstractFilterWithCovariance(AbstractFilter) :
         '''@ V : array | covariance matrix of the filter'''
         V = self.getCovariance()
         dt = t - self.getTime()
-        return self.transitionCovarianceMatrix(dt, V);
+        return StateTransition.transitionCovarianceMatrix(dt, V);
         
     @abstractmethod # pragma: no cover
     def getCovariance(self) -> array:
@@ -340,4 +230,81 @@ class AbstractFilterWithCovariance(AbstractFilter) :
         return V[V.shape[0]-1, V.shape[1]-1]; # TODO more efficient
 
  
+class StateTransition(ABC):
+    
+    def __init__(self):
+        pass
+    
+    @staticmethod
+    def conformState(order : int, state : vector) -> vector:
+        """
+        Matches an input state vector to the filter order
+        
+        Longer state vectors are truncated and short ones are zero filled
+        
+        Arguments:
+            order - target state vector order
+            state(vector) - arbitrary length input state vector
+        
+        Returns:
+            conformed state vector with order+1 elements        
+        """
+        '''@Z : vector : order+1'''
+        '''@m : int'''
+        Z = zeros([order+1])
+        m = min( order+1, state.shape[0] )
+        Z[0:m] = state[0:m]
+        return Z            
+    
+    @staticmethod            
+    def getStateTransitionMatrix( N : int, dt : float) -> array: # TODO remove
+        """
+        Return a state transition matrix of size N for time step dt
+        
+        Returns a Pade' expanded status transition matrix of order N [RMKdR(7)]
+            P(d)_i,j = (d^(j-i))/(j-i)! where 0 <= i <= j <= N elsewhere zero
+        
+        Arguments:
+            N - return matrix is (N,N)
+            dt - time step
+        
+        Returns:
+            N by N state transition matrix
+        """
+        '''@B: array : N : N'''
+        '''@i : int'''
+        '''@j : int'''
+        '''@x : float'''
+        '''@ji : int'''
+        '''@fji : float'''
+        
+        B = eye(N)
+        for i in range(0,N) :
+            for j in range(i+1,N):
+                ji = j-i
+                fji = ji
+                for x in range(2,ji) :
+                    fji *= x 
+                B[i,j] = pow(dt,ji)/fji
+        return B
+    
+    @classmethod
+    def transitionCovarianceMatrix(self, dt : float, V : array ) -> array:  #TODO test!!
+        """
+        Transition the specified covariance by the specified time step
+        
+        Arguments:
+            dt - time step
+            V - N x N covariance matrix
+            
+        Returns:
+            N x N covariance matrix
+        """
+        '''@ F : array'''
+        '''@ C : array'''
+        F = StateTransition.getStateTransitionMatrix(int(V.shape[0]), dt );
+        C = (F) @ V @ transpose(F);
+        return C
 
+
+    

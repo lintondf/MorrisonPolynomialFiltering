@@ -7,17 +7,17 @@ import unittest
 
 from abc import ABC, abstractmethod
 
-from numpy import array, ones, zeros, concatenate
+from numpy import array, ones, zeros, concatenate, transpose, sqrt
 from numpy import array as vector
 
 from numpy import cov
-from numpy.linalg import inv
+# from numpy.linalg import inv
 # from numpy.random import randn
 from numpy.testing import assert_allclose
 from numpy.testing import assert_almost_equal
-from netCDF4 import Dataset
-from TestUtilities import *
-from TestSuite import testDataPath;
+# from netCDF4 import Dataset
+# from TestUtilities import *
+# from TestSuite import testDataPath;
 from polynomialfiltering.PythonUtilities import ignore, testcase
 from TestData import TestData
 from TestUtilities import generateTestPolynomial, generateTestData, createTestGroup, writeTestVariable, A2S, assert_report, assert_clear
@@ -110,7 +110,7 @@ class RecursivePolynomialFilter_test(unittest.TestCase):
     def tearDown(self):
         pass
 
-    def test0Generate(self):
+    def step0Generate(self):
         testData = TestData('testRecursivePolynomialFilter.nc', 'w');
         
         N = 5;
@@ -174,7 +174,6 @@ class RecursivePolynomialFilter_test(unittest.TestCase):
                 for i in range(1,N) :
                     Zstar = f.predict(times[i])
                     e = observations[i] - Zstar[0]
-                    print(iTest, i, observations[i])
                     
                     Zstars[i,:] = transpose(Zstar)
                     es[i] = e;
@@ -190,7 +189,7 @@ class RecursivePolynomialFilter_test(unittest.TestCase):
         
         
     @testcase
-    def test1PurePredict(self) -> None: 
+    def step1PurePredict(self) -> None: 
         '''@testData : TestData'''
         '''@matches : List[str]'''
         '''@iMatch : int'''
@@ -245,7 +244,7 @@ class RecursivePolynomialFilter_test(unittest.TestCase):
         testData.close()
 
     @testcase
-    def test1PureObservation(self) -> None: 
+    def step1PureObservation(self) -> None: 
         '''@testData : TestData'''
         '''@matches : List[str]'''
         '''@iMatch : int'''
@@ -311,7 +310,7 @@ class RecursivePolynomialFilter_test(unittest.TestCase):
         testData.close()
 
     @testcase
-    def test9Coverage(self):
+    def step9Coverage(self):
         '''@core : ICore'''
         '''@f : RecursivePolynomialFilter'''
         '''@g : RecursivePolynomialFilter'''
@@ -348,20 +347,23 @@ class RecursivePolynomialFilter_test(unittest.TestCase):
         assert_report("RecursivePolynomialFilter_test/test9Coverage")
         
     
-    class TestCase(unittest.TestCase):
-    
-        def setUp(self):
-            unittest.TestCase.setUp(self)
-    
-        def tearDown(self):
-            unittest.TestCase.tearDown(self)
-    
-        def testMet1(self):
-            pass
-    
-    if __name__ == '__main__':
-        unittest.main()
+    def _steps(self):
+        for name in dir(self): # dir() result is implicitly sorted
+            if name.startswith("step"):
+                    yield name, getattr(self, name) 
+        
+    def test_steps(self):
+        for name, step in self._steps():
+            try:
+                with self.subTest(name):
+                    print(name, ' : ', end='')
+                    step()
+                    print(' OK')
+            except Exception as e:
+                self.fail("{} failed ({}: {})".format(step, type(e), e))
 
 if __name__ == "__main__":
-    #import sys;sys.argv = ['', 'Test.test0Generate']
     unittest.main()
+    
+    
+    

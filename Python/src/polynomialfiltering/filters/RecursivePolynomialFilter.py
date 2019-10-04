@@ -15,10 +15,13 @@ from polynomialfiltering.PythonUtilities import virtual, inline, forcestatic;
 from numpy import array, zeros;
 from numpy import array as vector;
 
+from polynomialfiltering.Main import StateTransition
 from polynomialfiltering.Main import AbstractFilter, FilterStatus
 from polynomialfiltering.components.ICore import ICore
+from polynomialfiltering.IComponentFilter import IComponentFilter
+from Cython.Build import Inline
 
-class RecursivePolynomialFilter(AbstractFilter):
+class RecursivePolynomialFilter(AbstractFilter, IComponentFilter):
     """
     Base class for both expanding and fading polynomial filter and their combinations.            
     """
@@ -110,7 +113,8 @@ class RecursivePolynomialFilter(AbstractFilter):
         self.n = 0;
         self.t0 = t;
         self.t = t;
-        self.Z = self._normalizeState(self._conformState(Z));
+        self.Z = StateTransition.conformState(self.order, Z);
+        self.Z = self._normalizeState(self.Z)
     
     def predict(self, t : float) -> vector :
         """
@@ -120,7 +124,7 @@ class RecursivePolynomialFilter(AbstractFilter):
             t - target time
             
         Returns:
-            predicted state INTERNAL UNITS
+            predicted NORMALIZED state (INTERNAL UNITS)
             
         """
         '''@ Zstar : vector : order+1'''
@@ -129,7 +133,7 @@ class RecursivePolynomialFilter(AbstractFilter):
         '''@ F : array : order+1 : order+1 '''
         dt = t - self.t
         dtau = self._normalizeDeltaTime(dt)
-        F = self.stateTransitionMatrix(self.order+1, dtau)
+        F = StateTransition.getStateTransitionMatrix(self.order+1, dtau)
         Zstar = F @ self.Z;
         return Zstar;
     
@@ -139,7 +143,7 @@ class RecursivePolynomialFilter(AbstractFilter):
         
         Arguments:
             t - update time
-            Zstar - predicted NORMALIZED state at update time
+            Zstar - predicted NORMALIZED state at update time  (INTERNAL UNITS)
             e - prediction error (observation - predicted state)
             
         Returns:
@@ -171,6 +175,11 @@ class RecursivePolynomialFilter(AbstractFilter):
     def getCore(self) -> ICore:
         return self.core
     
+    
+    @inline
+    def setCore(self, core : ICore) -> None:
+        self.core = core
+        
     @inline    
     def getN(self)->int:
         """
@@ -258,23 +267,6 @@ class RecursivePolynomialFilter(AbstractFilter):
         V = self.core.getVRF(self.n)
         return V;
 
-    def _conformState(self, state : vector) -> vector:
-        """
-        Matches an input state vector to the filter order
-        
-        Longer state vectors are truncated and short ones are zero filled
-        
-        Arguments:
-            state(vector) - arbitrary length input state vector
-        
-        Returns:
-            conformed state vector with order+1 elements
-        
-        """
-        '''@Z : vector'''
-        
-        return AbstractFilter.conformState(self.order, state)
-        
     @inline
     def _normalizeTime(self, t : float) -> float:
         """

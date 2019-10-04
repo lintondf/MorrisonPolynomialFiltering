@@ -294,7 +294,7 @@ class EMP_test(unittest.TestCase):
             testData.putArray(case, 'observations', observations)
             testData.putArray(case, 'expected', expected)
        
-    def xtest0Generate(self):
+    def xstep0Generate(self):
         print("test0Generate")
         testData = TestData('testEMP.nc', 'w');
         self.generateVRF(testData)
@@ -302,7 +302,7 @@ class EMP_test(unittest.TestCase):
         testData.close()
        
     @testcase        
-    def test1CheckVRF(self) -> None:
+    def step1CheckVRF(self) -> None:
         '''@testData : TestData'''
         '''@matches : List[str]'''
         '''@order : int'''
@@ -346,7 +346,7 @@ class EMP_test(unittest.TestCase):
         self.assertGreaterEqual(2.0, assert_report("Emp_test/test1CheckVRF"))
                 
     @testcase
-    def test2CheckStates(self) -> None:
+    def step2CheckStates(self) -> None:
         '''@testData : TestData'''
         '''@matches : List[str]'''
         '''@order : int'''
@@ -391,7 +391,7 @@ class EMP_test(unittest.TestCase):
         testData.close()
         self.assertGreaterEqual(29.2, assert_report("Emp_test/test2CheckStates"))
             
-    def test9CoreBasic(self) -> None:
+    def step9CoreBasic(self) -> None:
         '''@core : ICore'''
         '''@corehalf : ICore'''
         '''@coredouble : ICore'''
@@ -407,7 +407,7 @@ class EMP_test(unittest.TestCase):
     
 
     @testcase 
-    def test9NUnitLastVRF(self) -> None:
+    def step9NUnitLastVRF(self) -> None:
         '''@core : ICore'''
         '''@order : int'''
         '''@tau : float'''
@@ -426,26 +426,24 @@ class EMP_test(unittest.TestCase):
                 assert( core.getLastVRF(n)< 2.0 )
 
     @testcase 
-    def test9Coverage(self) -> None:
+    def step9Coverage(self) -> None:
         self.assertEqual(0.0, nSwitch(0, 2.0))
             
-#         try :
-#             nSwitch(-1, 0.5)
-#         except ValueError:
-#             pass
-#         except :
-#             self.assertTrue(False, "Exception expected")            
+            
+    def _steps(self):
+        for name in dir(self): # dir() result is implicitly sorted
+            if name.startswith("step"):
+                    yield name, getattr(self, name) 
         
-        
-#     def xtest9CrossSectionChi2(self):
-#         print("test9CrossSectionChi2")
-#         self.crossSectionChi2()
-#         if (slow()) :
-#             self.crossSectionChi2()
-#         else :
-#             self.fastCrossSectionChi2()
-
-
+    def test_steps(self):
+        for name, step in self._steps():
+            try:
+                with self.subTest(name):
+                    print(name, ' : ', end='')
+                    step()
+                    print(' OK')
+            except Exception as e:
+                self.fail("{} failed ({}: {})".format(step, type(e), e))
            
 if __name__ == "__main__":
     #import sys;sys.argv = ['', 'Test.testName']

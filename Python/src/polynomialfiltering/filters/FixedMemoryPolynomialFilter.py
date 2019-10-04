@@ -15,9 +15,10 @@ from numpy import array as vector
 from numpy.linalg.linalg import solve, lstsq, inv
 
 from polynomialfiltering.Main import AbstractFilter, FilterStatus
+from polynomialfiltering.IComponentFilter import IComponentFilter
 
 
-class FixedMemoryFilter(AbstractFilter) :
+class FixedMemoryFilter(AbstractFilter, IComponentFilter) :
     """
     Equally-weighted, fixed memory size, irregularly spaced data filter
     
@@ -148,29 +149,3 @@ class FixedMemoryFilter(AbstractFilter) :
         return Tn;
 
 
-
-# if __name__ == '__main__':
-# #     dt = -0.1;
-# #     F = zeros([6,6]);
-# #     for i in range(0,F.shape[0]) : 
-# #         for j in range(i,F.shape[1]) :
-# #             F[i,j] = binom(j,i) * dt**(j-i);
-# #     print(F);
-# #     M = zeros([1, F.shape[0]]);
-# #     M[0,0] = 1;
-# #     print(M)
-# #     print( M @ F )
-#     fixed = FixedMemoryFilter(3, 11);
-#     dt = zeros([11]);
-#     for d in range(0, 11) :
-#         dt[d] = -d * 0.1;
-#     Tn = fixed._getTn(dt);
-#     TntYn = transpose(Tn) @ dt;
-#     TntTn = transpose(Tn) @ Tn;
-#     print(solve(TntTn, TntYn) )
-#     print( inv(TntTn) @ TntYn)
-#     iR = diag(0.1*ones([11]));
-#     TntiRTn = transpose(Tn) @ iR @ Tn;
-#     TntiRYn = transpose(Tn) @ iR @ dt;
-#     print(solve(TntiRTn, TntiRYn) )
-#     print(inv(TntiRTn)@TntiRYn )

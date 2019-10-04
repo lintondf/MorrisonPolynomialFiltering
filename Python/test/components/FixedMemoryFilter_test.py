@@ -169,7 +169,7 @@ class FixedMemoryFilter_test(unittest.TestCase):
             testData.putArray(group, 'expected', expected);
          
          
-    def xtestVRFStatistics(self):
+    def xstepVRFStatistics(self):
         '''
          This extended numeric test validates the computed VRF matrix
          against the actual residuals for a large sample of filter runs.
@@ -213,7 +213,7 @@ class FixedMemoryFilter_test(unittest.TestCase):
         testData.close()
 
     @testcase
-    def test1CheckPerfect(self):
+    def step1CheckPerfect(self):
         '''@matches : List[str]'''
         '''@tau : float'''
         '''@N : int'''
@@ -243,7 +243,7 @@ class FixedMemoryFilter_test(unittest.TestCase):
         assert_report("FixedMemoryFilter_test/test1CheckPerfect")
 
     @testcase
-    def test1CheckNoisy(self):
+    def step1CheckNoisy(self):
         '''@matches : List[str]'''
         '''@tau : float'''
         '''@N : int'''
@@ -274,7 +274,7 @@ class FixedMemoryFilter_test(unittest.TestCase):
         assert_report("FixedMemoryFilter_test/test1CheckNoisy")
 
     @testcase
-    def test1CheckMidpoints(self):
+    def step1CheckMidpoints(self):
         '''@matches : List[str]'''
         '''@tau : float'''
         '''@N : int'''
@@ -316,7 +316,7 @@ class FixedMemoryFilter_test(unittest.TestCase):
         assert_report("FixedMemoryFilter_test/test1CheckMidpoints")
     
     @testcase
-    def test1CheckVrfs(self):
+    def step1CheckVrfs(self):
         '''@matches : List[str]'''
         '''@tau : float'''
         '''@N : int'''
@@ -373,7 +373,7 @@ class FixedMemoryFilter_test(unittest.TestCase):
         
 
     @testcase
-    def test9Regresssion(self):
+    def step9Regresssion(self):
         '''@f : TestFixedMemoryFilter'''
         '''@fixed : FixedMemoryFilter'''
         '''@i : int'''
@@ -563,6 +563,21 @@ class FixedMemoryFilter_test(unittest.TestCase):
 #                     print(order, N, theta, A2S(diag(V).flatten()), A2S((diag(V)/diag(c.getVRF(0))).flatten()))
 #                     N *= 2
            
+    def _steps(self):
+        for name in dir(self): # dir() result is implicitly sorted
+            if name.startswith("step"):
+                    yield name, getattr(self, name) 
+        
+    def test_steps(self):
+        for name, step in self._steps():
+            try:
+                with self.subTest(name):
+                    print(name, ' : ', end='')
+                    step()
+                    print(' OK')
+            except Exception as e:
+                self.fail("{} failed ({}: {})".format(step, type(e), e))
+
 if __name__ == "__main__":
     #import sys;sys.argv = ['', 'Test.testName']
     unittest.main()

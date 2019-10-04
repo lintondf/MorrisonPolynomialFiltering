@@ -389,7 +389,7 @@ class Fmp_test(unittest.TestCase):
         print('VR: ', self.vrfTaus)
 
     
-    def xtest0Generate(self):
+    def xstep0Generate(self):
 #         order = 5
 #         tau = 0.01
 #         for i in range(1,6) :
@@ -408,7 +408,7 @@ class Fmp_test(unittest.TestCase):
 
    
     @testcase
-    def test1CheckStates(self):
+    def step1CheckStates(self):
         '''@testData : TestData'''
         '''@matches : List[str]'''
         '''@order : int'''
@@ -468,7 +468,7 @@ class Fmp_test(unittest.TestCase):
         testData.close()
            
     @testcase     
-    def test1CheckGammas(self) -> None:
+    def step1CheckGammas(self) -> None:
         '''@testData : TestData'''
         '''@matches : List[str]'''
         '''@order : int'''
@@ -513,7 +513,7 @@ class Fmp_test(unittest.TestCase):
             
             
     @testcase     
-    def test1CheckVRF(self) -> None:
+    def step1CheckVRF(self) -> None:
         '''@testData : TestData'''
         '''@matches : List[str]'''
         '''@order : int'''
@@ -555,7 +555,7 @@ class Fmp_test(unittest.TestCase):
         
         
     @testcase 
-    def test9CoreBasic(self) -> None:
+    def step9CoreBasic(self) -> None:
         '''@core90 : ICore'''
         '''@core95 : ICore'''
         '''@core95half : ICore'''
@@ -583,7 +583,7 @@ class Fmp_test(unittest.TestCase):
         assert_report("Fmp_test/test9CoreBasic")
         
     @testcase
-    def test9Basic(self) -> None:
+    def step9Basic(self) -> None:
         '''@order : int'''
         '''@tau : float'''
         '''@theta : float'''
@@ -624,7 +624,7 @@ class Fmp_test(unittest.TestCase):
         self.assertGreaterEqual(24.5, assert_report("Fmp_test/test9Basic"))
     
     @testcase 
-    def test9NSwitch(self) -> None:
+    def step9NSwitch(self) -> None:
         '''@emp : ICore'''
         '''@fmp : ICore'''
         '''@order : int'''
@@ -658,6 +658,21 @@ class Fmp_test(unittest.TestCase):
         
     
 
+    def _steps(self):
+        for name in dir(self): # dir() result is implicitly sorted
+            if name.startswith("step"):
+                    yield name, getattr(self, name) 
+        
+    def test_steps(self):
+        for name, step in self._steps():
+            try:
+                with self.subTest(name):
+                    print(name, ' : ', end='')
+                    step()
+                    print(' OK')
+            except Exception as e:
+                self.fail("{} failed ({}: {})".format(step, type(e), e))
+                
 if __name__ == "__main__":
     #import sys;sys.argv = ['', 'Test.testName']
     unittest.main()

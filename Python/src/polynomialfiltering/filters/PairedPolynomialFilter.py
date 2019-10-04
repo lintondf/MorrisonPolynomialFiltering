@@ -13,12 +13,16 @@ from overrides import overrides
 from math import isnan, exp, log;
 from numpy import array, diag, zeros, sqrt, transpose
 from numpy import array as vector
+
+from polynomialfiltering.Main import AbstractFilter, FilterStatus
+from polynomialfiltering.IComponentFilter import IComponentFilter
 from polynomialfiltering.components.ICore import ICore
 from polynomialfiltering.filters.RecursivePolynomialFilter import RecursivePolynomialFilter
-from polynomialfiltering.components.Emp import makeEmpCore, nSwitch
+from polynomialfiltering.components.Emp import makeEmp, nSwitch
 from polynomialfiltering.components.Fmp import makeFmpCore
 
-class PairedPolynomialFilter( RecursivePolynomialFilter ):
+class PairedPolynomialFilter( AbstractFilter, IComponentFilter ):
+    '''@ rpf :RecursivePolynomialFilter | delegate for actual filter processing'''
     '''@ empCore : ICore | provider of core expanding functions'''
     '''@ fmpCore : ICore | provider of core fading functions'''
     '''@ switchN : int '''
@@ -29,25 +33,71 @@ class PairedPolynomialFilter( RecursivePolynomialFilter ):
         '''@!import!static polynomialfiltering.components.Emp.makeEmpCore'''
         '''@!super!Java!super(order, tau, makeEmpCore(order, tau) );'''
         '''@!super!C++!RecursivePolynomialFilter(order, tau, components::Emp::makeEmpCore(order, tau) )'''
-        super().__init__(order, tau, makeEmpCore(order, tau) )
-        self.empCore = self.core;
+        super().__init__(order, tau )
+        self.rpf = makeEmp(order, tau);
+        self.empCore = self.rpf.getCore();
         self.fmpCore = makeFmpCore(order, tau, theta);
         self.theta = theta;
         self.switchN = int(nSwitch( self.order, self.theta ))
         
     def update(self, t : float, Zstar : vector, e : float) -> vector:
         '''@ i : array'''
-        i = RecursivePolynomialFilter.update(self, t, Zstar, e);
-        if (self.n == self.switchN) :
-            self.core = self.fmpCore;
+        i = self.rpf.update(t, Zstar, e);
+        if (self.rpf.getN() == self.switchN) :
+            self.rpf.setCore( self.fmpCore );
         return i
 
     def start(self, t : float, Z : vector) -> None:
-        RecursivePolynomialFilter.start(self, t, Z)
-        self.core = self.empCore
+        self.rpf.setCore(self.empCore)
+        self.rpf.start(t, Z)
         
     def isFading(self) -> bool:
         '''@isF : bool'''
-        isF = self.n == self.switchN
+        isF = self.rpf.getN() >= self.switchN
         return isF
         
+    def getN(self)->int:
+        return self.rpf.getN()
+    
+    def getState(self) -> vector:
+        return self.rpf.getState()
+    
+    def getTime(self) -> float:
+        return self.rpf.getTime()
+    
+    def getTai(self) -> float:
+        return self.rpf.getTau()
+
+    @overrides
+    def add(self, t : float, y : float, observationId : int = -1) -> None:
+        '''@Zstar : vector'''
+        '''@e : float'''
+        Zstar = self.predict(t)
+        e = y - Zstar[0]
+        self.update(t, Zstar, e)
+            
+    def predict(self, t : float) -> vector :
+        """
+        Predict the filter state (Z*) at time t
+        
+        Arguments:
+            t - target time
+            
+        Returns:
+            predicted NORMALIZED state (INTERNAL UNITS)
+            
+        """
+        '''@ Zstar : vector : order+1'''
+        '''@ dt : float'''
+        '''@ dtau : float'''
+        '''@ F : array : order+1 : order+1 '''
+        return self.rpf.predict(t)
+
+    def getFirstVRF(self) -> float:
+        return self.rpf.getFirstVRF()
+
+    def getLastVRF(self) -> float:
+        return self.rpf.getLastVRF()
+    
+    def getVRF(self) -> array:
+        return self.rpf.getVRF()

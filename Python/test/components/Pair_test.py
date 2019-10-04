@@ -12,17 +12,16 @@ from numpy import array, array as vector, array_equal
 from numpy import arange, array2string, cov, log, var, zeros, trace, mean, std, transpose,\
     concatenate, allclose, min, max, nonzero, cumsum, histogram, where, diag, ones
 from numpy import sqrt
-from numpy.linalg import inv
-from numpy.random import randn, seed, get_state
+# from numpy.linalg import inv
+# from numpy.random import randn, seed, get_state
 from numpy.testing import assert_allclose 
 from numpy.testing import assert_almost_equal
 from numpy.testing import assert_array_less
-from scipy.stats import kstest, chi2, lognorm, norm, anderson
+# from scipy.stats import kstest, chi2, lognorm, norm, anderson
+# from runstats import Statistics
 
-from runstats import Statistics
-
-from netCDF4 import Dataset
-from TestSuite import testDataPath;
+# from netCDF4 import Dataset
+# from TestSuite import testDataPath;
 from TestUtilities import generateTestPolynomial, generateTestData, createTestGroup, writeTestVariable, A2S, assert_report, assert_clear
 from TestData import TestData
 
@@ -36,7 +35,6 @@ from polynomialfiltering.components.Emp import nSwitch
 
 from polynomialfiltering.PythonUtilities import ignore, testcase, testclass, testclassmethod
 from polynomialfiltering.PythonUtilities import assert_not_empty
-import test
 
 
 class Pair_test(unittest.TestCase):
@@ -112,15 +110,14 @@ class Pair_test(unittest.TestCase):
             testData.putArray(case, 'expected', expected)
             testData.putArray(case, 'vdiags', vdiags)
        
-    def test0Generate(self):
-        print("test0Generate")
+    def step0Generate(self):
         testData = TestData('testPair.nc', 'w');
         self.generateStates(testData)
         testData.close()
        
 
     @testcase
-    def test2CheckStates(self):
+    def step2CheckStates(self):
         '''@testData : TestData'''
         '''@states : Group'''
         '''@caseGroup : Group'''
@@ -179,7 +176,7 @@ class Pair_test(unittest.TestCase):
         self.assertGreaterEqual(39.4, assert_report('Pair_test/test2CheckStates'))
         
     @testcase
-    def test9Coverage(self):
+    def step9Coverage(self):
         '''@f : PairedPolynomialFilter'''
         '''@t : int'''
         '''@Zstar : array'''
@@ -195,6 +192,22 @@ class Pair_test(unittest.TestCase):
         Zstar = f.predict(4)
         f.update(4, Zstar, 0.0)
         self.assertTrue( f.isFading() )
+
+
+    def _steps(self):
+        for name in dir(self): # dir() result is implicitly sorted
+            if name.startswith("step"):
+                    yield name, getattr(self, name) 
+        
+    def test_steps(self):
+        for name, step in self._steps():
+            try:
+                with self.subTest(name):
+                    print(name, ' : ', end='')
+                    step()
+                    print(' OK')
+            except Exception as e:
+                self.fail("{} failed ({}: {})".format(step, type(e), e))
             
 if __name__ == "__main__":
     #import sys;sys.argv = ['', 'Test.testName']
