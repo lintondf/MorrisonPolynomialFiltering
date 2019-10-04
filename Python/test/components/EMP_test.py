@@ -7,31 +7,33 @@ Created on Apr 19, 2019
 '''
 
 import unittest
+from typing import List
 
-from netCDF4 import Dataset
-from numpy import arange, array2string, cov, log, var, zeros, trace, mean, std, transpose, \
-    concatenate, allclose, min, max, nonzero, cumsum, histogram, where, diag, ones
-from numpy import array, array as vector
-from numpy import sqrt
+from numpy import array as vector
+from numpy import (array, array2string, concatenate, cov, cumsum, diag, histogram,
+                   log, max, mean, min, nonzero, ones, sqrt, std, trace,
+                   transpose, var, where, zeros)
 from numpy.linalg import inv
-from numpy.random import randn, seed, get_state
-from numpy.testing import assert_allclose 
-from numpy.testing import assert_almost_equal
-from numpy.testing import assert_array_less
+from numpy.random import get_state, randn, seed
+from numpy.testing import (assert_allclose, assert_almost_equal,
+                           assert_array_less)
 from runstats import Statistics
-from scipy.stats import kstest, chi2, lognorm, norm, anderson
-from typing import List;
+from scipy.stats import anderson, chi2, kstest, lognorm, norm
 
-from TestData import TestData
-from TestSuite import slow
-from TestSuite import testDataPath;
-from TestUtilities import generateTestPolynomial, generateTestData, createTestGroup, writeTestVariable, A2S, assert_clear, assert_report
-from polynomialfiltering.Main import AbstractFilterWithCovariance, FilterStatus
-from polynomialfiltering.PythonUtilities import assert_not_empty
-from polynomialfiltering.PythonUtilities import ignore, testcase, testmethod, testclass, testclassmethod
-from polynomialfiltering.components.Emp import makeEmp, makeEmpCore, nUnitLastVRF, nSwitch
+from polynomialfiltering.components.Emp import (makeEmp, makeEmpCore, nSwitch,
+                                                nUnitLastVRF)
 from polynomialfiltering.components.ICore import ICore
-from polynomialfiltering.filters.RecursivePolynomialFilter import RecursivePolynomialFilter
+from polynomialfiltering.filters.RecursivePolynomialFilter import \
+    RecursivePolynomialFilter
+from polynomialfiltering.Main import AbstractFilterWithCovariance, FilterStatus
+from polynomialfiltering.PythonUtilities import (assert_not_empty, ignore,
+                                                 testcase, testclass,
+                                                 testclassmethod, testmethod)
+from TestData import TestData
+from TestSuite import slow, testDataPath
+from TestUtilities import (A2S, assert_clear, assert_report, createTestGroup,
+                           generateTestData, generateTestPolynomial,
+                           writeTestVariable)
 
 
 class EMP_test(unittest.TestCase):

@@ -7,13 +7,14 @@ import unittest
 from polynomialfiltering.PythonUtilities import ignore, testcase, testclass, testclassmethod
 
 from time import perf_counter
-from numpy import array, array as vector, mean, interp
+from numpy import array, array as vector, mean, interp, arange, trace
 from numpy import cov, zeros, diag, sqrt
 from numpy.linalg import inv
 from numpy.random import randn
 from numpy.testing import assert_almost_equal
 from netCDF4 import Dataset
-from TestUtilities import createTestGroup, writeTestVariable
+from TestUtilities import createTestGroup, writeTestVariable,\
+    covarianceToCorrelation
 from TestSuite import testDataPath;
 from polynomialfiltering.PythonUtilities import ignore, testcase
 from TestData import TestData, A2S
@@ -33,6 +34,10 @@ from polynomialfiltering.filters.controls.errormodel.ObservationDifferencesError
 from polynomialfiltering.filters.controls.errormodel.PairResidualsErrorModel import PairResidualsErrorModel
 from polynomialfiltering.filters.PairedPolynomialFilter import PairedPolynomialFilter
 from polynomialfiltering.filters.FixedMemoryPolynomialFilter import FixedMemoryFilter
+from statistics import stdev
+from scipy.optimize.optimize import fminbound
+from cmath import pi
+from polynomialfiltering.Geodesy import Site
 
 
 class ObservationErrorModel_test(unittest.TestCase):
@@ -298,7 +303,7 @@ class ObservationErrorModel_test(unittest.TestCase):
 
 
     @testcase
-    def step0PairResidualsErrorModel(self):
+    def xstep0PairResidualsErrorModel(self):
         testData = TestData('launchRadar')
         group = testData.getGroup('7501')
         radars = ('launch_radar_1', 'launch_radar_2', 'launch_radar_3')
@@ -330,6 +335,74 @@ class ObservationErrorModel_test(unittest.TestCase):
             print(cov(results[iFirst:iLast,1:], rowvar=False))
 #             return
 
+    def step0BetResiduals(self):
+        betData = TestData('launchBET')
+        betGroup = betData.getGroup('7501')
+#         radar = 'launch_radar_1'
+        testData = TestData('launchRadar')
+        group = testData.getGroup('7501')
+        
+        def testOffset( deltaT : float, plot : bool = False) -> float:
+            FMT = 4469086562.0+deltaT
+            # time, E, F, G, quality, beacon, enu[0], enu[1], enu[2], aer[0,0], aer[0,1], aer[0,2]
+            radars = ('launch_radar_1', 'launch_radar_2', 'launch_radar_3')
+            metric = 0
+            for radar in radars :
+                betAER = betData.getArray(betGroup, radar)
+                actualAER = testData.getArray(group, radar)
+                actualAER[:,0] -= FMT
+                tmin = max(betAER[0,0], actualAER[0,0])
+                tmax = min(betAER[-1,0], actualAER[-1,0])
+                iFirst = 0;
+                iLast = 0;
+                for i in range(0,actualAER.shape[0]) :
+                    if ((actualAER[i,0]) < tmin) :
+                        iFirst = i
+                    if ((actualAER[i,0]) < tmax) :
+                        iLast = i
+                iFirst += 1
+                T = []
+                for i in range(iFirst, iLast) :
+                    if (actualAER[i,4] == 2) :
+                        T.append(actualAER[i,0])
+                D = zeros([len(T), 4])
+                D[:,0] = T
+                site = Site('Zero', 0, 0, 0)
+                enu = site.AER2ENU(betAER[:,1:4] )
+                B = zeros([len(T), 4])
+                B[:,0] = T
+                B[:,1] = interp(T, betAER[:,0], enu[:,0] )
+                B[:,2] = interp(T, betAER[:,0], enu[:,1] )
+                B[:,3] = interp(T, betAER[:,0], enu[:,2] )
+                aer = site.ENU2AER(B[:,1:4])
+                B[:,1:4] = aer
+                if (plot) :
+                    f0 = plt.figure(figsize=(10, 6))
+                for o in range(0,3) :
+                    R = interp(T, actualAER[:,0], actualAER[:,9+o])
+                    D[:,o+1] = R - B[:,o+1]
+                    if (o < 2) : # handle discontinuities in azimuth or elevation
+                        for j in range(0,D.shape[0]) :
+                            if (D[j,o+1] > pi) :
+                                D[j,o+1] -= 2*pi
+                            elif (D[j,o+1] < -pi) :
+                                D[j,o+1] += 2*pi     
+                            if (abs(D[j,o+1]) > 1e-1) :
+                                print(D[j,:])                           
+                    if (plot) :
+                        ax = plt.subplot(3, 1, o+1)
+#                         ax.plot(T, D[:,o+1], 'k-', label='R-B')
+                        ax.hist(D[:,o+1], bins=100, density=True)
+#                         ax.legend()
+                A = (mean(D[:,1:4], axis=0))
+                C = (cov(D[:,1:4], rowvar=False))
+                metric += A[2]**2
+            return metric
+        
+        tOffset = -1.339088; # fminbound(testOffset, -3, +3)
+        print( tOffset, testOffset(tOffset, True))
+        plt.show()
+        
     def xstep0PlotRanges(self):
         plotting = True
         betData = TestData('launchBET')
