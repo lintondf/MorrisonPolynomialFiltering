@@ -16,7 +16,7 @@ from numpy import array, zeros;
 from numpy import array as vector;
 
 from polynomialfiltering.Main import StateTransition
-from polynomialfiltering.Main import AbstractFilter, FilterStatus
+from polynomialfiltering.Main import FilterStatus
 from polynomialfiltering.components.ICore import ICore
 from polynomialfiltering.AbstractComponentFilter import AbstractComponentFilter
 from Cython.Build import Inline

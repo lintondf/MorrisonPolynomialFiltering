@@ -14,7 +14,7 @@ from math import isnan, exp, log;
 from numpy import array, diag, zeros, sqrt, transpose
 from numpy import array as vector
 
-from polynomialfiltering.Main import AbstractFilter, FilterStatus
+from polynomialfiltering.Main import FilterStatus
 from polynomialfiltering.AbstractComponentFilter import AbstractComponentFilter
 from polynomialfiltering.components.ICore import ICore
 from polynomialfiltering.filters.RecursivePolynomialFilter import RecursivePolynomialFilter

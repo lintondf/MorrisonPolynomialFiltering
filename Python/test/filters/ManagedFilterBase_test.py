@@ -11,7 +11,7 @@ from numpy import array as vector;
 from TestSuite import TestCaseBase
 from polynomialfiltering.PythonUtilities import ignore, testcase, testclass, testclassmethod
 
-from polynomialfiltering.Main import AbstractFilter, AbstractFilterWithCovariance
+from polynomialfiltering.AbstractComponentFilter import AbstractComponentFilter
 from polynomialfiltering.components.Emp import makeEmp
 from polynomialfiltering.filters.ManagedFilterBase import ManagedFilterBase;
 from polynomialfiltering.Main import FilterStatus
@@ -22,7 +22,7 @@ class ManagedFilterBase_test(TestCaseBase):
     class ManagedFilterBaseMock(ManagedFilterBase):
         
         @testclassmethod
-        def __init__(self, order : int, worker : AbstractFilter):
+        def __init__(self, order : int, worker : AbstractComponentFilter):
             super().__init__(order, worker);
         
         @testclassmethod
