@@ -47,6 +47,17 @@ class PairedPolynomialFilter( AbstractFilter, IComponentFilter ):
         if (self.rpf.getN() == self.switchN) :
             self.rpf.setCore( self.fmpCore );
         return i
+    
+    @overrides
+    def getStatus(self) -> FilterStatus:
+        """
+        Return the filter status
+        
+        Returns:
+            FilterStatus enumeration
+        """
+        return self.rpf.getStatus()    
+            
 
     @overrides
     def start(self, t : float, Z : vector) -> None:

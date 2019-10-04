@@ -6,31 +6,30 @@ Created on Feb 23, 2019
  netCDF4 Visual Studio https://www.unidata.ucar.edu/software/netcdf/docs/winbin.html
  C:\Program Files\netCDF 4.6.3
 '''
+from _pickle import load
+from math import sqrt, sin
 import unittest
+
 from netCDF4 import Dataset
-from TestUtilities import *
-from numpy import arange, array2string, cov, zeros, mean, std, var, diag,\
+from numpy import arange, array2string, cov, zeros, mean, std, var, diag, \
     transpose, concatenate, ceil, log2
 from numpy.linalg import inv
 from numpy.random import randn
-from numpy.testing import assert_almost_equal
 from numpy.testing import assert_allclose
-from math import sqrt, sin
+from numpy.testing import assert_almost_equal
+from pygments.unistring import Lo
 from runstats import Statistics
-from scipy.stats._continuous_distns import chi2
 from scipy.optimize.zeros import brentq
+from scipy.stats._continuous_distns import chi2
 
-
+from TestData import TestData
+from TestSuite import testDataPath;
+from TestUtilities import *
+from polynomialfiltering.Main import FilterStatus
+from polynomialfiltering.PythonUtilities import assert_not_empty
+from polynomialfiltering.PythonUtilities import ignore, testcase, testmethod, testclass, testclassmethod
 from polynomialfiltering.components.Fmp import makeFmp, makeFmpCore
 from polynomialfiltering.filters.FixedMemoryPolynomialFilter import FixedMemoryFilter;
-
-from polynomialfiltering.Main import FilterStatus
-from TestSuite import testDataPath;
-from TestData import TestData
-from polynomialfiltering.PythonUtilities import ignore, testcase, testmethod, testclass, testclassmethod
-from polynomialfiltering.PythonUtilities import assert_not_empty
-from pygments.unistring import Lo
-from _pickle import load
 
 
 class FixedMemoryFilter_test(unittest.TestCase):

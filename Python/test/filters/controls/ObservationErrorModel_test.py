@@ -85,7 +85,7 @@ class ObservationErrorModel_test(unittest.TestCase):
             V = zeros(self.order+1, self.order+1)
             return V;
         
-    def xtest0ConstantObservationErrorModelGenerate(self) -> None:
+    def xstep0ConstantObservationErrorModelGenerate(self) -> None:
         path = testDataPath('testConstantObservationErrorModel.nc');
 #         print("Writing to: ", path)
         cdf = Dataset(path, "w", format="NETCDF4");
@@ -162,7 +162,7 @@ class ObservationErrorModel_test(unittest.TestCase):
         cdf.close();
 
     @testcase
-    def xtest1ConstantObservationErrorModelScalar(self) -> None: 
+    def xstep1ConstantObservationErrorModelScalar(self) -> None: 
         '''@testData : TestData'''
         '''@matches : List[str]'''
         '''@i : int'''
@@ -191,7 +191,7 @@ class ObservationErrorModel_test(unittest.TestCase):
         testData.close()
 
     @testcase
-    def xtest2ConstantObservationErrorModelMatrix(self) -> None:
+    def xstep2ConstantObservationErrorModelMatrix(self) -> None:
         '''@testData : TestData'''
         '''@matches : List[str]'''
         '''@i : int'''
@@ -220,7 +220,7 @@ class ObservationErrorModel_test(unittest.TestCase):
         testData.close()
 
     @testcase
-    def xtest3ConstantObservationErrorModelMatrixMatrix(self) -> None:
+    def xstep3ConstantObservationErrorModelMatrixMatrix(self) -> None:
         '''@testData : TestData'''
         '''@matches : List[str]'''
         '''@i : int'''
@@ -253,7 +253,7 @@ class ObservationErrorModel_test(unittest.TestCase):
         testData.close()
     
     @testcase
-    def xtestObservationDifferencesErrorModel(self):
+    def xstepObservationDifferencesErrorModel(self):
         testData = TestData('launchRadar')
         group = testData.getGroup('7501')
         radars = ('launch_radar_1', 'launch_radar_2', 'launch_radar_3')
@@ -270,7 +270,7 @@ class ObservationErrorModel_test(unittest.TestCase):
 
     
     @testcase
-    def xtest0FixedSampleErrorModel(self):
+    def xstep0FixedSampleErrorModel(self):
         testData = TestData('launchRadar')
         group = testData.getGroup('7501')
         radars = ('launch_radar_1', 'launch_radar_2', 'launch_radar_3')
@@ -283,7 +283,7 @@ class ObservationErrorModel_test(unittest.TestCase):
                     print(radar, i, A2S(sqrt(diag(C).flatten())))
         
     @testcase
-    def xtest9FixedSampleErrorModel(self):
+    def xstep9FixedSampleErrorModel(self):
         N = 25;
         M = 10
         O = randn(N,2)
@@ -298,7 +298,7 @@ class ObservationErrorModel_test(unittest.TestCase):
 
 
     @testcase
-    def test0PairResidualsErrorModel(self):
+    def step0PairResidualsErrorModel(self):
         testData = TestData('launchRadar')
         group = testData.getGroup('7501')
         radars = ('launch_radar_1', 'launch_radar_2', 'launch_radar_3')
@@ -330,7 +330,7 @@ class ObservationErrorModel_test(unittest.TestCase):
             print(cov(results[iFirst:iLast,1:], rowvar=False))
 #             return
 
-    def xtest0PlotRanges(self):
+    def xstep0PlotRanges(self):
         plotting = True
         betData = TestData('launchBET')
         betGroup = betData.getGroup('7501')
@@ -423,6 +423,24 @@ class ObservationErrorModel_test(unittest.TestCase):
 #             print(finishTime - startTime)
             d = results[iFirst:iLast,2]-iaer[:,2]
             print(radar, d[1000], d[3000], d[1000]-d[3000])
+            
+            
+    def _steps(self):
+        for name in dir(self): # dir() result is implicitly sorted
+            if name.startswith("step"):
+                    yield name, getattr(self, name) 
+        
+    def test_steps(self):
+        print(type(self).__name__)
+        for name, step in self._steps():
+            try:
+                with self.subTest(name):
+                    print('  ', name, ' : ', end='')
+                    step()
+                    print(' OK')
+            except Exception as e:
+                self.fail("{} failed ({}: {})".format(step, type(e), e))
+           
             
 if __name__ == "__main__":
     #import sys;sys.argv = ['', 'Test.testName']

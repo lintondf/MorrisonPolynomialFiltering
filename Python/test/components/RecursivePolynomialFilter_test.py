@@ -3,32 +3,29 @@ Created on Apr 19, 2019
 
 @author: NOOK
 '''
+from abc import ABC, abstractmethod
 import unittest
 
-from abc import ABC, abstractmethod
-
-from numpy import array, ones, zeros, concatenate, transpose, sqrt
 from numpy import array as vector
-
+from numpy import array, ones, zeros, concatenate, transpose, sqrt
 from numpy import cov
-# from numpy.linalg import inv
-# from numpy.random import randn
 from numpy.testing import assert_allclose
 from numpy.testing import assert_almost_equal
+
+from TestData import TestData
+from TestUtilities import generateTestPolynomial, generateTestData, createTestGroup, writeTestVariable, A2S, assert_report, assert_clear
+from polynomialfiltering.Main import FilterStatus
+from polynomialfiltering.PythonUtilities import assert_not_empty
+from polynomialfiltering.PythonUtilities import ignore, testcase
+from polynomialfiltering.PythonUtilities import ignore, testcase, testclass, testclassmethod
+from polynomialfiltering.filters.RecursivePolynomialFilter import RecursivePolynomialFilter, ICore
+
+
+# from numpy.linalg import inv
+# from numpy.random import randn
 # from netCDF4 import Dataset
 # from TestUtilities import *
 # from TestSuite import testDataPath;
-from polynomialfiltering.PythonUtilities import ignore, testcase
-from TestData import TestData
-from TestUtilities import generateTestPolynomial, generateTestData, createTestGroup, writeTestVariable, A2S, assert_report, assert_clear
-
-from polynomialfiltering.PythonUtilities import ignore, testcase, testclass, testclassmethod
-from polynomialfiltering.PythonUtilities import assert_not_empty
-
-
-from polynomialfiltering.filters.RecursivePolynomialFilter import RecursivePolynomialFilter, ICore
-from polynomialfiltering.Main import FilterStatus
-
 class RecursivePolynomialFilter_test(unittest.TestCase):
 
     """ PurePredictCore ignores observations producing a results solely from the state transition update"""

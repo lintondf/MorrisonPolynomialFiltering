@@ -4,39 +4,35 @@ Created on Sep 16, 2019
 @author: lintondf
 '''
 import unittest
-from typing import List;
 
-from TestSuite import slow
-
-from numpy import array, array as vector, array_equal
-from numpy import arange, array2string, cov, log, var, zeros, trace, mean, std, transpose,\
+from numpy import arange, array2string, cov, log, var, zeros, trace, mean, std, transpose, \
     concatenate, allclose, min, max, nonzero, cumsum, histogram, where, diag, ones
+from numpy import array, array as vector, array_equal
 from numpy import sqrt
-# from numpy.linalg import inv
-# from numpy.random import randn, seed, get_state
 from numpy.testing import assert_allclose 
 from numpy.testing import assert_almost_equal
 from numpy.testing import assert_array_less
-# from scipy.stats import kstest, chi2, lognorm, norm, anderson
-# from runstats import Statistics
-
-# from netCDF4 import Dataset
-# from TestSuite import testDataPath;
-from TestUtilities import generateTestPolynomial, generateTestData, createTestGroup, writeTestVariable, A2S, assert_report, assert_clear
-from TestData import TestData
-
 from scipy.optimize.zeros import brentq
+from typing import List;
 
+from TestData import TestData
+from TestSuite import slow
+from TestUtilities import generateTestPolynomial, generateTestData, createTestGroup, writeTestVariable, A2S, assert_report, assert_clear
 from polynomialfiltering.Main import AbstractFilterWithCovariance, FilterStatus
-from polynomialfiltering.filters.RecursivePolynomialFilter import RecursivePolynomialFilter
+from polynomialfiltering.PythonUtilities import assert_not_empty
+from polynomialfiltering.PythonUtilities import ignore, testcase, testclass, testclassmethod
+from polynomialfiltering.components.Emp import nSwitch
 from polynomialfiltering.components.ICore import ICore
 from polynomialfiltering.filters.PairedPolynomialFilter import PairedPolynomialFilter
-from polynomialfiltering.components.Emp import nSwitch
-
-from polynomialfiltering.PythonUtilities import ignore, testcase, testclass, testclassmethod
-from polynomialfiltering.PythonUtilities import assert_not_empty
+from polynomialfiltering.filters.RecursivePolynomialFilter import RecursivePolynomialFilter
 
 
+# from numpy.linalg import inv
+# from numpy.random import randn, seed, get_state
+# from scipy.stats import kstest, chi2, lognorm, norm, anderson
+# from runstats import Statistics
+# from netCDF4 import Dataset
+# from TestSuite import testDataPath;
 class Pair_test(unittest.TestCase):
 
 

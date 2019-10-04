@@ -3,50 +3,44 @@ Created on Apr 25, 2019
 
 @author: NOOK
 '''
-from docutils.nodes import target
-from overrides import overrides
-from astropy.io.ascii.tests.common import assert_almost_equal
-
 """ Taus for full range valid thetas [2e-16, 1-2e-16]
 Gamma:  {0: 1.1102230246251565e-16, 1: 1.651158036900312e-08, 2: 0.2898979485566357, 3: 0.4627475401696348, 4: 0.5697090329565893, 5: 0.6416277095878444}
 VRF:    {0: 3.0518509447574615e-05, 1: 1.4142135623842478, 2: 2.5495097571983933, 3: 3.8369548115879297, 4: 5.583955190144479, 5: 8.241797269321978}
 """
 
 import unittest
-from typing import List;
 
-from TestSuite import slow
-
-from numpy import array, array as vector, linspace, any, diff, log10
-from numpy import arange, array2string, cov, log, var, zeros, trace, mean, std, transpose,\
+from astropy.io.ascii.tests.common import assert_almost_equal
+from docutils.nodes import target
+from netCDF4 import Dataset, Group
+from nose.tools import assert_equal
+from numpy import arange, array2string, cov, log, var, zeros, trace, mean, std, transpose, \
     concatenate, allclose, min, max, nonzero, cumsum, histogram, where, diag, ones
+from numpy import array, array as vector, linspace, any, diff, log10
 from numpy import sqrt
+from numpy.core.defchararray import isdecimal
 from numpy.linalg import inv
 from numpy.random import randn, seed, get_state
-from numpy.testing import assert_almost_equal, assert_allclose, assert_array_less
-from scipy.stats import kstest, chi2, lognorm, norm, anderson
-from scipy.optimize.zeros import brentq
-
-from runstats import Statistics
-
-from netCDF4 import Dataset, Group
-from TestSuite import testDataPath;
-from TestUtilities import generateTestPolynomial, generateTestData, createTestGroup, writeTestVariable, A2S,\
-    covarianceToCorrelation, assert_report, assert_clear
-from TestData import TestData
-
-from polynomialfiltering.Main import AbstractFilter, FilterStatus
-from polynomialfiltering.filters.RecursivePolynomialFilter import RecursivePolynomialFilter
-from polynomialfiltering.components.ICore import ICore
-from polynomialfiltering.components.Fmp import makeFmp, makeFmpCore
-
-from polynomialfiltering.PythonUtilities import ignore, testcase, testclass, testclassmethod, forcestatic
-from polynomialfiltering.PythonUtilities import assert_not_empty
-
-from polynomialfiltering.components.Emp import makeEmp, makeEmpCore, nSwitch, nUnitLastVRF
 from numpy.random.mtrand import multivariate_normal
-from nose.tools import assert_equal
-from numpy.core.defchararray import isdecimal
+from numpy.testing import assert_almost_equal, assert_allclose, assert_array_less
+from overrides import overrides
+from runstats import Statistics
+from scipy.optimize.zeros import brentq
+from scipy.stats import kstest, chi2, lognorm, norm, anderson
+from typing import List;
+
+from TestData import TestData
+from TestSuite import slow
+from TestSuite import testDataPath;
+from TestUtilities import generateTestPolynomial, generateTestData, createTestGroup, writeTestVariable, A2S, \
+    covarianceToCorrelation, assert_report, assert_clear
+from polynomialfiltering.Main import AbstractFilter, FilterStatus
+from polynomialfiltering.PythonUtilities import assert_not_empty
+from polynomialfiltering.PythonUtilities import ignore, testcase, testclass, testclassmethod, forcestatic
+from polynomialfiltering.components.Emp import makeEmp, makeEmpCore, nSwitch, nUnitLastVRF
+from polynomialfiltering.components.Fmp import makeFmp, makeFmpCore
+from polynomialfiltering.components.ICore import ICore
+from polynomialfiltering.filters.RecursivePolynomialFilter import RecursivePolynomialFilter
 
 
 class Fmp_test(unittest.TestCase):
