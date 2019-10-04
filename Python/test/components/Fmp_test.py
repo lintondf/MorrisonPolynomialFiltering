@@ -22,7 +22,7 @@ from numpy.core.defchararray import isdecimal
 from numpy.linalg import inv
 from numpy.random import randn, seed, get_state
 from numpy.random.mtrand import multivariate_normal
-from numpy.testing import assert_almost_equal, assert_allclose, assert_array_less
+from TestUtilities import assert_allclose, assert_almost_equal, assert_array_less
 from overrides import overrides
 from runstats import Statistics
 from scipy.optimize.zeros import brentq

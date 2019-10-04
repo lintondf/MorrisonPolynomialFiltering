@@ -15,8 +15,6 @@ from numpy import (array, array2string, concatenate, cov, cumsum, diag, histogra
                    transpose, var, where, zeros)
 from numpy.linalg import inv
 from numpy.random import get_state, randn, seed
-from numpy.testing import (assert_allclose, assert_almost_equal,
-                           assert_array_less)
 from runstats import Statistics
 from scipy.stats import anderson, chi2, kstest, lognorm, norm
 
@@ -34,6 +32,7 @@ from TestSuite import TestCaseBase, slow, testDataPath
 from TestUtilities import (A2S, assert_clear, assert_report, createTestGroup,
                            generateTestData, generateTestPolynomial,
                            writeTestVariable)
+from TestUtilities import assert_allclose, assert_almost_equal, assert_array_less
 
 
 class EMP_test(TestCaseBase):

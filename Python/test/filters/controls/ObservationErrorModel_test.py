@@ -11,7 +11,7 @@ from numpy import array, array as vector, mean, interp, arange, trace
 from numpy import cov, zeros, diag, sqrt
 from numpy.linalg import inv
 from numpy.random import randn
-from numpy.testing import assert_almost_equal
+from TestUtilities import assert_allclose, assert_almost_equal, assert_array_less
 from netCDF4 import Dataset
 from TestUtilities import createTestGroup, writeTestVariable,\
     covarianceToCorrelation

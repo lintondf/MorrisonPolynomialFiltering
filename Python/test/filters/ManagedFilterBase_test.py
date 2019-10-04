@@ -9,6 +9,8 @@ from numpy import array, zeros
 from numpy import array as vector;
 
 from TestSuite import TestCaseBase
+from TestUtilities import assert_allclose, assert_almost_equal, assert_array_less
+
 from polynomialfiltering.PythonUtilities import ignore, testcase, testclass, testclassmethod
 
 from polynomialfiltering.AbstractComponentFilter import AbstractComponentFilter

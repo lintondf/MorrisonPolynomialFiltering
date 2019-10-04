@@ -9,9 +9,7 @@ from numpy import arange, array2string, cov, log, var, zeros, trace, mean, std, 
     concatenate, allclose, min, max, nonzero, cumsum, histogram, where, diag, ones
 from numpy import array, array as vector, array_equal
 from numpy import sqrt
-from numpy.testing import assert_allclose 
-from numpy.testing import assert_almost_equal
-from numpy.testing import assert_array_less
+from TestUtilities import assert_allclose, assert_almost_equal, assert_array_less
 from scipy.optimize.zeros import brentq
 from typing import List;
 

@@ -24,7 +24,7 @@ import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 import matplotlib.mlab as mlab
 
-
+import numpy as np
 
 from polynomialfiltering.Main import AbstractFilter
 from scipy.integrate.odepack import odeint
@@ -39,6 +39,15 @@ def assert_clear() -> None:
 def assert_report(source : str) -> float:
     return 0.0
 
+def assert_allclose( A : array, B : array, rtol=1e-07, atol=0):
+    np.testing.assert_allclose( A, B, rtol=rtol, atol=atol)
+    
+def assert_almost_equal( A : array, B : array, decimal=7):
+    np.testing.assert_almost_equal(A, B, decimal=decimal)
+
+def assert_array_less( A : array, B : array ):
+    np.testing.assert_array_less(A, B)
+    
 def createTestGroup(cdf : Dataset, name : str ) -> Dataset:
     return cdf.createGroup(name);
 

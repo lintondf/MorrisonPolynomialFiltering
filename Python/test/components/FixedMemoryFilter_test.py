@@ -15,8 +15,7 @@ from numpy import arange, array2string, cov, zeros, mean, std, var, diag, \
     transpose, concatenate, ceil, log2
 from numpy.linalg import inv
 from numpy.random import randn
-from numpy.testing import assert_allclose
-from numpy.testing import assert_almost_equal
+from TestUtilities import assert_allclose, assert_almost_equal, assert_array_less
 from pygments.unistring import Lo
 from runstats import Statistics
 from scipy.optimize.zeros import brentq

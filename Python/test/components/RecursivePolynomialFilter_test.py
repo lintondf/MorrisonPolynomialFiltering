@@ -9,8 +9,7 @@ import unittest
 from numpy import array as vector
 from numpy import array, ones, zeros, concatenate, transpose, sqrt
 from numpy import cov
-from numpy.testing import assert_allclose
-from numpy.testing import assert_almost_equal
+from TestUtilities import assert_allclose, assert_almost_equal, assert_array_less
 
 from TestSuite import TestCaseBase
 from TestData import TestData
