@@ -32,7 +32,7 @@ class IObservationErrorModel(ABC):
         pass
 
     @abstractmethod # pragma: no cover
-    def getPrecisionMatrix(self, f : AbstractFilterWithCovariance, t : float, y : vector, observationId : int) -> array:
+    def getPrecisionMatrix(self, f : AbstractFilterWithCovariance, t : float, y : vector) -> array:
         """
         Get the precision matrix (inverse covariance) for an observation
         
@@ -48,7 +48,7 @@ class IObservationErrorModel(ABC):
         pass
     
     @abstractmethod # pragma: no cover
-    def getCovarianceMatrix(self, f : AbstractFilterWithCovariance, t : float, y : vector, observationId : int) -> array:
+    def getCovarianceMatrix(self, f : AbstractFilterWithCovariance, t : float, y : vector) -> array:
         """
         Get the covariance matrix for an observation
         

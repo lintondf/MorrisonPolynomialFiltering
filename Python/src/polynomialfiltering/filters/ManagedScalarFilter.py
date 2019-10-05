@@ -12,8 +12,8 @@ from numpy import array as vector
 from polynomialfiltering.PythonUtilities import virtual;
 from polynomialfiltering.AbstractComponentFilter import AbstractComponentFilter
 from polynomialfiltering.filters.ManagedFilterBase import ManagedFilterBase;
-from polynomialfiltering.filters.controls.BaseScalarJudge import BaseScalarJudge
-from polynomialfiltering.filters.controls.NullMonitor import NullMonitor
+from polynomialfiltering.filters.controls.judge.BaseScalarJudge import BaseScalarJudge
+from polynomialfiltering.filters.controls.monitor.NullMonitor import NullMonitor
 
 
 class ManagedScalarRecursiveFilter(ManagedFilterBase):
@@ -25,16 +25,16 @@ class ManagedScalarRecursiveFilter(ManagedFilterBase):
         self.iR = zeros([1,1]);
         
     @virtual
-    def add(self, t:float, y:vector, observationId:int = -1) -> bool:
-        self.iR = self.errorModel.getPrecisionMatrix(self, t, y, observationId)
+    def addaddObservation(self, t:float, y:vector) -> bool:
+        self.iR = self.errorModel.getPrecisionMatrix(self, t, y)
         Zstar = self.worker.predict(t)
         e = y[0] - Zstar[0]
         if (self.judge.scalarUpdate(t, y, e, self.iR)) :
             innovation = self.worker.update(t, Zstar, e)
-            self.monitor.accepted(t, y, innovation, observationId );
+            self.monitor.accepted(t, y, innovation );
             return True;
         else : 
-            self.monitor.rejected(t, y, observationId );
+            self.monitor.rejected(t, y );
             return False;
         
     @virtual

@@ -38,8 +38,8 @@ class ManagedScalarRecursiveFilterSet(ManagedFilterBase):
         return self.workers;
     
     @virtual
-    def add(self, t:float, y:vector, observationId:int = -1) -> bool:
-        self.iR = self.errorModel.getPrecisionMatrix(self, t, y, observationId)
+    def addObservation(self, t:float, y:vector) -> bool:
+        self.iR = self.errorModel.getPrecisionMatrix(self, t, y)
         minSSR = 0;
         for iW in range(0, len(self.workers)) :
             Zstar = self.workers[iW].predict(t)
@@ -47,10 +47,10 @@ class ManagedScalarRecursiveFilterSet(ManagedFilterBase):
             innovation = self.workers[iW].update(t, Zstar, e)
             if (self.judges[iW].scalarUpdate(t, y, e, self.iR)) :
                 innovation = self.worker.update(t, Zstar, e)
-                self.monitor.accepted(t, y, innovation, observationId );
+                self.monitor.accepted(t, y, innovation );
                 return True;
             else : 
-                self.monitor.rejected(t, y, observationId );
+                self.monitor.rejected(t, y );
                 return False;
         iBest = BaseScalarJudge.best(self.judges);
         if (iBest < 0) :

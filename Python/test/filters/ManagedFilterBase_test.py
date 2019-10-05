@@ -28,7 +28,7 @@ class ManagedFilterBase_test(TestCaseBase):
             super().__init__(order, worker);
         
         @testclassmethod
-        def add(self, t:float, y:vector, observationId:int = 0) -> bool :
+        def addObservation(self, t:float, y:vector) -> bool :
             return False;
         
         @testclassmethod
@@ -53,10 +53,6 @@ class ManagedFilterBase_test(TestCaseBase):
             V = zeros(self.order+1, self.order+1)
             return V;
         
-        
-    
-    
-
     def setUp(self):
         pass
 
@@ -65,14 +61,14 @@ class ManagedFilterBase_test(TestCaseBase):
         pass
 
 
-    def stepName(self):
+    def step9Basic(self):
         f = makeEmp(0, 0.1)
         m = self.ManagedFilterBaseMock( f.getOrder(), f );
         assert( m.getN() == 0 )
         assert( m.getWorker().getOrder() == 0)
         assert( m.getWorker().getTau() == 0.1)
         
-    def stepWorkerPassthru(self):
+    def step9WorkerPassthru(self):
         f = makeEmp(1, 0.2)
         m = self.ManagedFilterBaseMock( f.getOrder(), f )
         assert( m.getWorker() == f)

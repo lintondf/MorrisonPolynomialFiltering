@@ -7,6 +7,8 @@ import os
 import unittest
 import coverage
 
+from time import perf_counter
+
 from unittest import TestCase
 
 class TestCaseBase(TestCase):
@@ -22,10 +24,12 @@ class TestCaseBase(TestCase):
         for name, step in self._steps():
             try:
                 with self.subTest(name):
-                    print('  ', name, ' : ', end='')
+                    print('  %-50s : ' % name, end='')
+                    start = perf_counter()
                     step()
-                    print(' OK')
+                    print(' OK   %10.6f s' % (perf_counter() - start))
             except Exception as e:
+                print(' FAIL %10.6f s' % (perf_counter() - start))
                 self.fail("{} failed ({}: {})".format(step, type(e), e))
            
     

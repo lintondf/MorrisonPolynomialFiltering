@@ -4,10 +4,11 @@ Created on Apr 11, 2019
 @author: NOOK
 '''
 import unittest
+from typing import List;
 from polynomialfiltering.PythonUtilities import ignore, testcase, testclass, testclassmethod
 
 from time import perf_counter
-from numpy import array, array as vector, mean, interp, arange, trace
+from numpy import array, array as vector, mean, interp, arange, trace, transpose
 from numpy import cov, zeros, diag, sqrt
 from numpy.linalg import inv
 from numpy.random import randn
@@ -39,6 +40,21 @@ from scipy.optimize.optimize import fminbound
 from cmath import pi
 from polynomialfiltering.Geodesy import Site
 
+''' A7501 covariances with bias additions
+launch_radar_1
+[[ 5.81240203e-07  5.27779360e-08 -1.87744937e-04]
+ [ 5.27779360e-08  2.25679125e-07  3.21831951e-04]
+ [-1.87744937e-04  3.21831951e-04  2.69499468e+02]]
+launch_radar_2
+[[ 2.18559366e-07 -7.19904482e-10 -2.87593751e-05]
+ [-7.19904482e-10  3.15991316e-07 -4.04204878e-06]
+ [-2.87593751e-05 -4.04204878e-06  5.32607959e+00]]
+launch_radar_3
+[[ 7.91203021e-09 -1.47174129e-09 -1.44763781e-04]
+ [-1.47174129e-09  2.21880665e-08 -9.88717864e-04]
+ [-1.44763781e-04 -9.88717864e-04  3.36443359e+02]]
+
+'''
 
 class ObservationErrorModel_test(TestCaseBase):
 
@@ -271,7 +287,8 @@ class ObservationErrorModel_test(TestCaseBase):
             for i in range(0, observations.shape[0]) :
                 if (observations[i,4] == 2) :
                     C = model.getCovarianceMatrix(None, i, observations[i,9:12])
-                    print(radar, i, A2S(sqrt(diag(C).flatten())))
+                    print(radar, i, A2S((diag(C).flatten())))
+            return
 
     
     @testcase
@@ -286,6 +303,7 @@ class ObservationErrorModel_test(TestCaseBase):
                 if (observations[i,4] == 2) :
                     C = model.getCovarianceMatrix(None, observations[i,0], observations[i,9:12])
                     print(radar, i, A2S(sqrt(diag(C).flatten())))
+            return
         
     @testcase
     def xstep9FixedSampleErrorModel(self):
@@ -303,7 +321,32 @@ class ObservationErrorModel_test(TestCaseBase):
 
 
     @testcase
-    def xstep0PairResidualsErrorModel(self):
+    def step0PairResidualsErrorModel(self):
+        '''
+No-Op
+launch_radar_1 [0. 0. 0.]
+launch_radar_2 [0. 0. 0.]
+launch_radar_3 [0. 0. 0.]
+ OK     0.6086
+ 
+order = 0
+launch_radar_1 [1.36254693e-04 4.87683077e-04 4.19108568e+02]
+launch_radar_2 [1.15414736e-04 3.27102133e-04 4.13845911e+02]
+launch_radar_3 [3.61315605e-03 2.33317622e-04 4.07123657e+02]
+ OK     57.975
+ 
+ order = 1
+launch_radar_1 [1.00626532e-04 6.94301775e-05 1.33409632e+00]
+launch_radar_2 [3.72963953e-06 1.89128552e-05 1.16305014e+00]
+launch_radar_3 [3.41262656e-03 1.37744414e-05 2.14199147e+00]
+ OK     76.032 
+ 
+ order = 2
+launch_radar_1 [9.05927924e-05 6.21821583e-05 4.08837908e-01]
+launch_radar_2 [2.22403144e-06 1.36854070e-05 2.67397680e-01]
+launch_radar_3 [2.90397504e-03 1.20662866e-05 1.05157640e+00]
+ OK     96.729 
+        '''
         testData = TestData('launchRadar')
         group = testData.getGroup('7501')
         radars = ('launch_radar_1', 'launch_radar_2', 'launch_radar_3')
@@ -316,37 +359,39 @@ class ObservationErrorModel_test(TestCaseBase):
             model = PairResidualsErrorModel(zeros([3, 3]), 25, order, 0.1, 0.90 )
             for i in range(0, observations.shape[0]) :
                 if (observations[i,4] == 2) :
+#                     C = zeros([3,3])
                     C = model.getCovarianceMatrix(None, observations[i,0], observations[i,9:12])
                     iFirst = min(iFirst,iLast)
                     results[iLast,0] = observations[i,0]
                     results[iLast,1:] = sqrt(diag(C).flatten())
 #                     print(radar, i, A2S(sqrt(diag(C).flatten())))
-                    if (results[iLast,3] > 100.0) :
-                        model.dump()
+#                     if (results[iLast,3] > 100.0) :
+#                         model.dump()
                     iLast += 1
                     
-            f0 = plt.figure(figsize=(10, 6))
-            ax = plt.subplot(1, 1, 1)
-            ax.plot(results[iFirst:iLast,0], results[iFirst:iLast,3], 'k-', label='R')
-            ax.legend()
-            plt.title( '%s Order %d' % (radar, order))
-            plt.show()
+#             f0 = plt.figure(figsize=(10, 6))
+#             ax = plt.subplot(1, 1, 1)
+#             ax.plot(results[iFirst:iLast,0], results[iFirst:iLast,3], 'k-', label='R')
+#             ax.legend()
+#             plt.title( '%s Order %d' % (radar, order))
+#             plt.show()
             print(radar, mean(results[iFirst:iLast,1:], axis=0))
-            print(cov(results[iFirst:iLast,1:], rowvar=False))
+#             print(cov(results[iFirst:iLast,1:], rowvar=False))
 #             return
 
-    def step0BetResiduals(self):
+    def xstep0BetResiduals(self):
         betData = TestData('launchBET')
         betGroup = betData.getGroup('7501')
 #         radar = 'launch_radar_1'
         testData = TestData('launchRadar')
         group = testData.getGroup('7501')
         
-        def testOffset( deltaT : float, plot : bool = False) -> float:
+        def testOffset( deltaT : float, iCs : List[array] = {}, plot : bool = False) -> float:
             FMT = 4469086562.0+deltaT
             # time, E, F, G, quality, beacon, enu[0], enu[1], enu[2], aer[0,0], aer[0,1], aer[0,2]
             radars = ('launch_radar_1', 'launch_radar_2', 'launch_radar_3')
             metric = 0
+            stats = {}
             for radar in radars :
                 betAER = betData.getArray(betGroup, radar)
                 actualAER = testData.getArray(group, radar)
@@ -389,18 +434,43 @@ class ObservationErrorModel_test(TestCaseBase):
                                 D[j,o+1] += 2*pi     
                             if (abs(D[j,o+1]) > 1e-1) :
                                 print(D[j,:])                           
-                    if (plot) :
-                        ax = plt.subplot(3, 1, o+1)
-#                         ax.plot(T, D[:,o+1], 'k-', label='R-B')
-                        ax.hist(D[:,o+1], bins=100, density=True)
-#                         ax.legend()
-                A = (mean(D[:,1:4], axis=0))
-                C = (cov(D[:,1:4], rowvar=False))
+                if (len(iCs) > 0) :
+                    iC = iCs[radar]
+                    idxs = []
+                    for i in range(0,D.shape[0]) :
+                        s = (D[i,1:4] @ iC @ transpose(D[i,1:4]))
+                        if (s < 3.0) :
+                            idxs.append(i)
+                    for o in range(0,3) :
+                        if (plot) :
+                            ax = plt.subplot(3, 1, o+1)
+                            ax.hist(D[idxs,o+1], bins=100, density=True)
+#                             ax.plot(T, D[:,o+1], 'k-', label='R-B')
+#                             ax.legend()
+                else:
+                    idxs = range(0, D.shape[0])
+                A = (mean(D[idxs,1:4], axis=0))
+                C = (cov(D[idxs,1:4], rowvar=False))
+                stats[radar] = (A, C)
                 metric += A[2]**2
-            return metric
+#             return metric
+            return stats;
         
         tOffset = -1.339088; # fminbound(testOffset, -3, +3)
-        testOffset(tOffset, True)
+        stats = testOffset(tOffset, plot=False)
+        iCs = {}
+        for name in stats :
+            A = stats[name][0]
+            C = stats[name][1]
+            print(name)
+            print(C + diag(A**2))
+            iCs[name] = inv(C + diag(A**2))
+        stats = testOffset(tOffset, iCs, plot=True)
+        for name in stats :
+            A = stats[name][0]
+            C = stats[name][1]
+            print(name)
+            print(C + diag(A**2))
         plt.show()
         
     def xstep0PlotRanges(self):

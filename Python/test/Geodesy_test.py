@@ -15,7 +15,7 @@ from TestUtilities import A2S
 
 from polynomialfiltering.Geodesy import Geodesy, Site
 
-class Test(TestCaseBase):
+class Geodesy_test(TestCaseBase):
 
 
     def stepEcef(self):

@@ -68,18 +68,12 @@ class ConstantObservationErrorModel(IObservationErrorModel):
         self.iR = inverseR;
 
 
-    def getPrecisionMatrix(self, f: AbstractFilterWithCovariance, t:float, y:vector, observationId:int = -1) -> array:
+    def getPrecisionMatrix(self, f: AbstractFilterWithCovariance, t:float, y:vector) -> array:
         '''@ P : array'''
-        if (observationId == -1) :
-            P = copy(self.iR)
-        else :
-            P = self.iR[observationId:observationId+1,observationId:observationId+1];
+        P = copy(self.iR)
         return P; 
 
-    def getCovarianceMatrix(self, f : AbstractFilterWithCovariance, t : float, y : vector, observationId : int = -1) -> array:
+    def getCovarianceMatrix(self, f : AbstractFilterWithCovariance, t : float, y : vector) -> array:
         '''@ P : array'''
-        if (observationId == -1) :
-            P = self.R;
-        else :
-            P = self.R[observationId:observationId+1,observationId:observationId+1]; 
+        P = self.R;
         return P; 

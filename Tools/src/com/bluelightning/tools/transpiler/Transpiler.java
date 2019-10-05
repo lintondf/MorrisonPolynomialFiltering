@@ -138,16 +138,20 @@ public class Transpiler {
 		new Target(Paths.get("polynomialfiltering/filters/controls"), "IJudge", true),
 		new Target(Paths.get("polynomialfiltering/filters/controls"), "IMonitor", true),
 		new Target(Paths.get("polynomialfiltering/filters/controls/errormodel"), "ConstantObservationErrorModel"),
-////		new Target(Paths.get("polynomialfiltering/filters/controls"), "BaseScalarJudge"),
-////		//new Target(Paths.get("polynomialfiltering/filters/controls"), "BaseVectorJudge"),
-////		//new Target(Paths.get("polynomialfiltering/filters/controls"), "NullMonitor"),
+		new Target(Paths.get("polynomialfiltering/filters/controls/errormodel"), "FixedSampleErrorModel"),
+		new Target(Paths.get("polynomialfiltering/filters/controls/errormodel"), "ObservationDifferencesErrorModel"),
+		new Target(Paths.get("polynomialfiltering/filters/controls/errormodel"), "PairResidualErrorModel"),
+//		new Target(Paths.get("polynomialfiltering/filters/controls/judge"), "BaseScalarJudge"),
+//		//new Target(Paths.get("polynomialfiltering/filters/controls/judge"), "BaseVectorJudge"),
+//		//new Target(Paths.get("polynomialfiltering/filters/controls/monitor"), "NullMonitor"),
 		
-////		new Target(Paths.get("polynomialfiltering/filters"), "IManagedFilter", true),
-////		new Target(Paths.get("polynomialfiltering/filters"), "ManagedFilterBase"),
+		new Target(Paths.get("polynomialfiltering/filters"), "AbstractManagedFilter", true),
+		new Target(Paths.get("polynomialfiltering/filters"), "ManagedFilterBase"),
 //////		new Target(Paths.get("polynomialfiltering/filters"), "ManagedScalarRecursiveFilter"),
 //////		new Target(Paths.get("polynomialfiltering/filters"), "ManagedScalarRecursiveFilterSet"),
 		
 		new TestTarget(Paths.get("filters/controls"), "ObservationErrorModel_test"),
+		new TestTarget(Paths.get("filters"), "ManagedFilterBase_test"),
 	};
 	
 	final Set<String> ignoredModules = new TreeSet<String>( Arrays.asList( new String[]{

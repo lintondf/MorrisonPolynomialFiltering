@@ -71,7 +71,7 @@ class ManagedFilterBase(AbstractManagedFilter):
         self.monitor = monitor;
 
     @abstractmethod # pragma: no cover
-    def add(self, t:float, y:vector, observationId:int = 0) -> bool :
+    def addObservation(self, t:float, y:vector) -> bool :
         pass
     
     @abstractmethod # pragma: no cover

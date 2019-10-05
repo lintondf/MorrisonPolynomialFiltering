@@ -28,26 +28,23 @@ class ObservationDifferencesErrorModel(IObservationErrorModel):
         self.window = zeros([N, R0.shape[0]])
         self.R = R0
         
-    def getPrecisionMatrix(self, f: AbstractFilterWithCovariance, t:float, y:vector, observationId:int = -1) -> array:
+    def getPrecisionMatrix(self, f: AbstractFilterWithCovariance, t:float, y:vector) -> array:
         '''@ P : array'''
-        P = inv(self.getCovarianceMatrix(f, t, y, observationId))
+        P = inv(self.getCovarianceMatrix(f, t, y))
         return P; 
 
-    def getCovarianceMatrix(self, f : AbstractFilterWithCovariance, t : float, y : vector, observationId : int = -1) -> array:
+    def getCovarianceMatrix(self, f : AbstractFilterWithCovariance, t : float, y : vector) -> array:
         '''@ P : array'''
         self.window[self.n % self.N,:] = y
         self.n = self.n + 1;
         if (self.n > self.N) :
             self.R = zeros([self.R0.shape[0], self.R0.shape[1]])
-            for i in range(1,self.N) :
+            for i in range(0,self.N) :
                 j1 = (self.n+i) % self.N
                 j2 = (self.n+i+1) % self.N
                 d = self.window[j2:j2+1,:] - self.window[j1:j1+1,:]
                 self.R = self.R + transpose(d) @ d
             self.R = self.R / (2.0*self.N - 2.0)
-        if (observationId == -1) :
-            P = self.R;
-        else :
-            P = self.R[observationId:observationId,observationId:observationId]; 
+        P = self.R;
         return P; 
         

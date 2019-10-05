@@ -42,12 +42,12 @@ class PairResidualsErrorModel(IObservationErrorModel):
             self.filters.append(PairedPolynomialFilter(order, tau, theta))
         self.R = R0
         
-    def getPrecisionMatrix(self, f: AbstractFilterWithCovariance, t:float, y:vector, observationId:int = -1) -> array:
+    def getPrecisionMatrix(self, f: AbstractFilterWithCovariance, t:float, y:vector) -> array:
         '''@ P : array'''
-        P = inv(self.getCovarianceMatrix(f, t, y, observationId))
+        P = inv(self.getCovarianceMatrix(f, t, y))
         return P; 
 
-    def getCovarianceMatrix(self, f : AbstractFilterWithCovariance, t : float, y : vector, observationId : int = -1) -> array:
+    def getCovarianceMatrix(self, f : AbstractFilterWithCovariance, t : float, y : vector) -> array:
         '''@ P : array'''
         idx = self.n % self.N
         self.tRing[ idx, 0 ] = t;    

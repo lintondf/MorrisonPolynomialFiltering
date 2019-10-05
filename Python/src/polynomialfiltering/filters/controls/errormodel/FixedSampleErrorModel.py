@@ -28,12 +28,12 @@ class FixedSampleErrorModel(IObservationErrorModel):
         self.window = zeros([N, R0.shape[0]])
         self.R = R0
         
-    def getPrecisionMatrix(self, f: AbstractFilterWithCovariance, t:float, y:vector, observationId:int = -1) -> array:
+    def getPrecisionMatrix(self, f: AbstractFilterWithCovariance, t:float, y:vector) -> array:
         '''@ P : array'''
-        P = inv(self.getCovarianceMatrix(f, t, y, observationId))
+        P = inv(self.getCovarianceMatrix(f, t, y))
         return P; 
 
-    def getCovarianceMatrix(self, f : AbstractFilterWithCovariance, t : float, y : vector, observationId : int = -1) -> array:
+    def getCovarianceMatrix(self, f : AbstractFilterWithCovariance, t : float, y : vector) -> array:
         '''@ P : array'''
         self.window[self.n % self.N,:] = y
         self.n = self.n + 1;
@@ -45,9 +45,6 @@ class FixedSampleErrorModel(IObservationErrorModel):
                 d = self.window[i:i+1,:] - meanO
                 meanO = meanO + (self.window[i:i+1,:]-meanO)/(i+1)
                 self.R = self.R + (transpose(d) @ (self.window[i:i+1,:] - meanO) - self.R)/(i+1)
-        if (observationId == -1) :
-            P = self.R;
-        else :
-            P = self.R[observationId:observationId,observationId:observationId]; 
+        P = self.R;
         return P; 
         
