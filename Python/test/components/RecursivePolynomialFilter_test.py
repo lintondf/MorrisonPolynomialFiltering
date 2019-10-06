@@ -346,6 +346,3 @@ class RecursivePolynomialFilter_test(TestCaseBase):
  
 if __name__ == "__main__":
     unittest.main()
-    
-    
-    

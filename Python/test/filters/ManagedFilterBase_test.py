@@ -49,7 +49,7 @@ class ManagedFilterBase_test(TestCaseBase):
         
         @testclassmethod
         def getVRF(self) -> array:
-            '''V : array'''
+            '''@V : array'''
             V = zeros(self.order+1, self.order+1)
             return V;
         

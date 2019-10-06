@@ -10,28 +10,28 @@ import unittest
 from typing import List
 
 from numpy import array as vector
-from numpy import (array, array2string, concatenate, cov, cumsum, diag, histogram,
-                   log, max, mean, min, nonzero, ones, sqrt, std, trace,
-                   transpose, var, where, zeros)
+from numpy import array, array2string, concatenate, cov, cumsum, diag, histogram,\
+                   log, max, mean, min, nonzero, ones, sqrt, std, trace,\
+                   transpose, var, where, zeros
 from numpy.linalg import inv
 from numpy.random import get_state, randn, seed
 from runstats import Statistics
 from scipy.stats import anderson, chi2, kstest, lognorm, norm
 
-from polynomialfiltering.components.Emp import (makeEmp, makeEmpCore, nSwitch,
-                                                nUnitLastVRF)
+from polynomialfiltering.components.Emp import makeEmp, makeEmpCore, nSwitch,\
+                                                nUnitLastVRF
 from polynomialfiltering.components.ICore import ICore
 from polynomialfiltering.filters.RecursivePolynomialFilter import \
     RecursivePolynomialFilter
 from polynomialfiltering.Main import AbstractFilterWithCovariance, FilterStatus
-from polynomialfiltering.PythonUtilities import (assert_not_empty, ignore,
-                                                 testcase, testclass,
-                                                 testclassmethod, testmethod)
+from polynomialfiltering.PythonUtilities import assert_not_empty, ignore,\
+                                                 testcase, testclass,\
+                                                 testclassmethod, testmethod
 from TestData import TestData
 from TestSuite import TestCaseBase, slow, testDataPath
-from TestUtilities import (A2S, assert_clear, assert_report, createTestGroup,
-                           generateTestData, generateTestPolynomial,
-                           writeTestVariable)
+from TestUtilities import A2S, assert_clear, assert_report, createTestGroup,\
+                           generateTestData, generateTestPolynomial,\
+                           writeTestVariable
 from TestUtilities import assert_allclose, assert_almost_equal, assert_array_less
 
 

@@ -26,6 +26,7 @@ import matplotlib.dates as mdates
 
 
 from polynomialfiltering.Main import AbstractFilter, AbstractFilterWithCovariance, FilterStatus
+from polynomialfiltering import AbstractComponentFilter
 from polynomialfiltering.filters.ManagedFilterBase import ManagedFilterBase;
 from polynomialfiltering.components.Emp import makeEmp
 
@@ -39,6 +40,7 @@ from statistics import stdev
 from scipy.optimize.optimize import fminbound
 from cmath import pi
 from polynomialfiltering.Geodesy import Site
+from polynomialfiltering.AbstractComponentFilter import AbstractComponentFilter
 
 ''' A7501 covariances with bias additions
 launch_radar_1
@@ -77,16 +79,18 @@ class ObservationErrorModel_test(TestCaseBase):
     class ManagedFilterBaseMock(ManagedFilterBase):
         
         @testclassmethod
-        def __init__(self, order : int, worker : AbstractFilter):
+        def __init__(self, order : int, worker : AbstractComponentFilter):
             super().__init__(order, worker);
         
         @testclassmethod
-        def add(self, t:float, y:vector, observationId:int = 0) -> bool :
+        def addObservation(self, t:float, y:vector) -> bool :
             return False;
         
         @testclassmethod
         def getCovariance(self) -> array:
-            return zeros([1,1])
+            '''@C : array'''
+            C = zeros([1,1])
+            return C
     
         @testclassmethod
         def getGoodnessOfFit(self) -> float:
@@ -102,7 +106,7 @@ class ObservationErrorModel_test(TestCaseBase):
         
         @testclassmethod
         def getVRF(self) -> array:
-            '''V : array'''
+            '''@ V : array'''
             V = zeros(self.order+1, self.order+1)
             return V;
         
@@ -182,7 +186,6 @@ class ObservationErrorModel_test(TestCaseBase):
                 assert_almost_equal(inputInverse[iE,iE], Q)
         cdf.close();
 
-    @testcase
     def xstep1ConstantObservationErrorModelScalar(self) -> None: 
         '''@testData : TestData'''
         '''@matches : List[str]'''
@@ -211,7 +214,6 @@ class ObservationErrorModel_test(TestCaseBase):
             assert_almost_equal(inputInverse[0,0], Q)        
         testData.close()
 
-    @testcase
     def xstep2ConstantObservationErrorModelMatrix(self) -> None:
         '''@testData : TestData'''
         '''@matches : List[str]'''
@@ -240,7 +242,6 @@ class ObservationErrorModel_test(TestCaseBase):
             assert_almost_equal(inputInverse[0,0], Q)        
         testData.close()
 
-    @testcase
     def xstep3ConstantObservationErrorModelMatrixMatrix(self) -> None:
         '''@testData : TestData'''
         '''@matches : List[str]'''
@@ -273,8 +274,12 @@ class ObservationErrorModel_test(TestCaseBase):
                 assert_almost_equal(inputInverse[iE, iE], Q)        
         testData.close()
     
-    @testcase
     def xstepObservationDifferencesErrorModel(self):
+        '''@testData : TestData'''
+        '''@group : Group'''
+        '''@radars : List[str]'''
+        '''@radar : str'''
+        '''@observations : array'''
         testData = TestData('launchRadar')
         group = testData.getGroup('7501')
         radars = ('launch_radar_1', 'launch_radar_2', 'launch_radar_3')
@@ -291,7 +296,6 @@ class ObservationErrorModel_test(TestCaseBase):
             return
 
     
-    @testcase
     def xstep0FixedSampleErrorModel(self):
         testData = TestData('launchRadar')
         group = testData.getGroup('7501')
@@ -305,7 +309,6 @@ class ObservationErrorModel_test(TestCaseBase):
                     print(radar, i, A2S(sqrt(diag(C).flatten())))
             return
         
-    @testcase
     def xstep9FixedSampleErrorModel(self):
         N = 25;
         M = 10
@@ -320,7 +323,6 @@ class ObservationErrorModel_test(TestCaseBase):
                 assert_almost_equal(cov(O[0:i+1], rowvar=False, bias=True), Q)
 
 
-    @testcase
     def step0PairResidualsErrorModel(self):
         '''
 No-Op
@@ -350,7 +352,7 @@ launch_radar_3 [2.90397504e-03 1.20662866e-05 1.05157640e+00]
         testData = TestData('launchRadar')
         group = testData.getGroup('7501')
         radars = ('launch_radar_1', 'launch_radar_2', 'launch_radar_3')
-        order = 2
+        order = 1
         for radar in radars :
             iFirst = 0;
             iLast = 0;

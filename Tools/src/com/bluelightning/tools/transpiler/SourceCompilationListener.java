@@ -656,6 +656,8 @@ public class SourceCompilationListener extends LcdPythonBaseListener {
 											if (c != null && c.isClass()) { 
 												Scope refScope = c.getScope().getChild(Level.CLASS, c.getName());
 												field = transpiler.symbolTable.lookup(refScope, fieldName );
+											} else if (s.getType().startsWith("List[")) {
+												field = transpiler.symbolTable.lookup(scope, fieldName);
 											}
 										}
 									}

@@ -49,7 +49,7 @@ public class JavaTestTarget extends AbstractJavaTarget {
 
 	@Override
 	public void finishClass(Scope scope) {
-		System.out.println( currentClass + " : " + scope.toString());
+//		System.out.println( currentClass + " : " + scope.toString());
 		if (! currentClass.isEmpty() && currentClass.peek().getName().equals(scope.getLast()) ) {
 			super.finishClass(scope);
 		}
@@ -79,7 +79,7 @@ public class JavaTestTarget extends AbstractJavaTarget {
 
 	@Override
 	public void startModule(Scope scope, boolean headerOnly, boolean isTest) {
-		initializeImports();
+		//initializeImports();
 		System.out.println(String.format("\nJava/%s test: ", programmer.getName()) + scope.toString() );
 		this.headerOnly = headerOnly;
 		currentScope = scope;

@@ -11,6 +11,8 @@ from numpy import exp, log, min, exp
 from scipy.stats import chi2, f;
 from typing import List;
 
+def List() -> List:
+    return []
 
 
 '''********************************************************************

@@ -35,7 +35,6 @@ public class CppTestTarget extends AbstractCppTarget {
 		}
 		inTest = true;
 		System.out.println(String.format("\nC++/%s test: ", programmer.getName()) + scope.toString() );
-		System.out.println(includeFiles.toString());
 		this.headerOnly = headerOnly;
 		
 		moduleTests = new ArrayList<>();
@@ -126,29 +125,31 @@ public class CppTestTarget extends AbstractCppTarget {
 		Indent docIndent = new Indent();
 		docIndent.append(String.format("TEST_CASE(\"%s\") {\n", moduleName ) );
 		docIndent.in();
-		String testClassName = moduleTests.get(0).getParent().toString();
-		testClassName = testClassName.substring(1, testClassName.length()-1).replace("/", "::");
-		docIndent.writeln(String.format("%s test;\n", testClassName ));
-		for (Scope test : moduleTests) {
-			docIndent.writeln( String.format("SUBCASE(\"%s\") {", test.getLast()));
-			docIndent.in();
-			docIndent.writeln( String.format("test.%s();", test.getLast()  ) );
+		if ( ! moduleTests.isEmpty()) {
+			String testClassName = moduleTests.get(0).getParent().toString();
+			testClassName = testClassName.substring(1, testClassName.length()-1).replace("/", "::");
+			docIndent.writeln(String.format("%s test;\n", testClassName ));
+			for (Scope test : moduleTests) {
+				docIndent.writeln( String.format("SUBCASE(\"%s\") {", test.getLast()));
+				docIndent.in();
+				docIndent.writeln( String.format("test.%s();", test.getLast()  ) );
+				docIndent.out();
+				docIndent.writeln("}");
+			}
 			docIndent.out();
-			docIndent.writeln("}");
-		}
-		docIndent.out();
-		docIndent.append("}\n");
-		templateDataModel.put("doctest", docIndent.sb.toString());
-		Transpiler.instance().addGeneratedFile(cppPath);
-		try {
-			cppPath.toFile().getParentFile().mkdirs();
-			OutputStreamWriter out = new OutputStreamWriter(new FileOutputStream(cppPath.toFile()));
-			test.process(templateDataModel, out);
-			out.close();
-		} catch (IOException iox ) {
-			iox.printStackTrace();
-		} catch (TemplateException e) {
-			e.printStackTrace();
+			docIndent.append("}\n");
+			templateDataModel.put("doctest", docIndent.sb.toString());
+			Transpiler.instance().addGeneratedFile(cppPath);
+			try {
+				cppPath.toFile().getParentFile().mkdirs();
+				OutputStreamWriter out = new OutputStreamWriter(new FileOutputStream(cppPath.toFile()));
+				test.process(templateDataModel, out);
+				out.close();
+			} catch (IOException iox ) {
+				iox.printStackTrace();
+			} catch (TemplateException e) {
+				e.printStackTrace();
+			}
 		}
 		inTest = false;
 	}

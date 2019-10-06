@@ -37,6 +37,8 @@ public class JavaSrcTarget extends AbstractJavaTarget {
 		staticImports.clear();
 		imports.clear();
 		imports.add("java.util.stream.IntStream");
+		imports.add("java.util.List");
+		imports.add("java.util.ArrayList");
 		programmer.addImports(imports);
 		imports.add("polynomialfiltering.main.FilterStatus");
 		imports.add("polynomialfiltering.main.AbstractFilter");
@@ -55,7 +57,7 @@ public class JavaSrcTarget extends AbstractJavaTarget {
 			return;
 		}
 		packageName = catalogContents( scope );
-		initializeImports();
+		//initializeImports();
 		List<String> manual = Transpiler.instance().getManualImports(scope.toString());
 		if (manual != null) {
 			for (String text : manual) {

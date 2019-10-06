@@ -99,6 +99,4 @@ class AbstractComponentFilter(AbstractFilter):
     
     @abstractmethod   # pragma: no cover
     def getVRF(self) -> array:
-        pass
-    
-        
+        pass    

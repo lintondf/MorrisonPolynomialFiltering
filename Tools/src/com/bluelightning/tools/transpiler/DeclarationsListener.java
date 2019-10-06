@@ -40,6 +40,7 @@ class DeclarationsListener extends LcdPythonBaseListener {
 			Map<String, Integer> map = transpiler.parser.getRuleIndexMap();
 			classdefContextIndex = map.get("classdef");
 			funcdefContextIndex = map.get("funcdef");
+			System.out.printf("Python module: %s\n", moduleScope.toString());
 		}
 		
 		protected String getChildText( RuleNode ctx, int iChild) {
@@ -177,26 +178,28 @@ class DeclarationsListener extends LcdPythonBaseListener {
 		
 		@Override public void exitDecorated(LcdPythonParser.DecoratedContext ctx) { 
 //			transpiler.dumpChildren(ctx);
-			String decoration = getChildText(ctx, 0).trim();
-			RuleContext ruleContext = (RuleContext) ctx.getChild(1);
-			if (ruleContext.getRuleIndex() == funcdefContextIndex) {
-				String functionName = transpiler.valueMap.get(ctx.getChild(1).getChild(1).getPayload()).trim();
-				Symbol symbol = transpiler.symbolTable.lookup(scopeStack.peek(), functionName);
-				Symbol.FunctionParametersInfo fpi = symbol.getFunctionParametersInfo();
-				fpi.decorators.add(decoration);
-//				System.out.printf("DECORATE: %s %s\n", functionName, decoration );
-				if (decoration.equals("@abstractmethod")) {
-					symbol = transpiler.lookupClass(symbol.getScope().getLast());
-					if (symbol != null) {
-						symbol.setAbstractClass(true);
+			String decorationSet = getChildText(ctx, 0).trim();
+			for (String decoration : decorationSet.split(" ")) {
+				RuleContext ruleContext = (RuleContext) ctx.getChild(1);
+				if (ruleContext.getRuleIndex() == funcdefContextIndex) {
+					String functionName = transpiler.valueMap.get(ctx.getChild(1).getChild(1).getPayload()).trim();
+					Symbol symbol = transpiler.symbolTable.lookup(scopeStack.peek(), functionName);
+					Symbol.FunctionParametersInfo fpi = symbol.getFunctionParametersInfo();
+					fpi.decorators.add(decoration);
+	//				System.out.printf("DECORATE: %s %s\n", functionName, decoration );
+					if (decoration.equals("@abstractmethod")) {
+						symbol = transpiler.lookupClass(symbol.getScope().getLast());
+						if (symbol != null) {
+							symbol.setAbstractClass(true);
+						}
 					}
+				} else {
+					String className = transpiler.valueMap.get(ctx.getChild(1).getChild(1).getPayload()).trim();
+					Symbol symbol = transpiler.lookupClass(className);
+					Symbol.FunctionParametersInfo fpi = new Symbol.FunctionParametersInfo();
+					fpi.decorators.add(decoration);
+					symbol.setFunctionParametersInfo(fpi);
 				}
-			} else {
-				String className = transpiler.valueMap.get(ctx.getChild(1).getChild(1).getPayload()).trim();
-				Symbol symbol = transpiler.lookupClass(className);
-				Symbol.FunctionParametersInfo fpi = new Symbol.FunctionParametersInfo();
-				fpi.decorators.add(decoration);
-				symbol.setFunctionParametersInfo(fpi);
 			}
 		}
 		

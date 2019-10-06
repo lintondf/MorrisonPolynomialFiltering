@@ -20,6 +20,11 @@ class ObservationDifferencesErrorModel(IObservationErrorModel):
     ingested.
     '''
 
+    '''@ R0 : array'''
+    '''@ n : int'''
+    '''@ N : int'''
+    '''@ window : array'''
+    '''@ R : array''' 
     
     def __init__(self, R0 : array, N : int):
         self.R0 = R0
@@ -30,12 +35,19 @@ class ObservationDifferencesErrorModel(IObservationErrorModel):
         
     def getPrecisionMatrix(self, f: AbstractFilterWithCovariance, t:float, y:vector) -> array:
         '''@ P : array'''
-        P = inv(self.getCovarianceMatrix(f, t, y))
+        '''@ C : array'''
+        C = self.getCovarianceMatrix(f, t, y)
+        P = inv(C)
         return P; 
 
     def getCovarianceMatrix(self, f : AbstractFilterWithCovariance, t : float, y : vector) -> array:
         '''@ P : array'''
-        self.window[self.n % self.N,:] = y
+        '''@ i : int | for loop variable'''
+        '''@ j1 : int'''
+        '''@ j2 : int'''
+        '''@ d : array'''
+        j1 = self.n % self.N
+        self.window[j1,:] = y
         self.n = self.n + 1;
         if (self.n > self.N) :
             self.R = zeros([self.R0.shape[0], self.R0.shape[1]])
@@ -47,4 +59,3 @@ class ObservationDifferencesErrorModel(IObservationErrorModel):
             self.R = self.R / (2.0*self.N - 2.0)
         P = self.R;
         return P; 
-        

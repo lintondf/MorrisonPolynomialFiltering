@@ -17,7 +17,11 @@ public class Utility {
 	}
 	
 	public static DMatrixRMaj ones( int r, int c ) {
-		return new DMatrixRMaj(r, c);
+		return new DMatrixRMaj(r, c, 1.0);
+	}
+	
+	public static DMatrixRMaj zeros( int r, int c ) {
+		return new DMatrixRMaj(r, c, 0.0);
 	}
 	
 	public static int numElements( DMatrixRMaj m) {

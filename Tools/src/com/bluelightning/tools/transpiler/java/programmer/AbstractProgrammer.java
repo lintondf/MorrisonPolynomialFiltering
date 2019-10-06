@@ -32,7 +32,10 @@ public abstract class AbstractProgrammer implements IProgrammer {
 		
 		//simpleRemaps.put("int", new Symbol(libraryScope, "", "int")); //TODO generic
 		//simpleRemaps.put("max", new Symbol(libraryScope, "Math.max", "int")); //TODO generic
-		//simpleRemaps.put("min", new Symbol(libraryScope, "Math.min", "int")); //TODO generic
+		simpleRemaps.put("pow", new Symbol(libraryScope, "pow", "float"));
+		simpleRemaps.put("sin", new Symbol(libraryScope, "sin", "float"));
+		simpleRemaps.put("cos", new Symbol(libraryScope, "cos", "float"));
+		simpleRemaps.put("arctan2", new Symbol(libraryScope, "atan2", "float"));
 		simpleRemaps.put("chi2Cdf", new Symbol(libraryScope, "chi2Cdf", "float"));
 		simpleRemaps.put("chi2Ppf", new Symbol(libraryScope, "chi2Ppf", "float"));
 		simpleRemaps.put("ftestCdf", new Symbol(libraryScope, "ftestCdf", "float"));
@@ -47,6 +50,9 @@ public abstract class AbstractProgrammer implements IProgrammer {
 		symbolRemap.put("True", "true");
 		symbolRemap.put("False", "false");
 		symbolRemap.put("None", "null");
+		symbolRemap.put("List", "ArrayList<>");
+		symbolRemap.put("append", "add");
+		symbolRemap.put("pi", "Math.PI");
 	}
 
 	Scope libraryScope = new Scope();

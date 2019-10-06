@@ -235,6 +235,7 @@ class StateTransition(ABC):
     def __init__(self):
         pass
     
+    @forcestatic
     @staticmethod
     def conformState(order : int, state : vector) -> vector:
         """
@@ -256,6 +257,7 @@ class StateTransition(ABC):
         Z[0:m] = state[0:m]
         return Z            
     
+    @forcestatic
     @staticmethod            
     def getStateTransitionMatrix( N : int, dt : float) -> array: # TODO remove
         """
@@ -288,7 +290,8 @@ class StateTransition(ABC):
                 B[i,j] = pow(dt,ji)/fji
         return B
     
-    @classmethod
+    @forcestatic
+    @staticmethod            
     def transitionCovarianceMatrix(self, dt : float, V : array ) -> array:  #TODO test!!
         """
         Transition the specified covariance by the specified time step

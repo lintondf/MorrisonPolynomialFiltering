@@ -238,7 +238,12 @@ public abstract class AbstractJavaTarget extends AbstractLanguageTarget{
 						ph.value = new Indent();
 						String value = parameter.getInitialization();
 						TranslationConstantNode tcn = SourceCompilationListener.getConstantNode(null, value, value);
-						programmer.writeConstant(ph.value, tcn);
+						if (tcn == null) {
+							ph.value.append("new ");
+							ph.value.append(value);
+						} else {
+							programmer.writeConstant(ph.value, tcn);
+						}
 					}
 					handling.add(ph);
 				} // for parameters
@@ -483,7 +488,12 @@ public abstract class AbstractJavaTarget extends AbstractLanguageTarget{
 		TranslationNode node = unary.getRhsNode();
 		if (symbol != null) {
 			if (symbol.isClassMethod()) {
-				programmer.writeOperator( out, "." );
+				if (symbol.getBaseSymbol() != null && symbol.getBaseSymbol().isClassMethod()) {
+					addStaticImport( symbol.getBaseSymbol().getScope(), symbol.getBaseSymbol().getName());
+					out.deleteLast(symbol.getBaseSymbol().getScope().getLast()); // Java does not require the class name .
+				} else {
+					programmer.writeOperator( out, "." );					
+				}
 			} else {
 				if (unary.getLeftSibling() != null && unary.getLeftSibling() instanceof TranslationUnaryNode) {
 					TranslationUnaryNode u = (TranslationUnaryNode) unary.getLeftSibling();
@@ -504,7 +514,9 @@ public abstract class AbstractJavaTarget extends AbstractLanguageTarget{
 						    ((TranslationSymbolNode) unary.getRightSibling().getFirstChild()).getSymbol().getName().equals("self") ) {
 							out.deleteLast(s.getSymbol().getName());
 							out.append("super");
-						} 
+						} else if (symbol.getBaseSymbol() != null && symbol.getBaseSymbol().isClassMethod()) {
+							addStaticImport( symbol.getBaseSymbol().getScope(), symbol.getBaseSymbol().getName());							
+						}
 						programmer.writeOperator( out, "." );							
 					} else {
 						Symbol type = Transpiler.instance().lookup(currentScope, s.getType());
@@ -533,9 +545,21 @@ public abstract class AbstractJavaTarget extends AbstractLanguageTarget{
 				}
 				TranslationNode which = unary.getRightSibling().getFirstChild();
 				if (which instanceof TranslationConstantNode) {
-					TranslationSymbolNode tsn = (TranslationSymbolNode) unary.getLeftSibling(); 
+					TranslationNode left = unary.getLeftSibling(); 
+					Symbol leftSymbol;
+					if (left instanceof TranslationSymbolNode) {
+						TranslationSymbolNode tsn = (TranslationSymbolNode) left;
+						leftSymbol = tsn.getSymbol();
+					} else if (left instanceof TranslationUnaryNode) {
+						leftSymbol = ((TranslationUnaryNode) left).getRhsSymbol();
+					} else {
+						leftSymbol = null;
+						Transpiler.instance().logger().error("Unexpected left-hand class: " + left.getClass());
+						return 1;						
+					}
+					
 					TranslationConstantNode tcn = (TranslationConstantNode) which;
-					symbol = programmer.getDimensionSymbol( tsn.getSymbol().getType(), tcn.getValue() );
+					symbol = programmer.getDimensionSymbol( leftSymbol.getType(), tcn.getValue() );
 					out.append( programmer.rewriteSymbol( scope, symbol ) );
 					programmer.openParenthesis( out );
 					programmer.closeParenthesis( out );
@@ -1204,7 +1228,9 @@ public abstract class AbstractJavaTarget extends AbstractLanguageTarget{
 	
 	@Override
 	public void addImport(Scope scope) {
-		if (scope.getLast().equals("Main") || scope.getLast().equals("TestData"))
+		if (scope.getLast().equals("Main") || 
+				scope.getLast().equals("TestData") || 
+				scope.getLast().equals("ArrayList<>"))
 			return;
 		StringBuilder includeFile = new StringBuilder();
 		for (int i = 0; i < scope.getLevelCount()-1; i++) {

@@ -35,7 +35,6 @@ public class CppSrcTarget extends AbstractCppTarget {
 			return;
 		}
 		System.out.println(String.format("\nC++/%s src: ", programmer.getName()) + scope.toAnnotatedString() );
-		System.out.println(includeFiles.toString());
 		catalogContents( scope );
 		this.headerOnly = headerOnly;
 		

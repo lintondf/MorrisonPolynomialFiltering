@@ -120,12 +120,15 @@ public class Transpiler {
 //		new Target(Paths.get(""), "TranspilerTest"),
 			
 		new Target(Paths.get("polynomialfiltering"), "Main"),
+		new Target(Paths.get("polynomialfiltering"), "AbstractComponentFilter"),
+		new Target(Paths.get("polynomialfiltering"), "Geodesy"),
+		new Target(Paths.get("polynomialfiltering"), "Site"),
 		new Target(Paths.get("polynomialfiltering/components"), "ICore", true),
 		new Target(Paths.get("polynomialfiltering/filters"), "RecursivePolynomialFilter"),
 		new Target(Paths.get("polynomialfiltering/components"), "Emp"),
 		new Target(Paths.get("polynomialfiltering/components"), "Fmp"),
 
-		new Target(Paths.get("polynomialfiltering/filters"), "FixedMemoryPolynomialFilter"),
+		new Target(Paths.get("polynomialfiltering/filters"), "FixedMemoryFilter"),
 		new Target(Paths.get("polynomialfiltering/filters"), "PairedPolynomialFilter"),
 		
 		new TestTarget(Paths.get("components"), "RecursivePolynomialFilter_test"),
@@ -140,7 +143,7 @@ public class Transpiler {
 		new Target(Paths.get("polynomialfiltering/filters/controls/errormodel"), "ConstantObservationErrorModel"),
 		new Target(Paths.get("polynomialfiltering/filters/controls/errormodel"), "FixedSampleErrorModel"),
 		new Target(Paths.get("polynomialfiltering/filters/controls/errormodel"), "ObservationDifferencesErrorModel"),
-		new Target(Paths.get("polynomialfiltering/filters/controls/errormodel"), "PairResidualErrorModel"),
+		new Target(Paths.get("polynomialfiltering/filters/controls/errormodel"), "PairResidualsErrorModel"),
 //		new Target(Paths.get("polynomialfiltering/filters/controls/judge"), "BaseScalarJudge"),
 //		//new Target(Paths.get("polynomialfiltering/filters/controls/judge"), "BaseVectorJudge"),
 //		//new Target(Paths.get("polynomialfiltering/filters/controls/monitor"), "NullMonitor"),
@@ -198,7 +201,7 @@ public class Transpiler {
 	}
 	
 	public List<String> getManualImports( String scopeString) {
-		System.out.println( scopeString + " : " + manualImports.get(scopeString));
+		//System.out.println( scopeString + " : " + manualImports.get(scopeString));
 		return manualImports.get(scopeString);
 	}
 
@@ -720,11 +723,14 @@ public class Transpiler {
 		symbolTable.add( importScope, "None", "NULL");
 		symbolTable.add( importScope, "ones", "array");
 		symbolTable.add( importScope, "pow", "float");
+		symbolTable.add( importScope, "sin", "array");
+		symbolTable.add( importScope, "cos", "array");
 		symbolTable.add( importScope, "log", "float");
 		symbolTable.add( importScope, "exp", "float");
 		symbolTable.add( importScope, "range", "range");
 		symbolTable.add( importScope, "shape", "dimensions");
 		symbolTable.add( importScope, "sqrt", "array");
+		symbolTable.add( importScope, "arctan2", "array");
 		symbolTable.add( importScope, "solve", "array");
 		symbolTable.add( importScope, "super", "super" );
 		symbolTable.add( importScope, "transpose", "array");
@@ -747,6 +753,10 @@ public class Transpiler {
 		symbolTable.add( importScope, "assertFalse", "None");
 		symbolTable.add( importScope, "assertTrue", "None");
 		symbolTable.add( importScope, "print", "None");
+		symbolTable.add( importScope, "append", "None");
+		symbolTable.add( importScope, "A2S", "str");
+		symbolTable.add( importScope, "List", "<CLASS>");
+		symbolTable.add( importScope, "pi", "float");
 		
 		valueMap.put( TranslationUnaryNode.staticFieldReference, "::");
 
@@ -949,7 +959,7 @@ public class Transpiler {
 				}
 			}
 			dottedModule.add(target.module);
-			System.out.println(String.join("\\", dottedModule));
+			//System.out.println(String.join("\\", dottedModule));
 			srcs.remove( String.join("\\", dottedModule) );
 			target.where = (target.isTest) ? testWhere : srcWhere;
 			target.dottedModule = dottedModule;

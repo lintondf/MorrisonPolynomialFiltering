@@ -30,10 +30,7 @@ class PairedPolynomialFilter( AbstractComponentFilter ):
     
     
     def __init__(self, order : int, tau : float, theta : float ) :
-        '''@!import!static polynomialfiltering.components.Emp.makeEmpCore'''
-        '''@!super!Java!super(order, tau, makeEmpCore(order, tau) );'''
-        '''@!super!C++!RecursivePolynomialFilter(order, tau, components::Emp::makeEmpCore(order, tau) )'''
-        super().__init__(order, tau )
+        super().__init__(order)
         self.rpf = makeEmp(order, tau);
         self.empCore = self.rpf.getCore();
         self.fmpCore = makeFmpCore(order, tau, theta);

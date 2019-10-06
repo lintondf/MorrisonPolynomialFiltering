@@ -289,7 +289,12 @@ public abstract class AbstractCppTarget extends AbstractLanguageTarget {
 						String value = parameter.getInitialization();
 						TranslationConstantNode tcn = SourceCompilationListener.getConstantNode(null, value, value);
 						header.append("=");
-						programmer.writeConstant(header, tcn);
+						if (tcn == null) {
+							header.append("new ");
+							header.append(value);
+						} else {
+							programmer.writeConstant(header, tcn);
+						}
 					}
 				}
 				
@@ -508,9 +513,20 @@ public abstract class AbstractCppTarget extends AbstractLanguageTarget {
 				}
 				TranslationNode which = unary.getRightSibling().getFirstChild();
 				if (which instanceof TranslationConstantNode) {
-					TranslationSymbolNode tsn = (TranslationSymbolNode) unary.getLeftSibling(); 
+					TranslationNode left = unary.getLeftSibling();
+					Symbol leftSymbol;
+					if (left instanceof TranslationSymbolNode) {
+						TranslationSymbolNode tsn = (TranslationSymbolNode) left;
+						leftSymbol = tsn.getSymbol();
+					} else if (left instanceof TranslationUnaryNode) {
+						leftSymbol = ((TranslationUnaryNode) left).getRhsSymbol();
+					} else {
+						leftSymbol = null;
+						Transpiler.instance().logger().error("Unexpected left-hand class: " + left.getClass());
+						return 1;						
+					}
 					TranslationConstantNode tcn = (TranslationConstantNode) which;
-					symbol = programmer.getDimensionSymbol( tsn.getSymbol().getType(), tcn.getValue() );
+					symbol = programmer.getDimensionSymbol( leftSymbol.getType(), tcn.getValue() );
 					out.append( programmer.rewriteSymbol( scope, symbol ) );
 					programmer.openParenthesis( out );
 					programmer.closeParenthesis( out );

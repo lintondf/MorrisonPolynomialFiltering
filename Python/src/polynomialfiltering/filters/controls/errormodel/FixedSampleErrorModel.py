@@ -19,7 +19,12 @@ class FixedSampleErrorModel(IObservationErrorModel):
         Return (R0) until M sample have been ingested
     '''
 
-    
+    '''@ R0 : array'''
+    '''@ n : int'''
+    '''@ N : int'''
+    '''@ M : int'''
+    '''@ window : array'''
+    '''@ R : array''' 
     def __init__(self, R0 : array, N : int, M : int):
         self.R0 = R0
         self.n = 0
@@ -30,12 +35,19 @@ class FixedSampleErrorModel(IObservationErrorModel):
         
     def getPrecisionMatrix(self, f: AbstractFilterWithCovariance, t:float, y:vector) -> array:
         '''@ P : array'''
-        P = inv(self.getCovarianceMatrix(f, t, y))
+        '''@ C : array'''
+        C = self.getCovarianceMatrix(f, t, y)
+        P = inv(C)
         return P; 
 
     def getCovarianceMatrix(self, f : AbstractFilterWithCovariance, t : float, y : vector) -> array:
         '''@ P : array'''
-        self.window[self.n % self.N,:] = y
+        '''@ L : int'''
+        '''@ meanO : array'''
+        '''@ i : int'''
+        '''@ d : array'''
+        L = self.n % self.N
+        self.window[L,:] = y
         self.n = self.n + 1;
         if (self.n > self.M) :
             self.R = zeros([self.R0.shape[0], self.R0.shape[1]])
@@ -47,4 +59,3 @@ class FixedSampleErrorModel(IObservationErrorModel):
                 self.R = self.R + (transpose(d) @ (self.window[i:i+1,:] - meanO) - self.R)/(i+1)
         P = self.R;
         return P; 
-        

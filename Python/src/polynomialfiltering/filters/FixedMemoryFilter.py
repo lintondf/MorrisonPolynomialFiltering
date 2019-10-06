@@ -25,7 +25,6 @@ class FixedMemoryFilter(AbstractComponentFilter) :
     Same units between state and observations
     """
     
-    '''@order :int | order of fitted polynomial'''
     '''@L :int | number of samples in memory window'''
     '''@n :int | total number of observations processed'''
     '''@n0 :int | number of observations required for valid result'''
@@ -72,7 +71,10 @@ class FixedMemoryFilter(AbstractComponentFilter) :
     
     @overrides
     def update(self, t : float, Zstar : vector, e : float) -> vector:
+        '''@ innovation : array'''
         self.add(t, Zstar[0] + e)
+        innovation = self.Z - Zstar;
+        return innovation; 
 
     @overrides
     def getN(self)->int:
