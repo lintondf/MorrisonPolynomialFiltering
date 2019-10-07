@@ -12,9 +12,8 @@ from numpy import array, pi, sin, cos, transpose, sqrt, arctan2, zeros
 from numpy import array as vector
 from math import radians
 
+from polynomialfiltering.PythonUtilities import copy
 from polynomialfiltering.Geodesy import Geodesy
-from astropy.coordinates.angles import Longitude
-from future.backports.urllib.request import getproxies_macosx_sysconf
 
 class Site(ABC):
     '''@ name : str'''
@@ -107,7 +106,7 @@ class Site(ABC):
     def ECEF2ENU(self, ECEF : array) -> array:
         '''@ L : array'''
         '''@ ENU : array'''
-        L = ECEF.copy()
+        L = copy(ECEF)
         L[:,0] = L[:,0] - self.ecef[0]
         L[:,1] = L[:,1] - self.ecef[1]
         L[:,2] = L[:,2] - self.ecef[2]

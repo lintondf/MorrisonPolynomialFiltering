@@ -1,12 +1,14 @@
 #ifndef __POLYNOMIAL_FILTERING_HPP
 #define __POLYNOMIAL_FILTERING_HPP
 
+#include <cmath>
 #include <iostream>
 #include <string>
 #include <exception>
 #include <tuple>
 
 namespace polynomialfiltering {
+
 	class PolynomialFilteringException : public std::exception {
 	protected:
 		std::string message;
@@ -81,6 +83,8 @@ namespace polynomialfiltering {
 
 	using std::shared_ptr;
 
+	inline void NOOP() {} // Used to delete lines such as std::vector (Python list) initializations
+
 	inline int integerCast(Index a) {
 		return static_cast<int>(a);
 	}
@@ -105,11 +109,11 @@ namespace polynomialfiltering {
 		return std::max(a, b);
 	}
 
-	// wrapper to match Python eye syntax for square matrices
 	inline RealMatrix copy(const RealMatrix& m) {
 		return m;
 	}
 
+	// wrapper to match Python eye syntax for square matrices
 	inline RealMatrix identity(Index N) {
 		return MatrixXd::Identity(N, N);
 	}
@@ -130,9 +134,9 @@ namespace polynomialfiltering {
 		return m.array().sqrt();
 	}
 
-	inline RealVector sqrt(const RealVector& v) {
-		return v.array().sqrt();
-	}
+	// inline RealVector sqrt(const RealVector& v) {
+	// 	return v.array().sqrt();
+	// }
 
 	inline RealMatrix zeros(Index N, Index M = 1) {
 		return MatrixXd::Constant(N, M, 0.0);
@@ -168,6 +172,62 @@ namespace polynomialfiltering {
 
 	inline RealMatrix arrayDivide(const RealMatrix& a, const RealMatrix& b) {
 		return a.array() / b.array();
+	}
+
+	inline double sqrt(double x) {
+		return ::sqrt(x);
+	}
+
+	inline double cos(double x) {
+		return ::cos(x);
+	}
+
+	inline double sin(double x) {
+		return ::sin(x);
+	}
+
+	inline double atan(double x) {
+		return ::atan(x);
+	}
+
+	inline double pow(double x, double p) {
+		return ::pow(x, p);
+	}
+
+	inline double atan2(double x, double y) {
+		return ::atan2(x, y);
+	}
+
+	inline RealMatrix atan(RealMatrix A) {
+		return A.array().atan();
+	}
+
+	inline RealMatrix atan2(RealMatrix A, RealMatrix B) {
+		RealMatrix O(A.rows(), A.cols());
+		for (int c = 0; c < A.cols(); c++) {
+			for (int r = 0; r < A.rows(); r++) {
+				O(r,c) = ::atan2(A(r,c), B(r,c));
+			}
+		}
+		return O;
+	}
+
+	inline RealMatrix cos(RealMatrix A) {
+		return A.array().cos();
+	}
+	
+	inline RealMatrix sin(RealMatrix A) {
+		return A.array().sin();
+	}
+	
+	inline RealMatrix pow(RealMatrix A, double p) {
+		RealMatrix O(A.rows(), A.cols());
+		for (int c = 0; c < A.cols(); c++) {
+			for (int r = 0; r < A.rows(); r++) {
+				O(r,c) = ::pow(A(r,c), p );
+			}
+		}
+		return O;
 	}
 
 	inline long len(const RealMatrix& a) {

@@ -144,11 +144,12 @@ public class Transpiler {
 		new Target(Paths.get("polynomialfiltering/filters/controls/errormodel"), "FixedSampleErrorModel"),
 		new Target(Paths.get("polynomialfiltering/filters/controls/errormodel"), "ObservationDifferencesErrorModel"),
 		new Target(Paths.get("polynomialfiltering/filters/controls/errormodel"), "PairResidualsErrorModel"),
-//		new Target(Paths.get("polynomialfiltering/filters/controls/judge"), "BaseScalarJudge"),
+
+		//		new Target(Paths.get("polynomialfiltering/filters/controls/judge"), "BaseScalarJudge"),
 //		//new Target(Paths.get("polynomialfiltering/filters/controls/judge"), "BaseVectorJudge"),
 //		//new Target(Paths.get("polynomialfiltering/filters/controls/monitor"), "NullMonitor"),
 		
-		new Target(Paths.get("polynomialfiltering/filters"), "AbstractManagedFilter", true),
+		new Target(Paths.get("polynomialfiltering/filters"), "AbstractManagedFilter"),
 		new Target(Paths.get("polynomialfiltering/filters"), "ManagedFilterBase"),
 //////		new Target(Paths.get("polynomialfiltering/filters"), "ManagedScalarRecursiveFilter"),
 //////		new Target(Paths.get("polynomialfiltering/filters"), "ManagedScalarRecursiveFilterSet"),

@@ -71,7 +71,7 @@ public class CppTestTarget extends AbstractCppTarget {
 		for (String includeFile : includeFiles) {
 			localIncludes.append(String.format("#include <%s>\n", includeFile));
 		}
-		localIncludes.append("#include <TestData.hpp>\n");
+		//localIncludes.append("#include <TestData.hpp>\n");
 		templateDataModel.put("localIncludes", localIncludes.toString());
 		templateDataModel.put("interfaceInclude", programmer.getInclude() + "\n");
 		
@@ -150,6 +150,10 @@ public class CppTestTarget extends AbstractCppTarget {
 			} catch (TemplateException e) {
 				e.printStackTrace();
 			}
+		} else {
+			try {
+				cppPath.toFile().delete();
+			} catch (Exception x) {}
 		}
 		inTest = false;
 	}

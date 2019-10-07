@@ -290,8 +290,7 @@ public abstract class AbstractCppTarget extends AbstractLanguageTarget {
 						TranslationConstantNode tcn = SourceCompilationListener.getConstantNode(null, value, value);
 						header.append("=");
 						if (tcn == null) {
-							header.append("new ");
-							header.append(value);
+							header.append(String.format("std::make_shared<%s>()", value.replace("()", "") ) );
 						} else {
 							programmer.writeConstant(header, tcn);
 						}
@@ -858,7 +857,12 @@ public abstract class AbstractCppTarget extends AbstractLanguageTarget {
 			cppIndent.append( String.format("/*eNE?*/std::shared_ptr<%s>(new ", className)); //->programmer
 			emitSubExpression( cppIndent, scope, root);
 		} else {
-			cppIndent.append( String.format("std::make_shared<%s>", className));
+			if (className.equals("ArrayList<>")) {
+				cppIndent.deleteCurrentLine();
+				cppIndent.write("NOOP");
+			} else {
+				cppIndent.append( String.format("std::make_shared<%s>", className));
+			}
 		}
 	}
 	
@@ -1056,7 +1060,6 @@ public abstract class AbstractCppTarget extends AbstractLanguageTarget {
 			if (f.equals(file))
 				return;
 		}
-//		System.out.printf("INCLUDE %s\n", file);
 		includeFiles.add(file);
 	}
 

@@ -92,4 +92,10 @@ public class Indent {
 			deleteLast(string.charAt(i));
 		}
 	}
+
+	public void deleteCurrentLine() {
+		while (sb.charAt(sb.length()-1) != '\n') {
+			deleteLast();
+		}
+	}
 }

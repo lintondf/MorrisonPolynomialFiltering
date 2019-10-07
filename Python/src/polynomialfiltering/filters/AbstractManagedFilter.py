@@ -16,8 +16,19 @@ from polynomialfiltering.filters.controls.IObservationErrorModel import IObserva
 
 
 class AbstractManagedFilter(AbstractFilterWithCovariance):
+    """
+    Extends AbstractFilterWithCovariance to support filter management methods.
+    """
+    
     def __init__(self, order : int, name : str = ''):
-        super().__init__(order, name);
+        super().__init__(order, name)
+        '''
+         Constructor
+        
+        Arguments:
+            order - polynomial order of the filter (state contains order+1 elements)
+            name - optional identifying string
+        '''
     
     @abstractmethod # pragma: no cover 
     def getGoodnessOfFit(self) -> float:
@@ -35,6 +46,3 @@ class AbstractManagedFilter(AbstractFilterWithCovariance):
     def setObservationErrorModel(self, errorModel : IObservationErrorModel) -> None:
         pass
 
-    
-if __name__ == '__main__':
-    pass

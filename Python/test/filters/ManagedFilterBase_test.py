@@ -33,7 +33,9 @@ class ManagedFilterBase_test(TestCaseBase):
         
         @testclassmethod
         def getCovariance(self) -> array:
-            return zeros([1,1])
+            '''@ C : array'''
+            C = zeros([1,1])
+            return C
     
         @testclassmethod
         def getGoodnessOfFit(self) -> float:

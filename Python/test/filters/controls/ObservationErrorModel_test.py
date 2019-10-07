@@ -26,7 +26,7 @@ import matplotlib.dates as mdates
 
 
 from polynomialfiltering.Main import AbstractFilter, AbstractFilterWithCovariance, FilterStatus
-from polynomialfiltering import AbstractComponentFilter
+from polynomialfiltering.AbstractComponentFilter import AbstractComponentFilter
 from polynomialfiltering.filters.ManagedFilterBase import ManagedFilterBase;
 from polynomialfiltering.components.Emp import makeEmp
 
@@ -39,7 +39,7 @@ from polynomialfiltering.filters.FixedMemoryFilter import FixedMemoryFilter
 from statistics import stdev
 from scipy.optimize.optimize import fminbound
 from cmath import pi
-from polynomialfiltering.Geodesy import Site
+from polynomialfiltering.Site import Site
 from polynomialfiltering.AbstractComponentFilter import AbstractComponentFilter
 
 ''' A7501 covariances with bias additions

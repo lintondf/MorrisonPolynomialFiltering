@@ -303,7 +303,7 @@ class RecursivePolynomialFilter_test(TestCaseBase):
                 assert_almost_equal(V, zeros([order+1, order+1]))
             
             assert_almost_equal( actual, expected )
-        self.assertGreaterEqual(22.0, assert_report("RecursivePolynomialFilter_test/test1PureObservation"))         
+        self.assertGreaterEqual(23.0, assert_report("RecursivePolynomialFilter_test/test1PureObservation"))         
         testData.close()
 
     @testcase

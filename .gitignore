@@ -37,3 +37,4 @@ Python/test/__pycache__
 Python/test/htmlcov
 Python/test/Filtering.py
 Tools/moduleChecksums.obj
+Tools/out/symbols.txt

@@ -130,7 +130,7 @@ static double ulp(double t) {
     int exp;
     double mantissa = frexp(t, &exp);
     exp--; // unbias exponent to match Java Math.getExponent
-    return ulpOne * pow(2.0, (double) exp);
+    return ulpOne * ::pow(2.0, (double) exp);
 }
 
 static double maxLog2Error = 0.0;
@@ -376,7 +376,7 @@ TEST_CASE("testTesting") {
 		c = nextafter(c, a+1);
 		double expecting[] = {5.49, 8.81, 12.13, 15.46, 18.78, 22.10, 25.42, 28.75, 32.07, 35.39, 38.71, 42.03, 45.36, 48.68, 51.00, 52.32};
 		for (int j = -14; j <= 1; j++) {
-			double p = pow(10.0, j);
+			double p = ::pow(10.0, j);
 			assert_clear();
 			assert_almost_equal( a, a+p );
 			if (fabs(maxLog2Error - expecting[14+j]) > 0.01) {
@@ -393,7 +393,7 @@ TEST_CASE("testTesting") {
 		B.resize(3, 3);
 		A.fill(1.0);
 		for (int j = -14; j <= 1; j++) {
-			double p = pow(10.0, j);
+			double p = ::pow(10.0, j);
 			assert_clear();
 			B.fill(a+p);
 			assert_almost_equal( A, B );
@@ -411,19 +411,5 @@ int main(int argc, char** argv) {
     const char* args[] = { "", "-d", "--reporters=xml", NULL };
     context.applyCommandLine(2, args);
     int i = context.run(); // output);
-    // int i = 0;
-    // std::cout << std::hexfloat << 2.220446049250313e-16 << std::endl;
-    // int exp;
-    // double one = 1.0;
-    // std::cout << std::hexfloat << one << std::endl;
-    // double mantissa = frexp(one, &exp);
-    // exp--; //unbias exponent
-    // std::cout << exp << ", " << mantissa << std::endl;
-    // double u = 2.220446049250313e-16 * pow(2.0, (double) exp);
-    // std::cout << std::hexfloat << u << std::endl;
-    // std::cout << std::hexfloat << 1.0/u << std::endl;
-    // u = log2(1.0/u);
-    // std::cout << std::hexfloat << u << std::endl;     
-    // std::cout << u << std::endl;
     return i;
 }

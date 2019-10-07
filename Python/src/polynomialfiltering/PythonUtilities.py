@@ -7,13 +7,9 @@
 '''
 
 """***************** DO NOT TRANSPILE THIS MODULE *************************"""
-from numpy import exp, log, min, exp
+from numpy import exp, log, min, exp, array
 from scipy.stats import chi2, f;
 from typing import List;
-
-def List() -> List:
-    return []
-
 
 '''********************************************************************
 LcdPython Decorators
@@ -82,6 +78,13 @@ def assert_not_empty(list : List[str ]) -> None:
 '''********************************************************************
 Utility functions for transpiled code; 
 '''
+    
+def List() -> List:
+    return []
+
+
+def copy( A : array ) -> array:
+    return A.copy()
 
 def chi2Cdf(x : float, df : int) -> float:
     return chi2.cdf(1e-9 + x, df)

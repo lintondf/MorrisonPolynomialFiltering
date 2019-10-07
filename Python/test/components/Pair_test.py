@@ -167,7 +167,7 @@ class Pair_test(TestCaseBase):
             assert_allclose( actual, expectedStates)
             assert_allclose( vdiags, expectedVdiag)
         testData.close()
-        self.assertGreaterEqual(39.4, assert_report('Pair_test/test2CheckStates'))
+        self.assertGreaterEqual(42.8, assert_report('Pair_test/test2CheckStates'))
         
     @testcase
     def step9Coverage(self):

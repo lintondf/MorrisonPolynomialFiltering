@@ -13,7 +13,8 @@ from math import radians
 from TestSuite import TestCaseBase
 from TestUtilities import A2S
 
-from polynomialfiltering.Geodesy import Geodesy, Site
+from polynomialfiltering.Geodesy import Geodesy
+from polynomialfiltering.Site import Site
 
 class Geodesy_test(TestCaseBase):
 
@@ -55,7 +56,7 @@ class Geodesy_test(TestCaseBase):
         lat = radians(21 + 34/60.0 + 19.6344/3600.0)
         lon = radians(-158 - 15/60.0-59.9095/3600.0)
         ecef = geodesy.geodetic2ECEF(lat, lon, 1000)
-        err = ecef[0,:] - array([-5513122.50228141, -2197656.90777665,  2330786.62031832]) 
+        err = ecef - array([-5513122.50228141, -2197656.90777665,  2330786.62031832]) 
         print('PLH2EFG', A2S(ecef), A2S(err), (abs(err) < 1e-3).all())
         
         expectedAER = array([1.18490418e+00, 1.96078968e-01, 1.82913439e+06, 1.19987743e-05, 1.40109679e-06, 2.34567665e+03])
