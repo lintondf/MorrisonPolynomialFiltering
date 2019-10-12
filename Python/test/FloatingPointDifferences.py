@@ -20,19 +20,6 @@ import os
 import time
 import apsw
 
-###
-### Check we have the expected version of apsw and sqlite
-###
-
-
-class NullDevice():
-    def __init__(self):
-        self.buffer = '';
-    def write(self, s):
-        self.buffer += s;
-    
-    def flush(self):
-        pass
 
 class FloatingPointDifferences :
     
@@ -147,25 +134,3 @@ if __name__ == '__main__':
     fpDiffs.add("Java/EJML", "RecursivePolynomialFilter_test/test9Coverage", 0)
     fpDiffs.dump();
     
-#     connection=apsw.Connection("dbfile")
-#     cursor=connection.cursor()
-#     try :
-#         cursor.execute("drop table errors");
-#     except :
-#         pass
-#     cursor.execute("create table errors(target TEXT, test TEXT, bits REAL)")
-#     cursor.execute("insert into errors(target, test, bits) values(?, ?, ?)", ("Cpp/Eigen", "Emp_test/test1CheckVRF", 0 ))
-#     cursor.execute("insert into errors(target, test, bits) values(?, ?, ?)", ("Cpp/Eigen", "Emp_test/test1CheckVRF", 1 ))
-#     for bits, test in cursor.execute("select bits, test from errors WHERE target == ?", ("Cpp/Eigen", )):
-# #         print (cursor.getdescription())  # shows column names and declared types
-#         print (bits, test)
-
-#     original_stdout = sys.stdout  # keep a reference to STDOUT
-#     
-#     runargs = ["doxypypy", "-a", "../src/DoxygenTest.py"];
-#     sys.argv = runargs
-#     dev = NullDevice()  # redirect the real STDOUT
-#     sys.stdout = dev;
-#     doxypypy.main()
-#     sys.stdout = original_stdout
-#     print(dev.buffer)
