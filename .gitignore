@@ -7,7 +7,12 @@ cleanGeneratedFiles.sh
 testdata
 __pycache__/
 *.py[cod]
+Cpp/SQLiteCpp
 Cpp/Eigen/FilteringEigen
+Cpp/Eigen/include/polynomialfiltering/*
+!Cpp/Eigen/include/polynomialfiltering/PolynomialFilteringEigen.hpp
+Cpp/Eigen/src/polynomialfiltering/*
+Cpp/Eigen/test/polynomialfiltering/*
 Cpp/.vs
 Cpp/Boost/.vs
 Cpp/Boost/include/boost
@@ -32,6 +37,9 @@ Java/bin
 Java/out
 Java/target
 Java/moduleChecksums.obj
+Java/Ejml/src/polynomialfiltering/*
+!Java/Ejml/src/polynomialfiltering/main/Utility.java
+Java/Ejml/test/polynomialfiltering/*
 Python/src/__pycache__
 Python/test/__pycache__
 Python/test/htmlcov

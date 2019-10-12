@@ -1,3 +1,5 @@
+/**
+ */
 #ifndef __POLYNOMIAL_FILTERING_HPP
 #define __POLYNOMIAL_FILTERING_HPP
 
