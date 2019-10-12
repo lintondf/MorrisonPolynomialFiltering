@@ -2,6 +2,7 @@
 #ifndef __FILTERING_TESTDATA_HPP
 #define __FILTERING_TESTDATA_HPP
 
+#include <stdio.h>
 #include <iostream>
 #include <stdlib.h>
 #include <vector>
@@ -37,7 +38,7 @@ void assert_not_empty(std::vector< std::string >& list);
 
 void assert_clear();
 
-double assert_report( const std::string id );
+double assert_report( const std::string id, const int iStep );
 
 void assertEqual(double limitBits, double actualBits);
 
@@ -61,7 +62,7 @@ public:
 
     TestData(std::string fileName);
 
-	void close() {} // meet python interface; closed in destructor
+    TestData(std::string dir, std::string fileName);
 
     ~TestData();
     
@@ -78,12 +79,19 @@ public:
     double getScalar( Group gid, std::string variableName );
     
     int getInteger( Group gid, std::string variableName );
+
+    Group createGroup( std::string name );
+
+    void putArray(Group group, std::string variable, RealMatrix value) ;
+
+    void close();
     
     
 protected:
 	int   ncid;  // root netCDF dataset id
 	std::vector<std::string>  groupNames;
 	std::vector<int>          groupIds;
+	FILE* out;
 };
 
 

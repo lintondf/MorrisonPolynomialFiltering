@@ -946,7 +946,7 @@ public class Transpiler {
 		Path dir = base.resolve("polynomialfiltering");
 		File d = dir.toFile();
 		scan(d);
-		srcs.remove("polynomialfiltering\\PythonUtilities"); // never do be transpiled
+		srcs.remove("polynomialfiltering\\PythonUtilities"); // never to be transpiled
 		Path testBase = Paths.get("../Python/test");
 		for (Target target : targets) {
 			Path srcWhere = base;

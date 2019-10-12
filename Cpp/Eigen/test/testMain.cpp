@@ -7,8 +7,15 @@
 #include <polynomialfiltering/PolynomialFilteringEigen.hpp>
 #include <polynomialfiltering/Main.hpp>
 
+#include <map>
+#include <unordered_map>
+#include <SQLiteCpp/SqliteCpp.h>
+
+
 using namespace Eigen;
 using namespace polynomialfiltering;
+
+static SQLite::Database* pDB;
 
 std::string TestData::testDataPath() {
     char cwd[PATH_MAX];
@@ -26,6 +33,7 @@ std::string TestData::testDataPath() {
 }
 
 TestData::TestData(std::string fileName) {
+	out = nullptr;
     std::string filePath = testDataPath();
     filePath += fileName;
     int retval, numgrps;
@@ -44,9 +52,20 @@ TestData::TestData(std::string fileName) {
     }
 }
 
+TestData::TestData(std::string dir, std::string fileName) {
+	ncid = -1;
+    std::string filePath = testDataPath();
+	filePath += dir;
+	filePath += "/";
+    filePath += fileName;
+	out = fopen(filePath.c_str(), "wt");
+}
 
 TestData::~TestData() {
-    nc_close(ncid);
+	if (ncid >= 0)
+    	nc_close(ncid);
+	if (out != nullptr)
+		fclose(out);
 }
 
 const std::vector<std::string> TestData::getGroupNames() {
@@ -125,6 +144,24 @@ int TestData::getInteger( Group gid, std::string variableName ) {
     return (int) getScalar(gid, variableName);
 }
 
+Group TestData::createGroup( std::string name ) {
+	fprintf(out, "%s\n", name.c_str());
+	return (Group) -1;
+}
+
+void TestData::putArray(Group group, std::string variable, RealMatrix value) {
+	fprintf(out, "%s,%ld,%ld\n", variable.c_str(), value.rows(), value.cols() );
+	for (int i = 0; i < value.rows(); i++) {
+		for (int j = 0; j < value.cols(); j++) {
+			fprintf(out, "%.15g,", value(i,j));
+		}
+		fprintf(out, "\n");
+	}
+}
+
+void TestData::close() {}
+
+
 static double ulp(double t) {
     double ulpOne = 2.220446049250313e-16;
     int exp;
@@ -134,17 +171,27 @@ static double ulp(double t) {
 }
 
 static double maxLog2Error = 0.0;
+static double maxErrorA = 0.0;
+static double maxErrorB = 0.0;
+
 static std::string prefix = "";
 static double threshold = 0.0; //1.5 * 1.0E-7;
 
+double compareDoubles(double a, double b);
+
 void assert_almost_equal(double A, double B) {
-    double max = std::max( fabs(A), fabs(B) );
-    double u = ulp(max);
-    double maxError = fabs(A-B);
-    double threshold = 1.0*u;
-    double log2Error = log2(maxError/u);
+    // double max = std::max( fabs(A), fabs(B) );
+    // double u = ulp(max);
+    // double maxError = fabs(A-B);
+    // double threshold = 1.0*u;
+    // double log2Error = log2(maxError/u);
+	// if (maxError/max > 1e-3) 
+	// 	log2Error += log2(maxError);
+	double log2Error = compareDoubles(A, B);
     if (log2Error > maxLog2Error) {
         maxLog2Error = log2Error;
+		maxErrorA = A;
+		maxErrorB = B;
     }
     prefix = "";
 }
@@ -152,12 +199,28 @@ void assert_almost_equal(double A, double B) {
 
 void assert_clear() {
     maxLog2Error = 0.0;
+	maxErrorA = maxErrorB = 0;
 }
 
-double assert_report( const std::string from ) {
+std::unordered_map<std::string, double> maxErrors;
+
+double assert_report( const std::string from, const int id ) {
     double result = maxLog2Error;
-    printf("%-72s: %10.2f bits\n", from.c_str(), maxLog2Error);
+	std::string msg(from);
+	if (id >= 0)
+		msg = msg + std::to_string(id);
+	maxErrors.emplace( msg, maxLog2Error);
+    printf("%-75s: %10.2f units; %.15g %.15g\n", msg.c_str(), maxLog2Error, maxErrorA, maxErrorB );
+	try {
+		std::string sql = "select bits from errors WHERE target='Cpp/Eigen' AND test='" + msg + "'";
+		SQLite::Column column = pDB->execAndGet( sql.c_str());
+		double bits = column.getDouble();
+		//std::cout << bits << std::endl;
+		CHECK(fabs(bits - maxLog2Error) <= 0.01);
+	} catch (const std::exception& ae) {}
+
     maxLog2Error = 0.0;
+	maxErrorA = maxErrorB = 0;
     return result;
 }
 
@@ -234,6 +297,95 @@ void assert_array_less(double A, double B) {
 void assert_not_empty(std::vector< std::string >& list) {
 	CHECK(list.size() > 0);
 }
+
+	static double MAX_BITS = 2048.0;
+	static double BITS_SCALE = 1.0;
+	// static double DBL_MIN = Double.MIN_VALUE;
+	// static double DBL_MAX = Double.MAX_VALUE;
+	// static double DBL_EPSILON = Double.longBitsToDouble(971l << 52);
+	static double LOG_OFFSET = -37.0; // log(DBL_MIN) + 707.5;
+	static double _DBL_TOL_MULT = 100.0;
+	static double TolAtEPS = DBL_EPSILON * _DBL_TOL_MULT; 
+	static double TolAtMIN = DBL_MIN * _DBL_TOL_MULT;
+	static double onePlusTol = 1.0 + DBL_EPSILON * _DBL_TOL_MULT;
+	static double oneMinusTol = 1.0 - DBL_EPSILON * _DBL_TOL_MULT;
+
+	static double bits( double x) {
+		double logx = log(fabs(x));
+	    return logx - LOG_OFFSET;
+	}
+
+	double compareDoubles( double a, double b) {
+
+	    if (isnan(a)) {
+	        if (isnan(b))
+	            return 0.0;
+	        else
+	            return MAX_BITS*BITS_SCALE;       
+	    } else {
+	        if (isnan(b))
+	            return MAX_BITS*BITS_SCALE;
+	    }
+	    if (isinf(a)) {
+	        if (isinf(b))
+	            return 0.0;
+	        else
+	            return MAX_BITS*BITS_SCALE;       
+	    } else {
+	        if (isinf(b))
+	            return MAX_BITS*BITS_SCALE;
+	    }
+	   if (a == b) 
+		   return 0.0;
+	   
+	   // machinery for "close enough"
+	   //
+
+	   // type identification, storage
+	    double ratio;
+	    double fabsa = fabs(a);
+	    double fabsb = fabs(b);
+
+	   // test for closeness to 0
+	   if ( 0.0 == a ) // check if |b| is "close enough" to 0 
+	      return bits(a)*BITS_SCALE; // (typedQty::TolAtEPS() > (0.0 > b ? -b : b));  
+	   if ( 0.0 == b ) // check if |a| is "close enough" to 0 
+	      return bits(b)*BITS_SCALE; // (typedQty::TolAtEPS() > (0.0 > a ? -a : a));  
+
+	   // test for closeness to each other
+	   if (TolAtMIN > fabsb) { 
+	      // |b| is indistinguishable from 0
+	      if (TolAtMIN > (0.0 > a ? -a : a)) 
+	    	  return 0.0; 
+	      // . . . but |a| is distinguishable from 0
+	      return bits(a)*BITS_SCALE;
+	   } else if (TolAtMIN < fabsa) {
+	      // |a| and |b| are distinguishable from 0, take ratio 
+	      // avoid overflow if |a| is very large and |b| is very small
+	      if ( (fabsb < 1.0) 
+	        && (fabsa > fabsb * DBL_MAX) ) 
+	    	  return MAX_BITS*BITS_SCALE;
+	      // avoid underflow if |a| is very small and |b| is very large 
+	      if ( (fabsb > 1.0) 
+	        && (fabsa < fabsb * DBL_MIN) ) 
+	    	  return MAX_BITS*BITS_SCALE;
+	      // this must be signed
+	      ratio = a/b;
+	   } else {
+	      // |b| is distinguishable from 0
+	      // |a| is indistinguishable from 0 
+	      return bits(b)*BITS_SCALE;
+	   };
+
+	   // only if signed ratio is indistinguishable from +1 then equality true
+	   if ( (onePlusTol > ratio) 
+	         && (oneMinusTol < ratio)) 
+		   return 0.0;
+
+	   // they're different 
+	   return bits(ratio-1.0)*BITS_SCALE;    
+	}
+
 
 TEST_CASE("testTesting") {
 		TestData *testData = new TestData("test.nc");
@@ -331,9 +483,9 @@ TEST_CASE("testTesting") {
 		A.fill(1.0);
 		assert_clear();
 		assert_almost_equal(1.0, A);
-		assert_report("Expect 0.0");
+		assert_report("Expect 0.0", -1);
 		assert_almost_equal(2.0, A);
-		assert_report("Expect 51");
+		assert_report("Expect 51", -1);
 		// try {
 		// 	assert_almost_equal(1.0, B);			
 		// 	std::cerr << "assert_almost_equal failed to fail" <<  std::endl;
@@ -366,15 +518,15 @@ TEST_CASE("testTesting") {
 		
 		double a = 1.0;
 		assert_clear();
-		double b = assert_report("Should be 0.0" );
+		double b = assert_report("Should be 0.0", -1 );
 		double c = nextafter(a, a+1);
 		assert_almost_equal( a, c );
-		b = assert_report("Expect 0.0");
+		b = assert_report("Expect 0.0", -1);
 		c = nextafter(c, a+1);
 		assert_almost_equal( a, c );
-		b = assert_report("Expect 1.0");
+		b = assert_report("Expect 1.0", -1);
 		c = nextafter(c, a+1);
-		double expecting[] = {5.49, 8.81, 12.13, 15.46, 18.78, 22.10, 25.42, 28.75, 32.07, 35.39, 38.71, 42.03, 45.36, 48.68, 51.00, 52.32};
+		double expecting[] = {5.49, 8.81, 12.13, 15.46, 18.78, 22.10, 25.42, 28.75, 32.07, 35.39, 38.71, 42.03, 38.71, 45.36, 51.00, 55.64};
 		for (int j = -14; j <= 1; j++) {
 			double p = ::pow(10.0, j);
 			assert_clear();
@@ -407,9 +559,15 @@ TEST_CASE("testTesting") {
 }
 
 int main(int argc, char** argv) {
+	std::string sqlPath = TestData::testDataPath();
+	sqlPath += "FloatingPointDifferences.sqlite";
+	pDB = new SQLite::Database(sqlPath);
     doctest::Context  context;
     const char* args[] = { "", "-d", "--reporters=xml", NULL };
     context.applyCommandLine(2, args);
     int i = context.run(); // output);
+	if (false) for (auto it = maxErrors.begin(); it != maxErrors.end(); it++) {
+		std::cout << it->first << " : " << it->second << std::endl;
+	}
     return i;
 }

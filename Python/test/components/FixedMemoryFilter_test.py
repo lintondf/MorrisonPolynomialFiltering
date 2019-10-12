@@ -12,7 +12,7 @@ import unittest
 
 from netCDF4 import Dataset
 from numpy import arange, array2string, cov, zeros, mean, std, var, diag, \
-    transpose, concatenate, ceil, log2
+        transpose, concatenate, ceil, log2
 from numpy.linalg import inv
 from numpy.random import randn
 from TestUtilities import assert_allclose, assert_almost_equal, assert_array_less
@@ -36,7 +36,8 @@ class FixedMemoryFilter_test(TestCaseBase):
     
     @classmethod
     def setUpClass(self):
-        self.Y0 = array([1e4, 1e3, 1e2, 1e1, 1e0, 1e-1]);
+#         self.Y0 = array([1e4, 1e3, 1e2, 1e1, 1e0, 1e-1]);
+        self.Y0 = array([1024., 512., 256., 128., 64., 32.0, 16.0]);
  
     @classmethod
     def tearDownClass(self):
@@ -200,7 +201,7 @@ class FixedMemoryFilter_test(TestCaseBase):
         assert_allclose( E, ones([(order+1)**2]), atol=1e-2 )
          
  
-    def test0Generate(self):
+    def xstep0Generate(self):
         testData = TestData('FixedMemoryFiltering.nc', 'w')
         
         self.generatePerfect(testData)
@@ -223,12 +224,16 @@ class FixedMemoryFilter_test(TestCaseBase):
         '''@actual : array'''
         '''@expected : array'''
         '''@testData : TestData'''
+        '''@ ulps : array'''
+        '''@ ulp : float'''
+        ulps = array([7.84,    9.52,    10.01,    12.75,    20.99,    22.37])
         assert_clear()
         testData = TestData('FixedMemoryFiltering.nc')
         matches = testData.getMatchingGroups('testPerfect_')
         assert_not_empty(matches)
         tau = 0.1;
         N = 25;
+        
         for i in range(0, len(matches)) :
             group = testData.getGroup(matches[i])
             setup = testData.getArray(group, 'setup')
@@ -237,8 +242,20 @@ class FixedMemoryFilter_test(TestCaseBase):
             actual = self.executeEstimatedState(setup, data);
             expected = testData.getArray(group, 'expected');
             assert_allclose( expected, actual )
+            ulp = ulps[i]
+            assert_report("FixedMemoryFilter_test/test1CheckPerfect/", i)
         testData.close()
-        assert_report("FixedMemoryFilter_test/test1CheckPerfect")
+        
+        '''
+        solve()
+[1.11627807e+04 1.11627793e+03 1.11627184e+02 1.11605093e+01 1.11004077e+00 1.00079133e-01]   
+        lstsq(, rcond=None)
+[1.11627807e+04 1.11627793e+03 1.11627184e+02 1.11605076e+01 1.11003352e+00 1.00065025e-01]
+        lstsq()
+[1.11627807e+04 1.11627793e+03 1.11627184e+02 1.11605076e+01 1.11003352e+00 1.00065025e-01]
+        cho_solve()
+[1.11627807e+04 1.11627793e+03 1.11627184e+02 1.11605022e+01 1.11000957e+00 1.00018220e-01]
+        '''
 
     @testcase
     def step1CheckNoisy(self):
@@ -253,7 +270,9 @@ class FixedMemoryFilter_test(TestCaseBase):
         '''@actual : array'''
         '''@expected : array'''
         '''@testData : TestData'''
-        
+        '''@ ulps : array'''
+        '''@ ulp : float'''
+        ulps = array([8.64,  8.46,   6.72,    11.24,    12.94,    16.58])        
         assert_clear()
         testData = TestData('FixedMemoryFiltering.nc')
         matches = testData.getMatchingGroups('testNoisy_')
@@ -268,8 +287,9 @@ class FixedMemoryFilter_test(TestCaseBase):
             actual = self.executeEstimatedState(setup, data);
             expected = testData.getArray(group, 'expected');
             assert_allclose( expected, actual )
+            ulp = ulps[i]
+            assert_report("FixedMemoryFilter_test/test1CheckNoisy/", i)
         testData.close()
-        assert_report("FixedMemoryFilter_test/test1CheckNoisy")
 
     @testcase
     def step1CheckMidpoints(self):
@@ -288,7 +308,9 @@ class FixedMemoryFilter_test(TestCaseBase):
         '''@actual : array'''
         '''@expected : array'''
         '''@testData : TestData'''
-        
+        '''@ ulps : array'''
+        '''@ ulp : float'''
+        ulps = array([6.86, 6.31, 8.14, 16.48, 23.63, 31.73, 0.01, 6.19, 10.01, 8.64, 20.08]);
         assert_clear()
         testData = TestData('FixedMemoryFiltering.nc')
         matches = testData.getMatchingGroups('testMidpoints_')
@@ -310,8 +332,9 @@ class FixedMemoryFilter_test(TestCaseBase):
             actual = self.executeEstimatedState(setup, data);
             expected = testData.getArray(group, 'expected');
             assert_allclose( expected, actual )
+            ulp = ulps[i]
+            assert_report("FixedMemoryFilter_test/test1CheckMidpoints/", i)
         testData.close()
-        assert_report("FixedMemoryFilter_test/test1CheckMidpoints")
     
     @testcase
     def step1CheckVrfs(self):
@@ -353,7 +376,7 @@ class FixedMemoryFilter_test(TestCaseBase):
             expected = testData.getArray(group, 'expected');
             assert_allclose( expected, actual )
         testData.close()
-        assert_report("FixedMemoryFilter_test/test1CheckVrfs")
+        assert_report("FixedMemoryFilter_test/test1CheckVrfs", -1)
 
     @testclass
     class TestFixedMemoryFilter(FixedMemoryFilter): 
@@ -396,7 +419,7 @@ class FixedMemoryFilter_test(TestCaseBase):
         self.assertEqual(fixed.getStatus(), FilterStatus.RUNNING)
         self.assertEqual(fixed.getTime(), 10 )
         assert_almost_equal(fixed.getState(), array([4.0]))
-        assert_report("FixedMemoryFilter_test/test9Regresssion")
+        assert_report("FixedMemoryFilter_test/test9Regresssion", -1)
             
 #     def xtest9ValidVRF(self):
 #         '''

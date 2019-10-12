@@ -339,7 +339,7 @@ class EMP_test(TestCaseBase):
                     assert_allclose(V, E)
                     offset += order+1
         testData.close()
-        self.assertGreaterEqual(2.0, assert_report("Emp_test/test1CheckVRF"))
+        assert_report("Emp_test/test1CheckVRF", -1)
                 
     @testcase
     def step2CheckStates(self) -> None:
@@ -385,7 +385,7 @@ class EMP_test(TestCaseBase):
 #                 assert_allclose(actual[j,:], expected[j,:])
             assert_allclose(actual, expected)
         testData.close()
-        self.assertGreaterEqual(29.2, assert_report("Emp_test/test2CheckStates"))
+        assert_report("Emp_test/test2CheckStates", -1)
             
     def step9CoreBasic(self) -> None:
         '''@core : ICore'''

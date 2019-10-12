@@ -458,7 +458,7 @@ class Fmp_test(TestCaseBase):
                 actual[j,:] = transpose(f.getState());
             
             assert_allclose(actual, expected)
-        self.assertGreaterEqual(32.0, assert_report("Fmp_test/test1CheckStates"))
+        assert_report("Fmp_test/test1CheckStates", -1)
         testData.close()
            
     @testcase     
@@ -502,7 +502,7 @@ class Fmp_test(TestCaseBase):
             actualG = f.getCore().getGamma(0, 1.0)
             assert_allclose(nS, nSwitch(order, theta))
             assert_allclose(actualG, expectedG)
-        self.assertGreaterEqual(0.0, assert_report("Fmp_test/test1CheckGammas"))
+        assert_report("Fmp_test/test1CheckGammas", -1)
         testData.close()
             
             
@@ -543,7 +543,7 @@ class Fmp_test(TestCaseBase):
             f = makeFmp( order, tau, theta );
             actualV = f.getCore().getVRF(0)
             assert_allclose(actualV, expectedV)
-        self.assertGreaterEqual(1.0, assert_report("Fmp_test/test1CheckVrfs"))
+        assert_report("Fmp_test/test1CheckVrfs", -1)
         testData.close()
         
         
@@ -574,7 +574,7 @@ class Fmp_test(TestCaseBase):
         assert_allclose( core90.getGamma(10.0, 5.0), core90.getGamma(10.0, 6.0) )
         assert_allclose( core95.getGamma(10.0, 5.0), core95half.getGamma(10.0, 5.0) ) 
         assert_allclose( core95.getGamma(10.0, 5.0), core95double.getGamma(10.0, 5.0) ) 
-        assert_report("Fmp_test/test9CoreBasic")
+        assert_report("Fmp_test/test9CoreBasic", -1)
         
     @testcase
     def step9Basic(self) -> None:
@@ -615,7 +615,7 @@ class Fmp_test(TestCaseBase):
         f.update(t, Zstar, e)
         actual = f.getState();
         assert_almost_equal(actual, array([ -5.30339172, -10.89873388, -16.74985512, -15.02740172,  -7.1477283,  -1.405171  ]))
-        self.assertGreaterEqual(24.5, assert_report("Fmp_test/test9Basic"))
+        assert_report("Fmp_test/test9Basic", -1)
     
     @testcase 
     def step9NSwitch(self) -> None:

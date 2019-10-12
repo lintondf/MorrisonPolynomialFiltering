@@ -104,7 +104,7 @@ class Pair_test(TestCaseBase):
             testData.putArray(case, 'expected', expected)
             testData.putArray(case, 'vdiags', vdiags)
        
-    def step0Generate(self):
+    def xstep0Generate(self):
         testData = TestData('testPair.nc', 'w');
         self.generateStates(testData)
         testData.close()
@@ -157,17 +157,18 @@ class Pair_test(TestCaseBase):
 #             print(order, tau, theta, nS, f.threshold)
             actual = zeros([N, order+1]) 
             vdiags = zeros([N, order+1]) 
-            for j in range(0,N) :
+            for j in range(0,N) : 
                 Zstar = f.predict(times[j,0])
                 e = observations[j] - Zstar[0]
                 f.update(times[j,0], Zstar, e)
                 actual[j,:] = transpose(f.getState())
                 vdiags[j,:] = transpose(diag(f.getVRF()))
+                
 
             assert_allclose( actual, expectedStates)
             assert_allclose( vdiags, expectedVdiag)
         testData.close()
-        self.assertGreaterEqual(42.8, assert_report('Pair_test/test2CheckStates'))
+        assert_report('Pair_test/test2CheckStates', -1)
         
     @testcase
     def step9Coverage(self):

@@ -36,7 +36,7 @@ from polynomialfiltering.filters.FixedMemoryFilter import FixedMemoryFilter;
 def assert_clear() -> None:
     pass 
 
-def assert_report(source : str) -> float:
+def assert_report(source : str, iStep : int) -> float:
     return 0.0
 
 def assert_allclose( A : array, B : array, rtol=1e-07, atol=0):

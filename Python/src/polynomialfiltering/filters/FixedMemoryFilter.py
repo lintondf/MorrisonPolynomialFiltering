@@ -13,6 +13,7 @@ from polynomialfiltering.PythonUtilities import virtual, inline;
 from numpy import array, copy, eye, ones, zeros, transpose
 from numpy import array as vector
 from numpy.linalg.linalg import solve, lstsq, inv
+from scipy.linalg import cho_factor, cho_solve
 
 from polynomialfiltering.Main import AbstractFilter, FilterStatus
 from polynomialfiltering.AbstractComponentFilter import AbstractComponentFilter
@@ -103,7 +104,7 @@ class FixedMemoryFilter(AbstractComponentFilter) :
         TntYn = Tnt @ self.yRing
 #         print(TntTn)
 #         print(TntYn)
-        self.Z = solve(TntTn, TntYn); # lstsq(TntTn, TntYn, rcond=None)[0];
+        self.Z = solve(TntTn, TntYn); #cho_solve(cho_factor(TntTn), TntYn); # lstsq(TntTn, TntYn)[0]; #  
         return copy(self.Z);
     
     @overrides

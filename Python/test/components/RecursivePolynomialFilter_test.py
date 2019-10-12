@@ -237,7 +237,7 @@ class RecursivePolynomialFilter_test(TestCaseBase):
             
             expected = testData.getGroupVariable(matches[iMatch], 'expected')
             assert_almost_equal( actual, expected )
-        self.assertGreaterEqual(2.6, assert_report("RecursivePolynomialFilter_test/test1PurePredict"))          
+        assert_report("RecursivePolynomialFilter_test/test1PurePredict", -1)     
         testData.close()
 
     @testcase
@@ -303,7 +303,7 @@ class RecursivePolynomialFilter_test(TestCaseBase):
                 assert_almost_equal(V, zeros([order+1, order+1]))
             
             assert_almost_equal( actual, expected )
-        self.assertGreaterEqual(23.0, assert_report("RecursivePolynomialFilter_test/test1PureObservation"))         
+        assert_report("RecursivePolynomialFilter_test/test1PureObservation", -1)       
         testData.close()
 
     @testcase
@@ -341,7 +341,7 @@ class RecursivePolynomialFilter_test(TestCaseBase):
         g = RecursivePolynomialFilter(2, 1.0, core );
         g.copyState(f)
         assert_almost_equal(g.getState(), array([11.0, 8.0, 3.0]))
-        assert_report("RecursivePolynomialFilter_test/test9Coverage")
+        assert_report("RecursivePolynomialFilter_test/test9Coverage", -1)
         
  
 if __name__ == "__main__":

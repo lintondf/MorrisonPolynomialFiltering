@@ -3,18 +3,27 @@ package utility;
  * 
  */
 
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.ejml.data.DMatrixRMaj;
 
+import com.opencsv.CSVWriter;
+
 import ucar.ma2.Array;
+import ucar.ma2.ArrayDouble;
+import ucar.ma2.DataType;
+import ucar.ma2.InvalidRangeException;
 import ucar.nc2.Dimension;
 import ucar.nc2.Group;
 import ucar.nc2.NetcdfFile;
+import ucar.nc2.NetcdfFileWriter;
 import ucar.nc2.Variable;
 
 /**
@@ -25,10 +34,12 @@ import ucar.nc2.Variable;
 public class TestData {
 	
 	NetcdfFile file;
+	CSVWriter writer;
 	
 	public TestData() {} // bean
 
 	public TestData( String fileName) {
+		writer = null;
 		try {
 			file = NetcdfFile.open(testDataPath(fileName));
 		} catch (Exception x) {
@@ -36,16 +47,26 @@ public class TestData {
 		}
 	}
 
+	public TestData( String subDir, String fileName ) {
+		file = null;
+		try {
+			String path = testDataPath(subDir + "/" + fileName);
+			try {
+				File f = new File(path);
+				f.delete();
+			} catch (Exception x) {}
+			FileWriter outputfile = new FileWriter(path); 
+	        writer = new CSVWriter(outputfile, ',', CSVWriter.NO_QUOTE_CHARACTER, CSVWriter.NO_ESCAPE_CHARACTER, CSVWriter.DEFAULT_LINE_END);
+		} catch (Exception x) {
+			file = null;
+		}
+	}
+	
 	public static String testDataPath( String fileName ) {
 		Path currentRelativePath = Paths.get("");
 		Path cwd = currentRelativePath.toAbsolutePath();
 		cwd = cwd.getParent().resolve("testdata");
 		return cwd.resolve(fileName).toString();
-	}
-	
-	public Group createGroup( String name ) {
-		Group g = new Group(this.file, file.getRootGroup(), name);
-		return g;
 	}
 	
 	public List<String> getMatchingGroups( String prefix ) {
@@ -127,6 +148,12 @@ public class TestData {
 		return getGroupVariable( group, variable );
 	}
 	
+	public Group createGroup( String name ) {
+		String[] header = {name};
+		writer.writeNext(header);
+		return null;
+	}
+	
 	public void putInteger( Group group, String variable, int value) {
 		throw new RuntimeException("Not implemented");
 	}
@@ -135,14 +162,32 @@ public class TestData {
 		throw new RuntimeException("Not implemented");
 	}
 
-	public void putArray( Group group, String variable, DMatrixRMaj value) {
-		throw new RuntimeException("Not implemented");		
+	public void putArray(Group group, String variable, DMatrixRMaj value) {
+		String[] header = {variable, Integer.toString(value.numRows), Integer.toString(value.numCols)};
+		writer.writeNext(header);
+		for (int i = 0; i < value.numRows; i++) {
+			ArrayList<String> cols = new ArrayList<>();
+			for (int j = 0; j < value.numCols; j++) {
+				cols.add( String.format("%.16g,", value.unsafe_get(i, j)));
+			}
+			writer.writeNext(cols.toArray(new String[0]));
+		}
 	}
 	
-	public void close() {}
+	public void close() {
+		try {
+			if (file != null) {
+				file.close();
+			}
+			if (writer != null) {
+				writer.close();
+			}
+		} catch (Exception x) {
+			x.printStackTrace();
+		}
+	}
 	
 	public static TestData make( String fileName) {
 		return new TestData(fileName);
-	}
-	
+	}	
 }

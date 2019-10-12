@@ -143,7 +143,7 @@ namespace polynomialfiltering {
 	}
 
 	inline RealMatrix solve(const RealMatrix& A, const RealMatrix& B) {
-		return A.ldlt().solve(B); //  A.colPivHouseholderQr().solve(B);
+		return A.ldlt().solve(B); //  A.colPivHouseholderQr().solve(B); // A.completeOrthogonalDecomposition().solve(B); // 
 	}
 
 	inline RealMatrix inv(const RealMatrix& M) {
