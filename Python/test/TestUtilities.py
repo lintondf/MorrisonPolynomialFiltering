@@ -48,6 +48,59 @@ def assert_almost_equal( A : array, B : array, decimal=7):
 def assert_array_less( A : array, B : array ):
     np.testing.assert_array_less(A, B)
     
+class RollingStatistics(object):
+    
+    def __init__(self, N : int):
+        self.N = N
+        self.n = 0
+        self.m = 0
+        self.M = 0
+        self.S = 0
+        
+    def append(self, X : float) -> None:
+        if (self.n == 0) :
+            self.M = X 
+            self.S = 0
+        else :
+            k = self.n - self.m
+            s = (X - self.M)
+            self.M += (X - self.M)/k
+            self.S += s * (X - self.M)
+    
+    def replace(self, X : float, Y : float) -> None:
+        if (self.n == 0) :
+            self.M = X 
+            self.S = 0
+        else :
+            k = self.n - self.m
+            s = (X - self.M)
+            t = (Y - self.M)
+            self.M += (X - self.M)/k - (Y - self.M)/k
+            self.S += s * (X - self.M) - t * (Y - self.M)
+            self.m += 1
+        
+    def getMean(self) -> float:
+        return self.M 
+    
+    def getVariance(self) -> float:
+        k = self.n - self.m
+        return self.S / (k-1)
+
+class WindowedStatistics(object):
+    
+    def __init__(self, N : int):
+        super().__init__()
+        self.N = N
+        self.W = zeros([N])
+        
+    def add(self, X : float) -> None:
+        if (self.n < self.N) :
+            super().add(X)
+            self.W[self.n % self.N] = X
+        else :
+            super().replace(X, self.W[self.n % self.N])
+            self.W[self.n % self.N] = X
+    
 def createTestGroup(cdf : Dataset, name : str ) -> Dataset:
     return cdf.createGroup(name);
 

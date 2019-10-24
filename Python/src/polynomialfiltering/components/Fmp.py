@@ -15,6 +15,8 @@ from numpy import array, diag, zeros, sqrt, transpose, copy
 from numpy import array as vector
 from polynomialfiltering.components.ICore import ICore
 from polynomialfiltering.filters.RecursivePolynomialFilter import RecursivePolynomialFilter
+from astropy.io.ascii.tests.test_ecsv import tm
+from astropy.units import Tm
 
 
 class AbstractCoreFmp(ICore):
@@ -33,6 +35,31 @@ class AbstractCoreFmp(ICore):
     
     def getSamplesToStart(self) -> int:
         return 1
+    
+    def getThetaForVRF(self, tau : float, theta0 : float, vrf00 : float ) -> float:
+        V = self._getVRF(tau, theta0)
+        if (V[0,0] > vrf00) : # target is higher
+            tl = theta0
+            tu = 1.0-1e-8
+            while abs(V[0,0] - vrf00) > 1e-5 :
+                tm = 0.5*(tu + tl)
+                V = self._getVRF(tau, tm)
+                if (V[0,0] > vrf00) : # target VRF is higher; increase theta
+                    tl = tm
+                else :
+                    tu = tm
+            return tm
+        else : # target is lower 
+            tu = theta0
+            tl = 1e-8
+            while abs(V[0,0] - vrf00) > 1e-5 :
+                tm = 0.5*(tu + tl)
+                V = self._getVRF(tau, tm)
+                if (V[0,0] > vrf00) : # target is higher
+                    tl = tm
+                else :
+                    tu = tm
+            return tm
         
     @abstractmethod # pragma: no cover
     def getGamma(self, t : float, dtau : float) -> vector:
@@ -471,6 +498,22 @@ class CoreFmp5(AbstractCoreFmp):
             V[5,5]=(-252.0*s**11)/((-2048.0 + s*(11264.0 + s*(-28160.0 + s*(42240.0 + s*(-42240.0 + s*(29568.0 + s*(-14784.0 + s*(5280.0 + s*(-1320.0 + s*(220.0 + (-22.0 + s)*s))))))))))*u**10)
         return V;
 
+@forcestatic
+def effectiveLength(order : int, theta : float) -> float:
+    """
+    Get the effective length in samples of an FMP filter
+    
+    See Morrison Section 12.2.24
+    
+    Arguments:
+        order - integer polynomial order
+        theta - fading factor [0..1]
+        
+    Returns:
+        number of samples    
+    """
+    k = array([2.0, 3.2, 4.36, 5.51, 6.63, 7.75, 8.85, 9.96, 11.05])
+    return k / (1-theta)
 
 @forcestatic
 def makeFmpCore(order : int, tau : float, theta : float) -> ICore:

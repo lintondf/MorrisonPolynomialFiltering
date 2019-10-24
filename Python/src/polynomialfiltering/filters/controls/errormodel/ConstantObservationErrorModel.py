@@ -18,7 +18,7 @@ class ConstantObservationErrorModel(IObservationErrorModel):
     """
     This model is used when the random errors in observations are constant.
     """
-    
+    '''@ t : float | time of most recent observation'''
     '''@ R : array | observation covariance matrix'''
     '''@ iR : array | observation precision (inverse covariance) matrix'''
     
@@ -41,6 +41,7 @@ class ConstantObservationErrorModel(IObservationErrorModel):
         Arguments:
             r - constant covariance of a scalar observation
         """
+        self.t = 4E-324;  # Double min
         self.R = array([[r]]);
         self.iR = array([[1.0/r]]);
         
@@ -52,6 +53,7 @@ class ConstantObservationErrorModel(IObservationErrorModel):
         Arguments:
             R - constant covariance matrix of a vector observation
         """
+        self.t = 4E-324;  # Double min
         self.R = R;
         self.iR = inv(R);
 
@@ -64,16 +66,19 @@ class ConstantObservationErrorModel(IObservationErrorModel):
             R - constant covariance matrix of a vector observation
             inverseR - inverse of the R matrix; used when inverseR is easily precomputed.
         """
+        self.t = 4E-324;  # Double min
         self.R = R;
         self.iR = inverseR;
 
 
     def getPrecisionMatrix(self, f: AbstractFilterWithCovariance, t:float, y:vector) -> array:
         '''@ P : array'''
+        self.t = t;
         P = copy(self.iR)
         return P; 
 
     def getCovarianceMatrix(self, f : AbstractFilterWithCovariance, t : float, y : vector) -> array:
         '''@ P : array'''
+        self.t = t;
         P = self.R;
         return P; 

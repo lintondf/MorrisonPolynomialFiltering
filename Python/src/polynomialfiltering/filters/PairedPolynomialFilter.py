@@ -1,4 +1,4 @@
-''' PolynomialFiltering.components.Pair
+''' PolynomialFiltering.components.PairedPolynomialFilter
  (C) Copyright 2019 - Blue Lightning Development, LLC.
  D. F. Linton. support@BlueLightningDevelopment.com
 

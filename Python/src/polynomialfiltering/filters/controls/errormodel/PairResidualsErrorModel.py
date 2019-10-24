@@ -29,6 +29,7 @@ class PairResidualsErrorModel(IObservationErrorModel):
         Return (R0) when filter status is not RUNNING
     '''
 
+    '''@ t : float | time of most recent observation'''
     '''@ R0 : array'''
     '''@ n : int'''
     '''@ m : int'''
@@ -37,6 +38,7 @@ class PairResidualsErrorModel(IObservationErrorModel):
     '''@ yRing : array'''
     '''@ filters : List[PairedPolynomialFilter]'''
     '''@ R : array''' 
+    '''@ iR : array''' 
     
     def __init__(self, R0 : array, memorySize : int, order : int, tau : float, theta : float):
         '''@ i : int'''
@@ -50,13 +52,17 @@ class PairResidualsErrorModel(IObservationErrorModel):
         for i in range(0,self.m) : 
             self.filters.append(PairedPolynomialFilter(order, tau, theta))
         self.R = R0
+        self.iR = inv(R0)
+        self.t = 4E-324
         
     def getPrecisionMatrix(self, f: AbstractFilterWithCovariance, t:float, y:vector) -> array:
         '''@ P : array'''
         '''@ C : array'''
+        if (self.t == t) :
+            return self.iR;
         C = self.getCovarianceMatrix(f, t, y)
-        P = inv(C)
-        return P; 
+        self.iR = inv(C)
+        return self.iR; 
 
     def getCovarianceMatrix(self, f : AbstractFilterWithCovariance, t : float, y : vector) -> array:
         '''@ P : array'''
@@ -70,6 +76,8 @@ class PairResidualsErrorModel(IObservationErrorModel):
         '''@ meanO : array'''
         '''@ d : array'''
         '''@ F : PairedPolynomialFilter'''
+        if (self.t == t) :
+            return self.R;
         idx = self.n % self.N
         self.tRing[ idx, 0 ] = t;    
         self.yRing[ idx, : ] = y;
@@ -100,6 +108,7 @@ class PairResidualsErrorModel(IObservationErrorModel):
                     meanO = meanO + (E-meanO)/(k+1)
                     self.R = self.R + (transpose(d) @ (E - meanO) - self.R)/(k+1)
                 k += 1
+        self.iR = inv(self.R)
         return self.R
     
     @ignore

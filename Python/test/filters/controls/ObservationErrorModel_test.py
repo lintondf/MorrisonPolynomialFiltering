@@ -20,7 +20,6 @@ from TestSuite import testDataPath, TestCaseBase;
 from polynomialfiltering.PythonUtilities import ignore, testcase
 from TestData import TestData, A2S
 from polynomialfiltering.PythonUtilities import assert_not_empty
-
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 
@@ -323,7 +322,7 @@ class ObservationErrorModel_test(TestCaseBase):
                 assert_almost_equal(cov(O[0:i+1], rowvar=False, bias=True), Q)
 
 
-    def step0PairResidualsErrorModel(self):
+    def xstep0PairResidualsErrorModel(self):
         '''
 No-Op
 launch_radar_1 [0. 0. 0.]
@@ -381,7 +380,7 @@ launch_radar_3 [2.90397504e-03 1.20662866e-05 1.05157640e+00]
 #             print(cov(results[iFirst:iLast,1:], rowvar=False))
 #             return
 
-    def xstep0BetResiduals(self):
+    def step0BetResiduals(self):
         betData = TestData('launchBET')
         betGroup = betData.getGroup('7501')
 #         radar = 'launch_radar_1'
@@ -389,6 +388,13 @@ launch_radar_3 [2.90397504e-03 1.20662866e-05 1.05157640e+00]
         group = testData.getGroup('7501')
         
         def testOffset( deltaT : float, iCs : List[array] = {}, plot : bool = False) -> float:
+            """
+            deltaT - BET vs observation time offset
+            iCs - dictionary of by-radar inverse covariance matrices
+            plot - True to plot
+            
+            returns bias metric for estimating deltaT by minimization of range biases sum squares
+            """
             FMT = 4469086562.0+deltaT
             # time, E, F, G, quality, beacon, enu[0], enu[1], enu[2], aer[0,0], aer[0,1], aer[0,2]
             radars = ('launch_radar_1', 'launch_radar_2', 'launch_radar_3')
@@ -414,6 +420,8 @@ launch_radar_3 [2.90397504e-03 1.20662866e-05 1.05157640e+00]
                         T.append(actualAER[i,0])
                 D = zeros([len(T), 4])
                 D[:,0] = T
+                
+                # interpolate BET to observation times in arbitrary cartesian coordinates to avoid issues with spherical discontinuities
                 site = Site('Zero', 0, 0, 0)
                 enu = site.AER2ENU(betAER[:,1:4] )
                 B = zeros([len(T), 4])
@@ -423,8 +431,10 @@ launch_radar_3 [2.90397504e-03 1.20662866e-05 1.05157640e+00]
                 B[:,3] = interp(T, betAER[:,0], enu[:,2] )
                 aer = site.ENU2AER(B[:,1:4])
                 B[:,1:4] = aer
+                
                 if (plot) :
                     f0 = plt.figure(figsize=(10, 6))
+                # compute differences in AER (handling discontinuities)
                 for o in range(0,3) :
                     R = interp(T, actualAER[:,0], actualAER[:,9+o])
                     D[:,o+1] = R - B[:,o+1]
@@ -435,7 +445,8 @@ launch_radar_3 [2.90397504e-03 1.20662866e-05 1.05157640e+00]
                             elif (D[j,o+1] < -pi) :
                                 D[j,o+1] += 2*pi     
                             if (abs(D[j,o+1]) > 1e-1) :
-                                print(D[j,:])                           
+                                print(D[j,:])  
+                # find the none wild-point observations using the input covariance                         
                 if (len(iCs) > 0) :
                     iC = iCs[radar]
                     idxs = []
@@ -449,7 +460,7 @@ launch_radar_3 [2.90397504e-03 1.20662866e-05 1.05157640e+00]
                             ax.hist(D[idxs,o+1], bins=100, density=True)
 #                             ax.plot(T, D[:,o+1], 'k-', label='R-B')
 #                             ax.legend()
-                else:
+                else: # or use all observations
                     idxs = range(0, D.shape[0])
                 A = (mean(D[idxs,1:4], axis=0))
                 C = (cov(D[idxs,1:4], rowvar=False))
@@ -460,6 +471,7 @@ launch_radar_3 [2.90397504e-03 1.20662866e-05 1.05157640e+00]
         
         tOffset = -1.339088; # fminbound(testOffset, -3, +3)
         stats = testOffset(tOffset, plot=False)
+        # compute the mean and covariances for all observations of all radars
         iCs = {}
         for name in stats :
             A = stats[name][0]
@@ -467,12 +479,17 @@ launch_radar_3 [2.90397504e-03 1.20662866e-05 1.05157640e+00]
             print(name)
             print(C + diag(A**2))
             iCs[name] = inv(C + diag(A**2))
+        # recompute using only those within 3-sigma bounds
         stats = testOffset(tOffset, iCs, plot=True)
         for name in stats :
             A = stats[name][0]
             C = stats[name][1]
             print(name)
-            print(C + diag(A**2))
+            print(A2S(A))
+            print(A2S(C))
+            K, D = covarianceToCorrelation(C)
+            print(A2S(K))
+            print(A2S(D))
         plt.show()
         
     def xstep0PlotRanges(self):
