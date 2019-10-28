@@ -44,6 +44,7 @@ import matplotlib.pyplot as plt
 from scipy.sparse.linalg.eigen.arpack._arpack import sseupd
 from scipy.optimize import fminbound, minimize
 from scipy.sparse.linalg.eigen.arpack.arpack import SSEUPD_ERRORS
+from scipy.optimize.optimize import brute, fmin
 
 
 
@@ -200,13 +201,16 @@ class AdaptiveOrderPolynomialFilter_test(TestCaseBase):
                     print( '%5d, %2d, %2d, %2d, %10.6f %s' % (iter, dorder, forder, f.getBest(), sf, r))
                 f.close();
 
-    def stepVaryingOrder(self):
+    def xstepAssistedStarting(self):
+        """
+        Test if .start() ing an EMP from the lower order state help.
+        Does not appear to
+        """
         iter = 1
         random.seed(iter)
         np.random.seed(iter)
         print()
         testData = TestData()
-        print()
         Times = zeros([1000,1])
         Truth = zeros([1000,5+1])
         i = 0
@@ -220,40 +224,115 @@ class AdaptiveOrderPolynomialFilter_test(TestCaseBase):
                 if (i >= Times.shape[0]) :
                     break
         tau = 0.1
-        R = 10.0
-        nS = Times.shape[0]
+        R = 100.0
+        nS = 50 # Times.shape[0]
         theta = 0.95
-        Observations = Truth[:,0:1] + R * randn(nS,1)
-        Actual = zeros([1000,5+1])
-        Best = zeros([1000,1])
-        
-        f = PairedPolynomialFilter(5, tau, theta)
-        k = 0
+        Observations = Truth[:,0:1] + R * randn(Truth.shape[0],1)
+        Actual = zeros([nS,5+1])
+        Starts = zeros([nS,5+1])
+        maxOrder = 3+1
+        colors = ('k', 'r', 'g', 'b', 'y', 'g')
+        f = []
+        for i in range(0,maxOrder) :
+            f.append( PairedPolynomialFilter(i, tau, theta) )
+            
         for j in range(0,nS) :
-            Zstar = f.predict(Times[j,0])
-            e = Observations[j,0] - Zstar[0]
-            f.update(Times[j,0], Zstar, e)
-            if (f.getStatus() == FilterStatus.RUNNING) :
-                Actual[j,:] = f.getState()
-            else :
-                Actual[j,:] = Truth[j,:]
-        sse = np.sum(np.power(Actual[k:,0] - Truth[k:,0], 2.0))
-        print(k, '5th Order Only %10.3e' % sse)
-#         ax = plt.subplot(3,1,1)
-#         ax.plot(Times, Actual[:,0], 'r.')
-#         ax.plot(Times, Truth[:,0], 'b-')
-#         ax = plt.subplot(3,1,2)
-#         ax.plot(Times, (Truth[:,0]-Actual[:,0]), 'b-')
-#         ax = plt.subplot(3,1,3)
-#         ax.plot(Times, Best, 'k-')
-#         plt.show()
+            for i in range(0,maxOrder) :
+                Zstar = f[i].predict(Times[j,0])
+                e = Observations[j,0] - Zstar[0]
+                f[i].update(Times[j,0], Zstar, e)
+                Actual[j,i] = f[i].getState()[0]
+        for i in range(0,maxOrder) :
+            r = Actual[0:nS,i] - Truth[0:nS,0]
+            print(i, mean(r), var(r), min(r), max(r))   
+        
+        f = []
+        for i in range(0,maxOrder) :
+            f.append( PairedPolynomialFilter(i, tau, theta) )
+        for j in range(0,nS) :
+            for i in range(0,maxOrder) :
+                if (j == 0 and i == 1) :
+                    f[1].start(Times[j,0], f[0].getState())
+                    f[2].start(Times[j,0], f[0].getState())
+                if (j == 1 and i == 2) :
+                    f[2].start(Times[j,0], f[1].getState())
+                if (j == 2 and i == 3) :
+                    f[3].start(Times[j,0], f[2].getState())
+                Zstar = f[i].predict(Times[j,0])
+                e = Observations[j,0] - Zstar[0]
+                f[i].update(Times[j,0], Zstar, e)
+                Starts[j,i] = f[i].getState()[0]
+        for i in range(0,maxOrder) :
+            r = Starts[0:nS,i] - Truth[0:nS,0]
+            print(i, mean(r), var(r), min(r), max(r))   
+        
+        ax = plt.subplot(1,1,1)
+        ax.plot(Times[0:nS,0], Truth[0:nS,0], 'm-')
+        for i in range(0,maxOrder) :
+            ax.plot(Times[0:nS,0], Actual[0:nS,i], colors[i] + '.-')
+            ax.plot(Times[0:nS,0], Starts[0:nS,i], colors[i] + '+')
+        plt.show()
+
+    def stepVaryingOrder(self):
+        iter = 1
+        random.seed(iter)
+        np.random.seed(iter)
+        print()
+        testData = TestData()
+        print()
+        nS = 1000
+        Times = zeros([nS,1])
+        Truth = zeros([nS,5+1])
+        i = 0
+        with open(testData.testDataPath('varyingorder2.csv'), newline='') as csvfile:
+            reader = csv.reader(csvfile, delimiter=',', quotechar='"')
+            for row in reader :
+                Times[i,0] = float(row[0])
+                for j in range(0,5+1) :
+                    Truth[i,j] = float(row[j+1])
+                i += 1
+                if (i >= Times.shape[0]) :
+                    break
+        tau = 0.1
+        R = 10.0
+        theta = 0.90
+        Observations = Truth[:,0:1] + R * randn(nS,1)
+        Actual = zeros([nS,5+1])
+        Best = zeros([nS,1])
+        if (True) : # True for 5th order only
+            f = PairedPolynomialFilter(5, tau, theta)
+            k = 0
+            for j in range(0,nS) :
+                Zstar = f.predict(Times[j,0])
+                e = Observations[j,0] - Zstar[0]
+                f.update(Times[j,0], Zstar, e)
+                if (f.getStatus() == FilterStatus.RUNNING) :
+                    Actual[j,:] = f.getState()
+                else :
+                    Actual[j,:] = Truth[j,:]
+            sse = np.sum(np.power(Actual[k:,0] - Truth[k:,0], 2.0))
+            print(k, '5th Order Only %10.3e' % sse)
+#             ax = plt.subplot(3,1,1)
+#             plt.title('5th order only; %10.3e' % sse)
+#             ax.plot(Times, Actual[:,0], 'r.')
+#             ax.plot(Times, Truth[:,0], 'b-')
+#             ax = plt.subplot(3,1,2)
+            err = (Truth[:,0]-Actual[:,0])
+            print('RESIDUALS', mean(err), var(err), min(err), max(err))
+#             ax.plot(Times, err, 'b-')
+#             ax = plt.subplot(3,1,3)
+#             Best[:,0] = 5
+#             ax.plot(Times, Best, 'k-')
+#             plt.show()
 
         def targetSSE(t : float):
+
             trace = open('AOPF.csv', 'w')
             f = AdaptiveOrderPolynomialFilter(5, tau, theta, trace=trace)
-            f.setSwitchThreshold(t[0])
-            f.setRestartThreshold(t[1])
+            f.setSwitchThresholdAndCount(t[0], int(t[2]))
+            f.setRestartThresholdAndCount(t[1], int(t[3]))
             for j in range(0,nS) :
+#                 trace.write('%10.3f T %15.9g %15.6g %15.6g %15.6g %15.6g %15.6g\n' % (Times[j,0], Truth[j,0], Truth[j,1], Truth[j,2], Truth[j,3], Truth[j,4], Truth[j,5]))
                 Zstar = f.predict(Times[j,0])
                 e = Observations[j,0] - Zstar[0]
                 f.update(Times[j,0], Zstar, e)
@@ -261,26 +340,50 @@ class AdaptiveOrderPolynomialFilter_test(TestCaseBase):
                 Best[j,0] = f.getBest()
             f.close()
             sse = np.sum(np.power(Actual[:,0] - Truth[:,0], 2.0))
+            print(t, '%10.4e' % sse)
             return sse
 
         if (False) :
-            minSSE = 1e100
-            minT = []
-            for st in arange(2.0, 3.1, 0.05) : #arange(2.0, 10.0, 0.1) : #   # 
-                for rt in arange(5.0, 6.0, 0.1) :
-                    t = array([st, rt])        
-                    sse = targetSSE(t)
-                    if (sse < minSSE) :
-                        minSSE = sse
-                        minT = t
-                    print('SSE  %10.6f, %10.6f, %10.3e' % (t[0], t[1], sse))
-            print('MINSSE  %10.6f, %10.6f, %10.3e' % (minT[0], minT[1], minSSE))
+            # optimize.brute
+            ranges = (slice(0.18, 0.50, 0.05), slice(0.001, 0.01, 0.001), slice(2,4+1,1), slice(2,5+1,1))
+            # [0.43  0.007 2.    3. ] 1.225e+06
+            ranges = (slice(0.38, 0.48, 0.005), slice(0.006, 0.008, 0.0001), slice(2,3+1,1), slice(3,4+1,1))
+            result = brute( targetSSE, ranges, full_output=True, finish=None )
+#             print(result)
+            minT = result[0]
             sse = targetSSE(minT)
+            print('SSE  %10.6f, %10.6f, %10.3e' % (minT[0], minT[1], sse))
+
+#             def tSSE(t):
+#                 return targetSSE([t[0], t[1], minT[2], minT[3]])
+#             
+#             t = fmin( tSSE, minT[0:1], disp=True)
+#             print(t)
+#             minSSE = 1e100
+#             minT = []
+#             for sc in (2, ) : # range(1, 5) :
+#                 for rc in (5, ) : # range(sc, 6) :
+#                     passSSE = 1e100
+#                     passT = []
+#                     for st in arange(0.45, 0.55, 0.001) : #arange(0.25, 5.0, 0.25) : # arange(2.8, 3.0, 0.01) : #
+#                         for rt in arange(0.15, 0.25, 0.001) :
+#                             t = array([st, rt, sc, rc])        
+#                             sse = targetSSE(t)
+#                             if (sse < passSSE) :
+#                                 passSSE = sse
+#                                 passT = t
+#                                 print('SSE  %d, %d, %10.6f, %10.6f, %10.3e' % (sc, rc, t[0], t[1], sse))
+#                     if (passSSE < minSSE) :
+#                         minSSE = passSSE
+#                         minT = passT
+#                     print('MINSSE  %d, %d, %10.6f, %10.6f, %10.3e' % (minT[2], minT[3], minT[0], minT[1], minSSE))
+            sse = targetSSE(minT)
+            print('SSE  %10.6f, %10.6f, %10.3e' % (minT[0], minT[1], sse))
         else :
-            minT = [2.5, 6.0]
+            minT = [0.425,  0.0079, 2,    4] # 0.606000,   0.160000, 2, 5
             minSSE = targetSSE(minT)
             print('SSE  %10.6f, %10.6f, %10.3e' % (minT[0], minT[1], minSSE))
-        
+            sse = minSSE
         if (False) :
             t = minimize( targetSSE, [2.8, 5.6], method='Nelder-Mead', options={'disp': True})
             print(t)
@@ -289,13 +392,29 @@ class AdaptiveOrderPolynomialFilter_test(TestCaseBase):
             
 #         print('ACTUAL:  ', A2S(f.getState()))
 #         print('EXPECT:  ', A2S(Truth[-1,:]))
+        st = stats.f.sf(minT[0],1,1)
+        rt = stats.f.sf(minT[1],1,1)
+        title = 'AOPF S, %10.4g, %d, R, %10.4g, %d,  SSE, %10.3e' % (st, int(minT[2]), rt, int(minT[3]), sse)
         ax = plt.subplot(3,1,1)
+        plt.title( title )
         ax.plot(Times, Actual[:,0], 'r.')
         ax.plot(Times, Truth[:,0], 'b-')
         ax = plt.subplot(3,1,2)
-        ax.plot(Times, (Truth[:,0]-Actual[:,0]), 'b-') # /Truth[:,0]
+        err = (Truth[:,0]-Actual[:,0])
+        print('RESIDUALS', mean(err), var(err), min(err), max(err))
+        ax.plot(Times, err, 'b-') # /Truth[:,0]
         ax = plt.subplot(3,1,3)
         ax.plot(Times, Best, 'k-')
+        Schedule = zeros([nS])
+        at = array([0, 1, 2, 25, 30, 40, 50, 55, 60, 70, 80,100])
+        ao = array([0, 1, 5,  4,  3,  2,  1,  2,  3,  4,  5,  5])
+        k = 0
+        for i in range(0,nS) :
+            if (at[k] <= Times[i,0]) :
+                k += 1
+            Schedule[i] = ao[k-1]
+            
+        ax.plot(Times, Schedule, 'm-')
         plt.show()
     
 #     def generateVaryingOrder(self, iter : int):
@@ -425,12 +544,19 @@ class AdaptiveOrderPolynomialFilter_test(TestCaseBase):
 #         ax.hist(X, density=True, histtype='stepfilled', alpha=0.2, bins=25)
 #         plt.show()
 #         
-    def stepDebug(self):
+    def xstepDebug(self):
         t0 = 0
         R = 10
         print()
-        for p in range(1,7) :
-            print(p,stats.chi2.isf(10**-p, 1)**(1/2))
+        # 0.965000,   9.750000
+        p1 = stats.f.sf(0.965000,1,1)
+        for i in range(1,5+1) : 
+            print( i, p1**i, stats.f.isf(p1**i,1,1) )
+        p1 = stats.f.sf(9.75,1,1)
+        for i in range(1,5+1) : 
+            print( i, p1**i, stats.f.isf(p1**i,1,1) )
+#         for p in range(1,7) :
+#             print(p,stats.chi2.isf(10**-p, 1)**(1/2))
 #         print(R**2, R**2 * 0.05/1.95, (R**2 * 0.05/1.95)**2)
 #         print(stats.chi2.isf(0.05, 1), stats.chi2.isf(0.05, 1, loc=R**2, scale=sqrt(2.0*R**4/(0.05/1.95))))
 #         print(stats.chi2.isf(sqrt(0.05), 1), stats.chi2.isf(sqrt(0.05), 1, loc=R**2, scale=sqrt(2.0*R**4/(0.05/1.95))))

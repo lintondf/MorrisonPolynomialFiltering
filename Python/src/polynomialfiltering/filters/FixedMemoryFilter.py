@@ -5,6 +5,9 @@
  SPDX-License-Identifier: MIT
  See separate LICENSE file for full text
 '''
+"""
+@TODO Morrison 12.2.26, construct from EMP; faster?
+"""
 
 from abc import abstractmethod
 from overrides import overrides

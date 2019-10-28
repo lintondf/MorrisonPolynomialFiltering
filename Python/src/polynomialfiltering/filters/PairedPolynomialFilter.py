@@ -60,6 +60,7 @@ class PairedPolynomialFilter( AbstractComponentFilter ):
     def start(self, t : float, Z : vector) -> None:
         self.rpf.setCore(self.empCore)
         self.rpf.start(t, Z)
+
         
     def isFading(self) -> bool:
         '''@isF : bool'''
