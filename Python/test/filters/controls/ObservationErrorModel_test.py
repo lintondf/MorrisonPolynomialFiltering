@@ -414,10 +414,11 @@ launch_radar_3 [2.90397504e-03 1.20662866e-05 1.05157640e+00]
                     if ((actualAER[i,0]) < tmax) :
                         iLast = i
                 iFirst += 1
-                T = []
-                for i in range(iFirst, iLast) :
-                    if (actualAER[i,4] == 2) :
-                        T.append(actualAER[i,0])
+#                 T = []
+#                 for i in range(iFirst, iLast) :
+#                     if (actualAER[i,4] == 2) :
+#                         T.append(actualAER[i,0])
+                T = actualAER[:,0]
                 D = zeros([len(T), 4])
                 D[:,0] = T
                 
@@ -432,8 +433,19 @@ launch_radar_3 [2.90397504e-03 1.20662866e-05 1.05157640e+00]
                 aer = site.ENU2AER(B[:,1:4])
                 B[:,1:4] = aer
                 
+                with open(testData.testDataPath(radar + ".csv"), "w") as out :
+                    for i in range(0,len(T)) :
+                        out.write("%15.10g, " % T[i])
+                        out.write("%15.10g, %15.10g, %15.10g, " % (aer[i,0], aer[i,1], aer[i,2] ))
+                        out.write("%15.10g, %15.10g, %15.10g, "% (actualAER[i,9], actualAER[i,10], actualAER[i,11] ))
+                        out.write('\n')
+                
                 if (plot) :
                     f0 = plt.figure(figsize=(10, 6))
+                    ax = plt.subplot(1, 1, 1)
+                    ax.plot(T, aer[:,2], 'b-')
+                    ax.plot(actualAER[:,0], actualAER[:,11], 'r.')
+                    plt.show()
                 # compute differences in AER (handling discontinuities)
                 for o in range(0,3) :
                     R = interp(T, actualAER[:,0], actualAER[:,9+o])
@@ -466,11 +478,14 @@ launch_radar_3 [2.90397504e-03 1.20662866e-05 1.05157640e+00]
                 C = (cov(D[idxs,1:4], rowvar=False))
                 stats[radar] = (A, C)
                 metric += A[2]**2
-#             return metric
-            return stats;
+            return D[500,3]**2
+#             return stats;
         
-        tOffset = -1.339088; # fminbound(testOffset, -3, +3)
-        stats = testOffset(tOffset, plot=False)
+#         print(fminbound(testOffset, -3, +3))
+        tOffset = -1.3674751866551864
+#         tOffset = -1.5946332728294594
+        tOffset = -1.34
+        stats = testOffset(tOffset, plot=True)
         # compute the mean and covariances for all observations of all radars
         iCs = {}
         for name in stats :

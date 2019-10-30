@@ -24,6 +24,7 @@ class AbstractCoreFmp(ICore):
     classdocs
     '''
 
+    '''@tau : float'''
     '''@theta : float'''
     '''@VRF : array'''
 
@@ -31,7 +32,13 @@ class AbstractCoreFmp(ICore):
         '''
         Constructor
         '''
+        self.tau = tau
         self.theta = theta;
+        
+    def setTheta(self, theta : float) -> None:
+        self.theta = theta;
+        self.VRF = self._getVRF(self.tau, theta);
+
     
     def getSamplesToStart(self) -> int:
         return 1

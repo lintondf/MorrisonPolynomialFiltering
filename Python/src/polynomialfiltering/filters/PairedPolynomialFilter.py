@@ -61,6 +61,13 @@ class PairedPolynomialFilter( AbstractComponentFilter ):
         self.rpf.setCore(self.empCore)
         self.rpf.start(t, Z)
 
+
+    def getTheta(self) -> float:
+        return self.theta
+        
+    def setTheta(self, theta : float) -> None:
+        self.theta = theta
+        self.fmpCore.setTheta(theta)
         
     def isFading(self) -> bool:
         '''@isF : bool'''
