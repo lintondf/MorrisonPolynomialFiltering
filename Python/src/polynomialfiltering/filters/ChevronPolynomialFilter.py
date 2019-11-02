@@ -18,7 +18,7 @@ from scipy import stats
 
 from polynomialfiltering.Main import FilterStatus
 from polynomialfiltering.AbstractComponentFilter import AbstractComponentFilter
-from polynomialfiltering.components.Emp import nSwitch, makeEmpCore
+from polynomialfiltering.components.Emp import nSwitch, makeEmpCore, nFromFirstVRF
 from polynomialfiltering.components.Fmp import makeFmpCore
 from polynomialfiltering.filters.RecursivePolynomialFilter import RecursivePolynomialFilter
 from polynomialfiltering.filters.PairedPolynomialFilter import PairedPolynomialFilter
@@ -29,7 +29,7 @@ from TestUtilities import A2S
 class ChevronPolynomialFilter(AbstractComponentFilter):
 
 
-    def __init__(self, order : int, tau : float, theta : float, trace=None ) :
+    def __init__(self, order : int, tau : float, theta : float, switchV0 : float, trace=None ) :
         super().__init__(order)
         self.Z = zeros([order+1])
         self.pair = PairedPolynomialFilter(order, tau, theta) # create primary filter
@@ -37,19 +37,11 @@ class ChevronPolynomialFilter(AbstractComponentFilter):
         self.emps = List() # chevron member EMP filters
         self.switchNs = zeros([order])
         fc = self.pair.getFmpCore()
-        self.vSwitch = 0.10
-        v0 = 0.10
         for o in range(0,order) : # create EMP filters for all lower orders
-            fc = makeFmpCore(o, tau, theta);
-            t = fc.getThetaForVRF(tau, theta, v0)
-            self.switchNs[o] = nSwitch(o, t)
+            self.switchNs[o] = nFromFirstVRF(o, switchV0)
             core = makeEmpCore(o, tau)
-#             print(o, self.switchNs[o], core.getFirstVRF(self.switchNs[o]))
             self.emps.append( RecursivePolynomialFilter(o, tau, core)) 
         self.trace = trace;
-#         print( nSwitch(order, theta), self.switchNs)
-#         self.switchNs = array([2, 4, 6, 8, 10])
-#         print(self.switchNs)
 
     @ignore
     def close(self):
@@ -66,7 +58,6 @@ class ChevronPolynomialFilter(AbstractComponentFilter):
         '''@ innovation : array'''
         '''@ o : float | the observation'''
         '''@ f : float | by filter observation residual'''
-        '''@ vrfs : vector | by filter 1+VRF[0,0] zero if filter is not running'''
 
 #         print(t, self.iActive, self.pair.getStatus(), self.pair.getFirstVRF(), self.emps[0].getFirstVRF())
         innovation = self.pair.update(t, Zstar, e)
@@ -74,13 +65,12 @@ class ChevronPolynomialFilter(AbstractComponentFilter):
             return innovation
 #         print('%6.3f %12.3g' % (t,e),'P', A2S(self.pair.getState()))
         o = e + Zstar[0] # recover observation
-        vrfs = zeros([self.order+1])
-        vrfs[self.order] = self.vSwitch
         for i in range(self.iActive, self.order) :
             z = self.emps[i].predict(t)
             f = o - z[0]
-            vrfs[i] = self.emps[i].getFirstVRF()
             inn = self.emps[i].update(t, z, f)
+        if (self.pair.getN() > self.switchNs[self.iActive]) :
+            self.iActive += 1
 #             print('%6.3f %12.3g' % (t,f),i,A2S(self.emps[i].getState()))
 #             if (i == self.iActive) :
 #                 innovation[0:i+1] = inn
@@ -94,10 +84,10 @@ class ChevronPolynomialFilter(AbstractComponentFilter):
 #             if (e2 < f2s[self.iActive]) :
 #                 print(t, self.iActive, ' -> P', f2s[self.iActive], e2)
 #                 self.iActive = -1
-        print(t, self.iActive, self.vSwitch, vrfs)
-        if (self.iActive < self.order and vrfs[self.iActive] > 0 and vrfs[self.iActive] <= self.vSwitch) :
-#         if (self.iActive < self.order and self.pair.getN() > self.switchNs[self.iActive]) :
-            self.iActive += 1
+#         print(t, self.iActive, self.vSwitch, vrfs)
+#         if (self.iActive < self.order and vrfs[self.iActive] > 0 and vrfs[self.iActive] <= self.vSwitch) :
+# #         if (self.iActive < self.order and self.pair.getN() > self.switchNs[self.iActive]) :
+#             self.iActive += 1
         return innovation
     
     @overrides
