@@ -17,6 +17,7 @@ from numpy import array as vector
 from polynomialfiltering.Main import FilterStatus
 from polynomialfiltering.AbstractComponentFilter import AbstractComponentFilter
 from polynomialfiltering.components.ICore import ICore
+from polynomialfiltering.components.Fmp import AbstractCoreFmp
 from polynomialfiltering.filters.RecursivePolynomialFilter import RecursivePolynomialFilter
 from polynomialfiltering.components.Emp import makeEmp, nSwitch
 from polynomialfiltering.components.Fmp import makeFmpCore
@@ -73,6 +74,12 @@ class PairedPolynomialFilter( AbstractComponentFilter ):
         '''@isF : bool'''
         isF = self.rpf.getN() >= self.switchN
         return isF
+    
+    def getEmpCore(self) -> ICore:
+        return self.empCore
+        
+    def getFmpCore(self) -> AbstractCoreFmp:
+        return self.fmpCore
         
     @overrides
     def getN(self)->int:

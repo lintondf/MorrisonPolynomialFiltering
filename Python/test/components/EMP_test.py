@@ -19,7 +19,7 @@ from runstats import Statistics
 from scipy.stats import anderson, chi2, kstest, lognorm, norm
 
 from polynomialfiltering.components.Emp import makeEmp, makeEmpCore, nSwitch,\
-                                                nUnitLastVRF
+                                                nUnitLastVRF, nFromFirstVRF
 from polynomialfiltering.components.ICore import ICore
 from polynomialfiltering.filters.RecursivePolynomialFilter import \
     RecursivePolynomialFilter
@@ -400,7 +400,15 @@ class EMP_test(TestCaseBase):
         assert_allclose( ones([3+1,3+1]), (coredouble.getVRF(5) / core.getVRF(5)) * (corehalf.getVRF(5) / core.getVRF(5)) )
         assert_allclose( core.getGamma(10.0, 5.0), core.getGamma(10.0, 6.0) )
             
-    
+    @testcase
+    def step9NFromFirstVRF(self) -> None:
+        print()
+        v0s = array([0.1, 0.25, 0.5, 0.75, 1.0])
+        for v0 in v0s :
+            for order in range(0,5+1) :
+                core = makeEmpCore(order, 1.0)
+                n = nFromFirstVRF(order, v0)
+                print('%d %5d %6.3f %6.3f %6.4f' % (order, n, v0, core.getFirstVRF(n), v0-core.getFirstVRF(n)))
 
     @testcase 
     def step9NUnitLastVRF(self) -> None:

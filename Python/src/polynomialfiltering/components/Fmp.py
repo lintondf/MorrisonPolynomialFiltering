@@ -45,6 +45,7 @@ class AbstractCoreFmp(ICore):
     
     def getThetaForVRF(self, tau : float, theta0 : float, vrf00 : float ) -> float:
         V = self._getVRF(tau, theta0)
+        tm = theta0
         if (V[0,0] > vrf00) : # target is higher
             tl = theta0
             tu = 1.0-1e-8

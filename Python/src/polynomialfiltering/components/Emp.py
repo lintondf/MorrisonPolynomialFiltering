@@ -244,7 +244,7 @@ class CoreEmp3(ICore) :
         '''@n2 : float'''
         '''@n3 : float'''
         '''@denom : float'''
-        '''@g : vector : 4'''       
+        '''@g : vector : 4'''
         n2 = n*n 
         n3 = n2*n 
         denom = 1.0/((n+4)*(n+3)*(n+2)*(n+1))
@@ -450,7 +450,9 @@ class CoreEmp5(ICore) :
         return self._getVRF(n, self.tau)
     
     def _getFirstVRF(self, n : float, tau : float ) -> float:
-        return 6.0*(6.0*n**5+45.0*n**4+280.0*n**3+855.0*n**2+1334.0*n+840.0)/(n*(n**5-9.0*n**4+25.0*n**3-15.0*n**2-26.0*n+24.0));
+#         return 6.0*(6.0*n**5+45.0*n**4+280.0*n**3+855.0*n**2+1334.0*n+840.0)/(n*(n**5-9.0*n**4+25.0*n**3-15.0*n**2-26.0*n+24.0));
+# FortranForm[HornerForm[Numerator[%]]/HornerForm[Denominator[%]]]
+        return (5040. + n*(8004. + n*(5130. + n*(1680. + n*(270. + 36.*n)))))/(n*(24. + n*(-26. + n*(-15. + n*(25. + (-9. + n)*n)))))
 
     def _getLastVRF(self, n : float, tau : float ) -> float:
         return 10059033600.0/(n*tau**10.0*(n-4.0)*(n-3.0)*(n-2.0)*(n-1.0)*(n+1.0)*(n+2.0)*(n+3.0)*(n+4.0)*(n+5.0)*(n+6.0));
@@ -500,7 +502,9 @@ class CoreEmp5(ICore) :
         V[4,5]=5029516800.0/(n*tau**9*(n-4.0)*(n-3.0)*(n-2.0)*(n-1.0)*(n+1.0)*(n+3.0)*(n+4.0)*(n+5.0)*(n+6.0))
         V[5,4]=V[4,5];
         return V;
+"""
 
+"""
 @forcestatic
 def nSwitch(order : int, theta : float) -> float:
     """
@@ -537,12 +541,52 @@ def nSwitch(order : int, theta : float) -> float:
         raise ValueError("Polynomial orders < 0.0 or > 5.0 are not supported")
 
 @forcestatic
+def nFromFirstVRF( order : int, V0 : float) -> int:
+    """
+    Estimate the sample number when the first VRF diagonal value approximately V0
+    
+    Uses curve fits to estimate the sample number when the first VRF diagonal element
+    first approximates the target V0
+    
+    Arguments:
+        order - polynomial filter order
+        V0 - target VRF[0,0] 
+        
+    Returns:
+        n - estimated sample number
+    """
+    '''@ x : float'''
+    '''@ y : float'''
+    if (order == 0) :
+        return max(1,int((1-V0)/V0))
+    elif (order == 1.0) :
+        x = log(V0)
+        y = 0.36 + x*(-0.66447 + (-0.14928 - 0.01704*x)*x)
+        return max(1,int(exp(exp(y))))
+    elif (order == 2.0) :
+        x = log(V0)
+        y = 0.88944 + (-0.33492 - 0.026753*x)*x
+        return max(1,int(exp(exp(y))) )
+    elif (order == 3.0) :
+        x = log(V0)
+        y = 1.1318 + (-0.23521 - 0.0091248*x)*x
+        return max(1,int(exp(exp(y))) )
+    elif (order == 4.0) :
+        x = log(V0)
+        y = 1.2671 + x*(-0.20681 + (-0.0015367 + 0.0015349*x)*x)
+        return max(1,int(exp(exp(y))))
+    else :
+        x = log(V0)
+        y = 1.3713 + x*(-0.18121 + (0.00063704 + 0.0010518*x)*x)
+        return max(1,int(exp(exp(y)))) 
+    
+@forcestatic
 def nUnitLastVRF( order : int, tau : float ) -> int:
     """
     Estimate the sample number when the final VRF diagonal value is one or less
     
     Uses curve fits to estimate the sample number when the final VRF diagonal element
-    first approaches zero.  For larger tau values, will return the first value value
+    first approaches zero.  For larger tau values, will return the first valid sample number 
     for this element.
     
     Arguments:
