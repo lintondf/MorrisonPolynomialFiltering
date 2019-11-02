@@ -14,7 +14,8 @@ from numpy import arange, array2string, cov, log, var, zeros, trace, mean, std, 
     concatenate, allclose, min, max, nonzero, cumsum, histogram, where, diag, ones
 from numpy import array, array as vector, array_equal
 from numpy import sqrt
-from TestUtilities import assert_allclose, assert_almost_equal, assert_array_less
+from TestUtilities import assert_allclose, assert_almost_equal, assert_array_less,\
+    covarianceToCorrelation
 from scipy.optimize.zeros import brentq
 from typing import List;
 
@@ -34,6 +35,7 @@ from polynomialfiltering.filters.ChevronPolynomialFilter import ChevronPolynomia
 import matplotlib
 import matplotlib.pyplot as plt
 from scipy.optimize.optimize import fminbound
+from numpy.linalg.linalg import cholesky
 
 class ChevronPolynomialFilter_test(TestCaseBase):
 
@@ -145,7 +147,7 @@ class ChevronPolynomialFilter_test(TestCaseBase):
 #             ax.plot(times[0:j,0], expected[0:j,0]-truth[0:j,0], 'k-')
 #             plt.show()
        
-    def step9TestLaunchRanges(self):
+    def xstep9TestLaunchRanges(self):
         print()
         testData = TestData()
         nS = 3000
@@ -181,17 +183,23 @@ class ChevronPolynomialFilter_test(TestCaseBase):
                 e = observations[j,0] - Zstar[0]
                 p.update(times[j][0], Zstar, e)
                 paired[j,:] = p.getState();
-                if (f.getBest() == order) :
-                    break;
             return (expected, paired, j)
         
         v0 = 0.1
-        for order in range(1, 5+1) :
-            for theta in (0.9, 0.95, 0.99) :
-                (expected, paired, j) = runOne(order, theta, v0)
-                print('%d %6.3f %8.5f %10.3f %10.4f' % (order, v0, theta, var(expected[0:j,0]-truth[0:j,0]), 
-                      var(expected[0:j,0]-truth[0:j,0])/var(paired[0:j,0]-truth[0:j,0])))
-        
+#         for order in range(1, 5+1) :
+#             for theta in (0.9, 0.95, 0.99) :
+#                 (expected, paired, j) = runOne(order, theta, v0)
+#                 print('%d %6.3f %8.5f %10.3f %10.4f' % (order, v0, theta, var(expected[0:j,0]-truth[0:j,0]), 
+#                       var(expected[0:j,0]-truth[0:j,0])/var(paired[0:j,0]-truth[0:j,0])))
+        order = 2
+        theta = 0.95
+        (expected, paired, j) = runOne(order, theta, v0)
+#         ax = plt.subplot(1,1,1)
+#         ax.plot(times[0:j,0], truth[0:j,0]-truth[0:j,0], 'b-')
+#         ax.plot(times[0:j,0], observations[0:j,0]-truth[0:j,0], 'b.')
+#         ax.plot(times[0:j,0], paired[0:j,0]-truth[0:j,0], 'r-')
+#         ax.plot(times[0:j,0], expected[0:j,0]-truth[0:j,0], 'k-')
+#         plt.show()
         
     def xstep0Generate(self):
         testData = TestData('testChevron.nc', 'w');
@@ -200,10 +208,26 @@ class ChevronPolynomialFilter_test(TestCaseBase):
        
 
 
-    def xstep9Basic(self):
-        f = ChevronPolynomialFilter(5, 0.1, 0.95, 0.1)
+    def step9Basic(self):
+        order = 5
+        tau = 0.1
+        theta =0.95
+        f = ChevronPolynomialFilter(order, tau, theta, 0.1)
         print(f.switchNs)
-        pass
+        t0 = 0.0
+        nS = 1+int(nSwitch(order, theta))
+        Y = generateTestPolynomial( order, nS, t0, tau )
+        R = 0.15 * abs(Y[0])
+        (times, truth, observations, noise) = generateTestData(order, nS, 0.0, Y[0:order+1], tau, sigma=R)
+        for j in range(0,nS) :
+            Zstar = f.predict(times[j][0])
+            e = observations[j,0] - Zstar[0]
+            f.update(times[j][0], Zstar, e)
+            V = f.getVRF()
+            print('%6.3f' % times[j][0], f.getStatus(), f.getBest(), A2S(diag(V)))
+            print(np.linalg.eigvals(V))
+            (cholesky(V)) # will throw exception if not positive definite
+            print(A2S(V))
 
 
 if __name__ == "__main__":

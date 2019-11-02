@@ -1,4 +1,4 @@
-''' PolynomialFiltering.components.AdaptiveOrderPolynomialFilter
+''' PolynomialFiltering.components.ChevronPolynomialFilter
  (C) Copyright 2019 - Blue Lightning Development, LLC.
  D. F. Linton. support@BlueLightningDevelopment.com
 
@@ -10,9 +10,10 @@ from typing import Tuple
 from abc import abstractmethod
 from overrides import overrides
 import csv
+import sys
 
 from math import isnan, exp, log;
-from numpy import array, diag, zeros, sqrt, transpose, linspace
+from numpy import array, diag, zeros, sqrt, transpose, linspace, eye
 from numpy import array as vector
 from scipy import stats
 
@@ -24,7 +25,8 @@ from polynomialfiltering.filters.RecursivePolynomialFilter import RecursivePolyn
 from polynomialfiltering.filters.PairedPolynomialFilter import PairedPolynomialFilter
 from polynomialfiltering.PythonUtilities import List, ignore
 from sympy.physics.quantum import innerproduct
-from TestUtilities import A2S
+from TestUtilities import A2S, covarianceToCorrelation
+from numpy.linalg import cholesky, eig
 
 class ChevronPolynomialFilter(AbstractComponentFilter):
 
@@ -41,6 +43,8 @@ class ChevronPolynomialFilter(AbstractComponentFilter):
             self.switchNs[o] = nFromFirstVRF(o, switchV0)
             core = makeEmpCore(o, tau)
             self.emps.append( RecursivePolynomialFilter(o, tau, core)) 
+        core = self.pair.getEmpCore()
+        self.V0 = core.getVRF(self.order)
         self.trace = trace;
 
     @ignore
@@ -59,11 +63,9 @@ class ChevronPolynomialFilter(AbstractComponentFilter):
         '''@ o : float | the observation'''
         '''@ f : float | by filter observation residual'''
 
-#         print(t, self.iActive, self.pair.getStatus(), self.pair.getFirstVRF(), self.emps[0].getFirstVRF())
         innovation = self.pair.update(t, Zstar, e)
         if (self.iActive == self.order) :
             return innovation
-#         print('%6.3f %12.3g' % (t,e),'P', A2S(self.pair.getState()))
         o = e + Zstar[0] # recover observation
         for i in range(self.iActive, self.order) :
             z = self.emps[i].predict(t)
@@ -71,23 +73,6 @@ class ChevronPolynomialFilter(AbstractComponentFilter):
             inn = self.emps[i].update(t, z, f)
         if (self.pair.getN() > self.switchNs[self.iActive]) :
             self.iActive += 1
-#             print('%6.3f %12.3g' % (t,f),i,A2S(self.emps[i].getState()))
-#             if (i == self.iActive) :
-#                 innovation[0:i+1] = inn
-#         print(A2S(f2s))
-#         if (f2s[self.iActive] > 0 and f2s[self.iActive+1] > 0 and f2s[self.iActive] > f2s[self.iActive+1]) :
-#             self.iActive += 1
-#             print(t, '-> ', self.iActive, f2s[self.iActive-1], f2s[self.iActive])
-#         V0 = self.pair.getFirstVRF()
-#         if (V0 > 0) :
-#             e2 = e*e/V0
-#             if (e2 < f2s[self.iActive]) :
-#                 print(t, self.iActive, ' -> P', f2s[self.iActive], e2)
-#                 self.iActive = -1
-#         print(t, self.iActive, self.vSwitch, vrfs)
-#         if (self.iActive < self.order and vrfs[self.iActive] > 0 and vrfs[self.iActive] <= self.vSwitch) :
-# #         if (self.iActive < self.order and self.pair.getN() > self.switchNs[self.iActive]) :
-#             self.iActive += 1
         return innovation
     
     @overrides
@@ -171,7 +156,15 @@ class ChevronPolynomialFilter(AbstractComponentFilter):
     @overrides
     def getVRF(self) -> array:
         V = self.pair.getVRF()
-        if (self.iActive < 0) :
+        if (V[0,0] == 0) :
+            V = self.V0
+        if (self.iActive == self.order) :
             return V
-        V[0:self.iActive+1,0:self.iActive+1] = self.emps[self.iActive].getVRF()
+        # update upper corner of full order VRF matrix with active filter VRF preserving positive definiteness
+        # (vD, vd) = covarianceToCorrelation(V)
+        cV = cholesky(V)
+        A = self.emps[self.iActive].getVRF()
+        cA = cholesky(A)
+        cV[0:self.iActive+1,0:self.iActive+1] = cA
+        V = cV @ transpose(cV)
         return V
