@@ -129,7 +129,7 @@ class ChevronPolynomialFilter_test(TestCaseBase):
             
             def targetV0(v0 : float):
                 (expected, paired, j) = runOne(v0)
-                return var(expected[0:j,0]-truth[0:j,0])/var(paired[0:j,0]-truth[0:j,0])
+                return var(expected[0:j,0]-truth[0:j,0]) / var(paired[0:j,0]-truth[0:j,0])
             
             for v0 in arange(0.1, 1.0, 0.1) :
                 (expected, paired, j) = runOne(v0)
@@ -211,7 +211,7 @@ class ChevronPolynomialFilter_test(TestCaseBase):
     def step9Basic(self):
         order = 5
         tau = 0.1
-        theta =0.95
+        theta = 0.95
         f = ChevronPolynomialFilter(order, tau, theta, 0.1)
         print(f.switchNs)
         t0 = 0.0
@@ -225,7 +225,6 @@ class ChevronPolynomialFilter_test(TestCaseBase):
             f.update(times[j][0], Zstar, e)
             V = f.getVRF()
             print('%6.3f' % times[j][0], f.getStatus(), f.getBest(), A2S(diag(V)))
-            print(np.linalg.eigvals(V))
             (cholesky(V)) # will throw exception if not positive definite
             print(A2S(V))
 

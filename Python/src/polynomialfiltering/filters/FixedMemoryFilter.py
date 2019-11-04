@@ -41,8 +41,6 @@ class FixedMemoryFilter(AbstractComponentFilter) :
     
     def __init__(self, order : int, memorySize : int = 51 ):
         super().__init__(order);  # TODO name
-#         if (order < 0 or order > 5) :
-#             raise ValueError("Polynomial orders < 1 or > 5 are not supported") # TODO exceptions
         self.order = order
         self.L = memorySize;
         self.n = 0
@@ -98,15 +96,11 @@ class FixedMemoryFilter(AbstractComponentFilter) :
         '''@Tnt : array : order+1 : L | transpose of Tn'''
         '''@TntTn : array : order+1 : order+1'''
         '''@TntYn : array : order+1 : 1'''
-#         print(self.tRing);
-#         print(self.yRing)
         dt = self.tRing - t;
         Tn = self._getTn(dt);
         Tnt = transpose(Tn)
         TntTn = Tnt @ Tn;
         TntYn = Tnt @ self.yRing
-#         print(TntTn)
-#         print(TntYn)
         self.Z = solve(TntTn, TntYn); #cho_solve(cho_factor(TntTn), TntYn); # lstsq(TntTn, TntYn)[0]; #  
         return copy(self.Z);
     

@@ -30,31 +30,45 @@ from numpy.linalg import cholesky, eig
 
 class ChevronPolynomialFilter(AbstractComponentFilter):
 
+    '''@ Z : vector | full-order state vector [Denormalized, EXTERNAL units]'''
+    '''@ pair : PairedPolynomialFilter'''
+    '''@ iActive : int'''
+    '''@ emps : List[RecursivePolynomialFilter]'''
+    '''@ switchNs : vector'''
+    '''@ V0 : array'''
 
-    def __init__(self, order : int, tau : float, theta : float, switchV0 : float, trace=None ) :
+    def __init__(self, order : int, tau : float, theta : float, switchV0 : float ) :
         super().__init__(order)
+        """
+        Constructor
+        Arguments:
+            order - integer polynomial orer
+            tau - nominal time step
+            theta - fading factor
+            switchV0 - by-order threshold VRF[0,0] to increase active order
+        """
+        '''@ o : int'''
+        '''@ core : ICore'''
         self.Z = zeros([order+1])
         self.pair = PairedPolynomialFilter(order, tau, theta) # create primary filter
         self.iActive = 0 # index into emps and switchNs; -1 if primary filter is active
         self.emps = List() # chevron member EMP filters
         self.switchNs = zeros([order])
-        fc = self.pair.getFmpCore()
         for o in range(0,order) : # create EMP filters for all lower orders
             self.switchNs[o] = nFromFirstVRF(o, switchV0)
             core = makeEmpCore(o, tau)
             self.emps.append( RecursivePolynomialFilter(o, tau, core)) 
         core = self.pair.getEmpCore()
         self.V0 = core.getVRF(self.order)
-        self.trace = trace;
-
-    @ignore
-    def close(self):
-        if (self.trace != None) :
-            self.trace.close()
             
     @ignore
     def getBest(self) -> int:
         return self.iActive
+    
+    def setSwitchN(self, ns : vector ) -> None:
+        '''@ n : int'''
+        n = min(self.order, len(ns))
+        self.switchNs[0:n] = ns[0:n];
         
     @overrides
     def update(self, t : float, Zstar : vector, e : float) -> vector:
@@ -151,7 +165,10 @@ class ChevronPolynomialFilter(AbstractComponentFilter):
 
     @overrides
     def getLastVRF(self) -> float:
-        return self.pair.getLastVRF()
+        if (self.iActive == self.order) :
+            return self.pair.getLastVRF()
+        V = self.getVRF()
+        return V[self.order, self.order]
     
     @overrides
     def getVRF(self) -> array:
@@ -161,7 +178,6 @@ class ChevronPolynomialFilter(AbstractComponentFilter):
         if (self.iActive == self.order) :
             return V
         # update upper corner of full order VRF matrix with active filter VRF preserving positive definiteness
-        # (vD, vd) = covarianceToCorrelation(V)
         cV = cholesky(V)
         A = self.emps[self.iActive].getVRF()
         cA = cholesky(A)
