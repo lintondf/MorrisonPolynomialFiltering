@@ -60,23 +60,6 @@ class ChevronPolynomialFilter_test(TestCaseBase):
         random.seed(iter)
         np.random.seed(iter)
         print()
-        """
-    0.5
-0.725480190570896 0.5356909159335558
-0.6882733072035283 0.6785007714946476
-1.761486453025724 0.5107522556593901
-1.38403500991246 0.5782497929112056        
-    0.4
-0.5141276855136485 0.5850719094903344
-0.6843619058801106 0.6317006487620059
-0.4329093260551004 0.5697405367798848
-2.4606737598087243 0.6339824343218847
-    0.25
-1.2171964190023308 0.5297074207464119
-0.5423237027086846 0.38693586556830833
-0.5526032329122892 0.39536547197967575
-1.7675207661802363 0.5064018902646222
-        """
         
         R = 100.0
         N = array([64, 128, 512, 512, 1024, 2048])
@@ -88,7 +71,7 @@ class ChevronPolynomialFilter_test(TestCaseBase):
             [5, 0.01],[5, 0.1], [5, 1.0], [5, 10.0]
             ])
         group = testData.createTestGroup('States')
-        for i in range(16,setup.shape[0]) :
+        for i in range(0,setup.shape[0]) :
             case = testData.createTestGroup( 'States_Case_%d' % i)
             order = int(setup[i,0])
             tau = setup[i,1]
@@ -194,14 +177,14 @@ class ChevronPolynomialFilter_test(TestCaseBase):
         order = 2
         theta = 0.95
         (expected, paired, j) = runOne(order, theta, v0)
-#         ax = plt.subplot(1,1,1)
-#         ax.plot(times[0:j,0], truth[0:j,0]-truth[0:j,0], 'b-')
-#         ax.plot(times[0:j,0], observations[0:j,0]-truth[0:j,0], 'b.')
-#         ax.plot(times[0:j,0], paired[0:j,0]-truth[0:j,0], 'r-')
-#         ax.plot(times[0:j,0], expected[0:j,0]-truth[0:j,0], 'k-')
-#         plt.show()
+        ax = plt.subplot(1,1,1)
+        ax.plot(times[0:j,0], truth[0:j,0]-truth[0:j,0], 'b-')
+        ax.plot(times[0:j,0], observations[0:j,0]-truth[0:j,0], 'b.')
+        ax.plot(times[0:j,0], paired[0:j,0]-truth[0:j,0], 'r-')
+        ax.plot(times[0:j,0], expected[0:j,0]-truth[0:j,0], 'k-')
+        plt.show()
         
-    def xstep0Generate(self):
+    def step0Generate(self):
         testData = TestData('testChevron.nc', 'w');
         self.generateStates(testData)
         testData.close()

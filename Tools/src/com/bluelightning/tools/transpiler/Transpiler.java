@@ -67,9 +67,11 @@ import freemarker.template.TemplateExceptionHandler;
 
 /* TODO
  * -- this.transpiler -> Transpiler.instance()
- * -- auto define missing variables as None?
+ * -- auto define missing variables as None? Errors rather than exceptions
  * -- direct return of vector of zeros fails
+ * 
  * FEATURES TO ADD
+ * LANGUAGES/LIBRARIES TO ADD
  * -- C++/Boost
  * -- Java/Colt
  * -- Julia
@@ -130,12 +132,14 @@ public class Transpiler {
 
 		new Target(Paths.get("polynomialfiltering/filters"), "FixedMemoryFilter"),
 		new Target(Paths.get("polynomialfiltering/filters"), "PairedPolynomialFilter"),
+		new Target(Paths.get("polynomialfiltering/filters"), "ChevronPolynomialFilter"),
 		
 		new TestTarget(Paths.get("components"), "RecursivePolynomialFilter_test"),
 		new TestTarget(Paths.get("components"), "EMP_test"),
 		new TestTarget(Paths.get("components"), "Fmp_test"),
 		new TestTarget(Paths.get("components"), "Pair_test"),
 		new TestTarget(Paths.get("components"), "FixedMemoryFilter_test"),
+		new TestTarget(Paths.get("components"), "ChevronPolynomialFilter_test"),
 
 		new Target(Paths.get("polynomialfiltering/filters/controls"), "IObservationErrorModel", true),
 		new Target(Paths.get("polynomialfiltering/filters/controls"), "IJudge", true),
@@ -151,7 +155,6 @@ public class Transpiler {
 		
 		new Target(Paths.get("polynomialfiltering/filters"), "AbstractManagedFilter"),
 		new Target(Paths.get("polynomialfiltering/filters"), "ManagedFilterBase"),
-//////		new Target(Paths.get("polynomialfiltering/filters"), "ManagedScalarRecursiveFilter"),
 //////		new Target(Paths.get("polynomialfiltering/filters"), "ManagedScalarRecursiveFilterSet"),
 		
 		new TestTarget(Paths.get("filters/controls"), "ObservationErrorModel_test"),
